@@ -6,7 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/04/27 10:43:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/20 06:04:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef STACK_HPP
+# define STACK_HPP
+
+
+
+#endif
