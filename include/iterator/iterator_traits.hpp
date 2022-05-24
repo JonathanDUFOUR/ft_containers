@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/22 10:25:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/23 20:52:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/24 06:08:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,8 @@ public:
 	typedef typename Iterator::difference_type		difference_type;
 
 private:
-
 protected:
-
 public:
-
 };
 
 template <typename T>
@@ -46,6 +43,10 @@ public:
 	typedef T *								pointer;
 	typedef T &								reference;
 	typedef std::ptrdiff_t					difference_type;
+
+private:
+protected:
+public:
 };
 
 template <typename T>

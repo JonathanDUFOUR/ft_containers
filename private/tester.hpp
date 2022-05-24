@@ -1,25 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   tester.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/24 12:50:52 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
+/*   Updated: 2022/05/24 12:19:20 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
-#include <iostream>
-#include "tester.hpp"
+#ifndef TESTER_HPP
+# define TESTER_HPP
 
-int	main(void)
-{
-	int	koCount;
-	int	idx;
+# include <cstddef>
 
-	for (koCount = 0, idx = 0 ; g_test[idx] ; ++idx)
-		koCount += g_test[idx]();
-	return !!koCount;
-}
+typedef int	(*t_test)(void);
+
+int	test_InputIterator(void);
+
+static t_test const	g_test[] = {
+	test_InputIterator,
+	NULL
+};
+
+#endif

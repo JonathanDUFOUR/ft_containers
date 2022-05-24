@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/22 14:16:38 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/24 12:48:57 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,12 +29,14 @@ NAME		=	unit_test.out
 SRC_DIR		=	srcs/
 OBJ_DIR		=	objs/
 INC_DIR		=	include/
+PRV_DIR		=	private/
 
 ######################################
 #            SOURCE FILES            #
 ######################################
 SRC			=	\
-				main.cpp
+				main.cpp				\
+				test_InputIterator.cpp
 
 ######################################
 #            OBJECT FILES            #
@@ -53,6 +55,7 @@ CXXFLAGS	+=	-Wshadow
 CXXFLAGS	+=	-std=c++98
 CXXFLAGS	+=	-MMD -MP
 CXXFLAGS	+=	-I${INC_DIR}
+CXXFLAGS	+=	-I${PRV_DIR}
 
 LDFLAGS		=	
 
