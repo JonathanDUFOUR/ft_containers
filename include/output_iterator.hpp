@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/23 23:54:58 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/24 04:43:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ private:
 
 public:
 	// Constructors
-	output_iterator(void) _ptr(NULL) {}
 	output_iterator(output_iterator const &src) : _ptr(src._ptr) {}
 
 	// Destructors
