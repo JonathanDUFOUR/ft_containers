@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/22 10:25:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/22 16:13:28 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/23 20:52:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 namespace ft
 {
-template < typename Iterator >
+template <typename Iterator>
 class iterator_traits
 {
 public:
@@ -36,8 +36,8 @@ public:
 
 };
 
-template < typename T >
-class iterator_traits < T * >
+template <typename T>
+class iterator_traits <T *>
 {
 public:
 	// Member types
@@ -48,8 +48,8 @@ public:
 	typedef std::ptrdiff_t					difference_type;
 };
 
-template < typename T >
-class iterator_traits < T const * >
+template <typename T>
+class iterator_traits <T const *>
 {
 public:
 	// Member types

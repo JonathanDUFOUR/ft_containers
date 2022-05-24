@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/22 16:50:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/24 00:04:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,74 +15,32 @@
 
 # include <memory>
 # include "iterator_traits.hpp"
+# include "random_access_iterator.hpp"
 
 namespace ft
 {
-template < typename Vector >
-class VectorIterator
-{
-public:
-	// Member types
-	typedef std::random_access_iterator_tag	iterator_category;
-	typedef typename Vector::value_type		value_type;
-	typedef typename Vector::pointer		pointer;
-	typedef typename Vector::reference		reference;
-	typedef std::ptrdiff_t					difference_type;
-
-private:
-protected:
-public:
-};
-
-template < typename Vector >
-class VectorConstIterator
-{
-public:
-private:
-protected:
-public:
-};
-
-template < typename Vector >
-class VectorReverseIterator
-{
-public:
-private:
-protected:
-public:
-};
-
-template < typename Vector >
-class VectorConstReverseIterator
-{
-public:
-private:
-protected:
-public:
-};
-
-template < typename T, typename Alloc = std::allocator<T> >
+template <typename T, typename Alloc = typename std::allocator<T> >
 class vector
 {
 public:
 	// Member types
-	typedef T																			value_type;
-	typedef Alloc																		allocator_type;
+	typedef T														value_type;
+	typedef Alloc													allocator_type;
 
-	typedef typename allocator_type::pointer											pointer;
-	typedef typename allocator_type::const_pointer										const_pointer;
+	typedef typename allocator_type::pointer						pointer;
+	typedef typename allocator_type::const_pointer					const_pointer;
 
-	typedef typename allocator_type::reference											reference;
-	typedef typename allocator_type::const_reference									const_reference;
+	typedef typename allocator_type::reference						reference;
+	typedef typename allocator_type::const_reference				const_reference;
 
-	typedef class VectorIterator< vector< value_type, allocator_type > >				iterator;
-	typedef class VectorConstIterator< vector< value_type, allocator_type > >			const_iterator;
+	typedef class random_access_iterator<value_type>				iterator;
+	typedef class random_access_iterator<const value_type>			const_iterator;
 
-	typedef class VectorReverseIterator< vector < value_type, allocator_type > >		reverse_iterator;
-	typedef class VectorConstReverseIterator< vector < value_type, allocator_type > >	const_reverse_iterator;
+	typedef class reverse_iterator<iterator>						reverse_iterator;
+	typedef class reverse_iterator<const_iterator>					const_reverse_iterator;
 
-	typedef typename iterator_traits<iterator>::difference_type							difference_type;
-	typedef std::size_t																	size_type;
+	typedef typename iterator_traits<iterator>::difference_type		difference_type;
+	typedef std::size_t												size_type;
 
 private:
 	// Attributes
