@@ -1,30 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_InputIterator.cpp                             :+:      :+:    :+:   */
+/*   test_output_iterator.cpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/24 12:10:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/24 13:06:40 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/25 01:05:25 by jodufour          #+#    #+#             */
+/*   Updated: 2022/05/25 08:56:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
+#include <cstring>
+#include <iomanip>
 #include <iostream>
-#include "iterator/InputIterator.tpp"
+#include "iterator/output_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_pointer(void)
 {
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	int	arr[] = {
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+	};
 	int	idx;
 
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::InputIterator<int>	it(arr + idx);
+			ft::output_iterator<int>	it(arr + idx);
+
 			if (*it != arr[idx])
 				return EXIT_FAILURE;
 		}
@@ -39,16 +53,28 @@ inline static int	__test_construct_pointer(void)
 
 inline static int	__test_construct_copy(void)
 {
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int	idx;
+	char	arr[] = {
+		'0',
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7',
+		'8',
+		'9',
+	};
+	int		idx;
 
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::InputIterator<int>	it0(arr + idx);
-			ft::InputIterator<int>	it1(it0);
-			if (it0 != it1)
+			ft::output_iterator<char>	it0(arr + idx);
+			ft::output_iterator<char>	it1(it0);
+
+			if (memcmp(&it0, &it1, sizeof(ft::output_iterator<char>)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -60,45 +86,33 @@ inline static int	__test_construct_copy(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_assignation(void)
+inline static int	__test_operator_assign(void)
 {
-	int						arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int						idx;
-	ft::InputIterator<int>	it0(NULL);
+	std::string	arr[] = {
+		std::string("I"),
+		std::string("wanna"),
+		std::string("be"),
+		std::string("the"),
+		std::string("very"),
+		std::string("best"),
+		std::string("like"),
+		std::string("no"),
+		std::string("one"),
+		std::string("ever"),
+		std::string("was"),
+	};
+	int			idx;
 
 	try
 	{
+		ft::output_iterator<std::string>	it0(NULL);
+
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::InputIterator<int>	it1(arr + idx);
-			it0 = it1;
-			if (it0 != it1)
-				return EXIT_FAILURE;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << std::endl;
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
+			ft::output_iterator<std::string>	it1(arr + idx);
 
-inline static int	__test_operator_equality(void)
-{
-	int						arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int						idx;
-	ft::InputIterator<int>	it0(NULL);
-
-	try
-	{
-		for (idx = 0 ; idx < 10 ; ++idx)
-		{
-			ft::InputIterator<int>	it1(arr + idx);
-			if (it0 == it1)
-				return EXIT_FAILURE;
 			it0 = it1;
-			if (it0 != it1)
+			if (memcmp(&it0, &it1, sizeof(ft::output_iterator<std::string>)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -112,37 +126,28 @@ inline static int	__test_operator_equality(void)
 
 inline static int	__test_operator_dereference(void)
 {
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int	idx;
+	t_hint	arr[] = {
+		-0,
+		-1,
+		-2,
+		-3,
+		-4,
+		-5,
+		-6,
+		-7,
+		-8,
+		-9,
+	};
+	int		idx;
 
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::InputIterator<int>	it(arr + idx);
+			ft::output_iterator<t_hint>	it(arr + idx);
+
+			*it += 42;
 			if (*it != arr[idx])
-				return EXIT_FAILURE;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << std::endl;
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_operator_maddress(void)
-{
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int	idx;
-
-	try
-	{
-		for (idx = 0 ; idx < 10 ; ++idx)
-		{
-			ft::InputIterator<int>	it(arr + idx);
-			if (it.operator->() != arr + idx)
 				return EXIT_FAILURE;
 		}
 	}
@@ -156,19 +161,27 @@ inline static int	__test_operator_maddress(void)
 
 inline static int	__test_operator_increment_prefix(void)
 {
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-	int	idx;
+	t_luint	arr[] = {
+		424242424242420,
+		424242424242421,
+		424242424242422,
+		424242424242423,
+		424242424242424,
+		424242424242425,
+		424242424242426,
+		424242424242427,
+		424242424242428,
+		424242424242429,
+	};
+	int		idx;
 
 	try
 	{
+		ft::output_iterator<t_luint>	it(arr);
+
 		for (idx = 0 ; idx < 9 ; ++idx)
-		{
-			ft::InputIterator<int>	it(arr + idx);
-			if (*it != arr[idx])
-				return EXIT_FAILURE;
 			if (*++it != arr[idx + 1])
 				return EXIT_FAILURE;
-		}
 	}
 	catch (std::exception const &e)
 	{
@@ -180,21 +193,27 @@ inline static int	__test_operator_increment_prefix(void)
 
 inline static int	__test_operator_increment_postfix(void)
 {
-	int	arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+	int	arr[] = {
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+	};
 	int	idx;
 
 	try
 	{
+		ft::output_iterator<int>	it(arr);
+
 		for (idx = 0 ; idx < 9 ; ++idx)
-		{
-			ft::InputIterator<int>	it(arr + idx);
-			if (*it != arr[idx])
+			if (*it++ != arr[idx] || *it != arr[idx + 1])
 				return EXIT_FAILURE;
-			if (*it++ != arr[idx])
-				return EXIT_FAILURE;
-			if (*it != arr[idx + 1])
-				return EXIT_FAILURE;
-		}
 	}
 	catch (std::exception const &e)
 	{
@@ -204,32 +223,37 @@ inline static int	__test_operator_increment_postfix(void)
 	return EXIT_SUCCESS;
 }
 
-int	test_InputIterator(void)
+int	test_output_iterator(void)
 {
-	t_test const	tests[] = {
+	t_test const tests[] = {
 		__test_construct_pointer,
 		__test_construct_copy,
-		__test_operator_assignation,
-		__test_operator_equality,
+		__test_operator_assign,
 		__test_operator_dereference,
-		__test_operator_maddress,
 		__test_operator_increment_prefix,
 		__test_operator_increment_postfix,
 		NULL
 	};
-	int				koCount;
-	int				idx;
+	int			koCount;
+	int			idx;
 
-	std::cout << "InputIterator:";
+	std::cout << std::setw(PADDING) << "output_iterator:";
 	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
-			std::cout << " \033[38;2;255;0;0m[KO]\033[0m";
+			std::cerr << "\033[38;2;255;0;0m";
+			std::cout << " [KO]";
+			std::cerr << "\033[0m";
 			++koCount;
 		}
 		else
-			std::cout << " \033[38;2;0;255;0m[OK]\033[0m";
+		{
+			std::cerr << "\033[38;2;0;255;0m";
+			std::cout << " [OK]";
+			std::cerr << "\033[0m";
+			
+		}
 	}
 	std::cout << std::endl;
 	return koCount;

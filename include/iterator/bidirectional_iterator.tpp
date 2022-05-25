@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   BidirectionalIterator.tpp                          :+:      :+:    :+:   */
+/*   bidirectional_iterator.tpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/24 12:03:40 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/25 10:01:46 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BIDIRECTIONALITERATOR_TPP
-# define BIDIRECTIONALITERATOR_TPP
+#ifndef BIDIRECTIONAL_ITERATOR_TPP
+# define BIDIRECTIONAL_ITERATOR_TPP
 
-# include "ForwardIterator.tpp"
+# include "forward_iterator.tpp"
 
 namespace ft
 {
@@ -23,33 +23,33 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class BidirectionalIterator : public ft::ForwardIterator<T, Category, Diff, Ptr, Ref>
+class bidirectional_iterator : public ft::forward_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types
-	using typename ForwardIterator<T, Category, Diff, Ptr, Ref>::iterator_category;
-	using typename ForwardIterator<T, Category, Diff, Ptr, Ref>::value_type;
-	using typename ForwardIterator<T, Category, Diff, Ptr, Ref>::pointer;
-	using typename ForwardIterator<T, Category, Diff, Ptr, Ref>::reference;
-	using typename ForwardIterator<T, Category, Diff, Ptr, Ref>::difference_type;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::iterator_category;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::value_type;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::pointer;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::reference;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
 private:
 protected:
 public:
 	// Constructors
-	BidirectionalIterator(pointer const ptr) :
-		ForwardIterator<T, Category, Diff, Ptr, Ref>(ptr) {}
+	bidirectional_iterator(pointer const ptr = NULL) :
+		forward_iterator<T, Category, Diff, Ptr, Ref>(ptr) {}
 
 	// Operators
-	inline /* virtual */ BidirectionalIterator &operator--(void) // --it
+	inline /* virtual */ bidirectional_iterator &operator--(void) // --it
 	{
 		--this->_ptr;
 		return *this;
 	}
 
-	inline /* virtual */ BidirectionalIterator operator--(int) // it--
+	inline /* virtual */ bidirectional_iterator operator--(int) // it--
 	{
-		BidirectionalIterator	original(*this);
+		bidirectional_iterator	original(*this);
 
 		--this->_ptr;
 		return original;

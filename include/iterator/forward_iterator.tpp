@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ForwardIterator.tpp                                :+:      :+:    :+:   */
+/*   forward_iterator.tpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/24 12:03:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/25 10:01:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FORWARDITERATOR_TPP
-# define FORWARDITERATOR_TPP
+#ifndef FORWARD_ITERATOR_TPP
+# define FORWARD_ITERATOR_TPP
 
-# include "InputIterator.tpp"
+# include "input_iterator.tpp"
 
 namespace ft
 {
@@ -23,28 +23,25 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class ForwardIterator : public InputIterator<T, Category, Diff, Ptr, Ref>
+class forward_iterator : public input_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types
-	using typename InputIterator<T, Category, Diff, Ptr, Ref>::iterator_category;
-	using typename InputIterator<T, Category, Diff, Ptr, Ref>::value_type;
-	using typename InputIterator<T, Category, Diff, Ptr, Ref>::pointer;
-	using typename InputIterator<T, Category, Diff, Ptr, Ref>::reference;
-	using typename InputIterator<T, Category, Diff, Ptr, Ref>::difference_type;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::iterator_category;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::value_type;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::pointer;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::reference;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
 private:
 protected:
 public:
 	// Constructors
-	ForwardIterator(void) :
-		InputIterator<T, Category, Diff, Ptr, Ref>() {}
+	forward_iterator(pointer const ptr = NULL) :
+		input_iterator<T, Category, Diff, Ptr, Ref>(ptr) {}
 
-	ForwardIterator(pointer const ptr) :
-		InputIterator<T, Category, Diff, Ptr, Ref>(ptr) {}
-
-	ForwardIterator(ForwardIterator const &src) :
-		InputIterator<T, Category, Diff, Ptr, Ref>(src) {}
+	forward_iterator(forward_iterator const &src) :
+		input_iterator<T, Category, Diff, Ptr, Ref>(src) {}
 };
 }
 

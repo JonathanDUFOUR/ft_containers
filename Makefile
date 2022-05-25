@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/24 12:48:57 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/25 21:11:05 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ CXX			=	clang++
 LINK		=	clang++
 MKDIR		=	mkdir -p
 RM			=	rm -rf
+VG			=	valgrind
 
 ######################################
 #             EXECUTABLE             #
@@ -35,8 +36,13 @@ PRV_DIR		=	private/
 #            SOURCE FILES            #
 ######################################
 SRC			=	\
-				main.cpp				\
-				test_InputIterator.cpp
+				main.cpp						\
+				test_bidirectional_iterator.cpp	\
+				test_forward_iterator.cpp		\
+				test_input_iterator.cpp			\
+				test_output_iterator.cpp		\
+				test_random_access_iterator.cpp	\
+				test_reverse_iterator.cpp
 
 ######################################
 #            OBJECT FILES            #
@@ -59,6 +65,10 @@ CXXFLAGS	+=	-I${PRV_DIR}
 
 LDFLAGS		=	
 
+VGFLAGS		=	--leak-check=full
+VGFLAGS		+=	--show-leak-kinds=all
+VGFLAGS		+=	--track-fds=yes
+
 ifeq (${DEBUG}, 1)
 	CXXFLAGS	+=	-g
 endif
@@ -72,6 +82,9 @@ ${NAME}: ${OBJ}
 	${LINK} $^ ${LDFLAGS} ${OUTPUT_OPTION}
 
 all: ${NAME}
+
+test: ${NAME}
+	${VG} ${VGFLAGS} ./$<
 
 -include ${DEP}
 

@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   OutputIterator.tpp                                 :+:      :+:    :+:   */
+/*   input_iterator.tpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/24 10:34:42 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
+/*   Updated: 2022/05/25 21:42:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OUTPUTITERATOR_TPP
-# define OUTPUTITERATOR_TPP
+#ifndef INPUT_ITERATOR_TPP
+# define INPUT_ITERATOR_TPP
 
 # include <iterator>
 
@@ -19,11 +19,11 @@ namespace ft
 {
 template <
 	typename T,
-	typename Category = std::output_iterator_tag,
+	typename Category = std::input_iterator_tag,
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class OutputIterator
+class input_iterator
 {
 public:
 	// Member types
@@ -33,38 +33,58 @@ public:
 	typedef Ref			reference;
 	typedef Diff		difference_type;
 
-private:
+protected:
 	// Attributes
 	pointer	_ptr;
 
+	// Constructors
+	input_iterator(void) : _ptr(NULL) {}
+
 public:
 	// Constructors
-	OutputIterator(OutputIterator const &src) : _ptr(src._ptr) {}
+	input_iterator(pointer const ptr) : _ptr(ptr) {}
+
+	input_iterator(input_iterator const &src) : _ptr(src._ptr) {}
 
 	// Destructors
-	~OutputIterator(void) {}
+	~input_iterator(void) {}
 
 	// Operators
-	inline OutputIterator	&operator=(OutputIterator const &rhs)
+	inline input_iterator &operator=(input_iterator const &rhs) // it0 = it1
 	{
 		this->_ptr = rhs._ptr;
 		return *this;
 	}
 
-	inline reference	operator*(void)
+	inline bool	operator==(input_iterator const &rhs) const // it0 == it1
+	{
+		return this->_ptr == rhs._ptr;
+	}
+
+	inline bool	operator!=(input_iterator const &rhs) const // it0 != it1
+	{
+		return this->_ptr != rhs._ptr;
+	}
+
+	inline reference	operator*(void) const // *it
 	{
 		return *this->_ptr;
 	}
 
-	inline OutputIterator	&operator++(void) // ++it
+	inline pointer	operator->(void) const // it->member
+	{
+		return this->_ptr;
+	}
+
+	inline /* virtual */ input_iterator	&operator++(void) // ++it
 	{
 		++this->_ptr;
 		return *this;
 	}
 
-	inline OutputIterator	operator++(int) // it++
+	inline /* virtual */ input_iterator	operator++(int) // it++
 	{
-		OutputIterator	original(*this);
+		input_iterator	original(*this);
 
 		++this->_ptr;
 		return original;
