@@ -25,7 +25,7 @@ inline static int	__test_construct_default(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -59,7 +59,7 @@ inline static int	__test_construct_pointer(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -88,13 +88,13 @@ inline static int	__test_construct_copy(void)
 			ft::random_access_iterator<char>	it0(arr + idx);
 			ft::random_access_iterator<char>	it1(it0);
 
-			if (memcmp(&it0, &it1, sizeof(ft::random_access_iterator<char>)))
+			if (memcmp(&it0, &it1, sizeof(it0)))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -126,13 +126,13 @@ inline static int	__test_operator_assign(void)
 			ft::random_access_iterator<std::string>	it1(arr + idx);
 
 			it0 = it1;
-			if (memcmp(&it0, &it1, sizeof(ft::random_access_iterator<std::string>)))
+			if (memcmp(&it0, &it1, sizeof(it0)))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -172,7 +172,7 @@ inline static int	__test_operator_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -211,7 +211,7 @@ inline static int	__test_operator_difference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -245,7 +245,7 @@ inline static int	__test_operator_dereference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -279,7 +279,7 @@ inline static int	__test_operator_maddress(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -288,16 +288,16 @@ inline static int	__test_operator_maddress(void)
 inline static int	__test_operator_increment_prefix(void)
 {
 	t_luint	arr[] = {
-		424242424242420LLU,
-		424242424242421LLU,
-		424242424242422LLU,
-		424242424242423LLU,
-		424242424242424LLU,
-		424242424242425LLU,
-		424242424242426LLU,
-		424242424242427LLU,
-		424242424242428LLU,
-		424242424242429LLU,
+		424242424242420LU,
+		424242424242421LU,
+		424242424242422LU,
+		424242424242423LU,
+		424242424242424LU,
+		424242424242425LU,
+		424242424242426LU,
+		424242424242427LU,
+		424242424242428LU,
+		424242424242429LU,
 	};
 	int		idx;
 
@@ -311,7 +311,7 @@ inline static int	__test_operator_increment_prefix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -343,7 +343,7 @@ inline static int	__test_operator_increment_postfix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -352,16 +352,16 @@ inline static int	__test_operator_increment_postfix(void)
 inline static int	__test_operator_decrement_prefix(void)
 {
 	t_luint	arr[] = {
-		424242424242420LLU,
-		424242424242421LLU,
-		424242424242422LLU,
-		424242424242423LLU,
-		424242424242424LLU,
-		424242424242425LLU,
-		424242424242426LLU,
-		424242424242427LLU,
-		424242424242428LLU,
-		424242424242429LLU,
+		424242424242420LU,
+		424242424242421LU,
+		424242424242422LU,
+		424242424242423LU,
+		424242424242424LU,
+		424242424242425LU,
+		424242424242426LU,
+		424242424242427LU,
+		424242424242428LU,
+		424242424242429LU,
 	};
 	int		idx;
 
@@ -375,7 +375,7 @@ inline static int	__test_operator_decrement_prefix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -407,7 +407,7 @@ inline static int	__test_operator_decrement_postfix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -442,7 +442,7 @@ inline static int	__test_operator_add_assign(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -477,7 +477,7 @@ inline static int	__test_operator_sub_assign(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -509,7 +509,7 @@ inline static int	__test_operator_add(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -541,7 +541,7 @@ inline static int	__test_operator_sub(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -582,7 +582,7 @@ inline static int	__test_operator_distance(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -614,7 +614,7 @@ inline static int	__test_operator_access(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_SUCCESS;
 	}
 	return EXIT_SUCCESS;
@@ -654,7 +654,7 @@ inline static int	__test_operator_lower(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -693,7 +693,7 @@ inline static int	__test_operator_upper(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -732,7 +732,7 @@ inline static int	__test_operator_lower_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -771,7 +771,7 @@ inline static int	__test_operator_upper_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -824,6 +824,6 @@ int	test_random_access_iterator(void)
 			
 		}
 	}
-	std::cout << std::endl;
+	std::cout << '\n';
 	return koCount;
 }

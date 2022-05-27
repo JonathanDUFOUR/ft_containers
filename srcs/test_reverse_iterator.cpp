@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 09:35:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 17:03:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,16 @@ inline static int	__test_construct_default(void)
 {
 	try
 	{
-		ft::reverse_iterator<ft::random_access_iterator<std::iostream> >	rit;
+		ft::reverse_iterator<ft::random_access_iterator<std::iostream> >	ft_rit;
+		std::reverse_iterator<ft::random_access_iterator<std::iostream> >	std_rit;
+
+		if (sizeof(ft_rit) != sizeof(std_rit)
+			|| memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -57,24 +62,14 @@ inline static int	__test_construct_iterator(void)
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
 
-			if (sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >) != sizeof(std::reverse_iterator<ft::random_access_iterator<int> >))
-			{
-				std::cout << "sizeof() break" << '\n';
-				std::cout << "      sizeof(ft::reverse_iterator): " << sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >) << '\n';
-				std::cout << "     sizeof(std::reverse_iterator): " << sizeof(std::reverse_iterator<ft::random_access_iterator<int> >) << '\n';
-				std::cout << "sizeof(ft::random_access_iterator): " << sizeof(ft::random_access_iterator<int>) << '\n';
+			if (sizeof(ft_rit) != sizeof(std_rit)
+				|| memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 				return EXIT_FAILURE;
-			}
-			if (memcmp(&ft_rit, &std_rit, sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >)))
-			{
-				std::cout << "memcmp() break" << std::endl;
-				return EXIT_FAILURE;
-			}
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -100,17 +95,21 @@ inline static int	__test_construct_copy(void)
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::random_access_iterator<char>						it(arr + idx);
-			ft::reverse_iterator<ft::random_access_iterator<char> >	rit0(it);
-			ft::reverse_iterator<ft::random_access_iterator<char> >	rit1(rit0);
+			ft::random_access_iterator<char>							it(arr + idx);
+			ft::reverse_iterator<ft::random_access_iterator<char> >		ft_rit0(it);
+			ft::reverse_iterator<ft::random_access_iterator<char> >		ft_rit1(ft_rit0);
+			std::reverse_iterator<ft::random_access_iterator<char> >	std_rit0(it);
+			std::reverse_iterator<ft::random_access_iterator<char> >	std_rit1(std_rit0);
 
-			if (memcmp(&rit0, &rit1, sizeof(ft::reverse_iterator<ft::random_access_iterator<char> >)))
+			if ((sizeof (ft_rit1) != sizeof (std_rit1))
+				|| (memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0))
+					!= memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -146,7 +145,7 @@ inline static int	__test_function_base(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -185,7 +184,7 @@ inline static int	__test_operator_assign(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -209,7 +208,7 @@ inline static int	__test_operator_dereference(void)
 
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 1 ; idx < 11 ; ++idx)
 		{
 			ft::random_access_iterator<t_hint>							it(arr + idx);
 			ft::reverse_iterator<ft::random_access_iterator<t_hint> >	ft_rit(it);
@@ -223,7 +222,7 @@ inline static int	__test_operator_dereference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -259,7 +258,7 @@ inline static int	__test_operator_maddress(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -293,7 +292,7 @@ inline static int	__test_operator_increment_prefix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -327,7 +326,7 @@ inline static int	__test_operator_increment_postfix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -361,7 +360,7 @@ inline static int	__test_operator_decrement_prefix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -395,7 +394,7 @@ inline static int	__test_operator_decrement_postfix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -433,7 +432,7 @@ inline static int	__test_operator_add_assign(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -471,7 +470,7 @@ inline static int	__test_operator_sub_assign(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -507,7 +506,7 @@ inline static int	__test_operator_add(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -541,7 +540,7 @@ inline static int	__test_operator_sub(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -565,7 +564,7 @@ inline static int	__test_operator_access(void)
 
 	try
 	{
-		ft::random_access_iterator<t_hhuint>							it(arr + 9);
+		ft::random_access_iterator<t_hhuint>							it(arr + 10);
 		ft::reverse_iterator<ft::random_access_iterator<t_hhuint> >		ft_rit(it);
 		std::reverse_iterator<ft::random_access_iterator<t_hhuint> >	std_rit(it);
 
@@ -575,7 +574,7 @@ inline static int	__test_operator_access(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_SUCCESS;
 	}
 	return EXIT_SUCCESS;
@@ -609,7 +608,7 @@ inline static int	__test_non_member_operator_add(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -654,7 +653,7 @@ inline static int	__test_non_member_operator_distance(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -698,7 +697,7 @@ inline static int	__test_non_member_operator_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -741,7 +740,7 @@ inline static int	__test_non_member_operator_difference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -784,7 +783,7 @@ inline static int	__test_non_member_operator_lower(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -827,7 +826,7 @@ inline static int	__test_non_member_operator_upper(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -870,7 +869,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -913,7 +912,7 @@ inline static int	__test_non_member_operator_upper_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -968,6 +967,6 @@ int	test_reverse_iterator(void)
 			
 		}
 	}
-	std::cout << std::endl;
+	std::cout << '\n';
 	return koCount;
 }

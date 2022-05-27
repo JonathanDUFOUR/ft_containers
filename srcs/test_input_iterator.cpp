@@ -45,7 +45,7 @@ inline static int	__test_construct_pointer(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -74,13 +74,13 @@ inline static int	__test_construct_copy(void)
 			ft::input_iterator<char>	it0(arr + idx);
 			ft::input_iterator<char>	it1(it0);
 
-			if (memcmp(&it0, &it1, sizeof(ft::input_iterator<char>)))
+			if (memcmp(&it0, &it1, sizeof(it0)))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -112,13 +112,13 @@ inline static int	__test_operator_assign(void)
 			ft::input_iterator<std::string>	it1(arr + idx);
 
 			it0 = it1;
-			if (memcmp(&it0, &it1, sizeof(ft::input_iterator<std::string>)))
+			if (memcmp(&it0, &it1, sizeof(it0)))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -158,7 +158,7 @@ inline static int	__test_operator_equal(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -197,7 +197,7 @@ inline static int	__test_operator_difference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 	}
 	return EXIT_SUCCESS;
 }
@@ -231,7 +231,7 @@ inline static int	__test_operator_dereference(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -265,7 +265,7 @@ inline static int	__test_operator_maddress(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -297,7 +297,7 @@ inline static int	__test_operator_increment_prefix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -329,7 +329,7 @@ inline static int	__test_operator_increment_postfix(void)
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::cerr << "Exception: " << e.what() << '\n';
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
@@ -370,6 +370,6 @@ int	test_input_iterator(void)
 			
 		}
 	}
-	std::cout << std::endl;
+	std::cout << '\n';
 	return koCount;
 }

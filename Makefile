@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/27 08:49:36 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/27 17:14:18 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,8 @@ SRC			=	\
 				test_input_iterator.cpp			\
 				test_output_iterator.cpp		\
 				test_random_access_iterator.cpp	\
-				test_reverse_iterator.cpp
+				test_reverse_iterator.cpp		\
+				test_stack.cpp					\
 
 ######################################
 #            OBJECT FILES            #
@@ -58,7 +59,9 @@ DEP			=	${OBJ:.o=.d}
 CXXFLAGS	=	-c
 CXXFLAGS	+=	-Wall -Wextra -Werror
 CXXFLAGS	+=	-Wshadow
+CXXFLAGS	+=	-Weffc++
 CXXFLAGS	+=	-std=c++98
+CXXFLAGS	+=	-pedantic
 CXXFLAGS	+=	-MMD -MP
 CXXFLAGS	+=	-I${INC_DIR}
 CXXFLAGS	+=	-I${PRV_DIR}
@@ -71,6 +74,16 @@ VGFLAGS		+=	--track-fds=yes
 
 ifeq (${DEBUG}, 1)
 	CXXFLAGS	+=	-g
+else \
+ifeq (${DEBUG}, 2)
+	CXXFLAGS	+=	-g
+	CXXFLAGS	+=	-fsanitize=address
+	CXXFLAGS	+=	-fsanitize=leak
+	CXXFLAGS	+=	-fsanitize=undefined
+
+	LDFLAGS		+=	-fsanitize=address
+	LDFLAGS		+=	-fsanitize=leak
+	LDFLAGS		+=	-fsanitize=undefined
 endif
 
 #######################################
