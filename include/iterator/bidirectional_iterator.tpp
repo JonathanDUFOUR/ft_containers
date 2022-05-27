@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 10:01:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 08:27:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,12 @@ protected:
 public:
 	// Constructors
 	bidirectional_iterator(pointer const ptr = NULL) :
-		forward_iterator<T, Category, Diff, Ptr, Ref>(ptr) {}
+		forward_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(ptr) {}
 
 	// Operators
 	inline /* virtual */ bidirectional_iterator &operator--(void) // --it

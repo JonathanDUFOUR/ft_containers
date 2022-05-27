@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 18:20:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 08:27:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,12 @@ protected:
 public:
 	// Constructors
 	random_access_iterator(pointer const ptr = NULL) :
-		bidirectional_iterator<T, Category, Diff, Ptr, Ref>(ptr) {}
+		bidirectional_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(ptr) {}
 
 	// Operators
 	inline random_access_iterator	&operator+=(difference_type const rhs) // it += n

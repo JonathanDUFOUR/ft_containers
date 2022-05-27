@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 21:45:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 09:35:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ inline static int	__test_construct_iterator(void)
 
 			if (sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >) != sizeof(std::reverse_iterator<ft::random_access_iterator<int> >))
 			{
-				std::cout << "sizeof() break" << std::endl;
+				std::cout << "sizeof() break" << '\n';
+				std::cout << "      sizeof(ft::reverse_iterator): " << sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >) << '\n';
+				std::cout << "     sizeof(std::reverse_iterator): " << sizeof(std::reverse_iterator<ft::random_access_iterator<int> >) << '\n';
+				std::cout << "sizeof(ft::random_access_iterator): " << sizeof(ft::random_access_iterator<int>) << '\n';
 				return EXIT_FAILURE;
 			}
 			if (memcmp(&ft_rit, &std_rit, sizeof(ft::reverse_iterator<ft::random_access_iterator<int> >)))
@@ -497,8 +500,10 @@ inline static int	__test_operator_add(void)
 		std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
 
 		for (idx = 0 ; idx < 10 ; ++idx)
+		{
 			if ((ft_rit + idx).base() != (std_rit + idx).base())
 				return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{

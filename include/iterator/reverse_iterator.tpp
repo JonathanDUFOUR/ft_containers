@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 21:42:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 09:31:48 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,53 @@
 # define REVERSE_ITERATOR_TPP
 
 # include "bidirectional_iterator.tpp"
+# include "iterator_traits.hpp"
 
 namespace ft
 {
 template <typename Iterator>
 class reverse_iterator : public bidirectional_iterator<
-	typename Iterator::value_type,
-	typename Iterator::iterator_category,
-	typename Iterator::difference_type,
-	typename Iterator::pointer,
-	typename Iterator::reference>
+	typename iterator_traits<Iterator>::value_type,
+	typename iterator_traits<Iterator>::iterator_category,
+	typename iterator_traits<Iterator>::difference_type,
+	typename iterator_traits<Iterator>::pointer,
+	typename iterator_traits<Iterator>::reference>
 {
 public:
 	// Member types
-	using typename bidirectional_iterator<
-		typename Iterator::value_type,
-		typename Iterator::iterator_category,
-		typename Iterator::difference_type,
-		typename Iterator::pointer,
-		typename Iterator::reference>::iterator_category;
-	using typename bidirectional_iterator<
-		typename Iterator::value_type,
-		typename Iterator::iterator_category,
-		typename Iterator::difference_type,
-		typename Iterator::pointer,
-		typename Iterator::reference>::value_type;
-	using typename bidirectional_iterator<
-		typename Iterator::value_type,
-		typename Iterator::iterator_category,
-		typename Iterator::difference_type,
-		typename Iterator::pointer,
-		typename Iterator::reference>::difference_type;
-	using typename bidirectional_iterator<
-		typename Iterator::value_type,
-		typename Iterator::iterator_category,
-		typename Iterator::difference_type,
-		typename Iterator::pointer,
-		typename Iterator::reference>::pointer;
-	using typename bidirectional_iterator<
-		typename Iterator::value_type,
-		typename Iterator::iterator_category,
-		typename Iterator::difference_type,
-		typename Iterator::pointer,
-		typename Iterator::reference>::reference;
+	typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
+	typedef typename iterator_traits<Iterator>::value_type			value_type;
+	typedef typename iterator_traits<Iterator>::pointer				pointer;
+	typedef typename iterator_traits<Iterator>::reference			reference;
+	typedef typename iterator_traits<Iterator>::difference_type		difference_type;
 
 	typedef Iterator	iterator_type;
 
 private:
-	// Attributes
-	iterator_type	_it;
-
 protected:
 public:
 	// Constructors
-	reverse_iterator(void) : _it() {};
-	explicit reverse_iterator(iterator_type const &it) : _it(it) {};
-	reverse_iterator(reverse_iterator const &src) : _it(src._it) {};
+	reverse_iterator(void) :
+		bidirectional_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>() {};
+	explicit reverse_iterator(iterator_type const &it) :
+		bidirectional_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(it) {};
+	reverse_iterator(reverse_iterator const &src) :
+		bidirectional_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(src._ptr) {};
 
 	// Destructors
 	~reverse_iterator(void) {};
@@ -77,13 +68,23 @@ public:
 	// Member functions
 	iterator_type	base(void) const
 	{
-		return this->_it - 1;
+		return iterator_type(this->_ptr);
 	};
 
 	// Operators
+	inline reference	operator*(void) const // *it
+	{
+		return *(this->_ptr - 1);
+	}
+
+	inline pointer	operator->(void) const // it->member
+	{
+		return this->_ptr - 1;
+	}
+
 	inline reverse_iterator	&operator++(void) // ++rit
 	{
-		--this->_it;
+		--this->_ptr;
 		return *this;
 	}
 
@@ -91,13 +92,13 @@ public:
 	{
 		reverse_iterator	original(*this);
 
-		--this->_it;
+		--this->_ptr;
 		return original;
 	}
 
 	inline reverse_iterator	&operator--(void) // --rit
 	{
-		++this->_it;
+		++this->_ptr;
 		return *this;
 	}
 
@@ -105,41 +106,41 @@ public:
 	{
 		reverse_iterator	original(*this);
 
-		++this->_it;
+		++this->_ptr;
 		return original;
 	}
 
 	inline reverse_iterator	&operator+=(difference_type n) // rit += n
 	{
-		this->_it -= n;
+		this->_ptr -= n;
 		return *this;
 	}
 
 	inline reverse_iterator	&operator-=(difference_type n) // rit -= n
 	{
-		this->_it += n;
+		this->_ptr += n;
 		return *this;
 	}
 
 	inline reverse_iterator operator+(difference_type n) const // rit + n
 	{
-		reverse_iterator<iterator_type>	it(*this);
+		reverse_iterator<iterator_type>	rit(*this);
 
-		it -= n;
-		return it;
+		rit += n;
+		return rit;
 	}
 
 	inline reverse_iterator operator-(difference_type n) const // rit - n
 	{
-		reverse_iterator<iterator_type>	it(*this);
+		reverse_iterator<iterator_type>	rit(*this);
 
-		it += n;
-		return it;
+		rit -= n;
+		return rit;
 	}
 
 	inline reference	operator[](difference_type idx) const // rit[idx]
 	{
-		return *(this->_it - idx);
+		return *(this->_ptr - idx - 1);
 	}
 };
 
@@ -156,7 +157,7 @@ inline typename reverse_iterator<Iterator>::difference_type	operator-(
 	reverse_iterator<Iterator> const &lhs,
 	reverse_iterator<Iterator> const &rhs) // rit0 - rit1
 {
-	return lhs.base() - rhs.base();
+	return rhs.base() - lhs.base();
 }
 
 template <typename Iterator>

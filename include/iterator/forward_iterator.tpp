@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 10:01:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 08:26:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class forward_iterator : public input_iterator<T, Category, Diff, Ptr, Ref>
+class forward_iterator : public ft::input_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types
@@ -38,10 +38,20 @@ protected:
 public:
 	// Constructors
 	forward_iterator(pointer const ptr = NULL) :
-		input_iterator<T, Category, Diff, Ptr, Ref>(ptr) {}
+		input_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(ptr) {}
 
 	forward_iterator(forward_iterator const &src) :
-		input_iterator<T, Category, Diff, Ptr, Ref>(src) {}
+		input_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(src) {}
 };
 }
 
