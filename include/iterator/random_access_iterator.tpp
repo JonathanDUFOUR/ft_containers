@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 08:27:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 12:46:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ public:
 			difference_type,
 			pointer,
 			reference>(ptr) {}
+
+	// Destructors
+	~random_access_iterator(void) {}
 
 	// Operators
 	inline random_access_iterator	&operator+=(difference_type const rhs) // it += n

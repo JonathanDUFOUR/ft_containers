@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 08:27:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 12:49:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ public:
 			difference_type,
 			pointer,
 			reference>(ptr) {}
+
+	// Destructors
+	~bidirectional_iterator(void) {}
 
 	// Operators
 	inline /* virtual */ bidirectional_iterator &operator--(void) // --it

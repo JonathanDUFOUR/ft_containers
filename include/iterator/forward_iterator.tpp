@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 08:26:22 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/27 12:48:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@ public:
 			difference_type,
 			pointer,
 			reference>(src) {}
+
+	// Destructors
+	~forward_iterator(void) {}
 };
 }
 
