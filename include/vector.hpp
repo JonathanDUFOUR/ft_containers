@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 10:03:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/28 19:00:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,55 +45,45 @@ public:
 
 private:
 	// Attributes
-	allocator_type	_alloc;
-	iterator		_head;
-	iterator		_tail;
-	size_type		_capacity;
-	size_type		_size;
+	pointer	_head;
+	pointer	_tail;
+	pointer	_eos;
 
 protected:
 public:
 	// Constructors
 	explicit vector(allocator_type const &alloc = allocator_type()) :
-		_alloc(alloc),
-		_head(),
-		_tail(),
-		_capacity(0),
-		_size(0) {}
+		_head(NULL),
+		_tail(NULL),
+		_eos(NULL) {}
 
 	explicit vector(
 		size_type n,
 		value_type const &val = value_type(),
 		allocator_type const &alloc = allocator_type()) :
-		_alloc(alloc),
-		_head(),
-		_tail(),
-		_capacity(0),
-		_size(0)
+		_head(NULL),
+		_tail(NULL),
+		_eos(NULL)
 	{
 		this->assign(n, val);
 	}
 
-	template < typename InputIterator >
+	template <typename InputIterator>
 	vector(
 		InputIterator first,
 		InputIterator last,
 		allocator_type const &alloc = allocator_type()) :
-		_alloc(alloc),
-		_head(),
-		_tail(),
-		_capacity(0),
-		_size(0)
+		_head(NULL),
+		_tail(NULL),
+		_eos(NULL)
 	{
 		this->assign(first, last);
 	}
 
 	vector(vector const &src) :
-		_alloc(src._alloc),
-		_head(),
-		_tail(),
-		_capacity(0),
-		_size(0)
+		_head(src._head),
+		_tail(src._tail),
+		_eos(src._eos)
 	{
 		this->assign(src.begin(), src.end());
 	}
@@ -108,7 +98,7 @@ public:
 	template <typename InputIterator>
 	void	assign(InputIterator first, InputIterator last);
 	void	assign(size_type n, value_type const &val);
-	void	clear(void);
+	void	clear(void) {}
 	template <typename InputIterator>
 	void	insert(iterator pos, InputIterator first, InputIterator last);
 	void	insert(iterator pos, size_type n, value_type const &val);

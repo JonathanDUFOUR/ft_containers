@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 17:04:44 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/28 18:47:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	test_output_iterator(void);
 int	test_random_access_iterator(void);
 int	test_reverse_iterator(void);
 int	test_stack(void);
+int	test_vector(void);
 
 static t_test const	g_test[] = {
 	test_input_iterator,
@@ -45,6 +46,7 @@ static t_test const	g_test[] = {
 	test_random_access_iterator,
 	test_reverse_iterator,
 	test_stack,
+	test_vector,
 	NULL
 };
 

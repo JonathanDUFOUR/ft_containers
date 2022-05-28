@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/28 17:36:21 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/28 18:48:21 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRC			=	\
 				test_random_access_iterator.cpp	\
 				test_reverse_iterator.cpp		\
 				test_stack.cpp					\
+				test_vector.cpp
 
 ######################################
 #            OBJECT FILES            #
