@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/27 17:14:18 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/28 17:36:21 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -97,7 +97,7 @@ ${NAME}: ${OBJ}
 all: ${NAME}
 
 test: ${NAME}
-	${VG} ${VGFLAGS} ./$< ; if [ $$? -eq 0 ] ; then echo "\033[38;2;0;255;0m>>> SUCCESS <<<" ; else echo "\033[38;2;255;0;0m>>> FAILURE <<<" ; fi
+	${VG} ${VGFLAGS} ./$< ; if [ $$? -eq 0 ] ; then echo -e "\033[38;2;0;255;0m>>> SUCCESS <<<" ; else echo -e "\033[38;2;255;0;0m>>> FAILURE <<<" ; fi
 
 -include ${DEP}
 

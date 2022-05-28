@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 18:08:23 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/28 17:35:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,32 @@ public:
 	{
 		return _ctnr.size();
 	}
+
+	// Operators
+	template <typename _T, typename _Container>
+	friend bool	operator==(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
+	template <typename _T, typename _Container>
+	friend bool	operator!=(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
+	template <typename _T, typename _Container>
+	friend bool	operator<(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
+	template <typename _T, typename _Container>
+	friend bool	operator>(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
+	template <typename _T, typename _Container>
+	friend bool	operator<=(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
+	template <typename _T, typename _Container>
+	friend bool	operator>=(
+		stack<_T, _Container> const &lhs,
+		stack<_T, _Container> const &rhs);
 };
 
 template <typename T, typename Container>
