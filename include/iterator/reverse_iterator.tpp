@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 09:31:48 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/30 12:32:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,6 @@ public:
 
 	typedef Iterator	iterator_type;
 
-private:
-protected:
-public:
 	// Constructors
 	reverse_iterator(void) :
 		bidirectional_iterator<

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 12:46:56 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/30 12:31:58 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ public:
 	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::reference;
 	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
-private:
-protected:
-public:
 	// Constructors
 	random_access_iterator(pointer const ptr = NULL) :
 		bidirectional_iterator<

@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/28 18:48:21 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/30 17:40:32 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ DEP			=	${OBJ:.o=.d}
 #                FLAGS                #
 #######################################
 CXXFLAGS	=	-c
-CXXFLAGS	+=	-Wall -Wextra -Werror
+CXXFLAGS	+=	-Wall -Wextra #-Werror
 CXXFLAGS	+=	-Wshadow
 CXXFLAGS	+=	-Weffc++
 CXXFLAGS	+=	-std=c++98
@@ -97,8 +97,16 @@ ${NAME}: ${OBJ}
 
 all: ${NAME}
 
+test: GREEN	=	\033[38;2;0;255;0m
+test: RED	=	\033[38;2;255;0;0m
+test: RESET	=	\033[0m
 test: ${NAME}
-	${VG} ${VGFLAGS} ./$< ; if [ $$? -eq 0 ] ; then echo -e "\033[38;2;0;255;0m>>> SUCCESS <<<" ; else echo -e "\033[38;2;255;0;0m>>> FAILURE <<<" ; fi
+	${VG} ${VGFLAGS} ./$<
+	@if [ $$? -eq 0 ] ; then \
+		printf "${GREEN}>>> SUCCESS <<<${RESET}\n" ; \
+	else \
+		printf "${RED}>>> FAILURE <<<${RESET}\n" ; \
+	fi
 
 -include ${DEP}
 

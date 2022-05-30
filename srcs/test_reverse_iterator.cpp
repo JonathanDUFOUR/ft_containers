@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/28 16:47:54 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/30 11:03:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -788,7 +788,7 @@ inline static int	__test_non_member_operator_lower(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_upper(void)
+inline static int	__test_non_member_operator_greater(void)
 {
 	int	arr[] = {
 		1,
@@ -874,7 +874,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_upper_equal(void)
+inline static int	__test_non_member_operator_greater_equal(void)
 {
 	int	arr[] = {
 		1,
@@ -941,9 +941,9 @@ int	test_reverse_iterator(void)
 		__test_non_member_operator_equal,
 		__test_non_member_operator_difference,
 		__test_non_member_operator_lower,
-		__test_non_member_operator_upper,
+		__test_non_member_operator_greater,
 		__test_non_member_operator_lower_equal,
-		__test_non_member_operator_upper_equal,
+		__test_non_member_operator_greater_equal,
 		NULL,
 	};
 	int				koCount;

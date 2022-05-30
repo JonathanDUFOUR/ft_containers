@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 12:48:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/30 12:31:10 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ public:
 	using typename input_iterator<T, Category, Diff, Ptr, Ref>::reference;
 	using typename input_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
-private:
-protected:
-public:
 	// Constructors
 	forward_iterator(pointer const ptr = NULL) :
 		input_iterator<

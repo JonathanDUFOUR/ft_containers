@@ -253,17 +253,17 @@ inline static int	__test_operator_dereference(void)
 
 inline static int	__test_operator_maddress(void)
 {
-	int	arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
+	std::pair<int, char>	arr[] = {
+		std::pair<int, char>(0, 'A'),
+		std::pair<int, char>(1, 'B'),
+		std::pair<int, char>(2, 'C'),
+		std::pair<int, char>(3, 'D'),
+		std::pair<int, char>(4, 'E'),
+		std::pair<int, char>(5, 'F'),
+		std::pair<int, char>(6, 'G'),
+		std::pair<int, char>(7, 'H'),
+		std::pair<int, char>(8, 'I'),
+		std::pair<int, char>(9, 'J'),
 	};
 	int	idx;
 
@@ -271,9 +271,10 @@ inline static int	__test_operator_maddress(void)
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft::random_access_iterator<int>	it(arr + idx);
+			ft::random_access_iterator<std::pair<int, char> >	it(arr + idx);
 
-			if (it.operator->() != arr + idx)
+			if (it->first != arr[idx].first
+				|| it->second != arr[idx].second)
 				return EXIT_FAILURE;
 		}
 	}
@@ -659,7 +660,7 @@ inline static int	__test_operator_lower(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_upper(void)
+inline static int	__test_operator_greater(void)
 {
 	int	arr[] = {
 		1,
@@ -737,7 +738,7 @@ inline static int	__test_operator_lower_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_upper_equal(void)
+inline static int	__test_operator_greater_equal(void)
 {
 	int	arr[] = {
 		1,
@@ -798,9 +799,9 @@ int	test_random_access_iterator(void)
 		__test_operator_distance,
 		__test_operator_access,
 		__test_operator_lower,
-		__test_operator_upper,
+		__test_operator_greater,
 		__test_operator_lower_equal,
-		__test_operator_upper_equal,
+		__test_operator_greater_equal,
 		NULL,
 	};
 	int				koCount;
