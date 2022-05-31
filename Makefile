@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/05/30 17:40:32 by jodufour         ###   ########.fr        #
+#    Updated: 2022/05/31 18:04:28 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -101,8 +101,8 @@ test: GREEN	=	\033[38;2;0;255;0m
 test: RED	=	\033[38;2;255;0;0m
 test: RESET	=	\033[0m
 test: ${NAME}
-	${VG} ${VGFLAGS} ./$<
-	@if [ $$? -eq 0 ] ; then \
+	@${VG} ${VGFLAGS} ./$< ; \
+	if [ $$? -eq 0 ] ; then \
 		printf "${GREEN}>>> SUCCESS <<<${RESET}\n" ; \
 	else \
 		printf "${RED}>>> FAILURE <<<${RESET}\n" ; \

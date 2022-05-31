@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 13:57:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/31 18:51:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,93 @@ inline static int	__test_function_end(void)
 	}
 	return EXIT_SUCCESS;
 }
+
+inline static int	__test_function_rbegin(void)
+{
+	t_lint	arr[] = {
+		0,
+		11,
+		222,
+		3333,
+		44444,
+		555555,
+		6666666,
+		77777777,
+		888888888,
+		9999999999,
+	};
+	int		n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<t_lint>							ft_vec(n, arr[n]);
+			std::vector<t_lint>							std_vec(n, arr[n]);
+			ft::vector<t_lint>::reverse_iterator		ft_rit = ft_vec.rbegin();
+			std::vector<t_lint>::reverse_iterator		std_rit = std_vec.rbegin();
+			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rbegin();
+			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rbegin();
+
+			if (!!ft_rit.operator->() != !!std_rit.operator->()
+				|| (ft_rit.operator->() && std_rit.operator->()
+					&& *ft_rit.operator->() != *std_rit.operator->())
+				|| !!ft_crit.operator->() != !!std_crit.operator->()
+				|| (ft_crit.operator->() && std_crit.operator->()
+					&& *ft_crit.operator->() != *std_crit.operator->()))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_rend(void)
+{
+	t_lint	arr[] = {
+		0,
+		11,
+		222,
+		3333,
+		44444,
+		555555,
+		6666666,
+		77777777,
+		888888888,
+		9999999999,
+	};
+	int		n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<t_lint>							ft_vec(n, arr[n]);
+			std::vector<t_lint>							std_vec(n, arr[n]);
+			ft::vector<t_lint>::reverse_iterator		ft_rit = ft_vec.rend();
+			std::vector<t_lint>::reverse_iterator		std_rit = std_vec.rend();
+			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rend();
+			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rend();
+
+			if (!!ft_rit.operator->() != !!std_rit.operator->()
+				|| (ft_rit.operator->() && std_rit.operator->()
+					&& *ft_rit.operator->() != *std_rit.operator->())
+				|| !!ft_crit.operator->() != !!std_crit.operator->()
+				|| (ft_crit.operator->() && std_crit.operator->()
+					&& *ft_crit.operator->() != *std_crit.operator->()))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+	}
+	return EXIT_SUCCESS;
+}
+
 
 int	test_vector(void)
 {
