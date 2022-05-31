@@ -14,7 +14,7 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-#include "iterator/random_access_iterator.tpp"
+#include "iterator/base/random_access_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_default(void)
@@ -822,7 +822,6 @@ int	test_random_access_iterator(void)
 			std::cerr << "\033[38;2;0;255;0m";
 			std::cout << " [OK]";
 			std::cerr << "\033[0m";
-			
 		}
 	}
 	std::cout << '\n';

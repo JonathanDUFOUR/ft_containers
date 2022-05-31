@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/30 12:31:10 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/31 17:48:08 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,16 @@ public:
 	using typename input_iterator<T, Category, Diff, Ptr, Ref>::reference;
 	using typename input_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
-	// Constructors
+// ************************************************************************** //
+//                                Constructors                                //
+// ************************************************************************** //
+
+	/**
+	 * @brief	Construct a new forward_iterator object.
+	 * 			(default constructor)
+	 * 
+	 * @param	ptr The pointer to wrap.
+	 */
 	forward_iterator(pointer const ptr = NULL) :
 		input_iterator<
 			value_type,
@@ -42,6 +51,12 @@ public:
 			pointer,
 			reference>(ptr) {}
 
+	/**
+	 * @brief	Construct a new forward iterator object from another one.
+	 * 			(copy constructor)
+	 * 
+	 * @param	src The iterator to copy.
+	 */
 	forward_iterator(forward_iterator const &src) :
 		input_iterator<
 			value_type,
@@ -50,7 +65,13 @@ public:
 			pointer,
 			reference>(src) {}
 
-	// Destructors
+// ************************************************************************* //
+//                                Destructors                                //
+// ************************************************************************* //
+
+	/**
+	 * @brief	Destroy the forward_iterator object.
+	 */
 	~forward_iterator(void) {}
 };
 }

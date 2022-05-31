@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/30 18:59:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/31 13:57:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,161 @@ inline static int	__test_construct_copy(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_size(void)
+{
+	int	n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<t_hhuint>	ft_vec(n, 42U);
+			std::vector<t_hhuint>	std_vec(n, 42U);
+
+			if (ft_vec.size() != std_vec.size())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_capacity(void)
+{
+	int	n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<float>	ft_vec(n, 3.14f);
+			std::vector<float>	std_vec(n, 3.14f);
+
+			if (ft_vec.capacity() != std_vec.capacity())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_empty(void)
+{
+	int	n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<std::string>		ft_vec(n * (n % 2), std::string("Hello World"));
+			std::vector<std::string>	std_vec(n * (n % 2), std::string("Hello World"));
+
+			if (ft_vec.empty() != std_vec.empty())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_begin(void)
+{
+	t_lint	arr[] = {
+		0,
+		11,
+		222,
+		3333,
+		44444,
+		555555,
+		6666666,
+		77777777,
+		888888888,
+		9999999999,
+	};
+	int		n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<t_lint>					ft_vec(n, arr[n]);
+			std::vector<t_lint>					std_vec(n, arr[n]);
+			ft::vector<t_lint>::iterator		ft_it = ft_vec.begin();
+			std::vector<t_lint>::iterator		std_it = std_vec.begin();
+			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.begin();
+			std::vector<t_lint>::const_iterator	std_cit = std_vec.begin();
+
+			if (!!ft_it.operator->() != !!std_it.operator->()
+				|| (ft_it.operator->() && std_it.operator->()
+					&& *ft_it.operator->() != *std_it.operator->())
+				|| !!ft_cit.operator->() != !!std_cit.operator->()
+				|| (ft_cit.operator->() && std_cit.operator->()
+					&& *ft_cit.operator->() != *std_cit.operator->()))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_end(void)
+{
+	t_lint	arr[] = {
+		0,
+		11,
+		222,
+		3333,
+		44444,
+		555555,
+		6666666,
+		77777777,
+		888888888,
+		9999999999,
+	};
+	int		n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<t_lint>					ft_vec(n, arr[n]);
+			std::vector<t_lint>					std_vec(n, arr[n]);
+			ft::vector<t_lint>::iterator		ft_it = ft_vec.end();
+			std::vector<t_lint>::iterator		std_it = std_vec.end();
+			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.end();
+			std::vector<t_lint>::const_iterator	std_cit = std_vec.end();
+
+			if (!!ft_it.operator->() != !!std_it.operator->()
+				|| (ft_it.operator->() && std_it.operator->()
+					&& *ft_it.operator->() != *std_it.operator->())
+				|| !!ft_cit.operator->() != !!std_cit.operator->()
+				|| (ft_cit.operator->() && std_cit.operator->()
+					&& *ft_cit.operator->() != *std_cit.operator->()))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+	}
+	return EXIT_SUCCESS;
+}
+
 int	test_vector(void)
 {
 	t_test const	tests[] = {
@@ -166,6 +321,11 @@ int	test_vector(void)
 		__test_construct_fill,
 		__test_construct_range,
 		__test_construct_copy,
+		__test_function_size,
+		__test_function_capacity,
+		__test_function_empty,
+		__test_function_begin,
+		__test_function_end,
 		NULL
 	};
 	int				koCount;
@@ -186,7 +346,6 @@ int	test_vector(void)
 			std::cerr << "\033[38;2;0;255;0m";
 			std::cout << " [OK]";
 			std::cerr << "\033[0m";
-			
 		}
 	}
 	std::cout << '\n';

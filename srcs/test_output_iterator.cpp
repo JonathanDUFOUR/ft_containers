@@ -14,7 +14,7 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-#include "iterator/output_iterator.tpp"
+#include "iterator/base/output_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_pointer(void)
@@ -252,7 +252,6 @@ int	test_output_iterator(void)
 			std::cerr << "\033[38;2;0;255;0m";
 			std::cout << " [OK]";
 			std::cerr << "\033[0m";
-			
 		}
 	}
 	std::cout << '\n';

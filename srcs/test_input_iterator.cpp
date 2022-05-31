@@ -14,7 +14,7 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-#include "iterator/input_iterator.tpp"
+#include "iterator/base/input_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_pointer(void)

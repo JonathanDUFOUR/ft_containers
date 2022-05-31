@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/30 18:55:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/31 17:49:40 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,8 @@
 
 # include <cstring>
 # include <memory>
-# include "iterator/iterator_traits.hpp"
-# include "iterator/random_access_iterator.tpp"
-# include "iterator/reverse_iterator.tpp"
+# include "iterator/spec/vector_iterator.tpp"
+# include "iterator/base/reverse_iterator.tpp"
 
 namespace ft
 {
@@ -35,8 +34,8 @@ public:
 	typedef typename allocator_type::reference						reference;
 	typedef typename allocator_type::const_reference				const_reference;
 
-	typedef class ft::random_access_iterator<value_type>			iterator;
-	typedef class ft::random_access_iterator<value_type const>		const_iterator;
+	typedef class ft::vector_iterator<pointer>						iterator;
+	typedef class ft::vector_iterator<const_pointer>				const_iterator;
 
 	typedef class ft::reverse_iterator<iterator>					reverse_iterator;
 	typedef class ft::reverse_iterator<const_iterator>				const_reverse_iterator;
@@ -142,7 +141,7 @@ public:
 
 	/**
 	 * @brief		Assign a new size and a new content to the vector.
-	 * 				(fill assignement)
+	 * 				(fill assignation)
 	 * 
 	 * @param n		The new size of the vector.
 	 * @param val	The new value to fill the vector with.
@@ -170,7 +169,7 @@ public:
 	 * @brief	Assign a new size and a new content to the vector
 	 * 			using a range of iterators,
 	 * 			from `first` included to `last` excluded.
-	 * 			(range assignement)
+	 * 			(range assignation)
 	 * 
 	 * @tparam	InputIterator The type of the iterators to use.
 	 * 			(it must conform to the standard input iterator requirements)
@@ -457,9 +456,9 @@ public:
 	}
 
 	/**
-	 * @brief	Get the element at a specific position in the vector.
+	 * @brief	Access to an element of the vector.
 	 * 
-	 * @param	n The position of the element to get.
+	 * @param	n The position of the element to access.
 	 * 
 	 * @return	The element at the given position.
 	 */
@@ -469,7 +468,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get the last element of the vector.
+	 * @brief	Access to the last element of the vector.
 	 * 
 	 * @return	The last element of the vector.
 	 */
@@ -479,7 +478,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get the first element of the vector.
+	 * @brief	Access to the first element of the vector.
 	 * 
 	 * @return	The first element of the vector.
 	 */
@@ -489,9 +488,9 @@ public:
 	}
 
 	/**
-	 * @brief	Get the constant element at a specific position in the vector.
+	 * @brief	Access to a constant element of the vector.
 	 * 
-	 * @param	n The position of the element to get.
+	 * @param	n The position of the element to access.
 	 * 
 	 * @return	The constant element at the given position.
 	 */
@@ -501,7 +500,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get the constant last element of the vector.
+	 * @brief	Access the constant last element of the vector.
 	 * 
 	 * @return	The constant last element of the vector.
 	 */
@@ -511,7 +510,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get the constant first element of the vector.
+	 * @brief	Access the constant first element of the vector.
 	 * 
 	 * @return	The constant first element of the vector.
 	 */
@@ -521,7 +520,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get an allocator object,
+	 * @brief	Get an allocator_type object,
 	 * 			corresponding to the one used in the vector.
 	 * 
 	 * @return	An allocator object.
@@ -535,11 +534,34 @@ public:
 //                                 Operators                                 //
 // ************************************************************************* //
 
+	/**
+	 * @brief	Replace the current content of the vector
+	 * 			by an other vector one's.
+	 * 			(copy assignation)
+	 * 
+	 * @param	rhs The right hand side vector to copy the content from.
+	 * 
+	 * @return	The assigned vector.
+	 */
 	vector			&operator=(vector const &rhs);
-	
-	reference		operator[](size_type n);
-	
-	const_reference	operator[](size_type n) const;
+
+	/**
+	 * @brief	Access to an element of the vector.
+	 * 
+	 * @param	idx The index of the element to get.
+	 * 
+	 * @return	The element at the given index.
+	 */
+	reference		operator[](size_type const idx);
+
+	/**
+	 * @brief	Access to a constant element of the vector.
+	 * 
+	 * @param	idx The index of the constant element to get.
+	 * 
+	 * @return	The constant element at the given index.
+	 */
+	const_reference	operator[](size_type const idx) const;
 };
 }
 

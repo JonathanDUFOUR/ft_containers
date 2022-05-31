@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/30 11:03:59 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/05/31 13:27:28 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
-#include "iterator/random_access_iterator.tpp"
-#include "iterator/reverse_iterator.tpp"
+#include "iterator/base/random_access_iterator.tpp"
+#include "iterator/base/reverse_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_default(void)
@@ -964,7 +964,6 @@ int	test_reverse_iterator(void)
 			std::cerr << "\033[38;2;0;255;0m";
 			std::cout << " [OK]";
 			std::cerr << "\033[0m";
-			
 		}
 	}
 	std::cout << '\n';

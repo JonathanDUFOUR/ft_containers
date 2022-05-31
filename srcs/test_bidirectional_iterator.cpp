@@ -14,7 +14,7 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-#include "iterator/bidirectional_iterator.tpp"
+#include "iterator/base/bidirectional_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_default(void)
