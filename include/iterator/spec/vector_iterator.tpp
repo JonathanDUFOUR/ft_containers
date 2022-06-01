@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 14:17:10 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/01 12:45:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ public:
 			iterator_category,
 			difference_type,
 			pointer,
-			reference>(src.base()) {}
+			reference>(src.operator->()) {}
 
 // ************************************************************************* //
 //                                Destructors                                //
@@ -78,20 +78,6 @@ public:
 	 * @brief	Destroy the vector_iterator object.
 	 */
 	~vector_iterator(void) {}
-
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
-
-	/**
-	 * @brief	Get the value of the wrapped pointer.
-	 * 
-	 * @return	The value of the wrapped pointer.
-	 */
-	pointer	base(void) const
-	{
-		return this->_ptr;
-	}
 };
 }
 

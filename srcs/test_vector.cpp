@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 18:51:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/01 19:00:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 #include "vector.hpp"
+#include "utility.hpp"
 #include "tester.hpp"
 
 inline static int	__test_construct_default(void)
@@ -182,6 +183,29 @@ inline static int	__test_function_size(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_max_size(void)
+{
+	int	n;
+
+	try
+	{
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft::vector<ft::pair<char, int> >	ft_vec(n, ft::pair<char, int>('F', 0));
+			std::vector<std::pair<char, int> >	std_vec(n, std::pair<char, int>('F', 0));
+
+			if (ft_vec.max_size() != std_vec.max_size())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
 inline static int	__test_function_capacity(void)
 {
 	int	n;
@@ -257,16 +281,17 @@ inline static int	__test_function_begin(void)
 
 			if (!!ft_it.operator->() != !!std_it.operator->()
 				|| (ft_it.operator->() && std_it.operator->()
-					&& *ft_it.operator->() != *std_it.operator->())
+					&& *ft_it != *std_it)
 				|| !!ft_cit.operator->() != !!std_cit.operator->()
 				|| (ft_cit.operator->() && std_cit.operator->()
-					&& *ft_cit.operator->() != *std_cit.operator->()))
+					&& *ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -300,16 +325,17 @@ inline static int	__test_function_end(void)
 
 			if (!!ft_it.operator->() != !!std_it.operator->()
 				|| (ft_it.operator->() && std_it.operator->()
-					&& *ft_it.operator->() != *std_it.operator->())
+					&& *ft_it != *std_it)
 				|| !!ft_cit.operator->() != !!std_cit.operator->()
 				|| (ft_cit.operator->() && std_cit.operator->()
-					&& *ft_cit.operator->() != *std_cit.operator->()))
+					&& *ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -341,18 +367,19 @@ inline static int	__test_function_rbegin(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rbegin();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rbegin();
 
-			if (!!ft_rit.operator->() != !!std_rit.operator->()
-				|| (ft_rit.operator->() && std_rit.operator->()
-					&& *ft_rit.operator->() != *std_rit.operator->())
-				|| !!ft_crit.operator->() != !!std_crit.operator->()
-				|| (ft_crit.operator->() && std_crit.operator->()
-					&& *ft_crit.operator->() != *std_crit.operator->()))
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1)
+				|| (ft_rit.operator->() + 1 && std_rit.operator->() + 1
+					&& *std_rit != *ft_rit)
+				|| !!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1)
+				|| (ft_crit.operator->() + 1 && std_crit.operator->() + 1
+					&& *ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -384,12 +411,12 @@ inline static int	__test_function_rend(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rend();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rend();
 
-			if (!!ft_rit.operator->() != !!std_rit.operator->()
-				|| (ft_rit.operator->() && std_rit.operator->()
-					&& *ft_rit.operator->() != *std_rit.operator->())
-				|| !!ft_crit.operator->() != !!std_crit.operator->()
-				|| (ft_crit.operator->() && std_crit.operator->()
-					&& *ft_crit.operator->() != *std_crit.operator->()))
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1)
+				|| (ft_rit.operator->() + 1 && std_rit.operator->() + 1
+					&& *std_rit != *ft_rit)
+				|| !!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1)
+				|| (ft_crit.operator->() + 1 && std_crit.operator->() + 1
+					&& *ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
 	}
@@ -400,6 +427,192 @@ inline static int	__test_function_rend(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_front(void)
+{
+	std::string	arr[] = {
+		std::string("ab"),
+		std::string("cd"),
+		std::string("ef"),
+		std::string("gh"),
+		std::string("ij"),
+		std::string("kl"),
+		std::string("mn"),
+		std::string("op"),
+		std::string("qr"),
+		std::string("st"),
+	};
+	int			idx;
+
+	try
+	{
+		for (idx = 0 ; idx < 10 ; ++idx)
+		{
+			ft::vector<std::string>		ft_vec(&arr[idx], &arr[10]);
+			std::vector<std::string>	std_vec(&arr[idx], &arr[10]);
+
+			if (ft_vec.front() != std_vec.front())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_back(void)
+{
+	std::string	arr[] = {
+		std::string("ts"),
+		std::string("rq"),
+		std::string("po"),
+		std::string("nm"),
+		std::string("lk"),
+		std::string("ji"),
+		std::string("hg"),
+		std::string("fe"),
+		std::string("dc"),
+		std::string("ba"),
+	};
+	int			idx;
+
+	try
+	{
+		for (idx = 1 ; idx < 11 ; ++idx)
+		{
+			ft::vector<std::string>		ft_vec(&arr[0], &arr[idx]);
+			std::vector<std::string>	std_vec(&arr[0], &arr[idx]);
+
+			if (ft_vec.back() != std_vec.back())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_at(void)
+{
+	std::pair<t_hhuint, long double>	arr[] = {
+		std::pair<t_huint, long double>(0, 0.0),
+		std::pair<t_huint, long double>(2, -2.0),
+		std::pair<t_huint, long double>(4, -4.0),
+		std::pair<t_huint, long double>(8, -8.0),
+		std::pair<t_huint, long double>(16, -16.0),
+		std::pair<t_huint, long double>(32, -32.0),
+		std::pair<t_huint, long double>(64, -64.0),
+		std::pair<t_huint, long double>(128, -128.0),
+		std::pair<t_huint, long double>(256, -256.0),
+		std::pair<t_huint, long double>(512, -512.0),
+	};
+	int									idx;
+
+	try
+	{
+		ft::vector<std::pair<t_hhuint, long double> >	ft_vec(&arr[0], &arr[10]);
+		std::vector<std::pair<t_hhuint, long double> >	std_vec(&arr[0], &arr[10]);
+
+		for (idx = 0 ; idx < 10 ; ++idx)
+			if (ft_vec.at(idx) != std_vec.at(idx))
+				return EXIT_FAILURE;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_push_back(void)
+{
+	int	arr[] = {
+		0,
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+	};
+	int	idx0;
+	int	idx1;
+
+	try
+	{
+		ft::vector<int>		ft_vec;
+		std::vector<int>	std_vec;
+
+		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		{
+			ft_vec.push_back(arr[idx0]);
+			std_vec.push_back(arr[idx0]);
+			if (ft_vec.size() != std_vec.size()
+				|| ft_vec.capacity() != std_vec.capacity())
+				return EXIT_FAILURE;
+			for (idx1 ; idx1 < ft_vec.size() ; ++idx1)
+				if (ft_vec.at(idx1) != std_vec.at(idx1))
+					return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_pop_back(void)
+{
+	double	arr[] = {
+		0.0,
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0,
+		7.0,
+		8.0,
+		9.0,
+	};
+	int	idx0;
+	int	idx1;
+
+	try
+	{
+		ft::vector<int>		ft_vec(&arr[0], &arr[10]);
+		std::vector<int>	std_vec(&arr[0], &arr[10]);
+
+		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		{
+			ft_vec.pop_back();
+			std_vec.pop_back();
+			if (ft_vec.size() != std_vec.size()
+				|| ft_vec.capacity() != std_vec.capacity())
+				return EXIT_FAILURE;
+			for (idx1 ; idx1 < ft_vec.size() ; ++idx1)
+				if (ft_vec.at(idx1) != std_vec.at(idx1))
+					return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
 
 int	test_vector(void)
 {
@@ -409,10 +622,18 @@ int	test_vector(void)
 		__test_construct_range,
 		__test_construct_copy,
 		__test_function_size,
+		__test_function_max_size,
 		__test_function_capacity,
 		__test_function_empty,
 		__test_function_begin,
 		__test_function_end,
+		__test_function_rbegin,
+		__test_function_rend,
+		// __test_function_front,
+		// __test_function_back,
+		// __test_function_at,
+		__test_function_push_back,
+		__test_function_pop_back,
 		NULL
 	};
 	int				koCount;

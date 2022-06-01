@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 17:52:51 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/01 12:45:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,22 @@ public:
 			reference>(it) {};
 
 	/**
-	 * @brief	Construct a new reverse iterator object
-	 * 			from another reverse iterator.
+	 * @brief	Construct a new reverse_iterator object from another one.
+	 * 			Allow iterator to constant iterator conversion.
 	 * 			(copy constructor)
+	 * 
+	 * @tparam	_Iterator The type of the iterator to copy.
 	 * 
 	 * @param	src The reverse_iterator to copy.
 	 */
-	reverse_iterator(reverse_iterator const &src) :
+	template <typename _Iterator>
+	reverse_iterator(reverse_iterator<_Iterator> const &src) :
 		bidirectional_iterator<
 			value_type,
 			iterator_category,
 			difference_type,
 			pointer,
-			reference>(src._ptr) {};
+			reference>(src.operator->()) {};
 
 // ************************************************************************* //
 //                                Destructors                                //

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 12:58:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/01 15:29:36 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ public:
 	// Operators
 	pair	&operator=(pair const &rhs)
 	{
-		first = src.first;
-		second = src.second;
+		first = rhs.first;
+		second = rhs.second;
 		return *this;
 	}
 };
