@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/01 12:45:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:11:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,8 @@ inline typename reverse_iterator<Iterator>::difference_type	operator-(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are equivalent, or false if not.
+ * @return	Either true if the two reverse_iterator are equivalent,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator==(
@@ -302,7 +303,8 @@ inline bool	operator==(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are different, or false if not.
+ * @return	Either true if the two reverse_iterator are different,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator!=(
@@ -313,14 +315,15 @@ inline bool	operator!=(
 }
 
 /**
- * @brief	Check if two reverse_iterator are ordered.
+ * @brief	Check if two reverse_iterator are strictly ordered.
  * 
  * @tparam	Iterator The type of the iterator to wrap.
  * 
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are ordered, or false if not.
+ * @return	Either true if the two reverse_iterator are strictly ordered,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator<(
@@ -331,14 +334,15 @@ inline bool	operator<(
 }
 
 /**
- * @brief	Check if two reverse_iterator are reverse ordered.
+ * @brief	Check if two reverse_iterator are strictly reverse ordered.
  * 
  * @tparam	Iterator The type of the iterator to wrap.
  * 
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are reverse ordered, or false if not.
+ * @return	Either true if the two reverse_iterator are strictly reverse ordered,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator>(
@@ -349,14 +353,15 @@ inline bool	operator>(
 }
 
 /**
- * @brief	Check if two reverse_iterator are ordered.
+ * @brief	Check if two reverse_iterator are ordered or equivalent.
  * 
  * @tparam	Iterator The type of the iterator to wrap.
  * 
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are ordered, or false if not.
+ * @return	Either true if the two reverse_iterator are ordered or equivalent,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator<=(
@@ -367,14 +372,15 @@ inline bool	operator<=(
 }
 
 /**
- * @brief	Check if two reverse_iterator are reverse ordered.
+ * @brief	Check if two reverse_iterator are reverse ordered or equivalent.
  * 
  * @tparam	Iterator The type of the iterator to wrap.
  * 
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are reverse ordered, or false if not.
+ * @return	Either true if the two reverse_iterator are reverse ordered or equivalent,
+ * 			or false if not.
  */
 template <typename Iterator>
 inline bool	operator>=(

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/01 12:45:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:53:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ class vector_iterator : public random_access_iterator<
 {
 public:
 	// Member types
-		typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
-		typedef typename iterator_traits<Iterator>::value_type			value_type;
-		typedef typename iterator_traits<Iterator>::pointer				pointer;
-		typedef typename iterator_traits<Iterator>::reference			reference;
-		typedef typename iterator_traits<Iterator>::difference_type		difference_type;
+	typedef typename iterator_traits<Iterator>::iterator_category	iterator_category;
+	typedef typename iterator_traits<Iterator>::value_type			value_type;
+	typedef typename iterator_traits<Iterator>::pointer				pointer;
+	typedef typename iterator_traits<Iterator>::reference			reference;
+	typedef typename iterator_traits<Iterator>::difference_type		difference_type;
 
 // ************************************************************************** //
 //                                Constructors                                //
@@ -54,12 +54,12 @@ public:
 
 	/**
 	 * @brief	Construct a new vector_iterator object from another one.
-	 * 			Allow iterator to constant iterator conversion.
+	 * 			Allow mutable to constant vector_iterator conversion.
 	 * 			(copy constructor)
 	 * 
-	 * @tparam	_Iterator The type of the iterator to copy.
+	 * @tparam	_Iterator The type of the vector_iterator to copy.
 	 * 
-	 * @param	src The iterator to copy.
+	 * @param	src The vector_iterator to copy.
 	 */
 	template <typename _Iterator>
 	vector_iterator(vector_iterator<_Iterator> const &src) :
@@ -78,7 +78,113 @@ public:
 	 * @brief	Destroy the vector_iterator object.
 	 */
 	~vector_iterator(void) {}
+// ************************************************************************* //
+//                                 Operators                                 //
+// ************************************************************************* //
+
+	/**
+	 * @brief	Check if two vector_iterator are equivalent.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are equivalent,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator==(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() == rhs.operator->();
+	}
+
+	/**
+	 * @brief	Check if two vector_iterator are different.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are different,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator!=(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() != rhs.operator->();
+	}
+
+	/**
+	 * @brief	Check if two vector_iterator are strictly ordered.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are strictly ordered,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator<(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() < rhs.operator->();
+	}
+
+	/**
+	 * @brief	Check if two vector_iterator are strictly reverse ordered.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are strictly reverse ordered,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator>(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() > rhs.operator->();
+	}
+
+	/**
+	 * @brief	Check if two vector_iterator are ordered or equivalent.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are ordered or equivalent,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator<=(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() <= rhs.operator->();
+	}
+
+	/**
+	 * @brief	Check if two vector_iterator are reverse ordered or equivalent.
+	 * 			Allow comparison between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to compare with.
+	 * 
+	 * @param	rhs The vector_iterator to compare with.
+	 * 
+	 * @return	Either true if the two vector_iterator are reverse ordered or equivalent,
+	 * 			or false if not.
+	 */
+	template <typename _Iterator>
+	inline bool	operator>=(vector_iterator<_Iterator> const &rhs)
+	{
+		return this->operator->() >= rhs.operator->();
+	}
 };
+
 }
 
 #endif

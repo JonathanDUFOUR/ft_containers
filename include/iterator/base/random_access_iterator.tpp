@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 17:53:21 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:40:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,11 +145,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if two random_access_iterator are ordered.
+	 * @brief	Check if two random_access_iterator are strictly ordered.
 	 * 
-	 * @param	rhs The random_access_iterator to compare to.
+	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are ordered, or false if not.
+	 * @return	Either true if the two random_access_iterator are strictly ordered,
+	 * 			or false if not.
 	 */
 	inline bool	operator<(random_access_iterator const &rhs) const
 	{
@@ -157,11 +158,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if two random_access_iterator are reverse ordered.
+	 * @brief	Check if two random_access_iterator are strictly reverse ordered.
 	 * 
-	 * @param	rhs The random_access_iterator to compare to.
+	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are reverse ordered, or false if not.
+	 * @return	Either true if the two random_access_iterator are strictly reverse ordered,
+	 * 			or false if not.
 	 */
 	inline bool	operator>(random_access_iterator const &rhs) const
 	{
@@ -169,11 +171,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if two random_access_iterator are ordered.
+	 * @brief	Check if two random_access_iterator are ordered or equivalent.
 	 * 
-	 * @param	rhs The random_access_iterator to compare to.
+	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are ordered, or false if not.
+	 * @return	Either true if the two random_access_iterator are ordered or equivalent,
+	 * 			or false if not.
 	 */
 	inline bool	operator<=(random_access_iterator const &rhs) const
 	{
@@ -181,11 +184,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if two random_access_iterator are reverse ordered.
+	 * @brief	Check if two random_access_iterator are reverse ordered or equivalent.
 	 * 
-	 * @param	rhs The random_access_iterator to compare to.
+	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are reverse ordered, or false if not.
+	 * @return	Either true if the two random_access_iterator are reverse ordered or equivalent,
+	 * 			or false if not.
 	 */
 	inline bool	operator>=(random_access_iterator const &rhs) const
 	{

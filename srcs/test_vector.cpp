@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/01 19:00:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:45:40 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,24 @@ inline static int	__test_function_capacity(void)
 			if (ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
 		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_get_allocator(void)
+{
+	try
+	{
+		ft::vector<char, std::allocator<char> >		ft_vec;
+		std::vector<char, std::allocator<char> >	std_vec;
+
+		if (ft_vec.get_allocator() != std_vec.get_allocator())
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
@@ -544,23 +562,26 @@ inline static int	__test_function_push_back(void)
 		8,
 		9,
 	};
-	int	idx0;
-	int	idx1;
+	int	idx;
 
 	try
 	{
-		ft::vector<int>		ft_vec;
-		std::vector<int>	std_vec;
+		ft::vector<int>						ft_vec;
+		std::vector<int>					std_vec;
+		ft::vector<int>::const_iterator		ft_cit;
+		std::vector<int>::const_iterator	std_cit;
 
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx = 0 ; idx < 10 ; ++idx)
 		{
-			ft_vec.push_back(arr[idx0]);
-			std_vec.push_back(arr[idx0]);
+			ft_vec.push_back(arr[idx]);
+			std_vec.push_back(arr[idx]);
 			if (ft_vec.size() != std_vec.size()
 				|| ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
-			for (idx1 ; idx1 < ft_vec.size() ; ++idx1)
-				if (ft_vec.at(idx1) != std_vec.at(idx1))
+			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
 					return EXIT_FAILURE;
 		}
 	}
@@ -586,23 +607,154 @@ inline static int	__test_function_pop_back(void)
 		8.0,
 		9.0,
 	};
-	int	idx0;
-	int	idx1;
+	int	idx;
 
 	try
 	{
-		ft::vector<int>		ft_vec(&arr[0], &arr[10]);
-		std::vector<int>	std_vec(&arr[0], &arr[10]);
+		ft::vector<int>						ft_vec(&arr[0], &arr[10]);
+		std::vector<int>					std_vec(&arr[0], &arr[10]);
+		ft::vector<int>::const_iterator		ft_cit;
+		std::vector<int>::const_iterator	std_cit;
 
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx = 0 ; idx < 10 ; ++idx)
 		{
 			ft_vec.pop_back();
 			std_vec.pop_back();
 			if (ft_vec.size() != std_vec.size()
 				|| ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
-			for (idx1 ; idx1 < ft_vec.size() ; ++idx1)
-				if (ft_vec.at(idx1) != std_vec.at(idx1))
+			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_clear(void)
+{
+	std::string	arr[] = {
+		std::string("0123456789"),
+		std::string("1234567890"),
+		std::string("2345678901"),
+		std::string("3456789012"),
+		std::string("4567890123"),
+		std::string("5678901234"),
+		std::string("6789012345"),
+		std::string("7890123456"),
+		std::string("8901234567"),
+		std::string("9012345678"),
+	};
+
+	try
+	{
+		ft::vector<std::string>		ft_vec(&arr[0], &arr[10]);
+		std::vector<std::string>	std_vec(&arr[0], &arr[10]);
+
+		ft_vec.clear();
+		std_vec.clear();
+		if (ft_vec.size() != std_vec.size()
+			|| ft_vec.capacity() != std_vec.capacity())
+			return EXIT_FAILURE;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_reserve(void)
+{
+	int	n;
+
+	try
+	{
+		ft::vector<int>						ft_vec/* (&arr[0], &arr[10]) */;
+		std::vector<int>					std_vec/* (&arr[0], &arr[10]) */;
+		ft::vector<int>::const_iterator		ft_cit;
+		std::vector<int>::const_iterator	std_cit;
+
+		for (n = 0 ; n < 100 ; n += 10)
+		{
+			ft_vec.reserve(n);
+			std_vec.reserve(n);
+
+			if (ft_vec.size() != std_vec.size()
+				|| ft_vec.capacity() < static_cast<ft::vector<int>::size_type>(n))
+				return EXIT_FAILURE;
+			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_resize(void)
+{
+	int	arr[] = {
+		9,
+		8,
+		7,
+		6,
+		5,
+		4,
+		3,
+		2,
+		1,
+		0,
+	};
+	int	n;
+
+	try
+	{
+		ft::vector<int>						ft_vec;
+		std::vector<int>					std_vec;
+		ft::vector<int>::const_iterator		ft_cit;
+		std::vector<int>::const_iterator	std_cit;
+
+		for (n = 0 ; n < 10 ; ++n)
+		{
+			ft_vec.resize(n * n, arr[n]);
+			std_vec.resize(n * n, arr[n]);
+
+			if (ft_vec.size() != std_vec.size()
+				|| ft_vec.capacity() != std_vec.capacity())
+				return EXIT_FAILURE;
+			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+		}
+		for (--n ; n >= 0 ; --n)
+		{
+			ft_vec.resize(n * n);
+			std_vec.resize(n * n);
+
+			if (ft_vec.size() != std_vec.size()
+				|| ft_vec.capacity() != std_vec.capacity())
+				return EXIT_FAILURE;
+			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
 					return EXIT_FAILURE;
 		}
 	}
@@ -624,16 +776,20 @@ int	test_vector(void)
 		__test_function_size,
 		__test_function_max_size,
 		__test_function_capacity,
+		__test_function_get_allocator,
 		__test_function_empty,
 		__test_function_begin,
 		__test_function_end,
-		__test_function_rbegin,
-		__test_function_rend,
+		// __test_function_rbegin,
+		// __test_function_rend,
 		// __test_function_front,
 		// __test_function_back,
 		// __test_function_at,
 		__test_function_push_back,
 		__test_function_pop_back,
+		__test_function_clear,
+		__test_function_reserve,
+		__test_function_resize,
 		NULL
 	};
 	int				koCount;

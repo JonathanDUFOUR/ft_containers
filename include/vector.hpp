@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/01 18:52:51 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/03 20:07:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ private:
 	// Attributes
 	pointer	_head;
 	pointer	_tail;
-	pointer	_eos;
+	pointer	_eos; // End of storage
 
 public:
 // ************************************************************************** //
@@ -132,6 +132,7 @@ public:
 	 */
 	~vector(void)
 	{
+		this->clear();
 		allocator_type().deallocate(this->_head, this->capacity());
 	};
 
@@ -190,6 +191,8 @@ public:
 	{
 		allocator_type	alloc;
 
+		if (this->_head == this->_tail)
+			return ;
 		for (--this->_tail ; this->_tail != this->_head ; --this->_tail)
 			alloc.destroy(this->_tail);
 		alloc.destroy(this->_tail);
@@ -232,7 +235,8 @@ public:
 	 */
 	void	pop_back(void)
 	{
-		--this->_tail;
+		if (this->_tail)
+			--this->_tail;
 		allocator_type().destroy(this->_tail);
 	}
 
@@ -254,7 +258,28 @@ public:
 	 */
 	void	reserve(size_type n)
 	{
-		
+		pointer		newHead;
+		size_type	newCapacity;
+		size_type	newSize;
+
+		if (n <= this->capacity())
+			return ;
+		if (this->capacity())
+			newCapacity = this->capacity();
+		else
+			newCapacity = 1;
+		while (newCapacity < n)
+			newCapacity *= 2;
+		newHead = allocator_type().allocate(newCapacity, this->_head);
+		newSize = this->size();
+		if (this->_head && this->_head != newHead)
+		{
+			memmove(newHead, this->_head, newSize * sizeof(value_type));
+			allocator_type().deallocate(this->_head, this->capacity());
+			this->_head = newHead;
+		}
+		this->_tail = this->_head + newSize;
+		this->_eos = this->_head + newCapacity;
 	}
 
 	/**
@@ -302,9 +327,9 @@ public:
 	}
 
 	/**
-	 * @brief	Get an iterator to the last element of the vector.
+	 * @brief	Get an iterator to the post-last element of the vector.
 	 * 
-	 * @return	An iterator to the last element of the vector.
+	 * @return	An iterator to the post-last element of the vector.
 	 */
 	iterator	end(void)
 	{
@@ -563,9 +588,6 @@ public:
 	 */
 	const_reference	operator[](size_type const idx) const;
 };
-
-
-
 }
 
 #endif

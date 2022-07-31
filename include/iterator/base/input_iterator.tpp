@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 17:48:28 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:23:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if two iterators are equivalent.
+	 * @brief	Check if two input_iterator are equivalent.
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
-	 * @return 	Either true if the two iterators are equivalent, or false if not.
+	 * @return 	Either true if the two input_iterator are equivalent,
+	 * 			or false if not.
 	 */
 	inline bool	operator==(input_iterator const &rhs) const
 	{
@@ -107,11 +108,12 @@ public:
 	}
 
 	/**
-	 * @brief	Check if the iterator is different from another one.
+	 * @brief	Check if two input_iterator are different.
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
-	 * @return	Either true if the two iterators are different, or false if not.
+	 * @return	Either true if the two input_iterator are different,
+	 * 			or false if not.
 	 */
 	inline bool	operator!=(input_iterator const &rhs) const
 	{

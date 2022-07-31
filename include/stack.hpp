@@ -120,6 +120,11 @@ public:
 //                                 Operators                                 //
 // ************************************************************************* //
 
+	/**
+	 * friend keyword is here to call the non-member operators,
+	 * instead of redefining them.
+	 */
+
 	template <typename _T, typename _Container>
 	friend bool	operator==(
 		stack<_T, _Container> const &lhs,
