@@ -153,13 +153,13 @@ public:
 
 		if (n > this->size())
 		{
-			for (idx = 0U ; idx < this->size() ; ++idx)
+			for (idx = 0LU ; idx < this->size() ; ++idx)
 				this->_head[idx] = val;
 			this->insert(this->end(), n - this->size(), val);
 		}
 		else 
 		{
-			for (idx = 0U ; idx < n ; ++idx)
+			for (idx = 0LU ; idx < n ; ++idx)
 				this->_head[idx] = val;
 			if (n < this->size())
 				this->erase(this->begin() + n, this->end());
@@ -247,7 +247,7 @@ public:
 	 */
 	void	push_back(value_type const &val)
 	{
-		this->insert(this->end(), val);
+		this->insert(this->end(), 1, val);
 	}
 
 	/**
@@ -387,11 +387,10 @@ public:
 	 * 
 	 * @return	An iterator to the inserted element.
 	 */
-	iterator	insert(iterator pos, value_type const &val)
+	iterator	insert(iterator const pos, value_type const &val)
 	{
-		difference_type const	idx = pos - this->begin();
-
-		return iterator(this->_head + idx);
+		this->insert(pos, 1, val);
+		return pos;
 	}
 
 	/**
