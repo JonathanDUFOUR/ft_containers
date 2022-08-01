@@ -256,43 +256,40 @@ public:
 	 * 
 	 * @param	n The minimum capacity to request.
 	 */
-	void	reserve(size_type n)
+	void	reserve(size_type const n)
 	{
-		pointer		newHead;
-		size_type	newCapacity;
-		size_type	newSize;
+		pointer	newHead;
+		pointer	newTail;
 
 		if (n <= this->capacity())
 			return ;
-		if (this->capacity())
-			newCapacity = this->capacity();
-		else
-			newCapacity = 1;
-		while (newCapacity < n)
-			newCapacity *= 2;
-		newHead = allocator_type().allocate(newCapacity, this->_head);
-		newSize = this->size();
-		if (this->_head && this->_head != newHead)
+		newHead = allocator_type().allocate(n, this->_head);
+		newTail = newHead + this->size();
+		if (this->_head != newHead)
 		{
-			memmove(newHead, this->_head, newSize * sizeof(value_type));
+			memmove(newHead, this->_head, this->size() * sizeof(value_type));
 			allocator_type().deallocate(this->_head, this->capacity());
 			this->_head = newHead;
+			this->_tail = newTail;
 		}
-		this->_tail = this->_head + newSize;
-		this->_eos = this->_head + newCapacity;
+		this->_eos = this->_head + n;
 	}
 
 	/**
 	 * @brief	Request for a new size of the vector.
 	 * 			In case of a smaller size, the current content is truncated.
 	 * 			In case of a greater size, the extra content is filled with `val`.
+	 * 			It may result in a reallocation of the content.
 	 * 
 	 * @param	n The new size of the vector.
 	 * @param	val The value to fill the extra content with.
 	 */
-	void	resize(size_type n, value_type val = value_type())
+	void	resize(size_type const n, value_type const val = value_type())
 	{
-		
+		if (n < this->size())
+			this->erase(this->_head + n, this->end());
+		else if (n > this->size())
+			this->insert(this->end(), n - this->size(), val);
 	}
 
 	/**
@@ -351,6 +348,8 @@ public:
 			pos.operator->(),
 			pos.operator->() + 1,
 			(this->_tail - pos.operator->() - 1) * sizeof(value_type));
+		--this->_tail;
+		return pos;
 	}
 
 	/**
@@ -375,6 +374,8 @@ public:
 			first.operator->(),
 			last.operator->(),
 			(this->_tail - last.operator->()) * sizeof(value_type));
+		this->_tail -= last.operator->() - first.operator->();
+		return first;
 	}
 
 	/**

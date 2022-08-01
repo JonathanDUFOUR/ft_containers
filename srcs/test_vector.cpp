@@ -26,8 +26,8 @@ inline static int	__test_construct_default(void)
 		ft::vector<int>		ft_vec;
 		std::vector<int>	std_vec;
 
-		if (sizeof(ft_vec) != sizeof(std_vec)
-			|| memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
+		if (sizeof(ft_vec) != sizeof(std_vec) ||
+			memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -43,22 +43,22 @@ inline static int	__test_construct_fill(void)
 	try
 	{
 		{
-			ft::vector<char>	ft_vec(21);
-			std::vector<char>	std_vec(21);
+			ft::vector<char>	ft_vec(21LU);
+			std::vector<char>	std_vec(21LU);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
 		}
 		{
-			ft::vector<char>	ft_vec(0, 'A');
-			std::vector<char>	std_vec(0, 'A');
+			ft::vector<char>	ft_vec(0LU, 'A');
+			std::vector<char>	std_vec(0LU, 'A');
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
 		}
 		{
-			ft::vector<char>	ft_vec(42, 42);
-			std::vector<char>	std_vec(42, 42);
+			ft::vector<char>	ft_vec(42LU, 42);
+			std::vector<char>	std_vec(42LU, 42);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
@@ -74,7 +74,7 @@ inline static int	__test_construct_fill(void)
 
 inline static int	__test_construct_range(void)
 {
-	t_huint	arr[] = {
+	t_huint const	arr[] = {
 		0U,
 		42U,
 		84U,
@@ -90,10 +90,10 @@ inline static int	__test_construct_range(void)
 	try
 	{
 		{
-			ft::input_iterator<t_huint>	it0(arr);
-			ft::input_iterator<t_huint>	it1(arr);
-			ft::vector<t_huint>			ft_vec(it0, it1);
-			std::vector<t_huint>		std_vec(it0, it1);
+			ft::input_iterator<t_huint const>	it0(arr);
+			ft::input_iterator<t_huint const>	it1(arr);
+			ft::vector<t_huint>					ft_vec(it0, it1);
+			std::vector<t_huint>				std_vec(it0, it1);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
@@ -108,10 +108,10 @@ inline static int	__test_construct_range(void)
 				return EXIT_FAILURE;
 		}
 		{
-			ft::random_access_iterator<t_huint>	it0(arr);
-			ft::random_access_iterator<t_huint>	it1(arr + 10);
-			ft::vector<t_huint>					ft_vec(it0, it1);
-			std::vector<t_huint>				std_vec(it0, it1);
+			ft::random_access_iterator<t_huint const>	it0(arr);
+			ft::random_access_iterator<t_huint const>	it1(arr + 10);
+			ft::vector<t_huint>							ft_vec(it0, it1);
+			std::vector<t_huint>						std_vec(it0, it1);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
@@ -127,7 +127,7 @@ inline static int	__test_construct_range(void)
 
 inline static int	__test_construct_copy(void)
 {
-	t_lint	arr[] = {
+	t_lint const	arr[] = {
 		112233445566778899L,
 		122334455667788991L,
 		223344556677889911L,
@@ -142,12 +142,12 @@ inline static int	__test_construct_copy(void)
 
 	try
 	{
-		ft::forward_iterator<t_lint>	it0(arr);
-		ft::forward_iterator<t_lint>	it1(arr + 10);
-		ft::vector<t_lint>				ft_vec0(it0, it1);
-		ft::vector<t_lint>				ft_vec1(ft_vec0);
-		std::vector<t_lint>				std_vec0(it0, it1);
-		std::vector<t_lint>				std_vec1(std_vec0);
+		ft::forward_iterator<t_lint const>	it0(arr);
+		ft::forward_iterator<t_lint const>	it1(arr + 10);
+		ft::vector<t_lint>					ft_vec0(it0, it1);
+		ft::vector<t_lint>					ft_vec1(ft_vec0);
+		std::vector<t_lint>					std_vec0(it0, it1);
+		std::vector<t_lint>					std_vec1(std_vec0);
 
 		if (sizeof(ft_vec1) != sizeof(std_vec1))
 			return EXIT_FAILURE;
@@ -162,11 +162,11 @@ inline static int	__test_construct_copy(void)
 
 inline static int	__test_function_size(void)
 {
-	int	n;
+	std::size_t	n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<t_hhuint>	ft_vec(n, 42U);
 			std::vector<t_hhuint>	std_vec(n, 42U);
@@ -185,11 +185,11 @@ inline static int	__test_function_size(void)
 
 inline static int	__test_function_max_size(void)
 {
-	int	n;
+	std::size_t	n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<ft::pair<char, int> >	ft_vec(n, ft::pair<char, int>('F', 0));
 			std::vector<std::pair<char, int> >	std_vec(n, std::pair<char, int>('F', 0));
@@ -208,11 +208,11 @@ inline static int	__test_function_max_size(void)
 
 inline static int	__test_function_capacity(void)
 {
-	int	n;
+	std::size_t	n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<float>	ft_vec(n, 3.14f);
 			std::vector<float>	std_vec(n, 3.14f);
@@ -249,11 +249,11 @@ inline static int	__test_function_get_allocator(void)
 
 inline static int	__test_function_empty(void)
 {
-	int	n;
+	std::size_t	n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<std::string>		ft_vec(n * (n % 2), std::string("Hello World"));
 			std::vector<std::string>	std_vec(n * (n % 2), std::string("Hello World"));
@@ -272,7 +272,7 @@ inline static int	__test_function_empty(void)
 
 inline static int	__test_function_begin(void)
 {
-	t_lint	arr[] = {
+	t_lint const	arr[] = {
 		0,
 		11,
 		222,
@@ -284,11 +284,11 @@ inline static int	__test_function_begin(void)
 		888888888,
 		9999999999,
 	};
-	int		n;
+	std::size_t		n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<t_lint>					ft_vec(n, arr[n]);
 			std::vector<t_lint>					std_vec(n, arr[n]);
@@ -297,12 +297,14 @@ inline static int	__test_function_begin(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.begin();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.begin();
 
-			if (!!ft_it.operator->() != !!std_it.operator->()
-				|| (ft_it.operator->() && std_it.operator->()
-					&& *ft_it != *std_it)
-				|| !!ft_cit.operator->() != !!std_cit.operator->()
-				|| (ft_cit.operator->() && std_cit.operator->()
-					&& *ft_cit != *std_cit))
+			if (!!ft_it.operator->() != !!std_it.operator->() || (
+					ft_it.operator->() &&
+					std_it.operator->() &&
+					*ft_it != *std_it) ||
+				!!ft_cit.operator->() != !!std_cit.operator->() || (
+					ft_cit.operator->() &&
+					std_cit.operator->() &&
+					*ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
 	}
@@ -316,7 +318,7 @@ inline static int	__test_function_begin(void)
 
 inline static int	__test_function_end(void)
 {
-	t_lint	arr[] = {
+	t_lint const	arr[] = {
 		0,
 		11,
 		222,
@@ -328,11 +330,11 @@ inline static int	__test_function_end(void)
 		888888888,
 		9999999999,
 	};
-	int		n;
+	std::size_t		n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<t_lint>					ft_vec(n, arr[n]);
 			std::vector<t_lint>					std_vec(n, arr[n]);
@@ -341,12 +343,14 @@ inline static int	__test_function_end(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.end();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.end();
 
-			if (!!ft_it.operator->() != !!std_it.operator->()
-				|| (ft_it.operator->() && std_it.operator->()
-					&& *ft_it != *std_it)
-				|| !!ft_cit.operator->() != !!std_cit.operator->()
-				|| (ft_cit.operator->() && std_cit.operator->()
-					&& *ft_cit != *std_cit))
+			if (!!ft_it.operator->() != !!std_it.operator->() || (
+					ft_it.operator->() &&
+					std_it.operator->() &&
+					*ft_it != *std_it) ||
+				!!ft_cit.operator->() != !!std_cit.operator->() || (
+					ft_cit.operator->() &&
+					std_cit.operator->() &&
+					*ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
 	}
@@ -360,7 +364,7 @@ inline static int	__test_function_end(void)
 
 inline static int	__test_function_rbegin(void)
 {
-	t_lint	arr[] = {
+	t_lint const	arr[] = {
 		0,
 		11,
 		222,
@@ -372,11 +376,11 @@ inline static int	__test_function_rbegin(void)
 		888888888,
 		9999999999,
 	};
-	int		n;
+	std::size_t		n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<t_lint>							ft_vec(n, arr[n]);
 			std::vector<t_lint>							std_vec(n, arr[n]);
@@ -385,12 +389,14 @@ inline static int	__test_function_rbegin(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rbegin();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rbegin();
 
-			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1)
-				|| (ft_rit.operator->() + 1 && std_rit.operator->() + 1
-					&& *std_rit != *ft_rit)
-				|| !!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1)
-				|| (ft_crit.operator->() + 1 && std_crit.operator->() + 1
-					&& *ft_crit != *std_crit))
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
+					ft_rit.operator->() + 1 &&
+					std_rit.operator->() + 1 &&
+					*std_rit != *ft_rit) ||
+				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
+					ft_crit.operator->() + 1 &&
+					std_crit.operator->() + 1 &&
+					*ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
 	}
@@ -404,7 +410,7 @@ inline static int	__test_function_rbegin(void)
 
 inline static int	__test_function_rend(void)
 {
-	t_lint	arr[] = {
+	t_lint const	arr[] = {
 		0,
 		11,
 		222,
@@ -416,11 +422,11 @@ inline static int	__test_function_rend(void)
 		888888888,
 		9999999999,
 	};
-	int		n;
+	std::size_t		n;
 
 	try
 	{
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft::vector<t_lint>							ft_vec(n, arr[n]);
 			std::vector<t_lint>							std_vec(n, arr[n]);
@@ -429,12 +435,14 @@ inline static int	__test_function_rend(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rend();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rend();
 
-			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1)
-				|| (ft_rit.operator->() + 1 && std_rit.operator->() + 1
-					&& *std_rit != *ft_rit)
-				|| !!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1)
-				|| (ft_crit.operator->() + 1 && std_crit.operator->() + 1
-					&& *ft_crit != *std_crit))
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
+					ft_rit.operator->() + 1 &&
+					std_rit.operator->() + 1 &&
+					*std_rit != *ft_rit) ||
+				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
+					ft_crit.operator->() + 1 &&
+					std_crit.operator->() + 1 &&
+					*ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
 	}
@@ -447,7 +455,7 @@ inline static int	__test_function_rend(void)
 
 inline static int	__test_function_front(void)
 {
-	std::string	arr[] = {
+	std::string const	arr[] = {
 		std::string("ab"),
 		std::string("cd"),
 		std::string("ef"),
@@ -459,11 +467,11 @@ inline static int	__test_function_front(void)
 		std::string("qr"),
 		std::string("st"),
 	};
-	int			idx;
+	t_uint				idx;
 
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::vector<std::string>		ft_vec(&arr[idx], &arr[10]);
 			std::vector<std::string>	std_vec(&arr[idx], &arr[10]);
@@ -482,7 +490,7 @@ inline static int	__test_function_front(void)
 
 inline static int	__test_function_back(void)
 {
-	std::string	arr[] = {
+	std::string const	arr[] = {
 		std::string("ts"),
 		std::string("rq"),
 		std::string("po"),
@@ -494,11 +502,11 @@ inline static int	__test_function_back(void)
 		std::string("dc"),
 		std::string("ba"),
 	};
-	int			idx;
+	t_uint				idx;
 
 	try
 	{
-		for (idx = 1 ; idx < 11 ; ++idx)
+		for (idx = 1U ; idx < 11U ; ++idx)
 		{
 			ft::vector<std::string>		ft_vec(&arr[0], &arr[idx]);
 			std::vector<std::string>	std_vec(&arr[0], &arr[idx]);
@@ -517,7 +525,7 @@ inline static int	__test_function_back(void)
 
 inline static int	__test_function_at(void)
 {
-	std::pair<t_hhuint, long double>	arr[] = {
+	std::pair<t_hhuint, long double> const	arr[] = {
 		std::pair<t_huint, long double>(0, 0.0),
 		std::pair<t_huint, long double>(2, -2.0),
 		std::pair<t_huint, long double>(4, -4.0),
@@ -529,14 +537,14 @@ inline static int	__test_function_at(void)
 		std::pair<t_huint, long double>(256, -256.0),
 		std::pair<t_huint, long double>(512, -512.0),
 	};
-	int									idx;
+	t_uint									idx;
 
 	try
 	{
 		ft::vector<std::pair<t_hhuint, long double> >	ft_vec(&arr[0], &arr[10]);
 		std::vector<std::pair<t_hhuint, long double> >	std_vec(&arr[0], &arr[10]);
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 			if (ft_vec.at(idx) != std_vec.at(idx))
 				return EXIT_FAILURE;
 	}
@@ -550,7 +558,7 @@ inline static int	__test_function_at(void)
 
 inline static int	__test_function_push_back(void)
 {
-	int	arr[] = {
+	int	const arr[] = {
 		0,
 		1,
 		2,
@@ -562,7 +570,7 @@ inline static int	__test_function_push_back(void)
 		8,
 		9,
 	};
-	int	idx;
+	t_uint	idx;
 
 	try
 	{
@@ -571,12 +579,12 @@ inline static int	__test_function_push_back(void)
 		ft::vector<int>::const_iterator		ft_cit;
 		std::vector<int>::const_iterator	std_cit;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_vec.push_back(arr[idx]);
 			std_vec.push_back(arr[idx]);
-			if (ft_vec.size() != std_vec.size()
-				|| ft_vec.capacity() != std_vec.capacity())
+			if (ft_vec.size() != std_vec.size() ||
+				ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
 			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
@@ -595,7 +603,7 @@ inline static int	__test_function_push_back(void)
 
 inline static int	__test_function_pop_back(void)
 {
-	double	arr[] = {
+	double const	arr[] = {
 		0.0,
 		1.0,
 		2.0,
@@ -607,21 +615,21 @@ inline static int	__test_function_pop_back(void)
 		8.0,
 		9.0,
 	};
-	int	idx;
+	t_uint	idx;
 
 	try
 	{
-		ft::vector<int>						ft_vec(&arr[0], &arr[10]);
-		std::vector<int>					std_vec(&arr[0], &arr[10]);
-		ft::vector<int>::const_iterator		ft_cit;
-		std::vector<int>::const_iterator	std_cit;
+		ft::vector<double>					ft_vec(&arr[0], &arr[10]);
+		std::vector<double>					std_vec(&arr[0], &arr[10]);
+		ft::vector<double>::const_iterator	ft_cit;
+		std::vector<double>::const_iterator	std_cit;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_vec.pop_back();
 			std_vec.pop_back();
-			if (ft_vec.size() != std_vec.size()
-				|| ft_vec.capacity() != std_vec.capacity())
+			if (ft_vec.size() != std_vec.size() ||
+				ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
 			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
@@ -640,7 +648,7 @@ inline static int	__test_function_pop_back(void)
 
 inline static int	__test_function_clear(void)
 {
-	std::string	arr[] = {
+	std::string const	arr[] = {
 		std::string("0123456789"),
 		std::string("1234567890"),
 		std::string("2345678901"),
@@ -660,8 +668,8 @@ inline static int	__test_function_clear(void)
 
 		ft_vec.clear();
 		std_vec.clear();
-		if (ft_vec.size() != std_vec.size()
-			|| ft_vec.capacity() != std_vec.capacity())
+		if (ft_vec.size() != std_vec.size() ||
+			ft_vec.capacity() != std_vec.capacity())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -674,22 +682,34 @@ inline static int	__test_function_clear(void)
 
 inline static int	__test_function_reserve(void)
 {
-	int	n;
+	t_huint const	arr[] = {
+		2U,
+		5U,
+		7U,
+		11U,
+		13U,
+		17U,
+		19U,
+		23U,
+		29U,
+		31U,
+	};
+	std::size_t	n;
 
 	try
 	{
-		ft::vector<int>						ft_vec/* (&arr[0], &arr[10]) */;
-		std::vector<int>					std_vec/* (&arr[0], &arr[10]) */;
-		ft::vector<int>::const_iterator		ft_cit;
-		std::vector<int>::const_iterator	std_cit;
+		ft::vector<t_huint>						ft_vec(&arr[0], &arr[10]);
+		std::vector<t_huint>					std_vec(&arr[0], &arr[10]);
+		ft::vector<t_huint>::const_iterator		ft_cit;
+		std::vector<t_huint>::const_iterator	std_cit;
 
-		for (n = 0 ; n < 100 ; n += 10)
+		for (n = 0LU ; n < 100LU ; n += 10LU)
 		{
 			ft_vec.reserve(n);
 			std_vec.reserve(n);
 
-			if (ft_vec.size() != std_vec.size()
-				|| ft_vec.capacity() < static_cast<ft::vector<int>::size_type>(n))
+			if (ft_vec.size() != std_vec.size() ||
+				ft_vec.capacity() != std_vec.size())
 				return EXIT_FAILURE;
 			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
@@ -708,7 +728,7 @@ inline static int	__test_function_reserve(void)
 
 inline static int	__test_function_resize(void)
 {
-	int	arr[] = {
+	int const	arr[] = {
 		9,
 		8,
 		7,
@@ -720,7 +740,7 @@ inline static int	__test_function_resize(void)
 		1,
 		0,
 	};
-	int	n;
+	std::size_t	n;
 
 	try
 	{
@@ -729,7 +749,7 @@ inline static int	__test_function_resize(void)
 		ft::vector<int>::const_iterator		ft_cit;
 		std::vector<int>::const_iterator	std_cit;
 
-		for (n = 0 ; n < 10 ; ++n)
+		for (n = 0LU ; n < 10LU ; ++n)
 		{
 			ft_vec.resize(n * n, arr[n]);
 			std_vec.resize(n * n, arr[n]);
@@ -743,7 +763,7 @@ inline static int	__test_function_resize(void)
 				if (*ft_cit != *std_cit)
 					return EXIT_FAILURE;
 		}
-		for (--n ; n >= 0 ; --n)
+		for (--n ; n > 0LU ; --n)
 		{
 			ft_vec.resize(n * n);
 			std_vec.resize(n * n);
@@ -780,8 +800,8 @@ int	test_vector(void)
 		__test_function_empty,
 		__test_function_begin,
 		__test_function_end,
-		// __test_function_rbegin,
-		// __test_function_rend,
+		__test_function_rbegin,
+		__test_function_rend,
 		// __test_function_front,
 		// __test_function_back,
 		// __test_function_at,
