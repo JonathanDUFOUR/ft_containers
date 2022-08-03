@@ -212,9 +212,10 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(iterator pos, InputIterator first, InputIterator last)
+	void	insert(iterator const pos, InputIterator first, InputIterator const last)
 	{
-		
+		for ( ; first != last ; ++first)
+			this->insert(pos, 1, *first);
 	}
 
 	/**
@@ -225,9 +226,39 @@ public:
 	 * @param	n The number of elements to insert.
 	 * @param	val The element value to fill the vector with.
 	 */
-	void	insert(iterator pos, size_type n, value_type const &val)
+	void	insert(iterator const pos, size_type const n, value_type const &val)
 	{
-		
+		size_type const	offset = pos - this->begin();
+		pointer			newHead;
+		pointer			newTail;
+		allocator_type	alloc;
+		size_t			idx;
+
+		if (this->size() + n > this->capacity())
+		{
+			newHead = alloc.allocate(this->size() + n, this->_head);
+			newTail = newHead + this->size() + n;
+			if (this->_head != newHead)
+				memmove(
+					newHead,
+					this->_head,
+					offset * sizeof(value_type));
+			memmove(
+				newHead + offset + n,
+				this->_head + offset,
+				(this->size() - offset) * sizeof(value_type));
+			this->_head = newHead;
+			this->_tail = newTail;
+		}
+		else
+			memmove(
+				this->_head + offset + n,
+				this->_head + offset,
+				(this->size() - offset) * sizeof(value_type));
+		for (newHead = this->_head + offset, newTail = this->_head + offset + n ;
+			newHead != newTail ;
+			++newHead)
+			alloc.construct(newHead, val);
 	}
 
 	/**
@@ -247,7 +278,7 @@ public:
 	 */
 	void	push_back(value_type const &val)
 	{
-		this->insert(this->end(), 1, val);
+		this->insert(this->end(), 1LU, val);
 	}
 
 	/**
@@ -267,7 +298,10 @@ public:
 		newTail = newHead + this->size();
 		if (this->_head != newHead)
 		{
-			memmove(newHead, this->_head, this->size() * sizeof(value_type));
+			memmove(
+				newHead,
+				this->_head,
+				this->size() * sizeof(value_type));
 			allocator_type().deallocate(this->_head, this->capacity());
 			this->_head = newHead;
 			this->_tail = newTail;
@@ -343,11 +377,13 @@ public:
 	 */
 	iterator	erase(iterator const pos)
 	{
+		size_type const	n = this->_tail - pos.operator->() - 1;
+	
 		allocator_type().destroy(pos.operator->());
 		memmove(
 			pos.operator->(),
 			pos.operator->() + 1,
-			(this->_tail - pos.operator->() - 1) * sizeof(value_type));
+			n * sizeof(value_type));
 		--this->_tail;
 		return pos;
 	}
@@ -365,6 +401,7 @@ public:
 	 */
 	iterator	erase(iterator const first, iterator const last)
 	{
+		size_type const	n = this->_tail - last.operator->();
 		allocator_type	alloc;
 		iterator		it;
 
@@ -373,7 +410,7 @@ public:
 		memmove(
 			first.operator->(),
 			last.operator->(),
-			(this->_tail - last.operator->()) * sizeof(value_type));
+			n * sizeof(value_type));
 		this->_tail -= last.operator->() - first.operator->();
 		return first;
 	}
@@ -389,8 +426,10 @@ public:
 	 */
 	iterator	insert(iterator const pos, value_type const &val)
 	{
+		size_type const	offset = pos - this->begin();
+
 		this->insert(pos, 1, val);
-		return pos;
+		return this->begin() + offset;
 	}
 
 	/**
