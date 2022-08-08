@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/02 17:53:22 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:42:43 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ public:
 			iterator_category,
 			difference_type,
 			pointer,
-			reference>(src.operator->()) {}
+			reference>(&*src) {}
 
 // ************************************************************************* //
 //                                Destructors                                //
@@ -96,7 +96,7 @@ public:
 	template <typename _Iterator>
 	inline bool	operator==(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() == rhs.operator->();
+		return &**this == &*rhs;
 	}
 
 	/**
@@ -113,7 +113,7 @@ public:
 	template <typename _Iterator>
 	inline bool	operator!=(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() != rhs.operator->();
+		return &**this != &*rhs;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public:
 	template <typename _Iterator>
 	inline bool	operator<(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() < rhs.operator->();
+		return &**this < &*rhs;
 	}
 
 	/**
@@ -147,7 +147,7 @@ public:
 	template <typename _Iterator>
 	inline bool	operator>(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() > rhs.operator->();
+		return &**this > &*rhs;
 	}
 
 	/**
@@ -164,7 +164,7 @@ public:
 	template <typename _Iterator>
 	inline bool	operator<=(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() <= rhs.operator->();
+		return &**this <= &*rhs;
 	}
 
 	/**
@@ -181,8 +181,10 @@ public:
 	template <typename _Iterator>
 	inline bool	operator>=(vector_iterator<_Iterator> const &rhs)
 	{
-		return this->operator->() >= rhs.operator->();
+		return &**this >= &*rhs;
 	}
+
+	// REMIND: See if it is possible to use the random_access_iterator member functions instead of overload them (with using keyword)
 };
 
 }

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 15:25:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/05 13:34:40 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,6 @@ class enable_if<true, T>
 public:
 	typedef T	type;
 };
-
-template <typename T>
-class enable_if<false, T> {};
 
 template <typename T, T v>
 class integral_constant

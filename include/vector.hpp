@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/03 20:07:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/06 18:26:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <memory>
 # include "iterator/spec/vector_iterator.tpp"
 # include "iterator/base/reverse_iterator.tpp"
+# include "type_traits.hpp"
 
 namespace ft
 {
@@ -34,11 +35,11 @@ public:
 	typedef typename allocator_type::reference						reference;
 	typedef typename allocator_type::const_reference				const_reference;
 
-	typedef class ft::vector_iterator<pointer>						iterator;
-	typedef class ft::vector_iterator<const_pointer>				const_iterator;
+	typedef typename ft::vector_iterator<pointer>					iterator;
+	typedef typename ft::vector_iterator<const_pointer>				const_iterator;
 
-	typedef class ft::reverse_iterator<iterator>					reverse_iterator;
-	typedef class ft::reverse_iterator<const_iterator>				const_reverse_iterator;
+	typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
+	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 	typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
 	typedef std::size_t												size_type;
@@ -48,6 +49,96 @@ private:
 	pointer	_head;
 	pointer	_tail;
 	pointer	_eos; // End of storage
+
+	// ************************************************************************** //
+	//                          Private Member Functions                          //
+	// ************************************************************************** //
+	
+	/**
+	 * @brief	Shift a portion of the vector to the begin direction.
+	 * 			The given iterator `first` must be at least `n` far from the begin.
+	 * 			The shift occurs using trivial copy.
+	 * 
+	 * @param	first The first element of the portion to shift.
+	 * @param	last The last element of the portion to shift.
+	 * @param	n The number of shift to do.
+	 */
+	inline void	_shiftBegin(
+		iterator const first,
+		iterator const last,
+		size_type const n,
+		true_type)
+	{
+		memmove(&*first - n, &*first, (last - first) * sizeof(value_type));
+	}
+
+	/**
+	 * @brief	Shift a range of elements to the begin direction.
+	 * 			The given iterator `first` must be at least `n` far from the begin.
+	 * 			The shift occurs using non-trivial copy.
+	 * 
+	 * @param	first The first element of the portion to shift.
+	 * @param	last The post-last element of the portion to shift.
+	 * @param	n The number of shift to do.
+	 */
+	inline void	_rangeShiftBegin(
+		iterator first,
+		iterator const last,
+		size_type const n,
+		false_type)
+	{
+		allocator_type	alloc;
+		pointer			ptr;
+
+		for (ptr = &*first - n ; first != last ; ++ptr, ++first)
+		{
+			alloc.construct(ptr, *first);
+			alloc.destroy(&*first);
+		}
+	}
+
+	/**
+	 * @brief	Shift a range of elements to the end direction.
+	 * 			The capacity must be already large enough to proceed.
+	 * 			The shift occurs using trivial copy.
+	 * 
+	 * @param	first The first element of the portion to shift.
+	 * @param	last The last element of the portion to shift.
+	 * @param	n The number of shift to do.
+	 */
+	inline void	_rangeShiftEnd(
+		iterator const first,
+		iterator const last,
+		size_type const n,
+		true_type)
+	{
+		memmove(&*first + n, &*first, (last - first) * sizeof(value_type));
+	}
+
+	/**
+	 * @brief	Shift a range of elements to the end direction.
+	 * 			The capacity must be already large enough to proceed.
+	 * 			The shift occurs using non-trivial copy.
+	 * 
+	 * @param	first The first element of the portion to shift.
+	 * @param	last The last element of the portion to shift.
+	 * @param	n The number of shift to do.
+	 */
+	inline void	_shiftEnd(
+		iterator first,
+		iterator last,
+		size_type const n,
+		false_type)
+	{
+		allocator_type	alloc;
+		pointer			ptr;
+
+		for (--first, --last, ptr = &*last + n ; first != last ; --ptr, --last)
+		{
+			alloc.construct(ptr, *last);
+			alloc.destroy(&*last);
+		}
+	}
 
 public:
 // ************************************************************************** //
@@ -74,7 +165,7 @@ public:
 	 * @param	val The element value to fill the vector with.
 	 */
 	explicit vector(
-		size_type n,
+		size_type const n,
 		value_type const &val = value_type(),
 		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
 		_head(NULL),
@@ -119,7 +210,7 @@ public:
 		_tail(NULL),
 		_eos(NULL)
 	{
-		this->insert(iterator(), src._head, src._tail);
+		this->insert(iterator(), src.begin(), src.end());
 	}
 
 // ************************************************************************* //
@@ -149,21 +240,8 @@ public:
 	 */
 	void	assign(size_type const n, value_type const &val)
 	{
-		size_type	idx;
-
-		if (n > this->size())
-		{
-			for (idx = 0LU ; idx < this->size() ; ++idx)
-				this->_head[idx] = val;
-			this->insert(this->end(), n - this->size(), val);
-		}
-		else 
-		{
-			for (idx = 0LU ; idx < n ; ++idx)
-				this->_head[idx] = val;
-			if (n < this->size())
-				this->erase(this->begin() + n, this->end());
-		}
+		this->clear();
+		this->insert(this->begin(), n, val);
 	}
 
 	/**
@@ -179,9 +257,10 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	assign(InputIterator first, InputIterator last)
+	void	assign(InputIterator const first, InputIterator const last)
 	{
-		
+		this->clear();
+		this->insert(this->begin(), first, last);
 	}
 
 	/**
@@ -214,8 +293,20 @@ public:
 	template <typename InputIterator>
 	void	insert(iterator const pos, InputIterator first, InputIterator const last)
 	{
-		for ( ; first != last ; ++first)
-			this->insert(pos, 1, *first);
+		bool	preventAlloc;
+	
+		for (preventAlloc = false ; first != last ; ++first)
+		{
+			// TODO: implement
+			if (this->size() < this->capacity())
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
 	}
 
 	/**
@@ -232,33 +323,40 @@ public:
 		pointer			newHead;
 		pointer			newTail;
 		allocator_type	alloc;
-		size_t			idx;
+		iterator		it;
+		size_t			i;
 
 		if (this->size() + n > this->capacity())
 		{
-			newHead = alloc.allocate(this->size() + n, this->_head);
-			newTail = newHead + this->size() + n;
+			if (this->size() + n > this->capacity() * 2)
+				newHead = alloc.allocate(this->size() + n, this->_head);
+			else
+				newHead = alloc.allocate(this->capacity() * 2, this->_head);
 			if (this->_head != newHead)
-				memmove(
-					newHead,
-					this->_head,
-					offset * sizeof(value_type));
-			memmove(
-				newHead + offset + n,
-				this->_head + offset,
-				(this->size() - offset) * sizeof(value_type));
+			{
+				newTail = newHead;
+				for (it = this->begin() ; it != pos ; ++it, ++newTail)
+				{
+					alloc.construct(newTail, *it);
+					alloc.destroy(it);
+				}
+				for (i = 0LU ; i < n ; ++i, ++newTail)
+					alloc.construct(newTail, val);
+				for ( ; it != this->end() ; ++it, ++newTail)
+				{
+					alloc.construct(newTail, *it);
+					alloc.destroy(it);
+				}
+			}
+			alloc.deallocate(this->_head, this->capacity());
 			this->_head = newHead;
 			this->_tail = newTail;
+			this->_eos = newTail;
 		}
 		else
-			memmove(
-				this->_head + offset + n,
-				this->_head + offset,
-				(this->size() - offset) * sizeof(value_type));
-		for (newHead = this->_head + offset, newTail = this->_head + offset + n ;
-			newHead != newTail ;
-			++newHead)
-			alloc.construct(newHead, val);
+		{
+			
+		}
 	}
 
 	/**
@@ -289,20 +387,24 @@ public:
 	 */
 	void	reserve(size_type const n)
 	{
-		pointer	newHead;
-		pointer	newTail;
+		pointer			newHead;
+		pointer			newTail;
+		pointer			ptr;
+		allocator_type	alloc;
 
 		if (n <= this->capacity())
 			return ;
-		newHead = allocator_type().allocate(n, this->_head);
-		newTail = newHead + this->size();
+		newHead = alloc.allocate(n, this->_head);
 		if (this->_head != newHead)
 		{
-			memmove(
-				newHead,
-				this->_head,
-				this->size() * sizeof(value_type));
-			allocator_type().deallocate(this->_head, this->capacity());
+			for (ptr = this->_head, newTail = newHead ;
+				ptr != this->_tail ;
+				++ptr, ++newTail)
+			{
+				alloc.construct(newTail, *ptr);
+				alloc.destroy(ptr);
+			}
+			alloc.deallocate(this->_head, this->capacity());
 			this->_head = newHead;
 			this->_tail = newTail;
 		}
@@ -377,13 +479,10 @@ public:
 	 */
 	iterator	erase(iterator const pos)
 	{
-		size_type const	n = this->_tail - pos.operator->() - 1;
+		size_type const	n = this->_tail - &*pos - 1;
 	
-		allocator_type().destroy(pos.operator->());
-		memmove(
-			pos.operator->(),
-			pos.operator->() + 1,
-			n * sizeof(value_type));
+		allocator_type().destroy(&*pos);
+		memmove(&*pos, &*pos + 1, n * sizeof(value_type));
 		--this->_tail;
 		return pos;
 	}
@@ -401,17 +500,14 @@ public:
 	 */
 	iterator	erase(iterator const first, iterator const last)
 	{
-		size_type const	n = this->_tail - last.operator->();
+		size_type const	n = this->end() - last;
 		allocator_type	alloc;
 		iterator		it;
 
 		for (it = first ; it != last ; ++it)
-			alloc.destroy(it.operator->());
-		memmove(
-			first.operator->(),
-			last.operator->(),
-			n * sizeof(value_type));
-		this->_tail -= last.operator->() - first.operator->();
+			alloc.destroy(&*it);
+		memmove(&*first, &*last, n * sizeof(value_type));
+		this->_tail -= &*last - &*first;
 		return first;
 	}
 

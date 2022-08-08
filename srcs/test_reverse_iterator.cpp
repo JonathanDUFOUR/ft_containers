@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 13:27:28 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:43:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ inline static int	__test_operator_maddress(void)
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
 
-			if (ft_rit.operator->() != std_rit.operator->())
+			if (&*ft_rit != &*std_rit)
 				return EXIT_FAILURE;
 		}
 	}

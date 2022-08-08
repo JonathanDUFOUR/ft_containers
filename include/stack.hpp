@@ -39,6 +39,7 @@ public:
 
 	/**
 	 * @brief	Construct a new stack object.
+	 * 			(default constructor)
 	 * 
 	 * @param	ctnr An optional underlying container to use for instanciation.
 	 */
@@ -52,7 +53,7 @@ public:
 	/**
 	 * @brief	Destruct a stack object.
 	 */
-	~stack(void) {}
+	virtual	~stack(void) {}
 
 // ************************************************************************* //
 //                          Public Member Functions                          //
