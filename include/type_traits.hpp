@@ -49,15 +49,35 @@ typedef integral_constant<bool, false>	false_type;
 
 template <typename T>
 class is_integral : public false_type {};
+
+template<>
 class is_integral<bool> : public true_type {};
+
+template<>
 class is_integral<wchar_t> : public true_type {};
+
+template<>
 class is_integral<signed char> : public true_type {};
+
+template<>
 class is_integral<signed short> : public true_type {};
+
+template<>
 class is_integral<signed int> : public true_type {};
+
+template<>
 class is_integral<signed long> : public true_type {};
+
+template<>
 class is_integral<unsigned char> : public true_type {};
+
+template<>
 class is_integral<unsigned short> : public true_type {};
+
+template<>
 class is_integral<unsigned int> : public true_type {};
+
+template<>
 class is_integral<unsigned long> : public true_type {};
 }
 

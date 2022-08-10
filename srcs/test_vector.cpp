@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/05 15:49:54 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/10 03:07:18 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ inline static int	__test_construct_copy(void)
 
 inline static int	__test_function_size(void)
 {
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{
@@ -185,7 +185,7 @@ inline static int	__test_function_size(void)
 
 inline static int	__test_function_max_size(void)
 {
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{
@@ -208,7 +208,7 @@ inline static int	__test_function_max_size(void)
 
 inline static int	__test_function_capacity(void)
 {
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{
@@ -249,7 +249,7 @@ inline static int	__test_function_get_allocator(void)
 
 inline static int	__test_function_empty(void)
 {
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{
@@ -284,7 +284,7 @@ inline static int	__test_function_begin(void)
 		888888888,
 		9999999999,
 	};
-	std::size_t		n;
+	size_t		n;
 
 	try
 	{
@@ -297,13 +297,13 @@ inline static int	__test_function_begin(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.begin();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.begin();
 
-			if (!!&*ft_it != !!&*std_it || (
-					&*ft_it &&
-					&*std_it &&
+			if (!!ft_it.operator->() != !!std_it.base() || (
+					ft_it.operator->() &&
+					std_it.operator->() &&
 					*ft_it != *std_it) ||
-				!!&*ft_cit != !!&*std_cit || (
-					&*ft_cit &&
-					&*std_cit &&
+				!!ft_cit.operator->() != !!std_cit.operator->() || (
+					ft_cit.operator->() &&
+					std_cit.operator->() &&
 					*ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
@@ -330,7 +330,7 @@ inline static int	__test_function_end(void)
 		888888888,
 		9999999999,
 	};
-	std::size_t		n;
+	size_t		n;
 
 	try
 	{
@@ -343,14 +343,14 @@ inline static int	__test_function_end(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.end();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.end();
 
-			if (!!&*ft_it != !!&*std_it || (
-					&*ft_it &&
-					&*std_it &&
-					*ft_it != *std_it) ||
-				!!&*ft_cit != !!&*std_cit || (
-					&*ft_cit &&
-					&*std_cit &&
-					*ft_cit != *std_cit))
+			if (!!ft_it.operator->() != !!std_it.operator->() || (
+					ft_it.operator->() &&
+					std_it.operator->() &&
+					*(ft_it - 1) != *(std_it - 1)) ||
+				!!ft_cit.operator->() != !!std_cit.operator->() || (
+					ft_cit.operator->() &&
+					std_cit.operator->() &&
+					*(ft_cit - 1) != *(std_cit - 1)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -376,7 +376,7 @@ inline static int	__test_function_rbegin(void)
 		888888888,
 		9999999999,
 	};
-	std::size_t		n;
+	size_t		n;
 
 	try
 	{
@@ -389,13 +389,13 @@ inline static int	__test_function_rbegin(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rbegin();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rbegin();
 
-			if (!!(&*ft_rit + 1) != !!(&*std_rit + 1) || (
-					&*ft_rit + 1 &&
-					&*std_rit + 1 &&
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
+					ft_rit.operator->() + 1 &&
+					std_rit.operator->() + 1 &&
 					*std_rit != *ft_rit) ||
-				!!(&*ft_crit + 1) != !!(&*std_crit + 1) || (
-					&*ft_crit + 1 &&
-					&*std_crit + 1 &&
+				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
+					ft_crit.operator->() + 1 &&
+					std_crit.operator->() + 1 &&
 					*ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
@@ -422,7 +422,7 @@ inline static int	__test_function_rend(void)
 		888888888,
 		9999999999,
 	};
-	std::size_t		n;
+	size_t			n;
 
 	try
 	{
@@ -435,13 +435,13 @@ inline static int	__test_function_rend(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rend();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rend();
 
-			if (!!(&*ft_rit + 1) != !!(&*std_rit + 1) || (
-					&*ft_rit + 1 &&
-					&*std_rit + 1 &&
+			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
+					ft_rit.operator->() + 1 &&
+					std_rit.operator->() + 1 &&
 					*std_rit != *ft_rit) ||
-				!!(&*ft_crit + 1) != !!(&*std_crit + 1) || (
-					&*ft_crit + 1 &&
-					&*std_crit + 1 &&
+				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
+					ft_crit.operator->() + 1 &&
+					std_crit.operator->() + 1 &&
 					*ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
@@ -694,7 +694,7 @@ inline static int	__test_function_reserve(void)
 		29U,
 		31U,
 	};
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{
@@ -740,7 +740,7 @@ inline static int	__test_function_resize(void)
 		1,
 		0,
 	};
-	std::size_t	n;
+	size_t	n;
 
 	try
 	{

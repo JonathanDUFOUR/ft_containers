@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/05 15:38:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/10 03:07:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define REVERSE_ITERATOR_TPP
 
 # include "bidirectional_iterator.tpp"
-# include "iterator/iterator_traits.hpp"
+# include "iterator.hpp"
 
 namespace ft
 {
@@ -34,7 +34,7 @@ public:
 	typedef typename iterator_traits<Iterator>::reference			reference;
 	typedef typename iterator_traits<Iterator>::difference_type		difference_type;
 
-	typedef Iterator	iterator_type;
+	typedef Iterator												iterator_type;
 
 // ************************************************************************** //
 //                                Constructors                                //

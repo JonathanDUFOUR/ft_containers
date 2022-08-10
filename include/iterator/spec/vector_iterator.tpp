@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/05 15:42:43 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/10 03:07:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define VECTOR_ITERATOR_TPP
 
 # include "iterator/base/random_access_iterator.tpp"
-# include "iterator/iterator_traits.hpp"
+# include "iterator.hpp"
 
 namespace ft
 {

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/06 18:26:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/10 03:10:12 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ public:
 	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 	typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
-	typedef std::size_t												size_type;
+	typedef size_t													size_type;
 
 private:
 	// Attributes
@@ -53,91 +53,59 @@ private:
 	// ************************************************************************** //
 	//                          Private Member Functions                          //
 	// ************************************************************************** //
-	
+
 	/**
-	 * @brief	Shift a portion of the vector to the begin direction.
-	 * 			The given iterator `first` must be at least `n` far from the begin.
-	 * 			The shift occurs using trivial copy.
+	 * @brief	Copy elements from a location to another,
+	 * 			using a range of pointers,
+	 * 			from `first` included to `last` excluded,
+	 * 			using trivial copy.
 	 * 
-	 * @param	first The first element of the portion to shift.
-	 * @param	last The last element of the portion to shift.
-	 * @param	n The number of shift to do.
+	 * @param	dst The destination location.
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
 	 */
-	inline void	_shiftBegin(
-		iterator const first,
-		iterator const last,
-		size_type const n,
-		true_type)
+	inline void	_rangeMove(
+		pointer const dst,
+		pointer const first,
+		pointer const last,
+		true_type) __attribute__((nonnull))
 	{
-		memmove(&*first - n, &*first, (last - first) * sizeof(value_type));
+		memmove(dst, first, (last - first) * sizeof(value_type));
 	}
 
 	/**
-	 * @brief	Shift a range of elements to the begin direction.
-	 * 			The given iterator `first` must be at least `n` far from the begin.
-	 * 			The shift occurs using non-trivial copy.
+	 * @brief	Copy elements from a location to another,
+	 * 			using a range of pointers,
+	 * 			from `first` included to `last` excluded,
+	 * 			using non-trivial copy.
 	 * 
-	 * @param	first The first element of the portion to shift.
-	 * @param	last The post-last element of the portion to shift.
-	 * @param	n The number of shift to do.
+	 * @param	dst The destination location.
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
 	 */
-	inline void	_rangeShiftBegin(
-		iterator first,
-		iterator const last,
-		size_type const n,
-		false_type)
+	inline void	_rangeMove(
+		pointer dst,
+		pointer first,
+		pointer last,
+		false_type) __attribute__((nonnull))
 	{
 		allocator_type	alloc;
-		pointer			ptr;
 
-		for (ptr = &*first - n ; first != last ; ++ptr, ++first)
-		{
-			alloc.construct(ptr, *first);
-			alloc.destroy(&*first);
-		}
-	}
-
-	/**
-	 * @brief	Shift a range of elements to the end direction.
-	 * 			The capacity must be already large enough to proceed.
-	 * 			The shift occurs using trivial copy.
-	 * 
-	 * @param	first The first element of the portion to shift.
-	 * @param	last The last element of the portion to shift.
-	 * @param	n The number of shift to do.
-	 */
-	inline void	_rangeShiftEnd(
-		iterator const first,
-		iterator const last,
-		size_type const n,
-		true_type)
-	{
-		memmove(&*first + n, &*first, (last - first) * sizeof(value_type));
-	}
-
-	/**
-	 * @brief	Shift a range of elements to the end direction.
-	 * 			The capacity must be already large enough to proceed.
-	 * 			The shift occurs using non-trivial copy.
-	 * 
-	 * @param	first The first element of the portion to shift.
-	 * @param	last The last element of the portion to shift.
-	 * @param	n The number of shift to do.
-	 */
-	inline void	_shiftEnd(
-		iterator first,
-		iterator last,
-		size_type const n,
-		false_type)
-	{
-		allocator_type	alloc;
-		pointer			ptr;
-
-		for (--first, --last, ptr = &*last + n ; first != last ; --ptr, --last)
-		{
-			alloc.construct(ptr, *last);
-			alloc.destroy(&*last);
-		}
+		if (dst < first)
+			for ( ; first != last ; ++first, ++dst)
+			{
+				alloc.construct(&*dst, *first);
+				alloc.destroy(&*first);
+			}
+		else if (dst > first)
+			for (dst += (last - first), --first, --last ;
+				first != last ;
+				--last, --dst)
+			{
+				alloc.construct(&*dst, *last);
+				alloc.destroy(&*last);
+			}
+		
 	}
 
 public:
@@ -181,8 +149,8 @@ public:
 	 * 			from `first` included to `last` excluded.
 	 * 			(range constructor)
 	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
+	 * @tparam	InputIterator Any type that fulfills
+	 * 			the standard input iterator requirements.
 	 * 
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
@@ -218,13 +186,15 @@ public:
 // ************************************************************************* //
 
 	/**
-	 * @brief	Destruct a vector object, releasing its related allocated memory.
+	 * @brief	Destruct a vector object,
+	 * 			releasing its related allocated memory.
 	 * 			(destructor)
 	 */
 	~vector(void)
 	{
 		this->clear();
-		allocator_type().deallocate(this->_head, this->capacity());
+		if (this->_head)
+			allocator_type().deallocate(this->_head, this->capacity());
 	};
 
 // ************************************************************************* //
@@ -250,8 +220,8 @@ public:
 	 * 			from `first` included to `last` excluded.
 	 * 			(range assignation)
 	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
+	 * @tparam	InputIterator Any type that fulfills
+	 * 			the standard input iterator requirements.
 	 * 
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
@@ -291,11 +261,14 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(iterator const pos, InputIterator first, InputIterator const last)
+	void	insert(
+		iterator const pos,
+		InputIterator first,
+		InputIterator const last)
 	{
-		bool	preventAlloc;
+		bool	isFirstRealloc;
 	
-		for (preventAlloc = false ; first != last ; ++first)
+		for (isFirstRealloc = true ; first != last ; ++first)
 		{
 			// TODO: implement
 			if (this->size() < this->capacity())
@@ -320,43 +293,46 @@ public:
 	void	insert(iterator const pos, size_type const n, value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
+		size_type		newCapacity;
 		pointer			newHead;
 		pointer			newTail;
 		allocator_type	alloc;
-		iterator		it;
-		size_t			i;
 
 		if (this->size() + n > this->capacity())
 		{
-			if (this->size() + n > this->capacity() * 2)
-				newHead = alloc.allocate(this->size() + n, this->_head);
-			else
-				newHead = alloc.allocate(this->capacity() * 2, this->_head);
-			if (this->_head != newHead)
-			{
-				newTail = newHead;
-				for (it = this->begin() ; it != pos ; ++it, ++newTail)
-				{
-					alloc.construct(newTail, *it);
-					alloc.destroy(it);
-				}
-				for (i = 0LU ; i < n ; ++i, ++newTail)
-					alloc.construct(newTail, val);
-				for ( ; it != this->end() ; ++it, ++newTail)
-				{
-					alloc.construct(newTail, *it);
-					alloc.destroy(it);
-				}
-			}
+			newCapacity = this->capacity() * 2;
+			if (newCapacity < this->size() + n)
+				newCapacity = this->size() + n;
+			newHead = alloc.allocate(newCapacity, this->_head);
+			newTail = newHead + this->size() + n;
+			this->_rangeMove(
+				newHead,
+				this->_head,
+				&*pos,
+				ft::is_integral<value_type>());
+			this->_rangeMove(
+				newHead + offset + n,
+				&*pos,
+				this->_tail,
+				ft::is_integral<value_type>());
 			alloc.deallocate(this->_head, this->capacity());
 			this->_head = newHead;
 			this->_tail = newTail;
-			this->_eos = newTail;
+			this->_eos = this->_head + newCapacity;
 		}
 		else
 		{
-			
+			this->_rangeMove(
+				this->_head + offset + n,
+				this->_head + offset,
+				this->_tail,
+				ft::is_integral<value_type>());
+			this->_tail += n;
 		}
+		for (newHead = this->_head + offset, newTail = newHead + n ;
+			newHead != newTail ;
+			++newHead)
+			alloc.construct(newHead, val);
 	}
 
 	/**
@@ -389,25 +365,20 @@ public:
 	{
 		pointer			newHead;
 		pointer			newTail;
-		pointer			ptr;
 		allocator_type	alloc;
 
 		if (n <= this->capacity())
 			return ;
 		newHead = alloc.allocate(n, this->_head);
-		if (this->_head != newHead)
-		{
-			for (ptr = this->_head, newTail = newHead ;
-				ptr != this->_tail ;
-				++ptr, ++newTail)
-			{
-				alloc.construct(newTail, *ptr);
-				alloc.destroy(ptr);
-			}
-			alloc.deallocate(this->_head, this->capacity());
-			this->_head = newHead;
-			this->_tail = newTail;
-		}
+		newTail = newHead + this->size();
+		this->_rangeMove(
+			newHead,
+			this->_head,
+			this->_tail,
+			ft::is_integral<value_type>());
+		alloc.deallocate(this->_head, this->capacity());
+		this->_head = newHead;
+		this->_tail = newTail;
 		this->_eos = this->_head + n;
 	}
 

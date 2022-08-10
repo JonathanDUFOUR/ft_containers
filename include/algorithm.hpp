@@ -13,6 +13,13 @@
 #ifndef ALGORITHM_HPP
 # define ALGORITHM_HPP
 
+# include <cstddef>
+# include <cstdlib>
+# include "type_traits.hpp"
+
+namespace ft
+{
+// TODO: Write the function comments.
 template <typename InputIterator0, typename InputIterator1>
 bool	equal(
 	InputIterator0 first0,
@@ -27,7 +34,11 @@ bool	equal(
 	return first0 == last0;
 }
 
-template <typename InputIterator0, typename InputIterator1, typename BinaryPredicate>
+// TODO: Write the function comments.
+template <
+	typename InputIterator0,
+	typename InputIterator1,
+	typename BinaryPredicate>
 bool	equal(
 	InputIterator0 first0,
 	InputIterator0 last0,
@@ -42,6 +53,7 @@ bool	equal(
 	return first0 == last0;
 }
 
+// TODO: Write the function comments.
 template <typename InputIterator0, typename InputIterator1>
 bool	lexicographical_compare(
 			InputIterator0 first0,
@@ -59,6 +71,7 @@ bool	lexicographical_compare(
 	return (first0 == last0) || (first1 != last1 && *first0 < *first1);
 }
 
+// TODO: Write the function comments.
 template <typename InputIterator0, typename InputIterator1, typename Compare>
 bool	lexicographical_compare(
 			InputIterator0 first0,
@@ -77,5 +90,5 @@ bool	lexicographical_compare(
 	}
 	return (first0 == last0) || (first1 != last1 && comp(*first0, *first1));
 }
-
+}
 #endif
