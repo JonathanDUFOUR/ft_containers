@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/11 20:52:20 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 23:30:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -615,6 +615,7 @@ inline static int	__test_function_push_back(void)
 		{
 			ft_vec.push_back(arr[idx]);
 			std_vec.push_back(arr[idx]);
+
 			if (ft_vec.size() != std_vec.size() ||
 				ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
@@ -660,6 +661,7 @@ inline static int	__test_function_pop_back(void)
 		{
 			ft_vec.pop_back();
 			std_vec.pop_back();
+
 			if (ft_vec.size() != std_vec.size() ||
 				ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
@@ -700,6 +702,7 @@ inline static int	__test_function_clear(void)
 
 		ft_vec.clear();
 		std_vec.clear();
+
 		if (ft_vec.size() != std_vec.size() ||
 			ft_vec.capacity() != std_vec.capacity())
 			return EXIT_FAILURE;
@@ -741,7 +744,7 @@ inline static int	__test_function_reserve(void)
 			std_vec.reserve(n);
 
 			if (ft_vec.size() != std_vec.size() ||
-				ft_vec.capacity() != std_vec.size())
+				ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
 			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;

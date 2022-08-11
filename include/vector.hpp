@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/11 21:04:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 23:38:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,9 +269,12 @@ public:
 			}
 			else
 			{
-				if (isFirstRealloc && this->capacity())
+				if (isFirstRealloc)
 				{
-					newCapacity = this->capacity() * 2;
+					if (this->capacity())
+						newCapacity = this->size() * 2;
+					else
+						newCapacity = 1;
 					isFirstRealloc = false;
 				}
 				else
@@ -327,7 +330,7 @@ public:
 		}
 		else
 		{
-			newCapacity = this->capacity() * 2;
+			newCapacity = this->size() * 2;
 			if (newCapacity < this->size() + n)
 				newCapacity = this->size() + n;
 			newHead = alloc.allocate(newCapacity, this->_head);
