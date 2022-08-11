@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/06/01 12:59:20 by jodufour         ###   ########.fr        #
+#    Updated: 2022/08/11 20:12:53 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,6 +81,7 @@ ifeq (${DEBUG}, 2)
 	CXXFLAGS	+=	-fsanitize=address
 	CXXFLAGS	+=	-fsanitize=leak
 	CXXFLAGS	+=	-fsanitize=undefined
+	CXXFLAGS	+=	-fstandalone-debug
 
 	LDFLAGS		+=	-fsanitize=address
 	LDFLAGS		+=	-fsanitize=leak

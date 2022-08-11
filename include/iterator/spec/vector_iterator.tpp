@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/10 03:07:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 17:33:46 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ public:
 			iterator_category,
 			difference_type,
 			pointer,
-			reference>(&*src) {}
+			reference>(src.base()) {}
 
 // ************************************************************************* //
 //                                Destructors                                //
@@ -78,6 +78,21 @@ public:
 	 * @brief	Destroy the vector_iterator object.
 	 */
 	~vector_iterator(void) {}
+
+// ************************************************************************* //
+//                          Public Member Functions                          //
+// ************************************************************************* //
+
+	/**
+	 * @brief	Get a copy of the wrapped pointer.
+	 * 
+	 * @return	A copy of the wrapped pointer.
+	 */
+	inline pointer	base(void) const
+	{
+		return this->_ptr;
+	}
+
 // ************************************************************************* //
 //                                 Operators                                 //
 // ************************************************************************* //
@@ -94,9 +109,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator==(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator==(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this == &*rhs;
+		return this->base() == rhs.base();
 	}
 
 	/**
@@ -111,9 +126,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator!=(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator!=(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this != &*rhs;
+		return this->base() != rhs.base();
 	}
 
 	/**
@@ -128,9 +143,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator<(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator<(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this < &*rhs;
+		return this->base() < rhs.base();
 	}
 
 	/**
@@ -145,9 +160,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator>(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator>(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this > &*rhs;
+		return this->base() > rhs.base();
 	}
 
 	/**
@@ -162,9 +177,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator<=(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator<=(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this <= &*rhs;
+		return this->base() <= rhs.base();
 	}
 
 	/**
@@ -179,9 +194,9 @@ public:
 	 * 			or false if not.
 	 */
 	template <typename _Iterator>
-	inline bool	operator>=(vector_iterator<_Iterator> const &rhs)
+	inline bool	operator>=(vector_iterator<_Iterator> const &rhs) const
 	{
-		return &**this >= &*rhs;
+		return this->base() >= rhs.base();
 	}
 
 	// REMIND: See if it is possible to use the random_access_iterator member functions instead of overload them (with using keyword)

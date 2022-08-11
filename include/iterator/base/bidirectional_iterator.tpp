@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 17:47:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 19:07:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class bidirectional_iterator : public ft::forward_iterator<T, Category, Diff, Ptr, Ref>
+class bidirectional_iterator : public forward_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types
@@ -50,6 +50,20 @@ public:
 			difference_type,
 			pointer,
 			reference>(ptr) {}
+
+	/**
+	 * @brief	Construct a new bidirectional_iterator object.
+	 * 			(copy constructor)
+	 * 
+	 * @param	src The iterator to copy.
+	 */
+	bidirectional_iterator(bidirectional_iterator const &src) :
+		forward_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference>(src) {}
 
 // ************************************************************************* //
 //                                Destructors                                //

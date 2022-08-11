@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/10 03:10:12 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 21:04:29 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 
 namespace ft
 {
+template <typename Iterator>
+class	vector_iterator;
+
+template <typename Iterator>
+class	reverse_iterator;
+
 template <typename T, typename Alloc = typename std::allocator<T> >
 class vector
 {
@@ -41,7 +47,7 @@ public:
 	typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
 	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
-	typedef typename ft::iterator_traits<iterator>::difference_type	difference_type;
+	typedef typename iterator_traits<iterator>::difference_type	difference_type;
 	typedef size_t													size_type;
 
 private:
@@ -50,62 +56,41 @@ private:
 	pointer	_tail;
 	pointer	_eos; // End of storage
 
-	// ************************************************************************** //
-	//                          Private Member Functions                          //
-	// ************************************************************************** //
+// ************************************************************************** //
+//                          Private Member Functions                          //
+// ************************************************************************** //
 
 	/**
 	 * @brief	Copy elements from a location to another,
 	 * 			using a range of pointers,
 	 * 			from `first` included to `last` excluded,
-	 * 			using trivial copy.
+	 * 			using either trivial copy if value_type is an integral type,
+	 * 			or non-trivial copy if not.
 	 * 
 	 * @param	dst The destination location.
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
 	 */
-	inline void	_rangeMove(
-		pointer const dst,
-		pointer const first,
-		pointer const last,
-		true_type) __attribute__((nonnull))
-	{
-		memmove(dst, first, (last - first) * sizeof(value_type));
-	}
-
-	/**
-	 * @brief	Copy elements from a location to another,
-	 * 			using a range of pointers,
-	 * 			from `first` included to `last` excluded,
-	 * 			using non-trivial copy.
-	 * 
-	 * @param	dst The destination location.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	inline void	_rangeMove(
-		pointer dst,
-		pointer first,
-		pointer last,
-		false_type) __attribute__((nonnull))
+	inline void	_rangeMove(pointer dst, pointer first, pointer last) __attribute__((nonnull))
 	{
 		allocator_type	alloc;
 
-		if (dst < first)
+		if (is_integral<value_type>::value)
+			memmove(dst, first, (last - first) * sizeof(value_type));
+		else if (dst < first)
 			for ( ; first != last ; ++first, ++dst)
 			{
 				alloc.construct(&*dst, *first);
 				alloc.destroy(&*first);
 			}
 		else if (dst > first)
-			for (dst += (last - first), --first, --last ;
+			for (dst += (last - first - 1), --first, --last ;
 				first != last ;
 				--last, --dst)
 			{
 				alloc.construct(&*dst, *last);
 				alloc.destroy(&*last);
 			}
-		
 	}
 
 public:
@@ -262,23 +247,55 @@ public:
 	 */
 	template <typename InputIterator>
 	void	insert(
-		iterator const pos,
+		iterator pos,
 		InputIterator first,
 		InputIterator const last)
 	{
-		bool	isFirstRealloc;
-	
+		size_type const	offset = this->end() - pos;
+		bool			isFirstRealloc;
+		size_type		newCapacity;
+		pointer			newHead;
+		pointer			newTail;
+		allocator_type	alloc;
+
 		for (isFirstRealloc = true ; first != last ; ++first)
 		{
-			// TODO: implement
 			if (this->size() < this->capacity())
 			{
-				
+				this->_rangeMove(
+					this->_tail - offset + 1,
+					this->_tail - offset,
+					this->_tail);
 			}
 			else
 			{
-				
+				if (isFirstRealloc && this->capacity())
+				{
+					newCapacity = this->capacity() * 2;
+					isFirstRealloc = false;
+				}
+				else
+					newCapacity = this->capacity() + 1;
+				newHead = alloc.allocate(newCapacity, this->_head);
+				newTail = newHead + this->size();
+				if (this->_head)
+				{
+					this->_rangeMove(
+						newHead,
+						this->_head,
+						this->_tail - offset);
+					this->_rangeMove(
+						newTail - offset + 1,
+						this->_tail - offset,
+						this->_tail);
+					alloc.deallocate(this->_head, this->capacity());
+				}
+				this->_head = newHead;
+				this->_tail = newTail;
+				this->_eos = this->_head + newCapacity;
 			}
+			alloc.construct(this->_tail - offset, *first);
+			++this->_tail;
 		}
 	}
 
@@ -298,36 +315,38 @@ public:
 		pointer			newTail;
 		allocator_type	alloc;
 
-		if (this->size() + n > this->capacity())
+		if (!n)
+			return ;
+		if (this->size() + n <= this->capacity())
+		{
+			this->_rangeMove(
+				this->_head + offset + n,
+				this->_head + offset,
+				this->_tail);
+			this->_tail += n;
+		}
+		else
 		{
 			newCapacity = this->capacity() * 2;
 			if (newCapacity < this->size() + n)
 				newCapacity = this->size() + n;
 			newHead = alloc.allocate(newCapacity, this->_head);
 			newTail = newHead + this->size() + n;
-			this->_rangeMove(
-				newHead,
-				this->_head,
-				&*pos,
-				ft::is_integral<value_type>());
-			this->_rangeMove(
-				newHead + offset + n,
-				&*pos,
-				this->_tail,
-				ft::is_integral<value_type>());
-			alloc.deallocate(this->_head, this->capacity());
+			if (this->_head)
+			{
+				this->_rangeMove(
+					newHead,
+					this->_head,
+					&*pos);
+				this->_rangeMove(
+					newHead + offset + n,
+					&*pos,
+					this->_tail);
+				alloc.deallocate(this->_head, this->capacity());
+			}
 			this->_head = newHead;
 			this->_tail = newTail;
 			this->_eos = this->_head + newCapacity;
-		}
-		else
-		{
-			this->_rangeMove(
-				this->_head + offset + n,
-				this->_head + offset,
-				this->_tail,
-				ft::is_integral<value_type>());
-			this->_tail += n;
 		}
 		for (newHead = this->_head + offset, newTail = newHead + n ;
 			newHead != newTail ;
@@ -374,8 +393,7 @@ public:
 		this->_rangeMove(
 			newHead,
 			this->_head,
-			this->_tail,
-			ft::is_integral<value_type>());
+			this->_tail);
 		alloc.deallocate(this->_head, this->capacity());
 		this->_head = newHead;
 		this->_tail = newTail;
@@ -450,12 +468,7 @@ public:
 	 */
 	iterator	erase(iterator const pos)
 	{
-		size_type const	n = this->_tail - &*pos - 1;
-	
-		allocator_type().destroy(&*pos);
-		memmove(&*pos, &*pos + 1, n * sizeof(value_type));
-		--this->_tail;
-		return pos;
+		return this->erase(pos, pos + 1);
 	}
 
 	/**
@@ -471,14 +484,16 @@ public:
 	 */
 	iterator	erase(iterator const first, iterator const last)
 	{
-		size_type const	n = this->end() - last;
 		allocator_type	alloc;
 		iterator		it;
 
 		for (it = first ; it != last ; ++it)
 			alloc.destroy(&*it);
-		memmove(&*first, &*last, n * sizeof(value_type));
-		this->_tail -= &*last - &*first;
+		this->_rangeMove(
+			&*first,
+			&*last,
+			this->_tail);
+		this->_tail -= last - first;
 		return first;
 	}
 
@@ -554,7 +569,10 @@ public:
 	 * 
 	 * @return	A const_reverse_iterator to the first element of the vector.
 	 */
-	const_reverse_iterator	rend(void) const;
+	const_reverse_iterator	rend(void) const
+	{
+		return const_reverse_iterator(this->begin());
+	}
 
 	/**
 	 * @brief	Get the number of allocated memory in the vector.
@@ -569,7 +587,7 @@ public:
 	/**
 	 * @brief	Get the maximum number of elements that can be stored in the vector.
 	 * 
-	 * @return The maximum number of elements that can be stored in the vector.
+	 * @return	The maximum number of elements that can be stored in the vector.
 	 */
 	size_type	max_size(void) const
 	{

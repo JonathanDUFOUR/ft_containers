@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/10 03:07:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 19:10:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ public:
 			iterator_category,
 			difference_type,
 			pointer,
-			reference>(&*src) {};
+			reference>(src.base().base()) {};
 
 // ************************************************************************* //
 //                                Destructors                                //

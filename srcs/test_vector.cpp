@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/10 03:07:18 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 20:52:20 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ inline static int	__test_construct_fill(void)
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
 		}
+		{
+			ft::vector<std::string>		ft_vec(42LU, std::string("How are you ?"));
+			std::vector<std::string>	std_vec(42LU, std::string("How are you ?"));
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -74,7 +81,7 @@ inline static int	__test_construct_fill(void)
 
 inline static int	__test_construct_range(void)
 {
-	t_huint const	arr[] = {
+	t_huint const		arr[] = {
 		0U,
 		42U,
 		84U,
@@ -127,7 +134,7 @@ inline static int	__test_construct_range(void)
 
 inline static int	__test_construct_copy(void)
 {
-	t_lint const	arr[] = {
+	t_lint const		arr0[] = {
 		112233445566778899L,
 		122334455667788991L,
 		223344556677889911L,
@@ -139,18 +146,43 @@ inline static int	__test_construct_copy(void)
 		556677889911223344L,
 		566778899112233445L,
 	};
+	std::string const	arr1[] = {
+		std::string("Gilbert"),
+		std::string("Bernard"),
+		std::string("Jack"),
+		std::string("Odette"),
+		std::string("Alphonse"),
+		std::string("Georgette"),
+		std::string("Anne"),
+		std::string("Gaston"),
+		std::string("Yves"),
+		std::string("Rose"),
+	};
 
 	try
 	{
-		ft::forward_iterator<t_lint const>	it0(arr);
-		ft::forward_iterator<t_lint const>	it1(arr + 10);
-		ft::vector<t_lint>					ft_vec0(it0, it1);
-		ft::vector<t_lint>					ft_vec1(ft_vec0);
-		std::vector<t_lint>					std_vec0(it0, it1);
-		std::vector<t_lint>					std_vec1(std_vec0);
+		{
+			ft::forward_iterator<t_lint const>	it0(arr0);
+			ft::forward_iterator<t_lint const>	it1(arr0 + 10);
+			ft::vector<t_lint>					ft_vec0(it0, it1);
+			ft::vector<t_lint>					ft_vec1(ft_vec0);
+			std::vector<t_lint>					std_vec0(it0, it1);
+			std::vector<t_lint>					std_vec1(std_vec0);
 
-		if (sizeof(ft_vec1) != sizeof(std_vec1))
-			return EXIT_FAILURE;
+			if (sizeof(ft_vec1) != sizeof(std_vec1))
+				return EXIT_FAILURE;
+		}
+		{
+			ft::forward_iterator<std::string const>	it0(arr1);
+			ft::forward_iterator<std::string const>	it1(arr1 + 10);
+			ft::vector<std::string>					ft_vec0(it0, it1);
+			ft::vector<std::string>					ft_vec1(ft_vec0);
+			std::vector<std::string>				std_vec0(it0, it1);
+			std::vector<std::string>				std_vec1(std_vec0);
+
+			if (sizeof(ft_vec1) != sizeof(std_vec1))
+				return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -297,13 +329,13 @@ inline static int	__test_function_begin(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.begin();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.begin();
 
-			if (!!ft_it.operator->() != !!std_it.base() || (
-					ft_it.operator->() &&
-					std_it.operator->() &&
+			if (!!ft_it.base() != !!std_it.base() || (
+					ft_it.base() &&
+					std_it.base() &&
 					*ft_it != *std_it) ||
-				!!ft_cit.operator->() != !!std_cit.operator->() || (
-					ft_cit.operator->() &&
-					std_cit.operator->() &&
+				!!ft_cit.base() != !!std_cit.base() || (
+					ft_cit.base() &&
+					std_cit.base() &&
 					*ft_cit != *std_cit))
 				return EXIT_FAILURE;
 		}
@@ -343,13 +375,13 @@ inline static int	__test_function_end(void)
 			ft::vector<t_lint>::const_iterator	ft_cit = ft_vec.end();
 			std::vector<t_lint>::const_iterator	std_cit = std_vec.end();
 
-			if (!!ft_it.operator->() != !!std_it.operator->() || (
-					ft_it.operator->() &&
-					std_it.operator->() &&
+			if (!!ft_it.base() != !!std_it.base() || (
+					ft_it.base() &&
+					std_it.base() &&
 					*(ft_it - 1) != *(std_it - 1)) ||
-				!!ft_cit.operator->() != !!std_cit.operator->() || (
-					ft_cit.operator->() &&
-					std_cit.operator->() &&
+				!!ft_cit.base() != !!std_cit.base() || (
+					ft_cit.base() &&
+					std_cit.base() &&
 					*(ft_cit - 1) != *(std_cit - 1)))
 				return EXIT_FAILURE;
 		}
@@ -389,13 +421,13 @@ inline static int	__test_function_rbegin(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rbegin();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rbegin();
 
-			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
-					ft_rit.operator->() + 1 &&
-					std_rit.operator->() + 1 &&
+			if (!!ft_rit.base().base() != !!std_rit.base().base() || (
+					ft_rit.base().base() &&
+					std_rit.base().base() &&
 					*std_rit != *ft_rit) ||
-				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
-					ft_crit.operator->() + 1 &&
-					std_crit.operator->() + 1 &&
+				!!ft_crit.base().base() != !!std_crit.base().base() || (
+					ft_crit.base().base() &&
+					std_crit.base().base() &&
 					*ft_crit != *std_crit))
 				return EXIT_FAILURE;
 		}
@@ -435,14 +467,14 @@ inline static int	__test_function_rend(void)
 			ft::vector<t_lint>::const_reverse_iterator	ft_crit = ft_vec.rend();
 			std::vector<t_lint>::const_reverse_iterator	std_crit = std_vec.rend();
 
-			if (!!(ft_rit.operator->() + 1) != !!(std_rit.operator->() + 1) || (
-					ft_rit.operator->() + 1 &&
-					std_rit.operator->() + 1 &&
-					*std_rit != *ft_rit) ||
-				!!(ft_crit.operator->() + 1) != !!(std_crit.operator->() + 1) || (
-					ft_crit.operator->() + 1 &&
-					std_crit.operator->() + 1 &&
-					*ft_crit != *std_crit))
+			if (!!ft_rit.base().base() != !!std_rit.base().base() || (
+					ft_rit.base().base() &&
+					std_rit.base().base() &&
+					*(std_rit - 1) != *(ft_rit - 1)) ||
+				!!ft_crit.base().base() != !!std_crit.base().base() || (
+					ft_crit.base().base() &&
+					std_crit.base().base() &&
+					*(ft_crit - 1) != *(std_crit - 1)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -802,9 +834,9 @@ int	test_vector(void)
 		__test_function_end,
 		__test_function_rbegin,
 		__test_function_rend,
-		// __test_function_front,
-		// __test_function_back,
-		// __test_function_at,
+		__test_function_front,
+		__test_function_back,
+		__test_function_at,
 		__test_function_push_back,
 		__test_function_pop_back,
 		__test_function_clear,

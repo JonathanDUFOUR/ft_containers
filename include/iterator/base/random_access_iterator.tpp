@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/02 17:40:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/11 19:09:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class random_access_iterator : public ft::bidirectional_iterator<T, Category, Diff, Ptr, Ref>
+class random_access_iterator : public bidirectional_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types

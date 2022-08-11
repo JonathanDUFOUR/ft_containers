@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/27 14:22:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/10 18:19:21 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,22 @@
 
 namespace ft
 {
-// TODO: Write the function comments.
+/**
+ * @brief	Compare elements with some others,
+ * 			using ranges of iterators,
+ * 			from `first0` included to `last0` excluded.
+ * 
+ * @tparam	InputIterator0 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	InputIterator1 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * 
+ * @param	first0 The first element of the first range.
+ * @param	last0 The last element of the first range.
+ * @param	first1 The first element of the second range, to compare with.
+ * 
+ * @return	Either true if both ranges are equal, or false if not.
+ */
 template <typename InputIterator0, typename InputIterator1>
 bool	equal(
 	InputIterator0 first0,
@@ -34,7 +49,26 @@ bool	equal(
 	return first0 == last0;
 }
 
-// TODO: Write the function comments.
+/**
+ * @brief	Compare elements with some others,
+ * 			using ranges of iterators,
+ * 			from `first0` included to `last0` excluded.
+ * 
+ * @tparam	InputIterator0 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	InputIterator1 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	BinaryPredicate Any function pointer that returns
+ * 			an integral type.
+ * 
+ * @param	first0 The first element of the first range.
+ * @param	last0 The last element of the first range.
+ * @param	first1 The first element of the second range, to compare with.
+ * @param	pred The function to use to compare elements.
+ * 
+ * @return	Either true if both ranges are equal
+ * 			according to `pred`, or false if not.
+ */
 template <
 	typename InputIterator0,
 	typename InputIterator1,
@@ -53,7 +87,25 @@ bool	equal(
 	return first0 == last0;
 }
 
-// TODO: Write the function comments.
+/**
+ * @brief	Compare lexicographically elements with some others,
+ * 			using ranges of iterators,
+ * 			from `first0` included to `last0` excluded, and
+ * 			from `first1` included to `last1` excluded.
+ * 
+ * @tparam	InputIterator0 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	InputIterator1 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * 
+ * @param	first0 The first element of the first range.
+ * @param	last0 The last element of the first range.
+ * @param	first1 The first element of the second range, to compare with.
+ * @param	last1 The last element of the second range, to compare with.
+ * 
+ * @return	Either true if both ranges are lexicographically ordered,
+ * 			or false if not.
+ */
 template <typename InputIterator0, typename InputIterator1>
 bool	lexicographical_compare(
 			InputIterator0 first0,
@@ -71,7 +123,28 @@ bool	lexicographical_compare(
 	return (first0 == last0) || (first1 != last1 && *first0 < *first1);
 }
 
-// TODO: Write the function comments.
+/**
+ * @brief	Compare lexicographically elements with some others,
+ * 			using ranges of iterators,
+ * 			from `first0` included to `last0` excluded, and
+ * 			from `first1` included to `last1` excluded.
+ * 
+ * @tparam	InputIterator0 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	InputIterator1 Any type that fulfills
+ * 			the standard input iterator requirements.
+ * @tparam	Compare Any function pointer that returns
+ * 			an integral type.
+ * 
+ * @param	first0 The first element of the first range.
+ * @param	last0 The last element of the first range.
+ * @param	first1 The first element of the second range, to compare with.
+ * @param	last1 The last element of the second range, to compare with.
+ * @param	comp The function to use to compare elements.
+ * 
+ * @return	Either true if both ranges are lexicographically ordered
+ * 			according to `comp`, or false if not.
+ */
 template <typename InputIterator0, typename InputIterator1, typename Compare>
 bool	lexicographical_compare(
 			InputIterator0 first0,
