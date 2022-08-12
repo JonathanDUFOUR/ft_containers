@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/12 23:31:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/13 01:32:20 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define VECTOR_HPP
 
 # include <cstring>
-# include <stdint.h>
 # include <memory>
+# include "algorithm.hpp"
 # include "iterator/spec/vector_iterator.tpp"
 # include "iterator/base/reverse_iterator.tpp"
 # include "type_traits.hpp"
@@ -422,17 +422,9 @@ public:
 	 */
 	void	swap(vector &other)
 	{
-		this->_head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
-		other._head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
-		this->_head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
-
-		this->_tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
-		other._tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
-		this->_tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
-
-		this->_eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
-		other._eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
-		this->_eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
+		ft::swap<pointer>(this->_head, other._head);
+		ft::swap<pointer>(this->_tail, other._tail);
+		ft::swap<pointer>(this->_eos, other._eos);
 	}
 
 	/**
@@ -696,7 +688,13 @@ public:
 	 * 
 	 * @return	The assigned vector.
 	 */
-	vector			&operator=(vector const &rhs);
+	vector			&operator=(vector const &rhs)
+	{
+		// BUG: The following assign call triggers invalid read/write that result in an abort.
+		if (this != &rhs)
+			this->assign(rhs.begin(), rhs.end());
+		return *this;
+	}
 
 	/**
 	 * @brief	Access to an element of the vector.
@@ -705,7 +703,10 @@ public:
 	 * 
 	 * @return	The element at the given index.
 	 */
-	reference		operator[](size_type const idx);
+	reference		operator[](size_type const idx)
+	{
+		return *(this->_head + idx);
+	}
 
 	/**
 	 * @brief	Access to a constant element of the vector.
@@ -714,7 +715,11 @@ public:
 	 * 
 	 * @return	The constant element at the given index.
 	 */
-	const_reference	operator[](size_type const idx) const;
+	const_reference	operator[](size_type const idx) const
+	{
+		return *(this->_head + idx);
+	}
+	
 };
 }
 

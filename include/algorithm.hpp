@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/10 18:19:21 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/13 00:50:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,21 @@
 
 namespace ft
 {
+
+/**
+ * @brief	Swap two elements of any type.
+ * 
+ * @tparam	T The type of the elements to swap.
+ */
+template <typename T>
+void	swap(T &a, T &b)
+{
+	T const	tmp = a;
+
+	a = b;
+	b = tmp;
+}
+
 /**
  * @brief	Compare elements with some others,
  * 			using ranges of iterators,
