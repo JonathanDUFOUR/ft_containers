@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/12 00:35:23 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/12 23:31:06 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_HPP
 
 # include <cstring>
+# include <stdint.h>
 # include <memory>
 # include "iterator/spec/vector_iterator.tpp"
 # include "iterator/base/reverse_iterator.tpp"
@@ -47,7 +48,7 @@ public:
 	typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
 	typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
-	typedef typename iterator_traits<iterator>::difference_type	difference_type;
+	typedef typename iterator_traits<iterator>::difference_type		difference_type;
 	typedef size_t													size_type;
 
 private:
@@ -80,16 +81,16 @@ private:
 		else if (dst < first)
 			for ( ; first != last ; ++first, ++dst)
 			{
-				alloc.construct(&*dst, *first);
-				alloc.destroy(&*first);
+				alloc.construct(dst, *first);
+				alloc.destroy(first);
 			}
 		else if (dst > first)
 			for (dst += (last - first - 1), --first, --last ;
 				first != last ;
 				--last, --dst)
 			{
-				alloc.construct(&*dst, *last);
-				alloc.destroy(&*last);
+				alloc.construct(dst, *last);
+				alloc.destroy(last);
 			}
 	}
 
@@ -233,76 +234,6 @@ public:
 	}
 
 	/**
-	 * @brief	Insert elements at a specific position
-	 * 			using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			(range insertion)
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	insert(
-		iterator const pos,
-		InputIterator first,
-		InputIterator const last)
-	{
-		size_type const	offset = this->end() - pos;
-		bool			isFirstRealloc;
-		size_type		newCapacity;
-		pointer			newHead;
-		pointer			newTail;
-		allocator_type	alloc;
-
-		for (isFirstRealloc = true ; first != last ; ++first)
-		{
-			if (this->size() < this->capacity())
-			{
-				this->_rangeMove(
-					this->_tail - offset + 1,
-					this->_tail - offset,
-					this->_tail);
-			}
-			else
-			{
-				if (isFirstRealloc)
-				{
-					if (this->capacity())
-						newCapacity = this->size() * 2;
-					else
-						newCapacity = 1;
-					isFirstRealloc = false;
-				}
-				else
-					newCapacity = this->capacity() + 1;
-				newHead = alloc.allocate(newCapacity, this->_head);
-				newTail = newHead + this->size();
-				if (this->_head)
-				{
-					this->_rangeMove(
-						newHead,
-						this->_head,
-						this->_tail - offset);
-					this->_rangeMove(
-						newTail - offset + 1,
-						this->_tail - offset,
-						this->_tail);
-					alloc.deallocate(this->_head, this->capacity());
-				}
-				this->_head = newHead;
-				this->_tail = newTail;
-				this->_eos = this->_head + newCapacity;
-			}
-			alloc.construct(this->_tail - offset, *first);
-			++this->_tail;
-		}
-	}
-
-	/**
 	 * @brief	Insert elements at a specific position.
 	 * 			(fill insertion)
 	 * 
@@ -340,10 +271,10 @@ public:
 				this->_rangeMove(
 					newHead,
 					this->_head,
-					&*pos);
+					pos.base());
 				this->_rangeMove(
 					newHead + offset + n,
-					&*pos,
+					pos.base(),
 					this->_tail);
 				alloc.deallocate(this->_head, this->capacity());
 			}
@@ -355,6 +286,69 @@ public:
 			newHead != newTail ;
 			++newHead)
 			alloc.construct(newHead, val);
+	}
+
+	/**
+	 * @brief	Insert elements at a specific position
+	 * 			using a range of iterators,
+	 * 			from `first` included to `last` excluded.
+	 * 			(range insertion)
+	 * 
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
+	 * 
+	 * @param	pos The position to insert the elements.
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	void	insert(
+		iterator const pos,
+		InputIterator first,
+		InputIterator const last)
+	{
+		size_type const	offset = this->end() - pos;
+		size_type		newCapacity;
+		pointer			newHead;
+		pointer			newTail;
+		allocator_type	alloc;
+
+		newCapacity = this->size() * 2;
+		if (newCapacity < this->size() + 1)
+			newCapacity = this->size() + 1;
+		for ( ; first != last ; ++first)
+		{
+			if (this->size() < this->capacity())
+			{
+				this->_rangeMove(
+					this->_tail - offset + 1,
+					this->_tail - offset,
+					this->_tail);
+			}
+			else
+			{
+				newHead = alloc.allocate(newCapacity, this->_head);
+				newTail = newHead + this->size();
+				if (this->_head)
+				{
+					this->_rangeMove(
+						newHead,
+						this->_head,
+						this->_tail - offset);
+					this->_rangeMove(
+						newTail - offset + 1,
+						this->_tail - offset,
+						this->_tail);
+					alloc.deallocate(this->_head, this->capacity());
+				}
+				this->_head = newHead;
+				this->_tail = newTail;
+				this->_eos = this->_head + newCapacity;
+				++newCapacity;
+			}
+			alloc.construct(this->_tail - offset, *first);
+			++this->_tail;
+		}
 	}
 
 	/**
@@ -428,7 +422,17 @@ public:
 	 */
 	void	swap(vector &other)
 	{
-		
+		this->_head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
+		other._head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
+		this->_head = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_head) ^ reinterpret_cast<uintptr_t>(other._head));
+
+		this->_tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
+		other._tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
+		this->_tail = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_tail) ^ reinterpret_cast<uintptr_t>(other._tail));
+
+		this->_eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
+		other._eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
+		this->_eos = reinterpret_cast<pointer>(reinterpret_cast<uintptr_t>(this->_eos) ^ reinterpret_cast<uintptr_t>(other._eos));
 	}
 
 	/**
@@ -491,11 +495,8 @@ public:
 		iterator		it;
 
 		for (it = first ; it != last ; ++it)
-			alloc.destroy(&*it);
-		this->_rangeMove(
-			&*first,
-			&*last,
-			this->_tail);
+			alloc.destroy(it.base());
+		this->_rangeMove(first.base(), last.base(), this->_tail);
 		this->_tail -= last - first;
 		return first;
 	}
@@ -513,7 +514,7 @@ public:
 	{
 		size_type const	offset = pos - this->begin();
 
-		this->insert(pos, 1, val);
+		this->insert(pos, 1LU, val);
 		return this->begin() + offset;
 	}
 

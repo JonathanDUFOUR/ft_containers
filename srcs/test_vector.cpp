@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/12 02:15:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/12 23:07:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ inline static int	__test_construct_fill(void)
 {
 	try
 	{
+		// Trivially copyable
 		{
 			ft::vector<char>	ft_vec(21LU);
 			std::vector<char>	std_vec(21LU);
@@ -63,9 +64,24 @@ inline static int	__test_construct_fill(void)
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
 		}
+		// Non-trivial copy required
 		{
-			ft::vector<std::string>		ft_vec(42LU, std::string("How are you ?"));
-			std::vector<std::string>	std_vec(42LU, std::string("How are you ?"));
+			ft::vector<std::string>		ft_vec(21LU);
+			std::vector<std::string>	std_vec(21LU);
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
+		{
+			ft::vector<std::string>		ft_vec(0LU, std::string("pouic"));
+			std::vector<std::string>	std_vec(0LU, std::string("pouic"));
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
+		{
+			ft::vector<std::string>		ft_vec(42LU, std::string("Hello World !"));
+			std::vector<std::string>	std_vec(42LU, std::string("Hello World !"));
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
@@ -81,7 +97,7 @@ inline static int	__test_construct_fill(void)
 
 inline static int	__test_construct_range(void)
 {
-	t_huint const		arr[] = {
+	t_huint const		arr0[] = {
 		0U,
 		42U,
 		84U,
@@ -93,12 +109,25 @@ inline static int	__test_construct_range(void)
 		336U,
 		378U,
 	};
+	std::string const	arr1[] = {
+		std::string("Never gonna give you up"),
+		std::string("Never gonna let you down"),
+		std::string("Never gonna run around and desert you"),
+		std::string("Never gonna make you cry"),
+		std::string("Never gonna say goodbye"),
+		std::string("Never gonna tell a lie and hurt you"),
+		std::string("We've known each other for so long"),
+		std::string("Your heart's been aching but you're too shy to say it"),
+		std::string("Inside, we both know what's been going on"),
+		std::string ("We know the game and we're gonna play it"),
+	};
 
 	try
 	{
+		// Trivially copyable
 		{
-			ft::input_iterator<t_huint const>	it0(arr);
-			ft::input_iterator<t_huint const>	it1(arr);
+			ft::input_iterator<t_huint const>	it0(arr0);
+			ft::input_iterator<t_huint const>	it1(arr0);
 			ft::vector<t_huint>					ft_vec(it0, it1);
 			std::vector<t_huint>				std_vec(it0, it1);
 
@@ -115,14 +144,43 @@ inline static int	__test_construct_range(void)
 				return EXIT_FAILURE;
 		}
 		{
-			ft::random_access_iterator<t_huint const>	it0(arr);
-			ft::random_access_iterator<t_huint const>	it1(arr + 10);
+			ft::random_access_iterator<t_huint const>	it0(arr0);
+			ft::random_access_iterator<t_huint const>	it1(arr0 + 10);
 			ft::vector<t_huint>							ft_vec(it0, it1);
 			std::vector<t_huint>						std_vec(it0, it1);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				return EXIT_FAILURE;
 		}
+		// Non-trivial copy required
+		{
+			ft::input_iterator<std::string const>	it0(arr1);
+			ft::input_iterator<std::string const>	it1(arr1);
+			ft::vector<std::string>					ft_vec(it0, it1);
+			std::vector<std::string>				std_vec(it0, it1);
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
+		{
+			ft::forward_iterator<void *>	it0;
+			ft::forward_iterator<void *>	it1;
+			ft::vector<void *>				ft_vec(it0, it1);
+			std::vector<void *>				std_vec(it0, it1);
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
+		{
+			ft::random_access_iterator<std::string const>	it0(arr1);
+			ft::random_access_iterator<std::string const>	it1(arr1 + 10);
+			ft::vector<std::string>							ft_vec(it0, it1);
+			std::vector<std::string>						std_vec(it0, it1);
+
+			if (sizeof(ft_vec) != sizeof(std_vec))
+				return EXIT_FAILURE;
+		}
+
 	}
 	catch (std::exception const &e)
 	{
@@ -161,6 +219,7 @@ inline static int	__test_construct_copy(void)
 
 	try
 	{
+		// Trivially copyable
 		{
 			ft::forward_iterator<t_lint const>	it0(arr0);
 			ft::forward_iterator<t_lint const>	it1(arr0 + 10);
@@ -172,6 +231,7 @@ inline static int	__test_construct_copy(void)
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				return EXIT_FAILURE;
 		}
+		// Non-trivial copy required
 		{
 			ft::forward_iterator<std::string const>	it0(arr1);
 			ft::forward_iterator<std::string const>	it1(arr1 + 10);
@@ -618,52 +678,6 @@ inline static int	__test_function_insert(void)
 
 	try
 	{
-		// Range insertion
-		// Trivially copyable
-		{
-			ft::vector<float>					ft_vec;
-			std::vector<float>					std_vec;
-			ft::vector<float>::const_iterator	ft_cit;
-			std::vector<float>::const_iterator	std_cit;
-
-			for (idx = 0U ; idx < 10U ; ++idx)
-			{
-				ft_vec.insert(ft_vec.begin() + idx / 2, &arr0[0], &arr0[idx]);
-				std_vec.insert(std_vec.begin() + idx / 2, &arr0[0], &arr0[idx]);
-
-				if (ft_vec.size() != std_vec.size() ||
-					ft_vec.capacity() != std_vec.capacity())
-					return EXIT_FAILURE;
-				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
-					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
-					++ft_cit, ++std_cit)
-					if (*ft_cit != *std_cit)
-						return EXIT_FAILURE;
-			}
-		}
-		// Range insertion
-		// Non-trivial copy required
-		{
-			ft::vector<std::string>						ft_vec;
-			std::vector<std::string>					std_vec;
-			ft::vector<std::string>::const_iterator		ft_cit;
-			std::vector<std::string>::const_iterator	std_cit;
-
-			for (idx = 0U ; idx < 10U ; ++idx)
-			{
-				ft_vec.insert(ft_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
-				std_vec.insert(std_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
-
-				if (ft_vec.size() != std_vec.size() ||
-					ft_vec.capacity() != std_vec.capacity())
-					return EXIT_FAILURE;
-				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
-					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
-					++ft_cit, ++std_cit)
-					if (*ft_cit != *std_cit)
-						return EXIT_FAILURE;
-			}
-		}
 		// Fill insertion
 		// Trivially copyable
 		{
@@ -710,6 +724,52 @@ inline static int	__test_function_insert(void)
 						return EXIT_FAILURE;
 			}
 		}
+		// Range insertion
+		// Trivially copyable
+		{
+			ft::vector<float>					ft_vec;
+			std::vector<float>					std_vec;
+			ft::vector<float>::const_iterator	ft_cit;
+			std::vector<float>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.insert(ft_vec.begin() + idx / 2, &arr0[0], &arr0[idx]);
+				std_vec.insert(std_vec.begin() + idx / 2, &arr0[0], &arr0[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Range insertion
+		// Non-trivial copy required
+		{
+			ft::vector<std::string>						ft_vec;
+			std::vector<std::string>					std_vec;
+			ft::vector<std::string>::const_iterator		ft_cit;
+			std::vector<std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.insert(ft_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
+				std_vec.insert(std_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
 		// Single insertion
 		// Trivially copyable
 		{
@@ -720,11 +780,12 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_vec.insert(ft_vec.begin() + idx / 2, arr0[idx]);
-				std_vec.insert(std_vec.begin() + idx / 2, arr0[idx]);
+				ft_cit = ft_vec.insert(ft_vec.begin() + idx / 2, arr0[idx]);
+				std_cit = std_vec.insert(std_vec.begin() + idx / 2, arr0[idx]);
 
 				if (ft_vec.size() != std_vec.size() ||
-					ft_vec.capacity() != std_vec.capacity())
+					ft_vec.capacity() != std_vec.capacity() ||
+					ft_cit - ft_vec.begin() != std_cit - std_vec.begin())
 					return EXIT_FAILURE;
 				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
@@ -766,42 +827,158 @@ inline static int	__test_function_insert(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_function_push_back(void)
+inline static int	__test_function_erase(void)
 {
-	int	const arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
+	t_hhuint const	arr[] = {
+		255U,
+		254U,
+		253U,
+		252U,
+		251U,
+		250U,
+		249U,
+		248U,
+		247U,
+		246U,
 	};
-	t_uint	idx;
+	t_uint			idx;
 
 	try
 	{
-		ft::vector<int>						ft_vec;
-		std::vector<int>					std_vec;
-		ft::vector<int>::const_iterator		ft_cit;
-		std::vector<int>::const_iterator	std_cit;
-
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Range erase
 		{
-			ft_vec.push_back(arr[idx]);
-			std_vec.push_back(arr[idx]);
+			ft::vector<t_hhuint>					ft_vec;
+			std::vector<t_hhuint>					std_vec;
+			ft::vector<t_hhuint>::const_iterator	ft_cit;
+			std::vector<t_hhuint>::const_iterator	std_cit;
 
-			if (ft_vec.size() != std_vec.size() ||
-				ft_vec.capacity() != std_vec.capacity())
-				return EXIT_FAILURE;
-			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
-				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
-				++ft_cit, ++std_cit)
-				if (*ft_cit != *std_cit)
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.insert(ft_vec.end(), &arr[idx], &arr[10]);
+				std_vec.insert(std_vec.end(), &arr[idx], &arr[10]);
+
+				ft_cit = ft_vec.erase(ft_vec.begin() + idx, ft_vec.begin() + idx * 2);
+				std_cit = std_vec.erase(std_vec.begin() + idx, std_vec.begin() + idx * 2);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity() ||
+					ft_cit - ft_vec.begin() != std_cit - std_vec.begin())
 					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Single erase
+		{
+			ft::vector<t_hhuint>					ft_vec;
+			std::vector<t_hhuint>					std_vec;
+			ft::vector<t_hhuint>::const_iterator	ft_cit;
+			std::vector<t_hhuint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.insert(ft_vec.end(), &arr[idx], &arr[10]);
+				std_vec.insert(std_vec.end(), &arr[idx], &arr[10]);
+
+				ft_cit = ft_vec.erase(ft_vec.begin() + idx);
+				std_cit = std_vec.erase(std_vec.begin() + idx);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity() ||
+					ft_cit - ft_vec.begin() != std_cit - std_vec.begin())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_push_back(void)
+{
+	long double const	arr0[] = {
+		0.0,
+		1.0,
+		2.0,
+		3.0,
+		4.0,
+		5.0,
+		6.0,
+		7.0,
+		8.0,
+		9.0,
+	};
+	std::string const	arr1[] = {
+		std::string("Lorem"),
+		std::string("ipsum"),
+		std::string("dolor"),
+		std::string("sit"),
+		std::string("amet"),
+		std::string("consectetur"),
+		std::string("adipiscing"),
+		std::string("elit"),
+		std::string("Mauris"),
+		std::string("lobortis"),
+	};
+	t_uint				idx;
+
+	try
+	{
+		// Trivial copyable
+		{
+			ft::vector<long double>						ft_vec;
+			std::vector<long double>					std_vec;
+			ft::vector<long double>::const_iterator		ft_cit;
+			std::vector<long double>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.push_back(arr0[idx]);
+				std_vec.push_back(arr0[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Non-trivial copy required
+		{
+			ft::vector<std::string>						ft_vec;
+			std::vector<std::string>					std_vec;
+			ft::vector<std::string>::const_iterator		ft_cit;
+			std::vector<std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.push_back(arr1[idx]);
+				std_vec.push_back(arr1[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -814,26 +991,26 @@ inline static int	__test_function_push_back(void)
 
 inline static int	__test_function_pop_back(void)
 {
-	double const	arr[] = {
-		0.0,
-		1.0,
-		2.0,
-		3.0,
-		4.0,
-		5.0,
-		6.0,
-		7.0,
-		8.0,
-		9.0,
+	int const	arr[] = {
+		-1,
+		-2,
+		-3,
+		-4,
+		-5,
+		-6,
+		-7,
+		-8,
+		-9,
+		-10,
 	};
-	t_uint	idx;
+	t_uint		idx;
 
 	try
 	{
-		ft::vector<double>					ft_vec(&arr[0], &arr[10]);
-		std::vector<double>					std_vec(&arr[0], &arr[10]);
-		ft::vector<double>::const_iterator	ft_cit;
-		std::vector<double>::const_iterator	std_cit;
+		ft::vector<int>						ft_vec(&arr[0], &arr[10]);
+		std::vector<int>					std_vec(&arr[0], &arr[10]);
+		ft::vector<int>::const_iterator		ft_cit;
+		std::vector<int>::const_iterator	std_cit;
 
 		for (idx = 0U ; idx < 10U ; ++idx)
 		{
@@ -884,6 +1061,246 @@ inline static int	__test_function_clear(void)
 		if (ft_vec.size() != std_vec.size() ||
 			ft_vec.capacity() != std_vec.capacity())
 			return EXIT_FAILURE;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_assign(void)
+{
+	double const		arr0[] = {
+		0.0,
+		1.9,
+		2.8,
+		3.7,
+		4.6,
+		5.5,
+		6.4,
+		7.3,
+		8.2,
+		9.1,
+	};
+	std::string const	arr1[] = {
+		std::string("There's a calm surrender"),
+		std::string("to the rush of day"),
+		std::string("when the heat of a rolling wind"),
+		std::string("can be turned away"),
+		std::string("An enchanted moment"),
+		std::string("And it sees the me through"),
+		std::string("It's enough for this restless warrior"),
+		std::string("Just to be with you"),
+		std::string("And can you feel the love tonight"),
+		std::string("It is where we are"),
+	};
+	t_uint				idx;
+
+	try
+	{
+		// Fill assignation
+		// Trivially copyable
+		{
+			ft::vector<double>					ft_vec;
+			std::vector<double>					std_vec;
+			ft::vector<double>::const_iterator	ft_cit;
+			std::vector<double>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.assign(idx * idx, arr0[idx]);
+				std_vec.assign(idx * idx, arr0[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ; 
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Fill assignation
+		// Non-trivial copy required
+		{
+			ft::vector<std::string>						ft_vec;
+			std::vector<std::string>					std_vec;
+			ft::vector<std::string>::const_iterator		ft_cit;
+			std::vector<std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.assign(idx * idx, arr1[idx]);
+				std_vec.assign(idx * idx, arr1[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ; 
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+			
+		}
+		// Range assignation
+		// Trivially copyable
+		{
+			ft::vector<double>					ft_vec;
+			std::vector<double>					std_vec;
+			ft::vector<double>::const_iterator	ft_cit;
+			std::vector<double>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.assign(&arr0[idx / 2 + (idx % 2)], &arr0[10 - idx / 2 - !(idx % 2)]);
+				std_vec.assign(&arr0[idx / 2 + (idx % 2)], &arr0[10 - idx / 2 - !(idx % 2)]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ; 
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Range assignation
+		// Non-trivial copy required
+		{
+			ft::vector<std::string>						ft_vec;
+			std::vector<std::string>					std_vec;
+			ft::vector<std::string>::const_iterator		ft_cit;
+			std::vector<std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.assign(&arr1[idx / 2 + (idx % 2)], &arr1[10 - idx / 2 - !(idx % 2)]);
+				std_vec.assign(&arr1[idx / 2 + (idx % 2)], &arr1[10 - idx / 2 - !(idx % 2)]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ; 
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+			
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_swap(void)
+{
+	t_uint const		arr0[] = {
+		4294967295U,
+		2147483647U,
+		1073741823U,
+		536870911U,
+		268435455U,
+		134217727U,
+		67108863U,
+		33554431U,
+		16777215U,
+		8388607U,
+	};
+	std::string const	arr1[] = {
+		std::string("goat"),
+		std::string("wolf"),
+		std::string("elephant"),
+		std::string("penguin"),
+		std::string("worm"),
+		std::string("bee"),
+		std::string("dolphin"),
+		std::string("wale"),
+		std::string("eagle"),
+		std::string("tiger"),
+	};
+	t_uint				idx;
+
+	try
+	{
+		// Trivially copyable
+		{
+			ft::vector<t_uint>					ft_vec0(&arr0[0], &arr0[10]);
+			std::vector<t_uint>					std_vec0(&arr0[0], &arr0[10]);
+			ft::vector<t_uint>					ft_vec1;
+			std::vector<t_uint>					std_vec1;
+			ft::vector<t_uint>::const_iterator	ft_cit;
+			std::vector<t_uint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 20U ; ++idx)
+			{
+				ft_vec1.insert(ft_vec1.begin(), arr0[idx / 2]);
+				std_vec1.insert(std_vec1.begin(), arr0[idx / 2]);
+			}
+
+			ft_vec0.swap(ft_vec1);
+			std_vec0.swap(std_vec1);
+
+			if (ft_vec0.size() != std_vec0.size() ||
+				ft_vec1.size() != std_vec1.size() ||
+				ft_vec0.capacity() != std_vec0.capacity() ||
+				ft_vec1.capacity() != std_vec1.capacity())
+				return EXIT_FAILURE;
+			for (ft_cit = ft_vec0.begin(), std_cit = std_vec0.begin() ;
+				ft_cit != ft_vec0.end() && std_cit != std_vec0.end() ; 
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+			for (ft_cit = ft_vec1.begin(), std_cit = std_vec1.begin() ;
+				ft_cit != ft_vec1.end() && std_cit != std_vec1.end() ; 
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+		}
+		// Non-trivial copy required
+		{
+			ft::vector<std::string>						ft_vec0(&arr1[0], &arr1[10]);
+			std::vector<std::string>					std_vec0(&arr1[0], &arr1[10]);
+			ft::vector<std::string>						ft_vec1;
+			std::vector<std::string>					std_vec1;
+			ft::vector<std::string>::const_iterator		ft_cit;
+			std::vector<std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 20U ; ++idx)
+			{
+				ft_vec1.insert(ft_vec1.begin(), arr1[idx / 2]);
+				std_vec1.insert(std_vec1.begin(), arr1[idx / 2]);
+			}
+			
+			ft_vec0.swap(ft_vec1);
+			std_vec0.swap(std_vec1);
+
+			if (ft_vec0.size() != std_vec0.size() ||
+				ft_vec1.size() != std_vec1.size() ||
+				ft_vec0.capacity() != std_vec0.capacity() ||
+				ft_vec1.capacity() != std_vec1.capacity())
+				return EXIT_FAILURE;
+			for (ft_cit = ft_vec0.begin(), std_cit = std_vec0.begin() ;
+				ft_cit != ft_vec0.end() && std_cit != std_vec0.end() ; 
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+			for (ft_cit = ft_vec1.begin(), std_cit = std_vec1.begin() ;
+				ft_cit != ft_vec1.end() && std_cit != std_vec1.end() ; 
+				++ft_cit, ++std_cit)
+				if (*ft_cit != *std_cit)
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1019,9 +1436,12 @@ int	test_vector(void)
 		__test_function_back,
 		__test_function_at,
 		__test_function_insert,
+		__test_function_erase,
 		__test_function_push_back,
 		__test_function_pop_back,
 		__test_function_clear,
+		__test_function_assign,
+		__test_function_swap,
 		__test_function_reserve,
 		__test_function_resize,
 		NULL
