@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/11 19:09:56 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/12 01:40:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,12 @@ public:
 	 */
 	inline random_access_iterator	operator+(difference_type const rhs) const
 	{
-		random_access_iterator<value_type, iterator_category, difference_type, pointer, reference> it(*this);
+		random_access_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference> it(*this);
 
 		it += rhs;
 		return it;
@@ -114,7 +119,12 @@ public:
 	 */
 	inline random_access_iterator	operator-(difference_type const rhs) const
 	{
-		random_access_iterator<value_type, iterator_category, difference_type, pointer, reference> it(*this);
+		random_access_iterator<
+			value_type,
+			iterator_category,
+			difference_type,
+			pointer,
+			reference> it(*this);
 
 		it -= rhs;
 		return it;

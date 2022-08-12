@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/11 23:38:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/12 00:35:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ private:
 	{
 		allocator_type	alloc;
 
-		if (is_integral<value_type>::value)
+		if (is_trivially_copyable<value_type>::value)
 			memmove(dst, first, (last - first) * sizeof(value_type));
 		else if (dst < first)
 			for ( ; first != last ; ++first, ++dst)
@@ -247,7 +247,7 @@ public:
 	 */
 	template <typename InputIterator>
 	void	insert(
-		iterator pos,
+		iterator const pos,
 		InputIterator first,
 		InputIterator const last)
 	{

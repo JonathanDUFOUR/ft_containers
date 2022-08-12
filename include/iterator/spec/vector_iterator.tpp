@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/11 17:33:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/12 02:28:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,86 @@ public:
 		return this->base() >= rhs.base();
 	}
 
-	// REMIND: See if it is possible to use the random_access_iterator member functions instead of overload them (with using keyword)
+
+	/**
+	 * @brief	Increase the wrapped pointer value by N.
+	 * 
+	 * @param	rhs The number to increase the pointer by.
+	 * 
+	 * @return	A reference to the increased vector_iterator.
+	 */
+	inline vector_iterator	&operator+=(difference_type const rhs)
+	{
+		this->_ptr += rhs;
+		return *this;
+	}
+
+	/**
+	 * @brief	Decrease the wrapped pointer value by N.
+	 * 
+	 * @param	rhs The number to decrease the pointer by.
+	 * 
+	 * @return	A reference to the decreased vector_iterator.
+	 */
+	inline vector_iterator	&operator-=(difference_type const rhs)
+	{
+		this->_ptr -= rhs;
+		return *this;
+	}
+
+	/**
+	 * @brief	Add N to the wrapped pointer value.
+	 * 
+	 * @param	rhs The number to add to the pointer.
+	 * 
+	 * @return	A vector_iterator pointing to the new position.
+	 */
+	inline vector_iterator	operator+(difference_type const rhs) const
+	{
+		vector_iterator<
+			random_access_iterator <
+				value_type,
+				iterator_category,
+				difference_type,
+				pointer,
+				reference> > it(*this);
+
+		it += rhs;
+		return it;
+	}
+
+	/**
+	 * @brief	Subtract N from the wrapped pointer value.
+	 * 
+	 * @param	rhs The number to subtract from the pointer.
+	 * 
+	 * @return   A vector_iterator pointing to the new position.
+	 */
+	inline vector_iterator	operator-(difference_type const rhs) const
+	{
+		vector_iterator<
+			random_access_iterator<
+				value_type,
+				iterator_category,
+				difference_type,
+				pointer,
+				reference> > it(*this);
+
+		it -= rhs;
+		return it;
+	}
+
+	/**
+	 * @brief	Calculate the distance between two random_access_iterator.
+	 * 
+	 * @param	rhs The random_access_iterator to calculate the distance to.
+	 * 
+	 * @return	The distance between the two random_access_iterator.
+	 */
+	inline difference_type operator-(vector_iterator const &rhs) const
+	{
+		return this->_ptr - rhs._ptr;
+	}
 };
 
 }
