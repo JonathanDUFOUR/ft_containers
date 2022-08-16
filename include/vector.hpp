@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/13 01:32:20 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/16 18:36:46 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,8 +314,6 @@ public:
 		allocator_type	alloc;
 
 		newCapacity = this->size() * 2;
-		if (newCapacity < this->size() + 1)
-			newCapacity = this->size() + 1;
 		for ( ; first != last ; ++first)
 		{
 			if (this->size() < this->capacity())
@@ -327,6 +325,9 @@ public:
 			}
 			else
 			{
+
+				if (newCapacity < this->size() + 1)
+					newCapacity = this->size() + 1;
 				newHead = alloc.allocate(newCapacity, this->_head);
 				newTail = newHead + this->size();
 				if (this->_head)
@@ -690,7 +691,6 @@ public:
 	 */
 	vector			&operator=(vector const &rhs)
 	{
-		// BUG: The following assign call triggers invalid read/write that result in an abort.
 		if (this != &rhs)
 			this->assign(rhs.begin(), rhs.end());
 		return *this;

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/13 01:56:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/16 18:37:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1577,11 +1577,11 @@ int	test_vector(void)
 		__test_function_push_back,
 		__test_function_pop_back,
 		__test_function_clear,
-		// __test_function_assign,
+		__test_function_assign,
 		__test_function_swap,
 		__test_function_reserve,
 		__test_function_resize,
-		// __test_operator_assign,
+		__test_operator_assign,
 		__test_operator_access,
 		NULL
 	};
