@@ -1,35 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   title.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 19:09:32 by jodufour         ###   ########.fr       */
+/*   Created: 2022/08/16 20:02:43 by jodufour          #+#    #+#             */
+/*   Updated: 2022/08/16 20:11:08 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vector>
+#include <iostream>
 #include "tester.hpp"
 
-int	main(void)
+/**
+ * @brief	Display a title for a test function
+ * 
+ * @param	funcName The name of the running test function.
+ * 			It must be formatted like this: __test_<explicit_name>.
+ */
+void	title(char const *const funcName)
 {
-	t_test const	tests[] = {
-		test_input_iterator,
-		test_output_iterator,
-		test_forward_iterator,
-		test_bidirectional_iterator,
-		test_random_access_iterator,
-		test_reverse_iterator,
-		test_stack,
-		test_vector,
-		NULL
-	};
-	int	koCount;
-	int	idx;
+	std::string	str(funcName + 7);
 
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
-		koCount += tests[idx]();
-	return !!koCount;
+	if (str.length() < PADDING)
+		str.append(PADDING - str.length(), ' ');
+	std::cout << str << " : ";
 }
+

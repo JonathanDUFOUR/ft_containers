@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 13:27:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/16 20:15:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 inline static int	__test_construct_default(void)
 {
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta;
@@ -43,6 +44,7 @@ inline static int	__test_construct_container(void)
 	std::vector<t_uint>	vec;
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		{
@@ -88,6 +90,7 @@ inline static int	__test_function_top(void)
 	std::vector<char>	vec;
 	int					idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -125,6 +128,7 @@ inline static int	__test_function_push(void)
 	};
 	int			idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<std::string, std::vector<std::string> >	ft_sta;
@@ -163,6 +167,7 @@ inline static int	__test_function_pop(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<float, std::vector<float> >	ft_sta;
@@ -210,6 +215,7 @@ inline static int	__test_function_empty(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<t_lint, std::vector<t_lint> >		ft_sta;
@@ -256,6 +262,7 @@ inline static int	__test_function_size(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<t_uint, std::vector<t_uint> >		ft_sta;
@@ -302,6 +309,7 @@ inline static int	__test_non_member_operator_equal(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -345,6 +353,7 @@ inline static int	__test_non_member_operator_difference(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -388,6 +397,7 @@ inline static int	__test_non_member_operator_lower(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -431,6 +441,7 @@ inline static int	__test_non_member_operator_greater(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -474,6 +485,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -517,6 +529,7 @@ inline static int	__test_non_member_operator_greater_equal(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::stack<int, std::vector<int> >	ft_sta0;
@@ -544,8 +557,6 @@ inline static int	__test_non_member_operator_greater_equal(void)
 	return EXIT_SUCCESS;
 }
 
-
-
 int	test_stack(void)
 {
 	t_test const	tests[] = {
@@ -567,20 +578,25 @@ int	test_stack(void)
 	int				koCount;
 	int				idx;
 
-	std::cout << std::setw(PADDING) << "stack:";
+	std::cerr << "\033[38;2;0;173;255m";
+	std::cout << "###################################################" << '\n';
+	std::cout << "##                     STACK                     ##" << '\n';
+	std::cout << "###################################################" << '\n';
+	std::cerr << "\033[0m";
+
 	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
 			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << " [KO]";
+			std::cout << "[KO]" << '\n';
 			std::cerr << "\033[0m";
 			++koCount;
 		}
 		else
 		{
 			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << " [OK]";
+			std::cout << "[OK]" << '\n';
 			std::cerr << "\033[0m";
 		}
 	}

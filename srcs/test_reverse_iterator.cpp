@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/05 15:43:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/16 20:31:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 inline static int	__test_construct_default(void)
 {
+	title(__func__);
 	try
 	{
 		ft::reverse_iterator<ft::random_access_iterator<std::iostream> >	ft_rit;
@@ -54,6 +55,7 @@ inline static int	__test_construct_iterator(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -91,6 +93,7 @@ inline static int	__test_construct_copy(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -131,6 +134,7 @@ inline static int	__test_function_base(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -168,6 +172,7 @@ inline static int	__test_operator_assign(void)
 	};
 	int			idx;
 
+	title(__func__);
 	try
 	{
 		ft::reverse_iterator<ft::random_access_iterator<std::string> >	rit0;
@@ -206,6 +211,7 @@ inline static int	__test_operator_dereference(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 1 ; idx < 11 ; ++idx)
@@ -244,6 +250,7 @@ inline static int	__test_operator_maddress(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -280,6 +287,7 @@ inline static int	__test_operator_increment_prefix(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<t_luint>							it(arr + 9);
@@ -314,6 +322,7 @@ inline static int	__test_operator_increment_postfix(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<int>							it(arr + 9);
@@ -348,6 +357,7 @@ inline static int	__test_operator_decrement_prefix(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<t_luint>							it(arr);
@@ -382,6 +392,7 @@ inline static int	__test_operator_decrement_postfix(void)
 	};
 	int	idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<int>							it(arr);
@@ -416,6 +427,7 @@ inline static int	__test_operator_add_assign(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -454,6 +466,7 @@ inline static int	__test_operator_sub_assign(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0 ; idx < 10 ; ++idx)
@@ -492,6 +505,7 @@ inline static int	__test_operator_add(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<float>							it(arr + 9);
@@ -528,6 +542,7 @@ inline static int	__test_operator_sub(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<float>							it(arr);
@@ -562,6 +577,7 @@ inline static int	__test_operator_access(void)
 	};
 	int			idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<t_hhuint>							it(arr + 10);
@@ -596,6 +612,7 @@ inline static int	__test_non_member_operator_add(void)
 	};
 	int		idx;
 
+	title(__func__);
 	try
 	{
 		ft::random_access_iterator<float>							it(arr + 9);
@@ -631,6 +648,7 @@ inline static int	__test_non_member_operator_distance(void)
 	int			idx0;
 	int			idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -676,6 +694,7 @@ inline static int	__test_non_member_operator_equal(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -719,6 +738,7 @@ inline static int	__test_non_member_operator_difference(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -762,6 +782,7 @@ inline static int	__test_non_member_operator_lower(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -805,6 +826,7 @@ inline static int	__test_non_member_operator_greater(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -848,6 +870,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -891,6 +914,7 @@ inline static int	__test_non_member_operator_greater_equal(void)
 	int	idx0;
 	int	idx1;
 
+	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
@@ -949,20 +973,25 @@ int	test_reverse_iterator(void)
 	int				koCount;
 	int				idx;
 
-	std::cout << std::setw(PADDING) << "reverse_iterator:";
+	std::cerr << "\033[38;2;0;173;255m";
+	std::cout << "####################################################" << '\n';
+	std::cout << "##                REVERSE ITERATOR                ##" << '\n';
+	std::cout << "####################################################" << '\n';
+	std::cerr << "\033[0m";
+
 	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
 			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << " [KO]";
+			std::cout << "[KO]" << '\n';
 			std::cerr << "\033[0m";
 			++koCount;
 		}
 		else
 		{
 			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << " [OK]";
+			std::cout << "[OK]" << '\n';
 			std::cerr << "\033[0m";
 		}
 	}

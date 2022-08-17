@@ -19,7 +19,7 @@
 
 inline static int	__test_construct_pointer(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		0,
 		1,
 		2,
@@ -31,11 +31,12 @@ inline static int	__test_construct_pointer(void)
 		8,
 		9,
 	};
-	int	idx;
+	t_uint	idx;
 
+	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::input_iterator<int>	it(arr + idx);
 
@@ -65,11 +66,12 @@ inline static int	__test_construct_copy(void)
 		'8',
 		'9',
 	};
-	int		idx;
+	t_uint	idx;
 
+	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::input_iterator<char>	it0(arr + idx);
 			ft::input_iterator<char>	it1(it0);
@@ -101,13 +103,14 @@ inline static int	__test_operator_assign(void)
 		std::string("ever"),
 		std::string("was"),
 	};
-	int			idx;
+	t_uint		idx;
 
+	title(__func__);
 	try
 	{
 		ft::input_iterator<std::string>	it0(NULL);
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::input_iterator<std::string>	it1(arr + idx);
 
@@ -126,7 +129,7 @@ inline static int	__test_operator_assign(void)
 
 inline static int	__test_operator_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -138,16 +141,17 @@ inline static int	__test_operator_equal(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
+	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::input_iterator<int>	it0(arr + idx0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::input_iterator<int>	it1(arr + idx1);
 
@@ -165,7 +169,7 @@ inline static int	__test_operator_equal(void)
 
 inline static int	__test_operator_difference(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -177,16 +181,17 @@ inline static int	__test_operator_difference(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
+	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::input_iterator<int>	it0(arr + idx0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::input_iterator<int>	it1(arr + idx1);
 
@@ -216,11 +221,12 @@ inline static int	__test_operator_dereference(void)
 		-8,
 		-9,
 	};
-	int		idx;
+	t_uint	idx;
 
+	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::input_iterator<t_hint>	it(arr + idx);
 
@@ -251,11 +257,12 @@ inline static int	__test_operator_maddress(void)
 		std::pair<int, char>(8, 'I'),
 		std::pair<int, char>(9, 'J'),
 	};
-	int	idx;
+	t_uint					idx;
 
+	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::input_iterator<std::pair<int, char> >	it(arr + idx);
 
@@ -286,13 +293,14 @@ inline static int	__test_operator_increment_prefix(void)
 		424242424242428,
 		424242424242429,
 	};
-	int		idx;
+	t_uint	idx;
 
+	title(__func__);
 	try
 	{
 		ft::input_iterator<t_luint>	it(arr);
 
-		for (idx = 0 ; idx < 9 ; ++idx)
+		for (idx = 0U ; idx < 9U ; ++idx)
 			if (*++it != arr[idx + 1])
 				return EXIT_FAILURE;
 	}
@@ -306,7 +314,7 @@ inline static int	__test_operator_increment_prefix(void)
 
 inline static int	__test_operator_increment_postfix(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		0,
 		1,
 		2,
@@ -318,13 +326,14 @@ inline static int	__test_operator_increment_postfix(void)
 		8,
 		9,
 	};
-	int	idx;
+	t_uint	idx;
 
+	title(__func__);
 	try
 	{
 		ft::input_iterator<int>	it(arr);
 
-		for (idx = 0 ; idx < 9 ; ++idx)
+		for (idx = 0U ; idx < 9U ; ++idx)
 			if (*it++ != arr[idx] || *it != arr[idx + 1])
 				return EXIT_FAILURE;
 	}
@@ -353,20 +362,24 @@ int	test_input_iterator(void)
 	int				koCount;
 	int				idx;
 
-	std::cout << std::setw(PADDING) << "input_iterator:";
+	std::cerr << "\033[38;2;0;173;255m";
+	std::cout << "####################################################" << '\n';
+	std::cout << "##                 INPUT ITERATOR                 ##" << '\n';
+	std::cout << "####################################################" << '\n';
+	std::cerr << "\033[0m";
 	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
 			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << " [KO]";
+			std::cout << "[KO]" << '\n';
 			std::cerr << "\033[0m";
 			++koCount;
 		}
 		else
 		{
 			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << " [OK]";
+			std::cout << "[OK]" << '\n';
 			std::cerr << "\033[0m";
 			
 		}

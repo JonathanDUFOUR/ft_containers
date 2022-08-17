@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 18:37:38 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/16 20:04:54 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 
 inline static int	__test_construct_default(void)
 {
+	title(__func__);
 	try
 	{
 		ft::vector<int>		ft_vec;
@@ -41,6 +42,7 @@ inline static int	__test_construct_default(void)
 
 inline static int	__test_construct_fill(void)
 {
+	title(__func__);
 	try
 	{
 		// Trivially copyable
@@ -127,6 +129,7 @@ inline static int	__test_construct_range(void)
 		std::string ("We know the game and we're gonna play it"),
 	};
 
+	title(__func__);
 	try
 	{
 		// Trivially copyable
@@ -226,6 +229,7 @@ inline static int	__test_construct_copy(void)
 		std::string("Rose"),
 	};
 
+	title(__func__);
 	try
 	{
 		// Trivially copyable
@@ -265,6 +269,7 @@ inline static int	__test_function_size(void)
 {
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -288,6 +293,7 @@ inline static int	__test_function_max_size(void)
 {
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -311,6 +317,7 @@ inline static int	__test_function_capacity(void)
 {
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -332,6 +339,7 @@ inline static int	__test_function_capacity(void)
 
 inline static int	__test_function_get_allocator(void)
 {
+	title(__func__);
 	try
 	{
 		ft::vector<char, std::allocator<char> >		ft_vec;
@@ -352,6 +360,7 @@ inline static int	__test_function_empty(void)
 {
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -387,6 +396,7 @@ inline static int	__test_function_begin(void)
 	};
 	size_t		n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -433,6 +443,7 @@ inline static int	__test_function_end(void)
 	};
 	size_t		n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -479,6 +490,7 @@ inline static int	__test_function_rbegin(void)
 	};
 	size_t		n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -525,6 +537,7 @@ inline static int	__test_function_rend(void)
 	};
 	size_t			n;
 
+	title(__func__);
 	try
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
@@ -570,6 +583,7 @@ inline static int	__test_function_front(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 0U ; idx < 10U ; ++idx)
@@ -605,6 +619,7 @@ inline static int	__test_function_back(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		for (idx = 1U ; idx < 11U ; ++idx)
@@ -640,6 +655,7 @@ inline static int	__test_function_at(void)
 	};
 	t_uint									idx;
 
+	title(__func__);
 	try
 	{
 		ft::vector<std::pair<t_hhuint, long double> >	ft_vec(&arr[0], &arr[10]);
@@ -685,6 +701,7 @@ inline static int	__test_function_insert(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		// Fill insertion
@@ -852,6 +869,7 @@ inline static int	__test_function_erase(void)
 	};
 	t_uint			idx;
 
+	title(__func__);
 	try
 	{
 		// Range erase
@@ -943,6 +961,7 @@ inline static int	__test_function_push_back(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		// Trivial copyable
@@ -1014,6 +1033,7 @@ inline static int	__test_function_pop_back(void)
 	};
 	t_uint		idx;
 
+	title(__func__);
 	try
 	{
 		ft::vector<int>						ft_vec(&arr[0], &arr[10]);
@@ -1059,6 +1079,7 @@ inline static int	__test_function_clear(void)
 		std::string("9012345678"),
 	};
 
+	title(__func__);
 	try
 	{
 		ft::vector<std::string>		ft_vec(&arr[0], &arr[10]);
@@ -1107,6 +1128,7 @@ inline static int	__test_function_assign(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		// Fill assignation
@@ -1240,6 +1262,7 @@ inline static int	__test_function_swap(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		// Trivially copyable
@@ -1335,6 +1358,7 @@ inline static int	__test_function_reserve(void)
 	};
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		ft::vector<t_huint>						ft_vec(&arr[0], &arr[10]);
@@ -1381,6 +1405,7 @@ inline static int	__test_function_resize(void)
 	};
 	size_t	n;
 
+	title(__func__);
 	try
 	{
 		ft::vector<int>						ft_vec;
@@ -1453,6 +1478,7 @@ inline static int	__test_operator_assign(void)
 	};
 	t_uint				idx;
 
+	title(__func__);
 	try
 	{
 		// Trivially copyable
@@ -1534,6 +1560,7 @@ inline static int	__test_operator_access(void)
 	};
 	t_uint			idx;
 
+	title(__func__);
 	try
 	{
 		ft::vector<t_lint>					ft_vector(&arr[0], &arr[10]);
@@ -1588,20 +1615,25 @@ int	test_vector(void)
 	int				koCount;
 	int				idx;
 
-	std::cout << std::setw(PADDING) << "vector:";
+	std::cerr << "\033[38;2;0;173;255m";
+	std::cout << "####################################################" << '\n';
+	std::cout << "##                     VECTOR                     ##" << '\n';
+	std::cout << "####################################################" << '\n';
+	std::cerr << "\033[0m";
+
 	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
 			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << " [KO]";
+			std::cout << "[KO]" << '\n';
 			std::cerr << "\033[0m";
 			++koCount;
 		}
 		else
 		{
 			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << " [OK]";
+			std::cout << "[OK]" << '\n';
 			std::cerr << "\033[0m";
 		}
 	}
