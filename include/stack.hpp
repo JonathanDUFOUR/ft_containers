@@ -6,18 +6,18 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/31 17:56:40 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/18 17:36:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
 
-# include <vector>
+# include "vector.hpp"
 
 namespace ft
 {
-template <typename T, typename Container = std::vector<T> >
+template <typename T, typename Container = ft::vector<T> >
 class stack
 {
 public:
@@ -45,15 +45,6 @@ public:
 	 */
 	explicit stack(container_type const &ctnr = container_type()) :
 		_ctnr(ctnr) {}
-
-// ************************************************************************* //
-//                                Destructors                                //
-// ************************************************************************* //
-
-	/**
-	 * @brief	Destruct a stack object.
-	 */
-	virtual	~stack(void) {}
 
 // ************************************************************************* //
 //                          Public Member Functions                          //
