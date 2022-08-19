@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_random_access_iterator.cpp                      :+:      :+:    :+:   */
+/*   test_random_access_iterator.cpp                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 04:19:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/05/25 08:58:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/19 17:56:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,7 @@ inline static int	__test_operator_increment_prefix(void)
 		424242424242428LU,
 		424242424242429LU,
 	};
-	t_uint		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try

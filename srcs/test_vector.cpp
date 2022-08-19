@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 20:04:54 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/19 18:57:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1223,7 +1223,6 @@ inline static int	__test_function_assign(void)
 					if (*ft_cit != *std_cit)
 						return EXIT_FAILURE;
 			}
-			
 		}
 	}
 	catch (std::exception const &e)
