@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 18:36:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/20 00:03:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class	vector_iterator;
 template <typename Iterator>
 class	reverse_iterator;
 
-template <typename T, typename Alloc = typename std::allocator<T> >
+template <typename T, typename Alloc = std::allocator<T> >
 class vector
 {
 public:
@@ -172,7 +172,7 @@ public:
 // ************************************************************************* //
 
 	/**
-	 * @brief	Destruct a vector object,
+	 * @brief	Destroy a vector object,
 	 * 			releasing its related allocated memory.
 	 * 			(destructor)
 	 */

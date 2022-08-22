@@ -1,0 +1,6 @@
+# Main properties
+
+1. Every node is either red or black.
+2. All NULL nodes are considered black.
+3. A red node does not have a red child.
+4. Every path from a given node to any of its descendant NIL nodes goes through the same number of black nodes.
