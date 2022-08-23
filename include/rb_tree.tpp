@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:02:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/23 10:15:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define RB_TREE_TPP
 
 # include <memory>
+# include "iterator/base/reverse_iterator.tpp"
+# include "iterator/spec/rb_tree_iterator.tpp"
+# include "utility.hpp"
 
 namespace ft
 {
@@ -32,20 +35,60 @@ enum e_rb_direction
 template <typename T>
 struct rb_node
 {
-	T			data;
+	// Attributes
+	T		data;
 
-	uint8_t		color;
+	uint8_t	color;
 
 	rb_node	*parent;
 	rb_node	*child[2];
+
+// ************************************************************************** //
+//                                Constructors                                //
+// ************************************************************************** //
+
+	/**
+	 * @brief	Construct a new rb_node object.
+	 * 			(default constructor)
+	 * 
+	 * @param	data The data to store in the node.
+	 */
+	rb_node(T const &data = T()) :
+		data(data),
+		color(RED),
+		parent(NULL),
+		child{NULL, NULL} {}
 };
 
 template <typename T, typename Compare, typename Alloc = std::allocator<rb_node<T>>>
 class rb_tree
 {
+public:
+	// Member types
+	typedef T													value_type;
+	typedef Compare												compare_function_type;
+	typedef Alloc												allocator_type;
+
+	typedef typename ft::rb_node<value_type>					node_type;
+
+	typedef typename allocator_type::pointer					pointer;
+	typedef typename allocator_type::const_pointer				const_pointer;
+
+	typedef typename allocator_type::reference					reference;
+	typedef typename allocator_type::const_reference			const_reference;
+
+	typedef typename ft::rb_tree_iterator<pointer>				iterator;
+	typedef typename ft::rb_tree_iterator<const_pointer>		const_iterator;
+
+	typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
+	typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+
+	typedef typename iterator_traits<iterator>::difference_type	difference_type;
+	typedef size_t												size_type;
+
 private:
 	// Attributes
-	rb_node	*_root;
+	pointer	_root;
 
 public:
 // ************************************************************************** //
@@ -58,7 +101,7 @@ public:
 	 * 
 	 * @param	root The root node of the new tree.
 	 */
-	rb_tree(rb_node const *const root = NULL) :
+	rb_tree(const_pointer const root = NULL) :
 		_root(root) {}
 
 	/**
@@ -97,10 +140,10 @@ public:
 	 * 
 	 * @param	root The root of the tree to clear.
 	 */
-	static void	clear(rb_node *const root)
+	static void	clear(pointer const root)
 		__attribute__((nonnull))
 	{
-		Alloc	alloc;
+		allocator_type	alloc;
 
 		if (root->child[LEFT])
 			rb_tree::clear(root->child[LEFT]);
@@ -118,7 +161,7 @@ public:
 	 * @return	Either LEFT if the given node is the left child of its parent,
 	 * 			or RIGHT if the given node is the right child of its parent.
 	 */
-	static uint8_t	childDirection(rb_node const *const node)
+	static uint8_t	childDirection(const_pointer const node)
 		__attribute__((nonnull))
 	{
 		if (node->parent->child[LEFT] == node)
@@ -134,11 +177,11 @@ public:
 	 * 
 	 * @return	The root of the new tree.
 	 */
-	static rb_node<T>	*dup(rb_node<T> const *const src)
+	static pointer	dup(const_pointer const src)
 		__attribute__((nonnull))
 	{
-		rb_node<T>	*dst;
-		Alloc		alloc;
+		pointer			dst;
+		allocator_type	alloc;
 
 		dst = alloc.allocate(1);
 		alloc.construct(dst, *src);
@@ -159,12 +202,12 @@ public:
 	 * @return	The new root of the rotated subtree.
 	 * 			Upon failure, NULL is returned instead.
 	 */
-	rb_node<T>	*rotate(rb_node<T> *const root, uint8_t const dir)
+	pointer	rotate(pointer const root, uint8_t const dir)
 		__attribute__((nonnull))
 	{
-		rb_node<T>	*parent;
-		rb_node<T>	*oppositeChild;
-		rb_node<T>	*grandChild;
+		node_type	*parent;
+		node_type	*oppositeChild;
+		node_type	*grandChild;
 
 		parent = root->parent;
 		oppositeChild = root->child[!dir];
@@ -198,13 +241,49 @@ public:
 	 * 
 	 * @param	data The data to insert in the tree.
 	 * 
-	 * @return	A pair containing an iterator to the node of the tree.
+	 * @return	A pair containing an iterator to the node of the tree
+	 * 			as `first` member,
+	 * 			and a boolean indicating whether a new node has been inserted
+	 * 			as `second` member.
 	 */
-	pair<> insert(T const &data)
+	pair<iterator, bool> insert(value_type const &data)
 	{
-		rb_node<T>	*node;
+		pointer					parent;
+		pointer					node;
+		pointer					pos;
+		compare_function_type	cmp;
+		allocator_type			alloc;
 
-		
+		if (!this->_root)
+		{
+			this->_root = alloc.allocate(1LU);
+			alloc.construct(this->_root, node_type(data));
+			return pair<iterator, bool>(iterator(this->_root), true);
+		}
+		pos = this->_root;
+		while (pos)
+		{
+			if (cmp(pos->data, data))
+			{
+				parent = pos;
+				pos = pos->child[RIGHT];
+			}
+			else if (cmp(data, pos->data))
+			{
+				parent = pos;
+				pos = pos->child[LEFT];
+			}
+			else
+				return pair<iterator, bool>(iterator(pos), false);
+		}
+		node = alloc.allocate(1LU);
+		alloc.construct(node, node_type(data));
+		node->parent = parent;
+		if (cmp(parent->data, data))
+			parent->child[RIGHT] = node;
+		else
+			parent->child[LEFT] = node;
+		// REMIND: continue here
 	}
 };
 }
