@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/12 16:38:59 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/24 19:00:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@ namespace ft
 {
 
 template <bool Cond, typename T = void>
-class enable_if;
+struct enable_if;
 
 template <typename T>
-class enable_if<true, T>
+struct enable_if<true, T>
 {
-public:
 	typedef T	type;
 };
 
@@ -54,6 +53,8 @@ class is_integral : public false_type {};
 template <>
 class is_integral<bool> : public true_type {};
 template <>
+class is_integral<char> : public true_type {};
+template <>
 class is_integral<wchar_t> : public true_type {};
 template <>
 class is_integral<signed char> : public true_type {};
@@ -78,6 +79,8 @@ template <typename T>
 class is_trivially_copyable : public false_type {};
 template <>
 class is_trivially_copyable<bool> : public true_type {};
+template <>
+class is_trivially_copyable<char> : public true_type {};
 template <>
 class is_trivially_copyable<wchar_t> : public true_type {};
 template <>

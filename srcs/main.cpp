@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 19:09:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/23 16:40:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(void)
 		test_bidirectional_iterator,
 		test_random_access_iterator,
 		test_reverse_iterator,
+		test_is_integral,
 		test_stack,
 		test_vector,
 		NULL

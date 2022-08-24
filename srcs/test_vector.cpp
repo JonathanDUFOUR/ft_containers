@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/19 18:57:53 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/24 19:03:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,89 +20,7 @@
 #include "utility.hpp"
 #include "tester.hpp"
 
-inline static int	__test_construct_default(void)
-{
-	title(__func__);
-	try
-	{
-		ft::vector<int>		ft_vec;
-		std::vector<int>	std_vec;
-
-		if (sizeof(ft_vec) != sizeof(std_vec) ||
-			memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
-			return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_fill(void)
-{
-	title(__func__);
-	try
-	{
-		// Trivially copyable
-		{
-			{
-				ft::vector<char>	ft_vec(21LU);
-				std::vector<char>	std_vec(21LU);
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-			{
-				ft::vector<char>	ft_vec(0LU, 'A');
-				std::vector<char>	std_vec(0LU, 'A');
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-			{
-				ft::vector<char>	ft_vec(42LU, 42);
-				std::vector<char>	std_vec(42LU, 42);
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-		}
-		// Non-trivial copy required
-		{
-			{
-				ft::vector<std::string>		ft_vec(21LU);
-				std::vector<std::string>	std_vec(21LU);
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-			{
-				ft::vector<std::string>		ft_vec(0LU, std::string("pouic"));
-				std::vector<std::string>	std_vec(0LU, std::string("pouic"));
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-			{
-				ft::vector<std::string>		ft_vec(42LU, std::string("Hello World !"));
-				std::vector<std::string>	std_vec(42LU, std::string("Hello World !"));
-
-				if (sizeof(ft_vec) != sizeof(std_vec))
-					return EXIT_FAILURE;
-			}
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_range(void)
+inline static int	__test_constructor(void)
 {
 	t_huint const		arr0[] = {
 		0U,
@@ -128,10 +46,95 @@ inline static int	__test_construct_range(void)
 		std::string("Inside, we both know what's been going on"),
 		std::string ("We know the game and we're gonna play it"),
 	};
-
 	title(__func__);
 	try
 	{
+		// Default constructor
+		{
+			ft::vector<int>		ft_vec;
+			std::vector<int>	std_vec;
+
+			if (sizeof(ft_vec) != sizeof(std_vec) ||
+				memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
+				return EXIT_FAILURE;
+		}
+		// Fill constructor
+		// Trivially copyable
+		{
+			{
+				ft::vector<char>	ft_vec(21LU);
+				std::vector<char>	std_vec(21LU);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<char>	ft_vec(0LU, 'A');
+				std::vector<char>	std_vec(0LU, 'A');
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<char>	ft_vec(42LU, 42);
+				std::vector<char>	std_vec(42LU, 42);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+		}
+		// Fill constructor
+		// Trivially copyable
+		// Ambiguous
+		{
+			{
+				ft::vector<char>	ft_vec(static_cast<char>(21LU), '$');
+				std::vector<char>	std_vec(static_cast<char>(21LU), '$');
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<char>	ft_vec(static_cast<char>(0LU), 'A');
+				std::vector<char>	std_vec(static_cast<char>(0LU), 'A');
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<char>	ft_vec(static_cast<char>(42LU), 42);
+				std::vector<char>	std_vec(static_cast<char>(42LU), 42);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+		}
+		// Fill constructor
+		// Non-trivial copy required
+		{
+			{
+				ft::vector<std::string>		ft_vec(21LU);
+				std::vector<std::string>	std_vec(21LU);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<std::string>		ft_vec(0LU, std::string("pouic"));
+				std::vector<std::string>	std_vec(0LU, std::string("pouic"));
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+			{
+				ft::vector<std::string>		ft_vec(42LU, std::string("Hello World !"));
+				std::vector<std::string>	std_vec(42LU, std::string("Hello World !"));
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					return EXIT_FAILURE;
+			}
+		}
+		// Range constructor
 		// Trivially copyable
 		{
 			{
@@ -162,6 +165,7 @@ inline static int	__test_construct_range(void)
 					return EXIT_FAILURE;
 			}
 		}
+		// Range constructor
 		// Non-trivial copy required
 		{
 			{
@@ -192,58 +196,20 @@ inline static int	__test_construct_range(void)
 					return EXIT_FAILURE;
 			}
 		}
-
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_copy(void)
-{
-	t_lint const		arr0[] = {
-		112233445566778899L,
-		122334455667788991L,
-		223344556677889911L,
-		233445566778899112L,
-		334455667788991122L,
-		344556677889911223L,
-		445566778899112233L,
-		455667788991122334L,
-		556677889911223344L,
-		566778899112233445L,
-	};
-	std::string const	arr1[] = {
-		std::string("Gilbert"),
-		std::string("Bernard"),
-		std::string("Jack"),
-		std::string("Odette"),
-		std::string("Alphonse"),
-		std::string("Georgette"),
-		std::string("Anne"),
-		std::string("Gaston"),
-		std::string("Yves"),
-		std::string("Rose"),
-	};
-
-	title(__func__);
-	try
-	{
+		// Copy constructor
 		// Trivially copyable
 		{
-			ft::forward_iterator<t_lint const>	it0(arr0);
-			ft::forward_iterator<t_lint const>	it1(arr0 + 10);
-			ft::vector<t_lint>					ft_vec0(it0, it1);
-			ft::vector<t_lint>					ft_vec1(ft_vec0);
-			std::vector<t_lint>					std_vec0(it0, it1);
-			std::vector<t_lint>					std_vec1(std_vec0);
+			ft::forward_iterator<t_huint const>	it0(arr0);
+			ft::forward_iterator<t_huint const>	it1(arr0 + 10);
+			ft::vector<t_huint>					ft_vec0(it0, it1);
+			ft::vector<t_huint>					ft_vec1(ft_vec0);
+			std::vector<t_huint>				std_vec0(it0, it1);
+			std::vector<t_huint>				std_vec1(std_vec0);
 
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				return EXIT_FAILURE;
 		}
+		// Copy constructor
 		// Non-trivial copy required
 		{
 			ft::forward_iterator<std::string const>	it0(arr1);
@@ -687,7 +653,19 @@ inline static int	__test_function_insert(void)
 		8.8f,
 		9.9f,
 	};
-	std::string const	arr1[] = {
+	int const			arr1[] = {
+		-1,
+		-12,
+		-123,
+		-1234,
+		-12345,
+		-123456,
+		-1234567,
+		-12345678,
+		-123456789,
+		-1234567890
+	};
+	std::string const	arr2[] = {
 		std::string("Un"),
 		std::string("jour"),
 		std::string("je"),
@@ -728,6 +706,30 @@ inline static int	__test_function_insert(void)
 			}
 		}
 		// Fill insertion
+		// Trivially copyable
+		// Ambiguous
+		{
+			ft::vector<int>						ft_vec;
+			std::vector<int>					std_vec;
+			ft::vector<int>::const_iterator		ft_cit;
+			std::vector<int>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.insert(ft_vec.begin() + idx / 2, static_cast<int>(10 - idx), arr1[idx]);
+				std_vec.insert(std_vec.begin() + idx / 2, static_cast<int>(10 - idx), arr1[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Fill insertion
 		// Non-trivial copy required
 		{
 			ft::vector<std::string>						ft_vec;
@@ -737,8 +739,8 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_vec.insert(ft_vec.end() - idx / 2, 10 - idx, arr1[idx]);
-				std_vec.insert(std_vec.end() - idx / 2, 10 - idx, arr1[idx]);
+				ft_vec.insert(ft_vec.end() - idx / 2, 10 - idx, arr2[idx]);
+				std_vec.insert(std_vec.end() - idx / 2, 10 - idx, arr2[idx]);
 
 				if (ft_vec.size() != std_vec.size() ||
 					ft_vec.capacity() != std_vec.capacity())
@@ -783,8 +785,8 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_vec.insert(ft_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
-				std_vec.insert(std_vec.end() - idx / 2, &arr1[0], &arr1[idx]);
+				ft_vec.insert(ft_vec.end() - idx / 2, &arr2[0], &arr2[idx]);
+				std_vec.insert(std_vec.end() - idx / 2, &arr2[0], &arr2[idx]);
 
 				if (ft_vec.size() != std_vec.size() ||
 					ft_vec.capacity() != std_vec.capacity())
@@ -830,8 +832,8 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_cit = ft_vec.insert(ft_vec.end() - idx / 2, arr1[idx]);
-				std_cit = std_vec.insert(std_vec.end() - idx / 2, arr1[idx]);
+				ft_cit = ft_vec.insert(ft_vec.end() - idx / 2, arr2[idx]);
+				std_cit = std_vec.insert(std_vec.end() - idx / 2, arr2[idx]);
 
 				if (ft_vec.size() != std_vec.size() ||
 					ft_vec.capacity() != std_vec.capacity() ||
@@ -1114,7 +1116,19 @@ inline static int	__test_function_assign(void)
 		8.2,
 		9.1,
 	};
-	std::string const	arr1[] = {
+	t_lint const		arr1[] = {
+		2L,
+		-5L,
+		10L,
+		-21L,
+		42L,
+		-85L,
+		170L,
+		-341L,
+		682L,
+		-1365L
+	};
+	std::string const	arr2[] = {
 		std::string("There's a calm surrender"),
 		std::string("to the rush of day"),
 		std::string("when the heat of a rolling wind"),
@@ -1148,6 +1162,30 @@ inline static int	__test_function_assign(void)
 					ft_vec.capacity() != std_vec.capacity())
 					return EXIT_FAILURE;
 				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Fill assignation
+		// Trivially copyable
+		// Ambiguous
+		{
+			ft::vector<t_lint>					ft_vec(7LU, 42L);
+			std::vector<t_lint>					std_vec(7LU, 42L);
+			ft::vector<t_lint>::const_iterator	ft_cit;
+			std::vector<t_lint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft_vec.assign(static_cast<t_lint>(idx * idx), arr1[idx]);
+				std_vec.assign(static_cast<t_lint>(idx * idx), arr1[idx]);
+
+				if (ft_vec.size() != std_vec.size() ||
+					ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 					ft_cit != ft_vec.end() && std_cit != std_vec.end() ; 
 					++ft_cit, ++std_cit)
 					if (*ft_cit != *std_cit)
@@ -1164,8 +1202,8 @@ inline static int	__test_function_assign(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_vec.assign(idx * idx, arr1[idx]);
-				std_vec.assign(idx * idx, arr1[idx]);
+				ft_vec.assign(idx * idx, arr2[idx]);
+				std_vec.assign(idx * idx, arr2[idx]);
 
 				if (ft_vec.size() != std_vec.size() ||
 					ft_vec.capacity() != std_vec.capacity())
@@ -1211,8 +1249,8 @@ inline static int	__test_function_assign(void)
 
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft_vec.assign(&arr1[idx / 2 + (idx % 2)], &arr1[10 - idx / 2 - !(idx % 2)]);
-				std_vec.assign(&arr1[idx / 2 + (idx % 2)], &arr1[10 - idx / 2 - !(idx % 2)]);
+				ft_vec.assign(&arr2[idx / 2 + (idx % 2)], &arr2[10 - idx / 2 - !(idx % 2)]);
+				std_vec.assign(&arr2[idx / 2 + (idx % 2)], &arr2[10 - idx / 2 - !(idx % 2)]);
 
 				if (ft_vec.size() != std_vec.size() ||
 					ft_vec.capacity() != std_vec.capacity())
@@ -1582,10 +1620,7 @@ inline static int	__test_operator_access(void)
 int	test_vector(void)
 {
 	t_test const	tests[] = {
-		__test_construct_default,
-		__test_construct_fill,
-		__test_construct_range,
-		__test_construct_copy,
+		__test_constructor,
 		__test_function_size,
 		__test_function_max_size,
 		__test_function_capacity,

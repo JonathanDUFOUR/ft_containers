@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 20:16:40 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/23 16:14:20 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef unsigned long		t_luint;
 int	test_bidirectional_iterator(void);
 int	test_forward_iterator(void);
 int	test_input_iterator(void);
+int	test_is_integral(void);
 int	test_output_iterator(void);
 int	test_random_access_iterator(void);
 int	test_reverse_iterator(void);

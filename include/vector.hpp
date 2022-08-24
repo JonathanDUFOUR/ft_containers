@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/23 07:48:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/24 18:28:04 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ private:
 	// Attributes
 	pointer	_head;
 	pointer	_tail;
-	pointer	_eos; // End of storage
+	pointer	_endOfStorage;
 
 // ************************************************************************** //
 //                          Private Member Functions                          //
@@ -89,143 +89,44 @@ private:
 			}
 	}
 
-public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
-
 	/**
-	 * @brief	Construct a new empty vector object.
-	 * 			(default constructor)
+	 * @brief	Determine that the called insert() is a fill insertion,
+	 * 			thanks to the fourth paramter type.
 	 * 
-	 * @param	alloc An optional allocator to use for instanciation.
-	 */
-	explicit vector(
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_eos(NULL) {}
-
-	/**
-	 * @brief	Construct a new vector object with specific size and content.
-	 * 			(fill constructor)
+	 * @tparam	U Any integral type.
 	 * 
-	 * @param	n The number of elements to fill the vector with.
-	 * @param	val The element value to fill the vector with.
+	 * @param	pos The position to insert the elements.
+	 * @param	param1 The number of elements to insert.
+	 * @param	param2 The element value to fill the vector with.
 	 */
-	explicit vector(
-		size_type const n,
-		value_type const &val = value_type(),
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_eos(NULL)
+	template<typename U>
+	inline void	_insertDispatch(
+		iterator const pos,
+		U const param1,
+		U const param2,
+		true_type const)
 	{
-		this->insert(iterator(), n, val);
+		this->_insertFill(pos, param1, param2);
 	}
 
 	/**
-	 * @brief	Construct a new vector object with a range of iterators.
-	 * 			The resulting vector will contain the elements
-	 * 			from `first` included to `last` excluded.
-	 * 			(range constructor)
+	 * @brief	Determine that the called insert() is a range insertion,
+	 * 			thanks to the fourth paramter type.
 	 * 
-	 * @tparam	InputIterator Any type that fulfills
-	 * 			the standard input iterator requirements.
+	 * @tparam	U Any non-integral type.
 	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
+	 * @param	pos The position to insert the elements.
+	 * @param	param1 The first element of the range to insert.
+	 * @param	param2 The last element of the range to insert.
 	 */
-	template <typename InputIterator>
-	vector(
-		InputIterator const &first,
-		InputIterator const &last,
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_eos(NULL)
+	template<typename U>
+	inline void	_insertDispatch(
+		iterator const pos,
+		U const param1,
+		U const param2,
+		false_type const)
 	{
-		this->insert(iterator(), first, last);
-	}
-
-	/**
-	 * @brief	Construct a new vector object as a copy of another one.
-	 * 			(copy constructor)
-	 * 
-	 * @param	src The vector to copy.
-	 */
-	vector(vector const &src) :
-		_head(NULL),
-		_tail(NULL),
-		_eos(NULL)
-	{
-		this->insert(iterator(), src.begin(), src.end());
-	}
-
-// ************************************************************************* //
-//                                Destructors                                //
-// ************************************************************************* //
-
-	/**
-	 * @brief	Destroy a vector object,
-	 * 			releasing its related allocated memory.
-	 * 			(destructor)
-	 */
-	~vector(void)
-	{
-		this->clear();
-		if (this->_head)
-			allocator_type().deallocate(this->_head, this->capacity());
-	};
-
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
-
-	/**
-	 * @brief		Assign a new size and a new content to the vector.
-	 * 				(fill assignation)
-	 * 
-	 * @param n		The new size of the vector.
-	 * @param val	The new value to fill the vector with.
-	 */
-	void	assign(size_type const n, value_type const &val)
-	{
-		this->clear();
-		this->insert(this->begin(), n, val);
-	}
-
-	/**
-	 * @brief	Assign a new size and a new content to the vector
-	 * 			using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			(range assignation)
-	 * 
-	 * @tparam	InputIterator Any type that fulfills
-	 * 			the standard input iterator requirements.
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	assign(InputIterator const first, InputIterator const last)
-	{
-		this->clear();
-		this->insert(this->begin(), first, last);
-	}
-
-	/**
-	 * @brief	Destroy every element in the vector without deallocating them.
-	 */
-	void	clear(void)
-	{
-		allocator_type	alloc;
-
-		if (this->_head == this->_tail)
-			return ;
-		for (--this->_tail ; this->_tail != this->_head ; --this->_tail)
-			alloc.destroy(this->_tail);
-		alloc.destroy(this->_tail);
+		this->_insertRange(pos, param1, param2);
 	}
 
 	/**
@@ -236,7 +137,10 @@ public:
 	 * @param	n The number of elements to insert.
 	 * @param	val The element value to fill the vector with.
 	 */
-	void	insert(iterator const pos, size_type const n, value_type const &val)
+	inline void	_insertFill(
+		iterator const pos,
+		size_type const n,
+		value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
 		size_type		newCapacity;
@@ -275,7 +179,7 @@ public:
 			}
 			this->_head = newHead;
 			this->_tail = newTail;
-			this->_eos = this->_head + newCapacity;
+			this->_endOfStorage = this->_head + newCapacity;
 		}
 		for (newHead = this->_head + offset, newTail = newHead + n ;
 			newHead != newTail ;
@@ -289,6 +193,10 @@ public:
 	 * 			from `first` included to `last` excluded.
 	 * 			(range insertion)
 	 * 
+	 * @par		The call to _insertDispacth() instead of directly
+	 * 			put the implementation in this one is for handle ambiguous
+	 * 			call of an overload of insert().
+	 * 
 	 * @tparam	InputIterator The type of the iterators to use.
 	 * 			(it must conform to the standard input iterator requirements)
 	 * 
@@ -297,7 +205,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(
+	void	_insertRange(
 		iterator const pos,
 		InputIterator first,
 		InputIterator const last)
@@ -339,12 +247,201 @@ public:
 				}
 				this->_head = newHead;
 				this->_tail = newTail;
-				this->_eos = this->_head + newCapacity;
+				this->_endOfStorage = this->_head + newCapacity;
 				++newCapacity;
 			}
 			alloc.construct(this->_tail - offset, *first);
 			++this->_tail;
 		}
+	}
+
+public:
+// ************************************************************************** //
+//                                Constructors                                //
+// ************************************************************************** //
+
+	/**
+	 * @brief	Construct a new empty vector object.
+	 * 			(default constructor)
+	 * 
+	 * @param	alloc An optional allocator to use for instanciation.
+	 */
+	explicit vector(
+		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+		_head(NULL),
+		_tail(NULL),
+		_endOfStorage(NULL) {}
+
+	/**
+	 * @brief	Construct a new vector object with specific size and content.
+	 * 			(fill constructor)
+	 * 
+	 * @param	n The number of elements to fill the vector with.
+	 * @param	val The element value to fill the vector with.
+	 */
+	explicit vector(
+		size_type const n,
+		value_type const &val = value_type(),
+		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+		_head(NULL),
+		_tail(NULL),
+		_endOfStorage(NULL)
+	{
+		this->_insertFill(iterator(), n, val);
+	}
+
+	/**
+	 * @brief	Construct a new vector object with a range of iterators.
+	 * 			The resulting vector will contain the elements
+	 * 			from `first` included to `last` excluded.
+	 * 			(range constructor)
+	 * 
+	 * @tparam	InputIterator Any type that fulfills
+	 * 			the standard input iterator requirements.
+	 * 
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	vector(
+		InputIterator const &first,
+		InputIterator const &last,
+		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+		_head(NULL),
+		_tail(NULL),
+		_endOfStorage(NULL)
+	{
+		this->_insertDispatch(iterator(),
+			first,
+			last,
+			is_integral<InputIterator>());
+	}
+
+	/**
+	 * @brief	Construct a new vector object as a copy of another one.
+	 * 			(copy constructor)
+	 * 
+	 * @param	src The vector to copy.
+	 */
+	vector(vector const &src) :
+		_head(NULL),
+		_tail(NULL),
+		_endOfStorage(NULL)
+	{
+		this->insert(iterator(), src.begin(), src.end());
+	}
+
+// ************************************************************************* //
+//                                Destructors                                //
+// ************************************************************************* //
+
+	/**
+	 * @brief	Destroy a vector object,
+	 * 			releasing its related allocated memory.
+	 * 			(destructor)
+	 */
+	~vector(void)
+	{
+		this->clear();
+		if (this->_head)
+			allocator_type().deallocate(this->_head, this->capacity());
+	};
+
+// ************************************************************************* //
+//                          Public Member Functions                          //
+// ************************************************************************* //
+
+	/**
+	 * @brief		Assign a new size and a new content to the vector.
+	 * 				(fill assignation)
+	 * 
+	 * @param n		The new size of the vector.
+	 * @param val	The new value to fill the vector with.
+	 */
+	void	assign(size_type const n, value_type const &val)
+	{
+		this->clear();
+		this->_insertFill(this->begin(), n, val);
+	}
+
+	/**
+	 * @brief	Assign a new size and a new content to the vector
+	 * 			using a range of iterators,
+	 * 			from `first` included to `last` excluded.
+	 * 			(range assignation)
+	 * 
+	 * @tparam	InputIterator Any type that fulfills
+	 * 			the standard input iterator requirements.
+	 * 
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	void	assign(InputIterator const first, InputIterator const last)
+	{
+		this->clear();
+		this->_insertDispatch(
+			this->begin(),
+			first,
+			last,
+			is_integral<InputIterator>());
+	}
+
+	/**
+	 * @brief	Destroy every element in the vector without deallocating them.
+	 */
+	void	clear(void)
+	{
+		allocator_type	alloc;
+
+		if (this->_head == this->_tail)
+			return ;
+		for (--this->_tail ; this->_tail != this->_head ; --this->_tail)
+			alloc.destroy(this->_tail);
+		alloc.destroy(this->_tail);
+	}
+
+	/**
+	 * @brief	Insert elements at a specific position.
+	 * 			(fill insertion)
+	 * 
+	 * @par		The call to _insertFill() instead of directly
+	 * 			put the implementation in this one is for handle ambiguous
+	 * 			call of an overload of insert().
+	 * 
+	 * @param	pos The position to insert the elements.
+	 * @param	n The number of elements to insert.
+	 * @param	val The element value to fill the vector with.
+	 */
+	void	insert(iterator const pos, size_type const n, value_type const &val)
+	{
+		this->_insertFill(pos, n, val);
+	}
+
+	/**
+	 * @brief	Insert elements at a specific position
+	 * 			using a range of iterators,
+	 * 			from `first` included to `last` excluded.
+	 * 			(range insertion)
+	 * 
+	 * @par		The call to _insertDispacth() instead of directly
+	 * 			put the implementation in this one is for handle ambiguous
+	 * 			call of an overload of insert().
+	 * 
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
+	 * 
+	 * @param	pos The position to insert the elements.
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	void	insert(
+		iterator const pos,
+		InputIterator first,
+		InputIterator const last)
+	{
+		this->_insertDispatch(pos, first, last, is_integral<InputIterator>());
 	}
 
 	/**
@@ -364,7 +461,7 @@ public:
 	 */
 	void	push_back(value_type const &val)
 	{
-		this->insert(this->end(), 1LU, val);
+		this->_insertFill(this->end(), 1LU, val);
 	}
 
 	/**
@@ -390,7 +487,7 @@ public:
 		alloc.deallocate(this->_head, this->capacity());
 		this->_head = newHead;
 		this->_tail = newTail;
-		this->_eos = this->_head + n;
+		this->_endOfStorage = this->_head + n;
 	}
 
 	/**
@@ -420,7 +517,7 @@ public:
 	{
 		ft::swap<pointer>(this->_head, other._head);
 		ft::swap<pointer>(this->_tail, other._tail);
-		ft::swap<pointer>(this->_eos, other._eos);
+		ft::swap<pointer>(this->_endOfStorage, other._endOfStorage);
 	}
 
 	/**
@@ -573,7 +670,7 @@ public:
 	 */
 	size_type	capacity(void) const
 	{
-		return this->_eos - this->_head;
+		return this->_endOfStorage - this->_head;
 	}
 
 	/**
@@ -605,7 +702,7 @@ public:
 	 */
 	reference	at(size_type const n)
 	{
-		return *(this->_head + n);
+		return this->_head[n];
 	}
 
 	/**
@@ -700,7 +797,7 @@ public:
 	 */
 	reference		operator[](size_type const idx)
 	{
-		return *(this->_head + idx);
+		return this->_head[idx];
 	}
 
 	/**
@@ -712,7 +809,7 @@ public:
 	 */
 	const_reference	operator[](size_type const idx) const
 	{
-		return *(this->_head + idx);
+		return this->_head[idx];
 	}
 	
 };
