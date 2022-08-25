@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 01:05:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/19 17:56:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:26:21 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "iterator/base/output_iterator.tpp"
 #include "tester.hpp"
 
-inline static int	__test_construct_pointer(void)
+inline static int	__test_constructor(void)
 {
 	int		arr[] = {
 		0,
@@ -36,48 +36,26 @@ inline static int	__test_construct_pointer(void)
 	title(__func__);
 	try
 	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Pointer constructor
 		{
-			ft::output_iterator<int>	it(arr + idx);
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::output_iterator<int>	it(arr + idx);
 
-			if (*it != arr[idx])
-				return EXIT_FAILURE;
+				if (*it != arr[idx])
+					return EXIT_FAILURE;
+			}
 		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_copy(void)
-{
-	char	arr[] = {
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-	};
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Copy constructor
 		{
-			ft::output_iterator<char>	it0(arr + idx);
-			ft::output_iterator<char>	it1(it0);
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::output_iterator<int>	it0(arr + idx);
+				ft::output_iterator<int>	it1(it0);
 
-			if (memcmp(&it0, &it1, sizeof(it0)))
-				return EXIT_FAILURE;
+				if (memcmp(&it0, &it1, sizeof(it0)))
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -163,7 +141,7 @@ inline static int	__test_operator_dereference(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_increment_prefix(void)
+inline static int	__test_operator_increment(void)
 {
 	t_luint	arr[] = {
 		424242424242420,
@@ -182,44 +160,22 @@ inline static int	__test_operator_increment_prefix(void)
 	title(__func__);
 	try
 	{
-		ft::output_iterator<t_luint>	it(arr);
+		// Prefix incrementation
+		{
+			ft::output_iterator<t_luint>	it(arr);
 
-		for (idx = 0U ; idx < 9U ; ++idx)
-			if (*++it != arr[idx + 1])
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if (*++it != arr[idx + 1])
+					return EXIT_FAILURE;
+		}
+		// Postfix incrementation
+		{
+			ft::output_iterator<t_luint>	it(arr);
 
-inline static int	__test_operator_increment_postfix(void)
-{
-	int		arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		ft::output_iterator<int>	it(arr);
-
-		for (idx = 0U ; idx < 9U ; ++idx)
-			if (*it++ != arr[idx] || *it != arr[idx + 1])
-				return EXIT_FAILURE;
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if (*it++ != arr[idx] || *it != arr[idx + 1])
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -232,23 +188,21 @@ inline static int	__test_operator_increment_postfix(void)
 int	test_output_iterator(void)
 {
 	t_test const tests[] = {
-		__test_construct_pointer,
-		__test_construct_copy,
+		__test_constructor,
 		__test_operator_assign,
 		__test_operator_dereference,
-		__test_operator_increment_prefix,
-		__test_operator_increment_postfix,
+		__test_operator_increment,
 		NULL
 	};
-	int			koCount;
-	int			idx;
+	t_uint		koCount;
+	t_uint		idx;
 
 	std::cerr << "\033[38;2;0;173;255m";
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                OUTPUT ITERATOR                ##" << '\n';
 	std::cout << "###################################################" << '\n';
 	std::cerr << "\033[0m";
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
+	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{

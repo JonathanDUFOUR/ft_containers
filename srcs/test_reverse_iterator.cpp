@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 20:31:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:26:29 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,9 @@
 #include "iterator/base/reverse_iterator.tpp"
 #include "tester.hpp"
 
-inline static int	__test_construct_default(void)
+inline static int	__test_constructor(void)
 {
-	title(__func__);
-	try
-	{
-		ft::reverse_iterator<ft::random_access_iterator<std::iostream> >	ft_rit;
-		std::reverse_iterator<ft::random_access_iterator<std::iostream> >	std_rit;
-
-		if (sizeof(ft_rit) != sizeof(std_rit)
-			|| memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
-			return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_iterator(void)
-{
-	int	arr[] = {
+	int		arr[] = {
 		0,
 		1,
 		2,
@@ -53,61 +33,45 @@ inline static int	__test_construct_iterator(void)
 		8,
 		9,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		// Default constructor
 		{
-			ft::random_access_iterator<int>							it(arr + idx);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
+			ft::reverse_iterator<ft::random_access_iterator<std::iostream> >	ft_rit;
+			std::reverse_iterator<ft::random_access_iterator<std::iostream> >	std_rit;
 
-			if (sizeof(ft_rit) != sizeof(std_rit)
-				|| memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
+			if (sizeof(ft_rit) != sizeof(std_rit) || memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 				return EXIT_FAILURE;
 		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_copy(void)
-{
-	char	arr[] = {
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-	};
-	int		idx;
-
-	title(__func__);
-	try
-	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		// Iterator constructor
 		{
-			ft::random_access_iterator<char>							it(arr + idx);
-			ft::reverse_iterator<ft::random_access_iterator<char> >		ft_rit0(it);
-			ft::reverse_iterator<ft::random_access_iterator<char> >		ft_rit1(ft_rit0);
-			std::reverse_iterator<ft::random_access_iterator<char> >	std_rit0(it);
-			std::reverse_iterator<ft::random_access_iterator<char> >	std_rit1(std_rit0);
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::random_access_iterator<int>							it(arr + idx);
+				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
 
-			if ((sizeof (ft_rit1) != sizeof (std_rit1))
-				|| (memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0))
-					!= memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))))
-				return EXIT_FAILURE;
+				if (sizeof(ft_rit) != sizeof(std_rit) || memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
+					return EXIT_FAILURE;
+			}
+		}
+		// Copy constructor
+		{
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::random_access_iterator<int>							it(arr + idx);
+				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it);
+				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(ft_rit0);
+				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it);
+				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(std_rit0);
+
+				if ((sizeof (ft_rit1) != sizeof (std_rit1)) ||
+					(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))))
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -132,12 +96,12 @@ inline static int	__test_function_base(void)
 		std::numeric_limits<double>::min(),
 		std::numeric_limits<double>::infinity(),
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::random_access_iterator<double>							it(arr + idx);
 			ft::reverse_iterator<ft::random_access_iterator<double> >	ft_rit(it);
@@ -170,14 +134,14 @@ inline static int	__test_operator_assign(void)
 		std::string("ever"),
 		std::string("was"),
 	};
-	int			idx;
+	t_uint		idx;
 
 	title(__func__);
 	try
 	{
 		ft::reverse_iterator<ft::random_access_iterator<std::string> >	rit0;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::random_access_iterator<std::string>							it(arr + idx);
 			ft::reverse_iterator<ft::random_access_iterator<std::string> >	rit1(it);
@@ -209,12 +173,12 @@ inline static int	__test_operator_dereference(void)
 		-8,
 		-9,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 1 ; idx < 11 ; ++idx)
+		for (idx = 1U ; idx < 11U ; ++idx)
 		{
 			ft::random_access_iterator<t_hint>							it(arr + idx);
 			ft::reverse_iterator<ft::random_access_iterator<t_hint> >	ft_rit(it);
@@ -236,7 +200,7 @@ inline static int	__test_operator_dereference(void)
 
 inline static int	__test_operator_maddress(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		0,
 		1,
 		2,
@@ -248,12 +212,12 @@ inline static int	__test_operator_maddress(void)
 		8,
 		9,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::random_access_iterator<int>							it(arr + idx);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
@@ -271,7 +235,7 @@ inline static int	__test_operator_maddress(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_increment_prefix(void)
+inline static int	__test_operator_increment(void)
 {
 	t_luint	arr[] = {
 		424242424242420LU,
@@ -285,18 +249,31 @@ inline static int	__test_operator_increment_prefix(void)
 		424242424242428LU,
 		424242424242429LU,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator<t_luint>							it(arr + 9);
-		ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
+		// Prefix incrementation
+		{
+			ft::random_access_iterator<t_luint>							it(arr + 9);
+			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
 
-		for (idx = 9 ; idx > 0 ; --idx)
-			if ((++ft_rit).base() != (++std_rit).base())
-				return EXIT_FAILURE;
+			for (idx = 9U ; idx > 0U ; --idx)
+				if ((++ft_rit).base() != (++std_rit).base())
+					return EXIT_FAILURE;
+		}
+		// Postfix incrementation
+		{
+			ft::random_access_iterator<t_luint>							it(arr + 9);
+			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
+
+			for (idx = 9U ; idx > 0U ; --idx)
+				if (ft_rit++.base() != std_rit++.base() || ft_rit.base() != std_rit.base())
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -306,42 +283,7 @@ inline static int	__test_operator_increment_prefix(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_increment_postfix(void)
-{
-	int	arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
-	int	idx;
-
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<int>							it(arr + 9);
-		ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
-
-		for (idx = 9 ; idx > 0 ; --idx)
-			if (ft_rit++.base() != std_rit++.base() || ft_rit.base() != std_rit.base())
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_operator_decrement_prefix(void)
+inline static int	__test_operator_decrement(void)
 {
 	t_luint	arr[] = {
 		424242424242420LU,
@@ -355,53 +297,31 @@ inline static int	__test_operator_decrement_prefix(void)
 		424242424242428LU,
 		424242424242429LU,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator<t_luint>							it(arr);
-		ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
+		// Prefix decrementation
+		{
+			ft::random_access_iterator<t_luint>							it(arr);
+			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
 
-		for (idx = 0 ; idx < 9 ; ++idx)
-			if ((--ft_rit).base() != (--std_rit).base())
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if ((--ft_rit).base() != (--std_rit).base())
+					return EXIT_FAILURE;
+		}
+		// Postfix decrementation
+		{
+			ft::random_access_iterator<t_luint>							it(arr);
+			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
 
-inline static int	__test_operator_decrement_postfix(void)
-{
-	int	arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
-	int	idx;
-
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<int>							it(arr);
-		ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<int> >	std_rit(it);
-
-		for (idx = 0 ; idx < 9 ; ++idx)
-			if (ft_rit--.base() != std_rit--.base() || ft_rit.base() != std_rit.base())
-				return EXIT_FAILURE;
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if (ft_rit--.base() != std_rit--.base() || ft_rit.base() != std_rit.base())
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -425,12 +345,12 @@ inline static int	__test_operator_add_assign(void)
 		1000LU,
 		1001LU,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::random_access_iterator<t_luint>							it(arr + 9);
 			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
@@ -464,12 +384,12 @@ inline static int	__test_operator_sub_assign(void)
 		1000LU,
 		1001LU,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft::random_access_iterator<t_luint>							it(arr);
 			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
@@ -503,19 +423,32 @@ inline static int	__test_operator_add(void)
 		1000.0f,
 		1001.0f,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator<float>							it(arr + 9);
-		ft::reverse_iterator<ft::random_access_iterator<float> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
-
-		for (idx = 0 ; idx < 10 ; ++idx)
+		// Member operator
 		{
-			if ((ft_rit + idx).base() != (std_rit + idx).base())
-				return EXIT_FAILURE;
+			ft::random_access_iterator<float>							it(arr + 9);
+			ft::reverse_iterator<ft::random_access_iterator<float> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				if ((ft_rit + idx).base() != (std_rit + idx).base())
+					return EXIT_FAILURE;
+			}
+		}
+		// Non-member operator
+		{
+			ft::random_access_iterator<float>							it(arr + 9);
+			ft::reverse_iterator<ft::random_access_iterator<float> >	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
+
+			for (idx = 0U ; idx < 10U ; ++idx)
+				if (ft::operator+(idx, ft_rit).base() != std::operator+(idx, std_rit).base())
+					return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)
@@ -540,7 +473,7 @@ inline static int	__test_operator_sub(void)
 		1000.0f,
 		1001.0f,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -549,7 +482,7 @@ inline static int	__test_operator_sub(void)
 		ft::reverse_iterator<ft::random_access_iterator<float> >	ft_rit(it);
 		std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 			if ((ft_rit - idx).base() != (std_rit - idx).base())
 				return EXIT_FAILURE;
 	}
@@ -575,7 +508,7 @@ inline static int	__test_operator_access(void)
 		0xf7,
 		0xf6,
 	};
-	int			idx;
+	t_uint		idx;
 
 	title(__func__);
 	try
@@ -584,7 +517,7 @@ inline static int	__test_operator_access(void)
 		ft::reverse_iterator<ft::random_access_iterator<t_hhuint> >		ft_rit(it);
 		std::reverse_iterator<ft::random_access_iterator<t_hhuint> >	std_rit(it);
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 			if (ft_rit[idx] != std_rit[idx])
 				return EXIT_FAILURE;
 	}
@@ -596,42 +529,7 @@ inline static int	__test_operator_access(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_add(void)
-{
-	float	arr[] = {
-		0.0f,
-		1.0f,
-		10.0f,
-		11.0f,
-		100.0f,
-		101.0f,
-		110.0f,
-		111.0f,
-		1000.0f,
-		1001.0f,
-	};
-	int		idx;
-
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<float>							it(arr + 9);
-		ft::reverse_iterator<ft::random_access_iterator<float> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
-
-		for (idx = 0 ; idx < 10 ; ++idx)
-			if (ft::operator+(idx, ft_rit).base() != std::operator+(idx, std_rit).base())
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_non_member_operator_distance(void)
+inline static int	__test_operator_distance(void)
 {
 	std::string	arr[] = {
 		std::string("Un"),
@@ -645,19 +543,19 @@ inline static int	__test_non_member_operator_distance(void)
 		std::string("d'"),
 		std::string("araignee"),
 	};
-	int			idx0;
-	int			idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<std::string>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<std::string> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<std::string> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<std::string>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<std::string> >	ft_rit1(it1);
@@ -677,9 +575,9 @@ inline static int	__test_non_member_operator_distance(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_equal(void)
+inline static int	__test_operator_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -691,19 +589,19 @@ inline static int	__test_non_member_operator_equal(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<int>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<int>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
@@ -721,9 +619,9 @@ inline static int	__test_non_member_operator_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_difference(void)
+inline static int	__test_operator_difference(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -735,19 +633,19 @@ inline static int	__test_non_member_operator_difference(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<int>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<int>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
@@ -765,9 +663,9 @@ inline static int	__test_non_member_operator_difference(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_lower(void)
+inline static int	__test_operator_lower(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -779,19 +677,19 @@ inline static int	__test_non_member_operator_lower(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<int>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<int>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
@@ -809,9 +707,9 @@ inline static int	__test_non_member_operator_lower(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_greater(void)
+inline static int	__test_operator_greater(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -823,19 +721,19 @@ inline static int	__test_non_member_operator_greater(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<int>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<int>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
@@ -853,9 +751,9 @@ inline static int	__test_non_member_operator_greater(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_lower_equal(void)
+inline static int	__test_operator_lower_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -867,19 +765,19 @@ inline static int	__test_non_member_operator_lower_equal(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint	idx0;
+	t_uint	idx1;
 
 	title(__func__);
 	try
 	{
-		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
+		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
 			ft::random_access_iterator<int>							it0(arr + idx0);
 			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
 			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
 
-			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
+			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
 				ft::random_access_iterator<int>							it1(arr + idx1);
 				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
@@ -897,7 +795,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_greater_equal(void)
+inline static int	__test_operator_greater_equal(void)
 {
 	int	arr[] = {
 		1,
@@ -944,34 +842,29 @@ inline static int	__test_non_member_operator_greater_equal(void)
 int	test_reverse_iterator(void)
 {
 	t_test const	tests[] = {
-		__test_construct_default,
-		__test_construct_iterator,
-		__test_construct_copy,
+		__test_constructor,
 		__test_function_base,
 		__test_operator_assign,
 		__test_operator_dereference,
 		__test_operator_maddress,
-		__test_operator_increment_prefix,
-		__test_operator_increment_postfix,
-		__test_operator_decrement_prefix,
-		__test_operator_decrement_postfix,
+		__test_operator_increment,
+		__test_operator_decrement,
 		__test_operator_add_assign,
 		__test_operator_sub_assign,
 		__test_operator_add,
 		__test_operator_sub,
 		__test_operator_access,
-		__test_non_member_operator_add,
-		__test_non_member_operator_distance,
-		__test_non_member_operator_equal,
-		__test_non_member_operator_difference,
-		__test_non_member_operator_lower,
-		__test_non_member_operator_greater,
-		__test_non_member_operator_lower_equal,
-		__test_non_member_operator_greater_equal,
+		__test_operator_distance,
+		__test_operator_equal,
+		__test_operator_difference,
+		__test_operator_lower,
+		__test_operator_greater,
+		__test_operator_lower_equal,
+		__test_operator_greater_equal,
 		NULL,
 	};
-	int				koCount;
-	int				idx;
+	t_uint			koCount;
+	t_uint			idx;
 
 	std::cerr << "\033[38;2;0;173;255m";
 	std::cout << "####################################################" << '\n';
@@ -979,7 +872,7 @@ int	test_reverse_iterator(void)
 	std::cout << "####################################################" << '\n';
 	std::cerr << "\033[0m";
 
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
+	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{

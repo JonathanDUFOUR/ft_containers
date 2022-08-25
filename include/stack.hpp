@@ -6,18 +6,19 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/18 17:36:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:55:06 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STACK_HPP
 # define STACK_HPP
 
+# include <vector>
 # include "vector.hpp"
 
 namespace ft
 {
-template <typename T, typename Container = ft::vector<T> >
+template <typename T, typename Container = std::vector<T> >
 class stack
 {
 public:
@@ -33,25 +34,24 @@ protected:
 	container_type	_ctnr;
 
 public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new stack object.
-	 * 			(default constructor)
+	 * @brief	Construct a new stack object. (default constructor)
 	 * 
 	 * @param	ctnr An optional underlying container to use for instanciation.
 	 */
 	explicit stack(container_type const &ctnr = container_type()) :
 		_ctnr(ctnr) {}
 
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                              Public Member Functions                                              //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Pop the element placed on the top of the stack.
+	 * @brief	Remove the element placed on the top of the stack.
 	 */
 	void	pop(void)
 	{
@@ -59,7 +59,7 @@ public:
 	}
 
 	/**
-	 * @brief	Push an element on the top of the stack.
+	 * @brief	Add an element on the top of the stack.
 	 * 
 	 * @param	val The value to push.
 	 */
@@ -108,9 +108,9 @@ public:
 		return _ctnr.size();
 	}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
 	 * friend keyword is here to call the non-member operators,
@@ -149,15 +149,13 @@ public:
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
  * @return	Either true if the two stacks are equivalent, or false if not.
  */
 template <typename T, typename Container>
-bool	operator==(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator==(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr == rhs._ctnr;
 }
@@ -168,99 +166,81 @@ bool	operator==(
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
  * @return	Either true if the two stacks are different, or false if not.
  */
 template <typename T, typename Container>
-bool	operator!=(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator!=(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr != rhs._ctnr;
 }
 
 /**
- * @brief	Check if the given stack `lhs` is lexicographicaly lower than
- * 			the given stack `rhs`.
+ * @brief	Check if two stack are strictly lexicographicaly ordered.
  * 
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
- * @return	Either true if the given stack `lhs` is lexicographicaly lower than
- * 			the given stack `rhs`, or false if not.
+ * @return	Either true if the two vector are strictly lexiographicaly ordered, or false if not.
  */
 template <typename T, typename Container>
-bool	operator<(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator<(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr < rhs._ctnr;
 }
 
 /**
- * @brief	Check if the given stack `lhs` is lexicographicaly greater than
- * 			the given stack `rhs`.
+ * @brief	Check if two stack are strictly lexicographicaly reverse-ordered.
  * 
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
- * @return	Either true if the given stack `lhs` is lexicographicaly greater than
- * 			the given stack `rhs`, or false if not.
+ * @return	Either true if the two vector are strictly lexiographicaly reverse-ordered, or false if not.
  */
 template <typename T, typename Container>
-bool	operator>(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator>(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr > rhs._ctnr;
 }
 
 /**
- * @brief	Check if the given stack `lhs` is lexicographicaly lower or equal than
- * 			the given stack `rhs`.
+ * @brief	Check if two stack are lexicographicaly ordered or equivalent.
  * 
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
- * @return	Either true if the given stack `lhs` lexicographicaly lower or equal than
- * 			the given stack `rhs`, or false if not.
+ * @return	Either true if the two vector are lexiographicaly ordered or equivalent, or false if not.
  */
 template <typename T, typename Container>
-bool	operator<=(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator<=(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr <= rhs._ctnr;
 }
 
 /**
- * @brief	Check if the given stack `lhs` is lexicographicaly greater or equal than
- * 			the given stack `rhs`.
+ * @brief	Check if two stack are lexicographicaly reverse-ordered or equivalent.
  * 
  * @tparam	T The type of the elements of the stacks.
  * @tparam	Container The type of the underlying container of the stacks.
  * 
- * @param	lhs The left hand side stack.
- * @param	rhs The right hand side stack.
+ * @param	lhs The left hand side stack to compare.
+ * @param	rhs The right hand side stack to compare.
  * 
- * @return	Either true if the given stack `lhs` is lexicographicaly greater or equal than
- * 			the given stack `rhs`, or false if not.
+ * @return	Either true if the two vector are lexiographicaly reverse-ordered or equivalent, or false if not.
  */
 template <typename T, typename Container>
-bool	operator>=(
-			stack<T, Container> const &lhs,
-			stack<T, Container> const &rhs)
+bool	operator>=(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr >= rhs._ctnr;
 }

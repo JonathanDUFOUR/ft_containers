@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:15:10 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:42:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,21 @@ public:
 
 	typedef Iterator												iterator_type;
 
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new reverse_iterator object.
-	 * 			(default constructor)
+	 * @brief	Construct a new reverse_iterator object. (default constructor)
 	 * 
 	 * @param	it The iterator to wrap.
 	 */
 	explicit reverse_iterator(iterator_type const &it = iterator_type()) :
-		bidirectional_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference>(it) {};
+		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(it) {};
 
 	/**
 	 * @brief	Construct a new reverse_iterator object from another one.
-	 * 			Allow iterator to constant iterator conversion.
-	 * 			(copy constructor)
+	 * 			Allow iterator to constant iterator conversion. (copy constructor)
 	 * 
 	 * @tparam	_Iterator The type of the iterator to copy.
 	 * 
@@ -65,16 +58,11 @@ public:
 	 */
 	template <typename _Iterator>
 	reverse_iterator(reverse_iterator<_Iterator> const &src) :
-		bidirectional_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference>(src.base().base()) {};
+		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(src.base().base()) {};
 
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                              Public Member Functions                                              //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Get a copy of the wrapped iterator.
@@ -86,9 +74,9 @@ public:
 		return iterator_type(this->_ptr);
 	};
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Dereference the pointer right before the wrapped one.
@@ -111,8 +99,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1.
-	 * 			(prefix incrementation)
+	 * @brief	Decrease the wrapped pointer value by 1. (prefix incrementation)
 	 * 
 	 * @return	A reference to the incremented reverse_iterator.
 	 */
@@ -123,8 +110,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1.
-	 * 			(postfix incrementation)
+	 * @brief	Decrease the wrapped pointer value by 1. (postfix incrementation)
 	 * 
 	 * @return	A copy of the reverse_iterator before the incrementation.
 	 */
@@ -137,8 +123,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(prefix decrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (prefix decrementation)
 	 * 
 	 * @return	A reference to the decremented reverse_iterator.
 	 */
@@ -149,8 +134,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(postfix decrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (postfix decrementation)
 	 * 
 	 * @return	A copy of the reverse_iterator before the decrementation.
 	 */
@@ -275,13 +259,10 @@ inline typename reverse_iterator<Iterator>::difference_type	operator-(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are equivalent,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are equivalent, or false if not.
  */
 template <typename Iterator>
-inline bool	operator==(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator==(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() == rhs.base();
 }
@@ -294,13 +275,10 @@ inline bool	operator==(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are different,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are different, or false if not.
  */
 template <typename Iterator>
-inline bool	operator!=(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator!=(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() != rhs.base();
 }
@@ -313,13 +291,10 @@ inline bool	operator!=(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are strictly ordered,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are strictly ordered, or false if not.
  */
 template <typename Iterator>
-inline bool	operator<(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator<(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() > rhs.base();
 }
@@ -332,13 +307,10 @@ inline bool	operator<(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are strictly reverse ordered,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are strictly reverse ordered, or false if not.
  */
 template <typename Iterator>
-inline bool	operator>(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator>(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() < rhs.base();
 }
@@ -351,13 +323,10 @@ inline bool	operator>(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are ordered or equivalent,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are ordered or equivalent, or false if not.
  */
 template <typename Iterator>
-inline bool	operator<=(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator<=(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() >= rhs.base();
 }
@@ -370,13 +339,10 @@ inline bool	operator<=(
  * @param	lhs The first reverse_iterator to compare.
  * @param	rhs The second reverse_iterator to compare.
  * 
- * @return	Either true if the two reverse_iterator are reverse ordered or equivalent,
- * 			or false if not.
+ * @return	Either true if the two reverse_iterator are reverse ordered or equivalent, or false if not.
  */
 template <typename Iterator>
-inline bool	operator>=(
-	reverse_iterator<Iterator> const &lhs,
-	reverse_iterator<Iterator> const &rhs)
+inline bool	operator>=(reverse_iterator<Iterator> const &lhs, reverse_iterator<Iterator> const &rhs)
 {
 	return lhs.base() <= rhs.base();
 }

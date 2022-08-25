@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/24 18:28:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 23:10:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,14 @@ private:
 	pointer	_tail;
 	pointer	_endOfStorage;
 
-// ************************************************************************** //
-//                          Private Member Functions                          //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                              Private Member Functions                                              //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Copy elements from a location to another,
-	 * 			using a range of pointers,
+	 * @brief	Copy elements from a location to another, using a range of pointers,
 	 * 			from `first` included to `last` excluded,
-	 * 			using either trivial copy if value_type is an integral type,
-	 * 			or non-trivial copy if not.
+	 * 			using either trivial copy if possible, or non-trivial copy if not.
 	 * 
 	 * @param	dst The destination location.
 	 * @param	first The first element of the range.
@@ -80,9 +78,7 @@ private:
 				alloc.destroy(first);
 			}
 		else if (dst > first)
-			for (dst += (last - first - 1), --first, --last ;
-				first != last ;
-				--last, --dst)
+			for (dst += (last - first - 1), --first, --last ; first != last ; --last, --dst)
 			{
 				alloc.construct(dst, *last);
 				alloc.destroy(last);
@@ -90,8 +86,7 @@ private:
 	}
 
 	/**
-	 * @brief	Determine that the called insert() is a fill insertion,
-	 * 			thanks to the fourth paramter type.
+	 * @brief	Determine that the called insert() is a fill insertion, thanks to the fourth paramter type.
 	 * 
 	 * @tparam	U Any integral type.
 	 * 
@@ -100,18 +95,13 @@ private:
 	 * @param	param2 The element value to fill the vector with.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(
-		iterator const pos,
-		U const param1,
-		U const param2,
-		true_type const)
+	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, true_type const)
 	{
 		this->_insertFill(pos, param1, param2);
 	}
 
 	/**
-	 * @brief	Determine that the called insert() is a range insertion,
-	 * 			thanks to the fourth paramter type.
+	 * @brief	Determine that the called insert() is a range insertion, thanks to the fourth paramter type.
 	 * 
 	 * @tparam	U Any non-integral type.
 	 * 
@@ -120,27 +110,19 @@ private:
 	 * @param	param2 The last element of the range to insert.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(
-		iterator const pos,
-		U const param1,
-		U const param2,
-		false_type const)
+	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, false_type const)
 	{
 		this->_insertRange(pos, param1, param2);
 	}
 
 	/**
 	 * @brief	Insert elements at a specific position.
-	 * 			(fill insertion)
 	 * 
 	 * @param	pos The position to insert the elements.
 	 * @param	n The number of elements to insert.
 	 * @param	val The element value to fill the vector with.
 	 */
-	inline void	_insertFill(
-		iterator const pos,
-		size_type const n,
-		value_type const &val)
+	inline void	_insertFill(iterator const pos, size_type const n, value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
 		size_type		newCapacity;
@@ -152,10 +134,7 @@ private:
 			return ;
 		if (this->size() + n <= this->capacity())
 		{
-			this->_rangeMove(
-				this->_head + offset + n,
-				this->_head + offset,
-				this->_tail);
+			this->_rangeMove(this->_head + offset + n, this->_head + offset, this->_tail);
 			this->_tail += n;
 		}
 		else
@@ -167,35 +146,21 @@ private:
 			newTail = newHead + this->size() + n;
 			if (this->_head)
 			{
-				this->_rangeMove(
-					newHead,
-					this->_head,
-					pos.base());
-				this->_rangeMove(
-					newHead + offset + n,
-					pos.base(),
-					this->_tail);
+				this->_rangeMove(newHead, this->_head, pos.base());
+				this->_rangeMove(newHead + offset + n, pos.base(), this->_tail);
 				alloc.deallocate(this->_head, this->capacity());
 			}
 			this->_head = newHead;
 			this->_tail = newTail;
 			this->_endOfStorage = this->_head + newCapacity;
 		}
-		for (newHead = this->_head + offset, newTail = newHead + n ;
-			newHead != newTail ;
-			++newHead)
+		for (newHead = this->_head + offset, newTail = newHead + n ; newHead != newTail ; ++newHead)
 			alloc.construct(newHead, val);
 	}
 
 	/**
-	 * @brief	Insert elements at a specific position
-	 * 			using a range of iterators,
+	 * @brief	Insert elements at a specific position using a range of iterators,
 	 * 			from `first` included to `last` excluded.
-	 * 			(range insertion)
-	 * 
-	 * @par		The call to _insertDispacth() instead of directly
-	 * 			put the implementation in this one is for handle ambiguous
-	 * 			call of an overload of insert().
 	 * 
 	 * @tparam	InputIterator The type of the iterators to use.
 	 * 			(it must conform to the standard input iterator requirements)
@@ -205,10 +170,7 @@ private:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	_insertRange(
-		iterator const pos,
-		InputIterator first,
-		InputIterator const last)
+	void	_insertRange(iterator const pos, InputIterator first, InputIterator const last)
 	{
 		size_type const	offset = this->end() - pos;
 		size_type		newCapacity;
@@ -220,12 +182,7 @@ private:
 		for ( ; first != last ; ++first)
 		{
 			if (this->size() < this->capacity())
-			{
-				this->_rangeMove(
-					this->_tail - offset + 1,
-					this->_tail - offset,
-					this->_tail);
-			}
+				this->_rangeMove(this->_tail - offset + 1, this->_tail - offset, this->_tail);
 			else
 			{
 
@@ -235,14 +192,8 @@ private:
 				newTail = newHead + this->size();
 				if (this->_head)
 				{
-					this->_rangeMove(
-						newHead,
-						this->_head,
-						this->_tail - offset);
-					this->_rangeMove(
-						newTail - offset + 1,
-						this->_tail - offset,
-						this->_tail);
+					this->_rangeMove(newHead, this->_head, this->_tail - offset);
+					this->_rangeMove(newTail - offset + 1, this->_tail - offset, this->_tail);
 					alloc.deallocate(this->_head, this->capacity());
 				}
 				this->_head = newHead;
@@ -256,33 +207,25 @@ private:
 	}
 
 public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new empty vector object.
-	 * 			(default constructor)
-	 * 
-	 * @param	alloc An optional allocator to use for instanciation.
+	 * @brief	Construct a new empty vector object. (default constructor)
 	 */
-	explicit vector(
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+	explicit vector(allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
 		_endOfStorage(NULL) {}
 
 	/**
-	 * @brief	Construct a new vector object with specific size and content.
-	 * 			(fill constructor)
+	 * @brief	Construct a new vector object with specific size and content. (fill constructor)
 	 * 
 	 * @param	n The number of elements to fill the vector with.
 	 * @param	val The element value to fill the vector with.
 	 */
-	explicit vector(
-		size_type const n,
-		value_type const &val = value_type(),
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+	explicit vector(size_type const n, value_type const &val = value_type(), allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
 		_endOfStorage(NULL)
@@ -292,34 +235,26 @@ public:
 
 	/**
 	 * @brief	Construct a new vector object with a range of iterators.
-	 * 			The resulting vector will contain the elements
-	 * 			from `first` included to `last` excluded.
+	 * 			The resulting vector will contain the elements from `first` included to `last` excluded.
 	 * 			(range constructor)
 	 * 
-	 * @tparam	InputIterator Any type that fulfills
-	 * 			the standard input iterator requirements.
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
 	 * 
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	vector(
-		InputIterator const &first,
-		InputIterator const &last,
-		allocator_type const &alloc __attribute__((unused)) = allocator_type()) :
+	vector(InputIterator const &first, InputIterator const &last, allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
 		_endOfStorage(NULL)
 	{
-		this->_insertDispatch(iterator(),
-			first,
-			last,
-			is_integral<InputIterator>());
+		this->_insertDispatch(iterator(), first, last, is_integral<InputIterator>());
 	}
 
 	/**
-	 * @brief	Construct a new vector object as a copy of another one.
-	 * 			(copy constructor)
+	 * @brief	Construct a new vector object as a copy of another one. (copy constructor)
 	 * 
 	 * @param	src The vector to copy.
 	 */
@@ -331,14 +266,12 @@ public:
 		this->insert(iterator(), src.begin(), src.end());
 	}
 
-// ************************************************************************* //
-//                                Destructors                                //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                    Destructors                                                    //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy a vector object,
-	 * 			releasing its related allocated memory.
-	 * 			(destructor)
+	 * @brief	Destroy a vector object, releasing its related allocated memory. (destructor)
 	 */
 	~vector(void)
 	{
@@ -347,13 +280,12 @@ public:
 			allocator_type().deallocate(this->_head, this->capacity());
 	};
 
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                              Public Member Functions                                              //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief		Assign a new size and a new content to the vector.
-	 * 				(fill assignation)
+	 * @brief		Assign a new size and a new content to the vector. (fill assignation)
 	 * 
 	 * @param n		The new size of the vector.
 	 * @param val	The new value to fill the vector with.
@@ -365,13 +297,11 @@ public:
 	}
 
 	/**
-	 * @brief	Assign a new size and a new content to the vector
-	 * 			using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			(range assignation)
+	 * @brief	Assign a new size and a new content to the vector, using a range of iterators,
+	 * 			from `first` included to `last` excluded. (range assignation)
 	 * 
-	 * @tparam	InputIterator Any type that fulfills
-	 * 			the standard input iterator requirements.
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
 	 * 
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
@@ -380,11 +310,7 @@ public:
 	void	assign(InputIterator const first, InputIterator const last)
 	{
 		this->clear();
-		this->_insertDispatch(
-			this->begin(),
-			first,
-			last,
-			is_integral<InputIterator>());
+		this->_insertDispatch(this->begin(), first, last, is_integral<InputIterator>());
 	}
 
 	/**
@@ -402,12 +328,10 @@ public:
 	}
 
 	/**
-	 * @brief	Insert elements at a specific position.
-	 * 			(fill insertion)
+	 * @brief	Insert elements at a specific position. (fill insertion)
 	 * 
-	 * @par		The call to _insertFill() instead of directly
-	 * 			put the implementation in this one is for handle ambiguous
-	 * 			call of an overload of insert().
+	 * @par		The call to _insertFill() instead of directly put the implementation here
+	 * 			is for handle ambiguous call of an overload of insert().
 	 * 
 	 * @param	pos The position to insert the elements.
 	 * @param	n The number of elements to insert.
@@ -419,14 +343,11 @@ public:
 	}
 
 	/**
-	 * @brief	Insert elements at a specific position
-	 * 			using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			(range insertion)
+	 * @brief	Insert elements at a specific position using a range of iterators,
+	 * 			from `first` included to `last` excluded. (range insertion)
 	 * 
-	 * @par		The call to _insertDispacth() instead of directly
-	 * 			put the implementation in this one is for handle ambiguous
-	 * 			call of an overload of insert().
+	 * @par		The call to _insertDispacth() instead of directly put the implementation here
+	 * 			is for handle ambiguous call of an overload of insert().
 	 * 
 	 * @tparam	InputIterator The type of the iterators to use.
 	 * 			(it must conform to the standard input iterator requirements)
@@ -436,10 +357,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(
-		iterator const pos,
-		InputIterator first,
-		InputIterator const last)
+	void	insert(iterator const pos, InputIterator first, InputIterator const last)
 	{
 		this->_insertDispatch(pos, first, last, is_integral<InputIterator>());
 	}
@@ -480,10 +398,7 @@ public:
 			return ;
 		newHead = alloc.allocate(n, this->_head);
 		newTail = newHead + this->size();
-		this->_rangeMove(
-			newHead,
-			this->_head,
-			this->_tail);
+		this->_rangeMove(newHead, this->_head, this->_tail);
 		alloc.deallocate(this->_head, this->capacity());
 		this->_head = newHead;
 		this->_tail = newTail;
@@ -508,8 +423,7 @@ public:
 	}
 
 	/**
-	 * @brief	Swap the content of the given vector
-	 * 			with the content of the current vector.
+	 * @brief	Swap the content of the given vector with the content of the current vector.
 	 * 
 	 * @param	other The vector to swap with.
 	 */
@@ -551,8 +465,7 @@ public:
 	}
 
 	/**
-	 * @brief	Remove a single element from the vector.
-	 * 			(single erase)
+	 * @brief	Remove a single element from the vector. (single erase)
 	 * 
 	 * @param	pos The position of the element to remove.
 	 * 
@@ -564,10 +477,8 @@ public:
 	}
 
 	/**
-	 * @brief	Remove elements from the vector
-	 * 			using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			(range erase)
+	 * @brief	Remove elements from the vector using a range of iterators,
+	 * 			from `first` included to `last` excluded. (range erase)
 	 * 
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
@@ -587,8 +498,7 @@ public:
 	}
 
 	/**
-	 * @brief	Insert an element at a specific position.
-	 * 			(single insertion)
+	 * @brief	Insert an element at a specific position. (single insertion)
 	 * 
 	 * @param	pos The position to insert the element.
 	 * @param	val The element to insert.
@@ -758,8 +668,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get an allocator_type object,
-	 * 			corresponding to the one used in the vector.
+	 * @brief	Get an allocator_type object, corresponding to the one used in the vector.
 	 * 
 	 * @return	An allocator object.
 	 */
@@ -768,14 +677,12 @@ public:
 		return allocator_type();
 	}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Replace the current content of the vector
-	 * 			by an other vector one's.
-	 * 			(copy assignation)
+	 * @brief	Replace the current content of the vector by an other vector one's. (copy assignation)
 	 * 
 	 * @param	rhs The right hand side vector to copy the content from.
 	 * 
@@ -813,6 +720,124 @@ public:
 	}
 	
 };
+
+/**
+ * @brief	Check if two vector are equivalent.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are equivalent, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator==(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	
+	return &lhs == &rhs || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+/**
+ * @brief	Check if two vector are different.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are different, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator!=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	return !(lhs == rhs);
+}
+
+/**
+ * @brief	Check if two vector are strictly lexiographicaly ordered.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are strictly lexiographicaly ordered, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator<(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+/**
+ * @brief	Check if two vector are strictly lexiographicaly reverse-ordered.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are strictly lexiographicaly reverse-ordered, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator>(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	return rhs < lhs;
+}
+
+/**
+ * @brief	Check if two vector are lexiographicaly ordered or equivalent.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are lexiographicaly ordered or equivalent, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator<=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	return !(rhs < lhs);
+}
+
+/**
+ * @brief	Check if two vector are lexiographicaly reverse-ordered or equivalent.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	lhs The left hand side vector to compare.
+ * @param	rhs The right hand side vector to compare.
+ * 
+ * @return	Either true if the two vector are lexiographicaly reverse-ordered or equivalent, or false if not.
+ */
+template <typename T, typename Alloc>
+bool	operator>=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+{
+	return !(lhs < rhs);
+}
+
+/**
+ * @brief	Swap the contents of two given vector.
+ * 
+ * @tparam	T The type of the elements stored in both of the vector.
+ * @tparam	Alloc The allocator type used in both of the vector.
+ * 
+ * @param	a The first vector to swap.
+ * @param	b The second vector to swap.
+ */
+template <typename T, typename Alloc>
+void	swap(vector<T, Alloc> &a, vector<T, Alloc> &b)
+{
+	a.swap(b);
+}
 }
 
 #endif

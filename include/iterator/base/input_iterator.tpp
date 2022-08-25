@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:15:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:35:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,34 @@ protected:
 	// Attributes
 	pointer	_ptr;
 
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new input_iterator object.
-	 * 			(default constructor)
+	 * @brief	Construct a new input_iterator object. (default constructor)
 	 */
 	input_iterator(void) : _ptr(NULL) {}
 
 public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
 
 	/**
-	 * @brief	Construct a new input_iterator object from a pointer.
-	 * 			(wrap constructor)
+	 * @brief	Construct a new input_iterator object from a pointer. (wrap constructor)
 	 * 
 	 * @param	ptr The pointer to wrap.
 	 */
 	input_iterator(pointer const ptr) : _ptr(ptr) {}
 
 	/**
-	 * @brief	Construct a new input_iterator object from another one.
-	 * 			(copy constructor)
+	 * @brief	Construct a new input_iterator object from another one. (copy constructor)
 	 * 
 	 * @param	src The iterator to copy.
 	 */
 	input_iterator(input_iterator const &src) : _ptr(src._ptr) {}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Assign a new pointer to the iterator.
@@ -90,8 +84,7 @@ public:
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
-	 * @return 	Either true if the two input_iterator are equivalent,
-	 * 			or false if not.
+	 * @return 	Either true if the two input_iterator are equivalent, or false if not.
 	 */
 	inline bool	operator==(input_iterator const &rhs) const
 	{
@@ -103,8 +96,7 @@ public:
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
-	 * @return	Either true if the two input_iterator are different,
-	 * 			or false if not.
+	 * @return	Either true if the two input_iterator are different, or false if not.
 	 */
 	inline bool	operator!=(input_iterator const &rhs) const
 	{
@@ -132,8 +124,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(prefix incrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (prefix incrementation)
 	 * 
 	 * @return 	A reference to the incremented input_iterator.
 	 */
@@ -144,8 +135,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(postfix incrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (postfix incrementation)
 	 * 
 	 * @return 	A copy of the input_iterator before the incrementation.
 	 */

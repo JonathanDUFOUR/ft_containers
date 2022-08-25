@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:16:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:31:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,45 +33,32 @@ public:
 	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::reference;
 	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new bidirectional_iterator object.
-	 * 			(default constructor)
+	 * @brief	Construct a new bidirectional_iterator object. (default constructor)
 	 * 
 	 * @param	ptr The pointer to wrap.
 	 */
 	bidirectional_iterator(pointer const ptr = NULL) :
-		forward_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference>(ptr) {}
+		forward_iterator<value_type, iterator_category, difference_type, pointer, reference>(ptr) {}
 
 	/**
-	 * @brief	Construct a new bidirectional_iterator object.
-	 * 			(copy constructor)
+	 * @brief	Construct a new bidirectional_iterator object. (copy constructor)
 	 * 
 	 * @param	src The iterator to copy.
 	 */
 	bidirectional_iterator(bidirectional_iterator const &src) :
-		forward_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference>(src) {}
+		forward_iterator<value_type, iterator_category, difference_type, pointer, reference>(src) {}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1.
-	 * 			(prefix decrementation)
+	 * @brief	Decrease the wrapped pointer value by 1. (prefix decrementation)
 	 * 
 	 * @return	A reference to the decremented bidirectional_iterator.
 	 */
@@ -82,8 +69,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1.
-	 * 			(postfix decrementation)
+	 * @brief	Decrease the wrapped pointer value by 1. (postfix decrementation)
 	 * 
 	 * @return	A copy of the bidirectional_iterator before the decrementation.
 	 */

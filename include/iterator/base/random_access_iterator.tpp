@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:15:20 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:38:13 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,21 @@ public:
 	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::reference;
 	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
 
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new random_access_iterator object.
-	 * 			(default constructor)
+	 * @brief	Construct a new random_access_iterator object. (default constructor)
 	 * 
 	 * @param	ptr	The pointer to wrap.
 	 */
 	random_access_iterator(pointer const ptr = NULL) :
-		bidirectional_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference>(ptr) {}
+		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(ptr) {}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Increase the wrapped pointer value by N.
@@ -90,12 +84,7 @@ public:
 	 */
 	inline random_access_iterator	operator+(difference_type const rhs) const
 	{
-		random_access_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference> it(*this);
+		random_access_iterator<value_type, iterator_category, difference_type, pointer, reference> it(*this);
 
 		it += rhs;
 		return it;
@@ -110,12 +99,7 @@ public:
 	 */
 	inline random_access_iterator	operator-(difference_type const rhs) const
 	{
-		random_access_iterator<
-			value_type,
-			iterator_category,
-			difference_type,
-			pointer,
-			reference> it(*this);
+		random_access_iterator<value_type, iterator_category, difference_type, pointer, reference> it(*this);
 
 		it -= rhs;
 		return it;
@@ -150,8 +134,7 @@ public:
 	 * 
 	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are strictly ordered,
-	 * 			or false if not.
+	 * @return	Either true if the two random_access_iterator are strictly ordered, or false if not.
 	 */
 	inline bool	operator<(random_access_iterator const &rhs) const
 	{
@@ -163,8 +146,7 @@ public:
 	 * 
 	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are strictly reverse ordered,
-	 * 			or false if not.
+	 * @return	Either true if the two random_access_iterator are strictly reverse ordered, or false if not.
 	 */
 	inline bool	operator>(random_access_iterator const &rhs) const
 	{
@@ -176,8 +158,7 @@ public:
 	 * 
 	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are ordered or equivalent,
-	 * 			or false if not.
+	 * @return	Either true if the two random_access_iterator are ordered or equivalent, or false if not.
 	 */
 	inline bool	operator<=(random_access_iterator const &rhs) const
 	{
@@ -189,8 +170,7 @@ public:
 	 * 
 	 * @param	rhs The random_access_iterator to compare with.
 	 * 
-	 * @return	Either true if the two random_access_iterator are reverse ordered or equivalent,
-	 * 			or false if not.
+	 * @return	Either true if the two random_access_iterator are reverse ordered or equivalent, or false if not.
 	 */
 	inline bool	operator>=(random_access_iterator const &rhs) const
 	{

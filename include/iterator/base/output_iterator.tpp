@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/22 23:15:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:36:24 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,32 +33,30 @@ public:
 	typedef Ref			reference;
 	typedef Diff		difference_type;
 
-private:
+protected:
 	// Attributes
 	pointer	_ptr;
 
 public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new output_iterator object from a pointer.
-	 * 			(wrap constructor)
+	 * @brief	Construct a new output_iterator object from a pointer. (wrap constructor)
 	 * 
 	 * @param	ptr The pointer to wrap.
 	 */
 	output_iterator(pointer const ptr) : _ptr(ptr) {}
 
 	/**
-	 * @brief	Construct a new output_iterator object.
-	 * 			(copy constructor)
+	 * @brief	Construct a new output_iterator object. (copy constructor)
 	 */
 	output_iterator(output_iterator const &src) : _ptr(src._ptr) {}
 
-// ************************************************************************* //
-//                                 Operators                                 //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Assign a new pointer to the iterator.
@@ -84,8 +82,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(prefix incrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (prefix incrementation)
 	 * 
 	 * @return	A reference to the incremented output_iterator.
 	 */
@@ -96,8 +93,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1.
-	 * 			(postfix incrementation)
+	 * @brief	Increase the wrapped pointer value by 1. (postfix incrementation)
 	 * 
 	 * @return	A copy of the output_iterator before the incrementation.
 	 */

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/23 10:15:15 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:20:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,12 @@ struct rb_node
 	rb_node	*parent;
 	rb_node	*child[2];
 
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new rb_node object.
-	 * 			(default constructor)
+	 * @brief	Construct a new rb_node object. (default constructor)
 	 * 
 	 * @param	data The data to store in the node.
 	 */
@@ -91,13 +90,12 @@ private:
 	pointer	_root;
 
 public:
-// ************************************************************************** //
-//                                Constructors                                //
-// ************************************************************************** //
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new rb_tree object.
-	 * 			(default constructor)
+	 * @brief	Construct a new rb_tree object. (default constructor)
 	 * 
 	 * @param	root The root node of the new tree.
 	 */
@@ -105,8 +103,7 @@ public:
 		_root(root) {}
 
 	/**
-	 * @brief	Construct a new rb_tree object.
-	 * 			(copy constructor)
+	 * @brief	Construct a new rb_tree object. (copy constructor)
 	 * 
 	 * @param	src The rb_tree to copy
 	 */
@@ -117,23 +114,21 @@ public:
 			this->_root = rb_tree::dup(src._root);
 	}
 
-// ************************************************************************* //
-//                                Destructors                                //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                                    Destructors                                                    //
+// ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy a rb_tree object,
-	 * 			relasing its related allocated memory.
-	 * 			(destructor)
+	 * @brief	Destroy a rb_tree object, relasing its related allocated memory. (destructor)
 	 */
 	~rb_tree(void)
 	{
 		rb_tree::clear(this->_root);
 	}
 
-// ************************************************************************* //
-//                          Public Member Functions                          //
-// ************************************************************************* //
+// ***************************************************************************************************************** //
+//                                              Public Member Functions                                              //
+// ***************************************************************************************************************** //
 
 	/**
 	 * @brief	Remove every nodes of the given tree.
@@ -170,8 +165,7 @@ public:
 	}
 
 	/**
-	 * @brief	Duplicate every node from a tree to another,
-	 * 			using deep copy.
+	 * @brief	Duplicate every node from a tree to another, using deep copy.
 	 * 
 	 * @param	src The source root.
 	 * 
@@ -193,14 +187,12 @@ public:
 	}
 
 	/**
-	 * @brief	Rotate a portion of the tree to the given direction.
-	 * 			The colors are not modified.
+	 * @brief	Rotate a portion of the tree to the given direction. The colors are not modified.
 	 * 
 	 * @param	root The root of the subtree to rotate.
 	 * @param	dir The direction to rotate the subtree.
 	 * 
-	 * @return	The new root of the rotated subtree.
-	 * 			Upon failure, NULL is returned instead.
+	 * @return	The new root of the rotated subtree. Upon failure, NULL is returned instead.
 	 */
 	pointer	rotate(pointer const root, uint8_t const dir)
 		__attribute__((nonnull))
@@ -241,10 +233,8 @@ public:
 	 * 
 	 * @param	data The data to insert in the tree.
 	 * 
-	 * @return	A pair containing an iterator to the node of the tree
-	 * 			as `first` member,
-	 * 			and a boolean indicating whether a new node has been inserted
-	 * 			as `second` member.
+	 * @return	A pair containing an iterator to the node of the tree as `first` member,
+	 * 			and a boolean indicating whether a new node has been inserted as `second` member.
 	 */
 	pair<iterator, bool> insert(value_type const &data)
 	{

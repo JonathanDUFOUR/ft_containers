@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/24 18:59:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:26:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,8 +344,8 @@ int	test_is_integral(void)
 		__test_ft_input_iterator,
 		NULL
 	};
-	int				koCount;
-	int				idx;
+	t_uint			koCount;
+	t_uint			idx;
 
 	std::cerr << "\033[38;2;0;173;255m";
 	std::cout << "###################################################" << '\n';
@@ -353,7 +353,7 @@ int	test_is_integral(void)
 	std::cout << "###################################################" << '\n';
 	std::cerr << "\033[0m";
 
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
+	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{

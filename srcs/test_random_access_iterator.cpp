@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 04:19:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/19 17:56:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:26:25 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,7 @@
 #include "iterator/base/random_access_iterator.tpp"
 #include "tester.hpp"
 
-inline static int	__test_construct_default(void)
-{
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<std::iostream>	it;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_pointer(void)
+inline static int	__test_constructor(void)
 {
 	int		arr[] = {
 		0,
@@ -51,48 +36,30 @@ inline static int	__test_construct_pointer(void)
 	title(__func__);
 	try
 	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Default constructor
 		{
-			ft::random_access_iterator<int>	it(arr + idx);
-
-			if (*it != arr[idx])
-				return EXIT_FAILURE;
+			ft::random_access_iterator<std::iostream>	it;
 		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_copy(void)
-{
-	char	arr[] = {
-		'0',
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-	};
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Pointer constructor
 		{
-			ft::random_access_iterator<char>	it0(arr + idx);
-			ft::random_access_iterator<char>	it1(it0);
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::random_access_iterator<int>	it(arr + idx);
 
-			if (memcmp(&it0, &it1, sizeof(it0)))
-				return EXIT_FAILURE;
+				if (*it != arr[idx])
+					return EXIT_FAILURE;
+			}
+		}
+		// Copy constructor
+		{
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				ft::random_access_iterator<int>	it0(arr + idx);
+				ft::random_access_iterator<int>	it1(it0);
+
+				if (memcmp(&it0, &it1, sizeof(it0)))
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -294,7 +261,7 @@ inline static int	__test_operator_maddress(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_increment_prefix(void)
+inline static int	__test_operator_increment(void)
 {
 	t_luint	arr[] = {
 		424242424242420LU,
@@ -313,11 +280,22 @@ inline static int	__test_operator_increment_prefix(void)
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator<t_luint>	it(arr);
+		// Prefix incrementation
+		{
+			ft::random_access_iterator<t_luint>	it(arr);
 
-		for (idx = 0U ; idx < 9U ; ++idx)
-			if (*++it != arr[idx + 1])
-				return EXIT_FAILURE;
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if (*++it != arr[idx + 1])
+					return EXIT_FAILURE;
+		}
+		// Postfix incrementation
+		{
+			ft::random_access_iterator<t_luint>	it(arr);
+
+			for (idx = 0U ; idx < 9U ; ++idx)
+				if (*it++ != arr[idx] || *it != arr[idx + 1])
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -327,40 +305,7 @@ inline static int	__test_operator_increment_prefix(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_operator_increment_postfix(void)
-{
-	int		arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<int>	it(arr);
-
-		for (idx = 0U ; idx < 9U ; ++idx)
-			if (*it++ != arr[idx] || *it != arr[idx + 1])
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_operator_decrement_prefix(void)
+inline static int	__test_operator_decrement(void)
 {
 	t_luint	arr[] = {
 		424242424242420LU,
@@ -379,44 +324,22 @@ inline static int	__test_operator_decrement_prefix(void)
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator<t_luint>	it(arr + 9);
+		// Prefix decrementation
+		{
+			ft::random_access_iterator<t_luint>	it(arr + 9);
 
-		for (idx = 9U ; idx > 0U ; --idx)
-			if (*--it != arr[idx - 1])
-				return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
+			for (idx = 9U ; idx > 0U ; --idx)
+				if (*--it != arr[idx - 1])
+					return EXIT_FAILURE;
+		}
+		// Postfix decrementation
+		{
+			ft::random_access_iterator<t_luint>	it(arr + 9);
 
-inline static int	__test_operator_decrement_postfix(void)
-{
-	int		arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		ft::random_access_iterator<int>	it(arr + 9);
-
-		for (idx = 9U ; idx > 0U ; --idx)
-			if (*it-- != arr[idx] || *it != arr[idx - 1])
-				return EXIT_FAILURE;
+			for (idx = 9U ; idx > 0U ; --idx)
+				if (*it-- != arr[idx] || *it != arr[idx - 1])
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -802,18 +725,14 @@ inline static int	__test_operator_greater_equal(void)
 int	test_random_access_iterator(void)
 {
 	t_test const	tests[] = {
-		__test_construct_default,
-		__test_construct_pointer,
-		__test_construct_copy,
+		__test_constructor,
 		__test_operator_assign,
 		__test_operator_equal,
 		__test_operator_difference,
 		__test_operator_dereference,
 		__test_operator_maddress,
-		__test_operator_increment_prefix,
-		__test_operator_increment_postfix,
-		__test_operator_decrement_prefix,
-		__test_operator_decrement_postfix,
+		__test_operator_increment,
+		__test_operator_decrement,
 		__test_operator_add_assign,
 		__test_operator_sub_assign,
 		__test_operator_add,
@@ -826,8 +745,8 @@ int	test_random_access_iterator(void)
 		__test_operator_greater_equal,
 		NULL,
 	};
-	int				koCount;
-	int				idx;
+	t_uint			koCount;
+	t_uint			idx;
 
 
 	std::cerr << "\033[38;2;0;173;255m";
@@ -836,7 +755,7 @@ int	test_random_access_iterator(void)
 	std::cout << "####################################################" << '\n';
 	std::cerr << "\033[0m";
 
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
+	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{

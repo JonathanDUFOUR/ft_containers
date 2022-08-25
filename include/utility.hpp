@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/06/01 15:29:36 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 20:29:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@
 namespace ft
 {
 template <typename T0, typename T1>
-class pair
+struct pair
 {
-public:
 	// Member types
 	typedef T0	first_type;
 	typedef T1	second_type;
@@ -28,9 +27,7 @@ public:
 	second_type	second;
 
 	// Constructors
-	pair(
-		first_type const &a = first_type(),
-		second_type const &b = second_type()) :
+	pair(first_type const &a = first_type(), second_type const &b = second_type()) :
 		first(a),
 		second(b) {}
 	pair(pair const &src) :

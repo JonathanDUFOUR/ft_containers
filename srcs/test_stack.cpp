@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/18 17:28:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/25 22:30:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,27 +19,7 @@
 #include "stack.hpp"
 #include "tester.hpp"
 
-inline static int	__test_construct_default(void)
-{
-	title(__func__);
-	try
-	{
-		ft::stack<int, std::vector<int> >	ft_sta;
-		std::stack<int, std::vector<int> >	std_sta;
-
-		if (sizeof(ft_sta) != sizeof(std_sta)
-			|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
-			return EXIT_FAILURE;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_construct_container(void)
+inline static int	__test_constructor(void)
 {
 	std::vector<t_uint>	vec;
 	t_uint				idx;
@@ -47,22 +27,34 @@ inline static int	__test_construct_container(void)
 	title(__func__);
 	try
 	{
+		// Default constructor
 		{
-			ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
-			std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
+			ft::stack<int, std::vector<int> >	ft_sta;
+			std::stack<int, std::vector<int> >	std_sta;
+
 			if (sizeof(ft_sta) != sizeof(std_sta)
 				|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
 				return EXIT_FAILURE;
 		}
-		for (idx = 0U ; idx < 10U ; ++idx)
+		// Wrap constructor
 		{
-			vec.push_back(idx);
+			{
+				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
+				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
+				if (sizeof(ft_sta) != sizeof(std_sta)
+					|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
+					return EXIT_FAILURE;
+			}
+			for (idx = 0U ; idx < 10U ; ++idx)
+			{
+				vec.push_back(idx);
 
-			ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
-			std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
+				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
+				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
 
-			if (sizeof(ft_sta) != sizeof(std_sta))
-				return EXIT_FAILURE;
+				if (sizeof(ft_sta) != sizeof(std_sta))
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -88,12 +80,12 @@ inline static int	__test_function_top(void)
 		'!',
 	};
 	std::vector<char>	vec;
-	int					idx;
+	t_uint					idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			vec.push_back(arr[idx]);
 
@@ -126,7 +118,7 @@ inline static int	__test_function_push(void)
 		std::string("l'attrape"),
 		std::string("par"),
 	};
-	int			idx;
+	t_uint		idx;
 
 	title(__func__);
 	try
@@ -134,7 +126,7 @@ inline static int	__test_function_push(void)
 		ft::stack<std::string, std::vector<std::string> >	ft_sta;
 		std::stack<std::string, std::vector<std::string> >	std_sta;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_sta.push(arr[idx]);
 			std_sta.push(arr[idx]);
@@ -165,7 +157,7 @@ inline static int	__test_function_pop(void)
 		1000.0f,
 		1001.0f,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -173,19 +165,19 @@ inline static int	__test_function_pop(void)
 		ft::stack<float, std::vector<float> >	ft_sta;
 		std::stack<float, std::vector<float> >	std_sta;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_sta.push(arr[idx]);
 			std_sta.push(arr[idx]);
 		}
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			if (ft_sta.top() != std_sta.top())
 				return EXIT_FAILURE;
 			ft_sta.pop();
 			std_sta.pop();
 		}
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
@@ -213,7 +205,7 @@ inline static int	__test_function_empty(void)
 		0x00000000ffffffffL,
 		0x0000000fffffffffL,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -221,7 +213,7 @@ inline static int	__test_function_empty(void)
 		ft::stack<t_lint, std::vector<t_lint> >		ft_sta;
 		std::stack<t_lint, std::vector<t_lint> >	std_sta;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			if (ft_sta.empty() != std_sta.empty())
 				return EXIT_FAILURE;
@@ -230,7 +222,7 @@ inline static int	__test_function_empty(void)
 		}
 		if (ft_sta.empty() != std_sta.empty())
 			return EXIT_FAILURE;
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
@@ -260,7 +252,7 @@ inline static int	__test_function_size(void)
 		0x89abcdefU,
 		0x789abcdeU,
 	};
-	int		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -268,7 +260,7 @@ inline static int	__test_function_size(void)
 		ft::stack<t_uint, std::vector<t_uint> >		ft_sta;
 		std::stack<t_uint, std::vector<t_uint> >	std_sta;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			if (ft_sta.size() != std_sta.size())
 				return EXIT_FAILURE;
@@ -277,7 +269,7 @@ inline static int	__test_function_size(void)
 		}
 		if (ft_sta.size() != std_sta.size())
 			return EXIT_FAILURE;
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
@@ -293,9 +285,9 @@ inline static int	__test_function_size(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_equal(void)
+inline static int	__test_operator_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -307,7 +299,7 @@ inline static int	__test_non_member_operator_equal(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -317,13 +309,13 @@ inline static int	__test_non_member_operator_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 == ft_sta1) != (std_sta0 == std_sta1))
+			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 == ft_sta1) != (std_sta0 == std_sta1))
+			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -337,9 +329,9 @@ inline static int	__test_non_member_operator_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_difference(void)
+inline static int	__test_operator_difference(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -351,7 +343,7 @@ inline static int	__test_non_member_operator_difference(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -361,13 +353,13 @@ inline static int	__test_non_member_operator_difference(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 != ft_sta1) != (std_sta0 != std_sta1))
+			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 != ft_sta1) != (std_sta0 != std_sta1))
+			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -381,9 +373,9 @@ inline static int	__test_non_member_operator_difference(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_lower(void)
+inline static int	__test_operator_lower(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -395,7 +387,7 @@ inline static int	__test_non_member_operator_lower(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -405,13 +397,13 @@ inline static int	__test_non_member_operator_lower(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 < ft_sta1) != (std_sta0 < std_sta1))
+			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 < ft_sta1) != (std_sta0 < std_sta1))
+			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -425,9 +417,9 @@ inline static int	__test_non_member_operator_lower(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_greater(void)
+inline static int	__test_operator_greater(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -439,7 +431,7 @@ inline static int	__test_non_member_operator_greater(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -449,13 +441,13 @@ inline static int	__test_non_member_operator_greater(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 > ft_sta1) != (std_sta0 > std_sta1))
+			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 > ft_sta1) != (std_sta0 > std_sta1))
+			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -469,9 +461,9 @@ inline static int	__test_non_member_operator_greater(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_lower_equal(void)
+inline static int	__test_operator_lower_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -483,7 +475,7 @@ inline static int	__test_non_member_operator_lower_equal(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -493,13 +485,13 @@ inline static int	__test_non_member_operator_lower_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 <= ft_sta1) != (std_sta0 <= std_sta1))
+			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 <= ft_sta1) != (std_sta0 <= std_sta1))
+			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -513,9 +505,9 @@ inline static int	__test_non_member_operator_lower_equal(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_non_member_operator_greater_equal(void)
+inline static int	__test_operator_greater_equal(void)
 {
-	int	arr[] = {
+	int		arr[] = {
 		1,
 		2,
 		4,
@@ -527,7 +519,7 @@ inline static int	__test_non_member_operator_greater_equal(void)
 		256,
 		512,
 	};
-	int	idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -537,13 +529,13 @@ inline static int	__test_non_member_operator_greater_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0 ; idx < 10 ; ++idx)
+		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			if ((ft_sta0 >= ft_sta1) != (std_sta0 >= std_sta1))
+			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta0.push(arr[idx]);
 			std_sta0.push(arr[idx]);
-			if ((ft_sta0 >= ft_sta1) != (std_sta0 >= std_sta1))
+			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
 				return EXIT_FAILURE;
 			ft_sta1.push(arr[idx]);
 			std_sta1.push(arr[idx]);
@@ -560,23 +552,22 @@ inline static int	__test_non_member_operator_greater_equal(void)
 int	test_stack(void)
 {
 	t_test const	tests[] = {
-		__test_construct_default,
-		__test_construct_container,
+		__test_constructor,
 		__test_function_top,
 		__test_function_push,
 		__test_function_pop,
 		__test_function_empty,
 		__test_function_size,
-		__test_non_member_operator_equal,
-		__test_non_member_operator_difference,
-		__test_non_member_operator_lower,
-		__test_non_member_operator_greater,
-		__test_non_member_operator_lower_equal,
-		__test_non_member_operator_greater_equal,
+		__test_operator_equal,
+		__test_operator_difference,
+		__test_operator_lower,
+		__test_operator_greater,
+		__test_operator_lower_equal,
+		__test_operator_greater_equal,
 		NULL
 	};
-	int				koCount;
-	int				idx;
+	t_uint			koCount;
+	t_uint			idx;
 
 	std::cerr << "\033[38;2;0;173;255m";
 	std::cout << "###################################################" << '\n';
@@ -584,7 +575,7 @@ int	test_stack(void)
 	std::cout << "###################################################" << '\n';
 	std::cerr << "\033[0m";
 
-	for (koCount = 0, idx = 0 ; tests[idx] ; ++idx)
+	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
 		if (tests[idx]())
 		{
