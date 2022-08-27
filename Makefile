@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/08/23 16:39:03 by jodufour         ###   ########.fr        #
+#    Updated: 2022/08/27 16:40:05 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ PRV_DIR		=	private/
 ######################################
 SRC			=	\
 				main.cpp						\
+				test_algorithm.cpp				\
 				test_bidirectional_iterator.cpp	\
 				test_forward_iterator.cpp		\
 				test_input_iterator.cpp			\

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:14:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/27 19:27:25 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,6 @@
 
 namespace ft
 {
-
-/**
- * @brief	Swap two elements of any type.
- * 
- * @tparam	T The type of the elements to swap.
- */
-template <typename T>
-void	swap(T &a, T &b)
-{
-	T const	tmp = a;
-
-	a = b;
-	b = tmp;
-}
-
 /**
  * @brief	Compare elements with some others, using ranges of iterators, from `first0` included to `last0` excluded.
  * 
@@ -109,12 +94,16 @@ bool	lexicographical_compare(
 	InputIterator1 first1,
 	InputIterator1 last1)
 {
-	while (first0 != last0 && first1 != last1 && *first0 == *first1)
+	while (first0 != last0)
 	{
+		if (first1 == last1 || *first1 < *first0)
+			return false;
+		else if (*first0 < *first1)
+			return true;
 		++first0;
 		++first1;
 	}
-	return (first0 == last0) || (first1 != last1 && *first0 < *first1);
+	return first1 != last1;
 }
 
 /**
@@ -143,12 +132,30 @@ bool	lexicographical_compare(
 	InputIterator1 last1,
 	Compare comp)
 {
-	while (first0 != last0 && first1 != last1 && !comp(*first0, *first1) && !comp(*first1, *first0))
+	while (first0 != last0)
 	{
+		if (first1 == last1 || comp(*first1, *first0))
+			return false;
+		else if (comp(*first0, *first1))
+			return true;
 		++first0;
 		++first1;
 	}
-	return (first0 == last0) || (first1 != last1 && comp(*first0, *first1));
+	return first1 != last1;
+}
+
+/**
+ * @brief	Swap two elements of any type.
+ * 
+ * @tparam	T The type of the elements to swap.
+ */
+template <typename T>
+void	swap(T &a, T &b)
+{
+	T const	tmp = a;
+
+	a = b;
+	b = tmp;
 }
 }
 #endif

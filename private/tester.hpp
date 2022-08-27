@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:25:40 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/27 15:52:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef unsigned short		t_huint;
 typedef unsigned int		t_uint;
 typedef unsigned long		t_luint;
 
+int	test_algorithm(void);
 int	test_bidirectional_iterator(void);
 int	test_forward_iterator(void);
 int	test_input_iterator(void);
