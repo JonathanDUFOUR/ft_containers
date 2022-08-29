@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:58:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/29 18:56:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,7 +359,7 @@ inline static int	__test_function_begin(void)
 		888888888,
 		9999999999,
 	};
-	size_t		n;
+	size_t			n;
 
 	title(__func__);
 	try
@@ -402,7 +402,7 @@ inline static int	__test_function_end(void)
 		888888888,
 		9999999999,
 	};
-	size_t		n;
+	size_t			n;
 
 	title(__func__);
 	try
@@ -445,7 +445,7 @@ inline static int	__test_function_rbegin(void)
 		888888888,
 		9999999999,
 	};
-	size_t		n;
+	size_t			n;
 
 	title(__func__);
 	try
@@ -1410,7 +1410,7 @@ inline static int	__test_function_swap(void)
 
 inline static int	__test_function_reserve(void)
 {
-	t_huint const	arr[] = {
+	t_huint const		arr0[] = {
 		2U,
 		5U,
 		7U,
@@ -1422,22 +1422,71 @@ inline static int	__test_function_reserve(void)
 		29U,
 		31U,
 	};
-	size_t	n;
+	long double const	arr1[] = {
+		2.0L,
+		5.0L,
+		7.0L,
+		11.0L,
+		13.0L,
+		17.0L,
+		19.0L,
+		23.0L,
+		29.0L,
+		31.0L,
+	};
+	size_t				n;
 
 	title(__func__);
 	try
 	{
-		ft::vector<t_huint>						ft_vec(&arr[0], &arr[10]);
-		std::vector<t_huint>					std_vec(&arr[0], &arr[10]);
-		ft::vector<t_huint>::const_iterator		ft_cit;
-		std::vector<t_huint>::const_iterator	std_cit;
-
-		for (n = 0LU ; n < 100LU ; n += 10LU)
+		// Light size
 		{
-			ft_vec.reserve(n);
-			std_vec.reserve(n);
+			ft::vector<t_huint>						ft_vec(&arr0[0], &arr0[10]);
+			std::vector<t_huint>					std_vec(&arr0[0], &arr0[10]);
+			ft::vector<t_huint>::const_iterator		ft_cit;
+			std::vector<t_huint>::const_iterator	std_cit;
 
-			if (ft_vec.size() != std_vec.size() || ft_vec.capacity() != std_vec.capacity())
+			for (n = 0LU ; n < 100LU ; n += 10LU)
+			{
+				ft_vec.reserve(n);
+				std_vec.reserve(n);
+
+				if (ft_vec.size() != std_vec.size() || ft_vec.capacity() != std_vec.capacity())
+					return EXIT_FAILURE;
+				for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+					ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+					++ft_cit, ++std_cit)
+					if (*ft_cit != *std_cit)
+						return EXIT_FAILURE;
+			}
+		}
+		// Heavy size
+		{
+			ft::vector<long double>						ft_vec(&arr1[0], &arr1[10]);
+			std::vector<long double>					std_vec(&arr1[0], &arr1[10]);
+			ft::vector<long double>::const_iterator		ft_cit;
+			std::vector<long double>::const_iterator	std_cit;
+			std::string									ft_except;
+			std::string									std_except;
+
+			try
+			{
+				ft_vec.reserve(ft_vec.max_size() * 2);
+			}
+			catch (std::exception const &e)
+			{
+				ft_except = e.what();
+			}
+			try
+			{
+				std_vec.reserve(std_vec.max_size() * 2);
+			}
+			catch (std::exception const &e)
+			{
+				std_except = e.what();
+			}
+
+			if (ft_except != std_except || ft_vec.size() != std_vec.size() || ft_vec.capacity() != std_vec.capacity())
 				return EXIT_FAILURE;
 			for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
 				ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
@@ -1468,7 +1517,7 @@ inline static int	__test_function_resize(void)
 		1,
 		0,
 	};
-	size_t	n;
+	size_t		n;
 
 	title(__func__);
 	try
