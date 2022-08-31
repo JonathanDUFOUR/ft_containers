@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:55:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 11:07:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 namespace ft
 {
-template <typename T, typename Container = std::vector<T> >
+template <typename T, typename Container = ft::vector<T> >
 class stack
 {
 public:
@@ -118,29 +118,17 @@ public:
 	 */
 
 	template <typename _T, typename _Container>
-	friend bool	operator==(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator==(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
-	friend bool	operator!=(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator!=(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
-	friend bool	operator<(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator<(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
-	friend bool	operator>(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator>(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
-	friend bool	operator<=(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator<=(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
-	friend bool	operator>=(
-		stack<_T, _Container> const &lhs,
-		stack<_T, _Container> const &rhs);
+	friend bool	operator>=(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 };
 
 /**

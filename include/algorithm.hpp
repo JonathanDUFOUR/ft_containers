@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/27 19:27:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/30 22:40:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ bool	lexicographical_compare(
  * @tparam	T The type of the elements to swap.
  */
 template <typename T>
-void	swap(T &a, T &b)
+inline void	swap(T &a, T &b)
 {
 	T const	tmp = a;
 

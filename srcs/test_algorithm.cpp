@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/27 19:29:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/30 22:51:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -688,7 +688,63 @@ inline static int	__test_lexicographical_compare(void)
 inline static int	__test_swap(void)
 {
 	title(__func__);
-	
+	// Swap int
+	{
+		int	ft_a;
+		int	ft_b;
+		int	std_a;
+		int	std_b;
+
+		ft_a = 42;
+		ft_b = -21;
+		std_a = ft_a;
+		std_b = ft_b;
+
+		ft::swap(ft_a, ft_b);
+		std::swap(std_a, std_b);
+
+		if (ft_a != std_a || ft_b != std_b)
+			return EXIT_FAILURE;
+	}
+	// Swap string
+	{
+		std::string	ft_a;
+		std::string	ft_b;
+		std::string	std_a;
+		std::string	std_b;
+
+		ft_a = std::string("Hello");
+		ft_b = std::string("World");
+		std_a = ft_a;
+		std_b = ft_b;
+
+		ft::swap(ft_a, ft_b);
+		std::swap(std_a, std_b);
+
+		if (ft_a != std_a || ft_b != std_b)
+			return EXIT_FAILURE;
+	}
+	// Swap vector of unsigned char
+	{
+		std::vector<t_hhuint>	ft_a;
+		std::vector<t_hhuint>	ft_b;
+		std::vector<t_hhuint>	std_a;
+		std::vector<t_hhuint>	std_b;
+		t_uint					idx;
+
+		for (idx = 0U ; idx < 21U ; ++idx)
+			ft_a.push_back(static_cast<t_hhuint>((idx * 7 - 5) / 3));
+		for (idx = 0U ; idx < 42U ; ++idx)
+			ft_b.push_back(static_cast<t_hhuint>((idx * 5 - 7) / 3));
+		std_a = ft_a;
+		std_b = ft_b;
+
+		ft::swap(ft_a, ft_b);
+		std::swap(std_a, std_b);
+
+		if (ft_a != std_a || ft_b != std_b)
+			return EXIT_FAILURE;
+	}
 	return EXIT_SUCCESS;
 }
 
@@ -697,6 +753,7 @@ int	test_algorithm(void)
 	t_test const	tests[] = {
 		__test_equal,
 		__test_lexicographical_compare,
+		__test_swap,
 		NULL
 	};
 	t_uint			koCount;

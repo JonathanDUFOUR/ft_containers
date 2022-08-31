@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/29 19:00:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 06:26:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,6 +322,8 @@ public:
 	 */
 	reference	at(size_type const n)
 	{
+		if (n >= this->size())
+			throw std::out_of_range("vector::at");
 		return this->_head[n];
 	}
 
@@ -334,7 +336,9 @@ public:
 	 */
 	const_reference	at(size_type const n) const
 	{
-		return *(this->_head + n);
+		if (n >= this->size())
+			throw std::out_of_range("vector::at");
+		return this->_head[n];
 	}
 
 	/**
@@ -839,5 +843,11 @@ void	swap(vector<T, Alloc> &a, vector<T, Alloc> &b)
 	a.swap(b);
 }
 }
+
+/*
+	template<InputIterator It>
+	void insert(It first, It end,
+	typename <ft::enable_if<ft::isinteg<It>::value, It>::type* = 0)
+*/
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:31:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 08:35:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,38 @@ public:
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Check if two bidirectional_iterator are equivalent.
+	 * 			Allow comparison between mutable and constant bidirectional_iterator.
+	 * 
+	 * @tparam	U The type of the bidirectional_iterator to compare with.
+	 * 
+	 * @param	rhs The bidirectional_iterator to compare with.
+	 * 
+	 * @return 	Either true if the two bidirectional_iterator are equivalent, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator==(bidirectional_iterator<U> const &rhs) const
+	{
+		return this->base() == rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two bidirectional_iterator are different.
+	 * 			Allow comparison between mutable and constant bidirectional_iterator.
+	 * 
+	 * @tparam	U The type of the bidirectional_iterator to compare with.
+	 * 
+	 * @param	rhs The bidirectional_iterator to compare with.
+	 * 
+	 * @return	Either true if the two bidirectional_iterator are different, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator!=(bidirectional_iterator<U> const &rhs) const
+	{
+		return this->base() != rhs.base();
+	}
 
 	/**
 	 * @brief	Decrease the wrapped pointer value by 1. (prefix decrementation)

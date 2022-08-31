@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:53:34 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 11:04:48 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,13 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get a copy of the wrapped pointer.
+	 * @brief	Get a copy of the wrapped iterator.
 	 * 
-	 * @return	A copy of the wrapped pointer.
+	 * @return	A copy of the wrapped iterator.
 	 */
-	inline pointer	base(void) const
+	inline iterator_type	base(void) const
 	{
-		return this->_ptr;
+		return iterator_type(this->_ptr);
 	}
 
 // ***************************************************************************************************************** //
@@ -108,6 +108,126 @@ public:
 	inline bool	operator!=(vector_iterator<_Iterator> const &rhs) const
 	{
 		return this->base() != rhs.base();
+	}
+
+	/**
+	 * @brief	Increase the wrapped pointer value by 1. (prefix incrementation)
+	 * 
+	 * @return 	A reference to the incremented vector_iterator.
+	 */
+	inline vector_iterator	&operator++(void)
+	{
+		++this->_ptr;
+		return *this;
+	}
+
+	/**
+	 * @brief	Increase the wrapped pointer value by 1. (postfix incrementation)
+	 * 
+	 * @return 	A copy of the vector_iterator before the incrementation.
+	 */
+	inline vector_iterator	operator++(int)
+	{
+		vector_iterator	original(*this);
+
+		++this->_ptr;
+		return original;
+	}
+
+	/**
+	 * @brief	Decrease the wrapped pointer value by 1. (prefix decrementation)
+	 * 
+	 * @return	A reference to the decremented vector_iterator.
+	 */
+	inline vector_iterator	&operator--(void)
+	{
+		--this->_ptr;
+		return *this;
+	}
+
+	/**
+	 * @brief	Decrease the wrapped pointer value by 1. (postfix decrementation)
+	 * 
+	 * @return	A copy of the vector_iterator before the decrementation.
+	 */
+	inline vector_iterator	operator--(int)
+	{
+		vector_iterator	original(*this);
+
+		--this->_ptr;
+		return original;
+	}
+
+	/**
+	 * @brief	Increase the wrapped pointer value by N.
+	 * 
+	 * @param	rhs The number to increase the pointer by.
+	 * 
+	 * @return	A reference to the increased vector_iterator.
+	 */
+	inline vector_iterator	&operator+=(difference_type const rhs)
+	{
+		this->_ptr += rhs;
+		return *this;
+	}
+
+	/**
+	 * @brief	Decrease the wrapped pointer value by N.
+	 * 
+	 * @param	rhs The number to decrease the pointer by.
+	 * 
+	 * @return	A reference to the decreased vector_iterator.
+	 */
+	inline vector_iterator	&operator-=(difference_type const rhs)
+	{
+		this->_ptr -= rhs;
+		return *this;
+	}
+
+	/**
+	 * @brief	Add N to the wrapped pointer value.
+	 * 
+	 * @param	rhs The number to add to the pointer.
+	 * 
+	 * @return	A vector_iterator pointing to the new position.
+	 */
+	inline vector_iterator	operator+(difference_type const rhs) const
+	{
+		vector_iterator<iterator_type>	it(*this);
+
+		it += rhs;
+		return it;
+	}
+
+	/**
+	 * @brief	Subtract N from the wrapped pointer value.
+	 * 
+	 * @param	rhs The number to subtract from the pointer.
+	 * 
+	 * @return   A vector_iterator pointing to the new position.
+	 */
+	inline vector_iterator	operator-(difference_type const rhs) const
+	{
+		vector_iterator<iterator_type>	it(*this);
+
+		it -= rhs;
+		return it;
+	}
+
+	/**
+	 * @brief	Calculate the distance between to another vector_iterator.
+	 * 			Allow calculation between mutable and constant vector_iterator.
+	 * 
+	 * @tparam	_Iterator The type of the vector_iterator to calculate the distance to.
+	 * 
+	 * @param	rhs The vector_iterator to calculate the distance to.
+	 * 
+	 * @return	The distance between the two vector_iterator.
+	 */
+	template <typename _Iterator>
+	inline difference_type operator-(vector_iterator<_Iterator> const &rhs) const
+	{
+		return this->base() - rhs.base();
 	}
 
 	/**
@@ -173,77 +293,22 @@ public:
 	{
 		return this->base() >= rhs.base();
 	}
-
-
-	/**
-	 * @brief	Increase the wrapped pointer value by N.
-	 * 
-	 * @param	rhs The number to increase the pointer by.
-	 * 
-	 * @return	A reference to the increased vector_iterator.
-	 */
-	inline vector_iterator	&operator+=(difference_type const rhs)
-	{
-		this->_ptr += rhs;
-		return *this;
-	}
-
-	/**
-	 * @brief	Decrease the wrapped pointer value by N.
-	 * 
-	 * @param	rhs The number to decrease the pointer by.
-	 * 
-	 * @return	A reference to the decreased vector_iterator.
-	 */
-	inline vector_iterator	&operator-=(difference_type const rhs)
-	{
-		this->_ptr -= rhs;
-		return *this;
-	}
-
-	/**
-	 * @brief	Add N to the wrapped pointer value.
-	 * 
-	 * @param	rhs The number to add to the pointer.
-	 * 
-	 * @return	A vector_iterator pointing to the new position.
-	 */
-	inline vector_iterator	operator+(difference_type const rhs) const
-	{
-		vector_iterator<iterator_type>	it(*this);
-
-		it += rhs;
-		return it;
-	}
-
-	/**
-	 * @brief	Subtract N from the wrapped pointer value.
-	 * 
-	 * @param	rhs The number to subtract from the pointer.
-	 * 
-	 * @return   A vector_iterator pointing to the new position.
-	 */
-	inline vector_iterator	operator-(difference_type const rhs) const
-	{
-		vector_iterator<iterator_type>	it(*this);
-
-		it -= rhs;
-		return it;
-	}
-
-	/**
-	 * @brief	Calculate the distance between two random_access_iterator.
-	 * 
-	 * @param	rhs The random_access_iterator to calculate the distance to.
-	 * 
-	 * @return	The distance between the two random_access_iterator.
-	 */
-	inline difference_type operator-(vector_iterator const &rhs) const
-	{
-		return this->_ptr - rhs._ptr;
-	}
 };
 
+/**
+ * @brief	Increment the wrapped pointer of a vector_iterator by N.
+ * 
+ * @param	lhs The number to increment the pointer with.
+ * 
+ * @return	A vector_iterator pointing to the new position.
+ */
+template <typename Iterator>
+inline vector_iterator<Iterator>	operator+(
+	typename vector_iterator<Iterator>::difference_type const lhs,
+	vector_iterator<Iterator> const &rhs)
+{
+	return rhs + lhs;
+}
 }
 
 #endif

@@ -6,3 +6,5 @@
 **.log
 .vscode
 tester_mazoise
+tester_mli
+tester_monkey

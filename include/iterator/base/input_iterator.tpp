@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:35:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 08:35:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,20 @@ public:
 	input_iterator(input_iterator const &src) : _ptr(src._ptr) {}
 
 // ***************************************************************************************************************** //
+//                                                     Accessors                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Get the pointer wrapped by the iterator.
+	 * 
+	 * @return	The pointer wrapped by the iterator.
+	 */
+	pointer	base(void) const
+	{
+		return _ptr;
+	}
+
+// ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
 
@@ -73,7 +87,7 @@ public:
 	 * 
 	 * @return 	A reference to the assigned input_iterator.
 	 */
-	inline input_iterator &operator=(input_iterator const &rhs)
+	inline input_iterator	&operator=(input_iterator const &rhs)
 	{
 		this->_ptr = rhs._ptr;
 		return *this;
@@ -81,26 +95,34 @@ public:
 
 	/**
 	 * @brief	Check if two input_iterator are equivalent.
+	 * 			Allow comparison between mutable and constant input_iterator.
+	 * 
+	 * @tparam	U The type of the input_iterator to compare with.
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
 	 * @return 	Either true if the two input_iterator are equivalent, or false if not.
 	 */
-	inline bool	operator==(input_iterator const &rhs) const
+	template <typename U>
+	inline bool	operator==(input_iterator<U> const &rhs) const
 	{
-		return this->_ptr == rhs._ptr;
+		return this->base() == rhs.base();
 	}
 
 	/**
 	 * @brief	Check if two input_iterator are different.
+	 * 			Allow comparison between mutable and constant input_iterator.
+	 * 
+	 * @tparam	U The type of the input_iterator to compare with.
 	 * 
 	 * @param	rhs The input_iterator to compare with.
 	 * 
 	 * @return	Either true if the two input_iterator are different, or false if not.
 	 */
-	inline bool	operator!=(input_iterator const &rhs) const
+	template <typename U>
+	inline bool	operator!=(input_iterator<U> const &rhs) const
 	{
-		return this->_ptr != rhs._ptr;
+		return this->base() != rhs.base();
 	}
 
 	/**

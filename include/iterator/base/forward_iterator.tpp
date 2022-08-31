@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:32:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 08:35:11 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,42 @@ public:
 	 */
 	forward_iterator(forward_iterator const &src) :
 		input_iterator<value_type, iterator_category, difference_type, pointer, reference>(src) {}
+
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Check if two forward_iterator are equivalent.
+	 * 			Allow comparison between mutable and constant forward_iterator.
+	 * 
+	 * @tparam	U The type of the forward_iterator to compare with.
+	 * 
+	 * @param	rhs The forward_iterator to compare with.
+	 * 
+	 * @return 	Either true if the two forward_iterator are equivalent, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator==(forward_iterator<U> const &rhs) const
+	{
+		return this->base() == rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two forward_iterator are different.
+	 * 			Allow comparison between mutable and constant forward_iterator.
+	 * 
+	 * @tparam	U The type of the forward_iterator to compare with.
+	 * 
+	 * @param	rhs The forward_iterator to compare with.
+	 * 
+	 * @return	Either true if the two forward_iterator are different, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator!=(forward_iterator<U> const &rhs) const
+	{
+		return this->base() != rhs.base();
+	}
 };
 }
 

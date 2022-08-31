@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:26:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 10:51:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,17 @@ inline static int	__test_constructor(void)
 		{
 			for (idx = 0U ; idx < 10U ; ++idx)
 			{
-				ft::random_access_iterator<int>							it(arr + idx);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(ft_rit0);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(std_rit0);
+				ft::random_access_iterator<int>									it(arr + idx);
+				ft::reverse_iterator<ft::random_access_iterator<int> >			ft_rit0(it);
+				ft::reverse_iterator<ft::random_access_iterator<int> >			ft_rit1(ft_rit0);
+				ft::reverse_iterator<ft::random_access_iterator<int> const>		ft_rit2(ft_rit1);
+				std::reverse_iterator<ft::random_access_iterator<int> >			std_rit0(it);
+				std::reverse_iterator<ft::random_access_iterator<int> >			std_rit1(std_rit0);
+				std::reverse_iterator<ft::random_access_iterator<int> const>	std_rit2(std_rit1);
 
-				if ((sizeof (ft_rit1) != sizeof (std_rit1)) ||
-					(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))))
+				if ((sizeof (ft_rit1) != sizeof (std_rit1)) || sizeof(ft_rit2) != sizeof(std_rit2) ||
+					(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))) ||
+					(memcmp(&ft_rit1, &ft_rit2, sizeof(ft_rit1)) != memcmp(&std_rit1, &std_rit2, sizeof(std_rit1))))
 					return EXIT_FAILURE;
 			}
 		}
@@ -143,11 +146,16 @@ inline static int	__test_operator_assign(void)
 
 		for (idx = 0U ; idx < 10U ; ++idx)
 		{
-			ft::random_access_iterator<std::string>							it(arr + idx);
-			ft::reverse_iterator<ft::random_access_iterator<std::string> >	rit1(it);
+			ft::random_access_iterator<std::string>								it0(arr + idx);
+			ft::random_access_iterator<std::string> const						it1(arr + idx);
+			ft::reverse_iterator<ft::random_access_iterator<std::string> >		rit1(it0);
+			ft::reverse_iterator<ft::random_access_iterator<std::string> const>	rit2(it1);
 
 			rit0 = rit1;
 			if (memcmp(&rit0, &rit1, sizeof(ft::reverse_iterator<ft::random_access_iterator<std::string> >)))
+				return EXIT_FAILURE;
+			rit0 = rit2;
+			if (memcmp(&rit0, &rit2, sizeof(ft::reverse_iterator<ft::random_access_iterator<std::string> >)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -356,8 +364,8 @@ inline static int	__test_operator_add_assign(void)
 			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
 
-			ft_rit += idx;
-			std_rit += idx;
+			ft_rit = (ft_rit += idx);
+			std_rit = (std_rit += idx);
 			if (ft_rit.base() != std_rit.base())
 				return EXIT_FAILURE;
 		}
@@ -395,8 +403,8 @@ inline static int	__test_operator_sub_assign(void)
 			ft::reverse_iterator<ft::random_access_iterator<t_luint> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator<t_luint> >	std_rit(it);
 
-			ft_rit -= idx;
-			std_rit -= idx;
+			ft_rit = (ft_rit -= idx);
+			std_rit = (std_rit -= idx);
 			if (ft_rit.base() != std_rit.base())
 				return EXIT_FAILURE;
 		}
@@ -447,7 +455,7 @@ inline static int	__test_operator_add(void)
 			std::reverse_iterator<ft::random_access_iterator<float> >	std_rit(it);
 
 			for (idx = 0U ; idx < 10U ; ++idx)
-				if (ft::operator+(idx, ft_rit).base() != std::operator+(idx, std_rit).base())
+				if ((idx + ft_rit).base() != (idx + std_rit).base())
 					return EXIT_FAILURE;
 		}
 	}
@@ -531,7 +539,7 @@ inline static int	__test_operator_access(void)
 
 inline static int	__test_operator_distance(void)
 {
-	std::string	arr[] = {
+	std::string const	arr[] = {
 		std::string("Un"),
 		std::string("elephant"),
 		std::string("qui"),
@@ -543,23 +551,23 @@ inline static int	__test_operator_distance(void)
 		std::string("d'"),
 		std::string("araignee"),
 	};
-	t_uint		idx0;
-	t_uint		idx1;
+	t_uint				idx0;
+	t_uint				idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<std::string>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<std::string> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<std::string> >	std_rit0(it0);
+			ft::random_access_iterator<std::string const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<std::string const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<std::string const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<std::string>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<std::string> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<std::string> >	std_rit1(it1);
+				ft::random_access_iterator<std::string const>								it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<std::string const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<std::string const> const>	std_rit1(it1);
 
 				if (ft::operator-(ft_rit0, ft_rit1) != std::operator-(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -577,7 +585,7 @@ inline static int	__test_operator_distance(void)
 
 inline static int	__test_operator_equal(void)
 {
-	int		arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -589,23 +597,23 @@ inline static int	__test_operator_equal(void)
 		256,
 		512,
 	};
-	t_uint	idx0;
-	t_uint	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const> const							it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> const>	std_rit1(it1);
 
 				if (ft::operator==(ft_rit0, ft_rit1) != std::operator==(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -615,13 +623,14 @@ inline static int	__test_operator_equal(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
 
 inline static int	__test_operator_difference(void)
 {
-	int		arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -633,23 +642,23 @@ inline static int	__test_operator_difference(void)
 		256,
 		512,
 	};
-	t_uint	idx0;
-	t_uint	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const> const						it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const> const							it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> const>	std_rit1(it1);
 
 				if (ft::operator!=(ft_rit0, ft_rit1) != std::operator!=(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -659,13 +668,14 @@ inline static int	__test_operator_difference(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
 
 inline static int	__test_operator_lower(void)
 {
-	int		arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -677,23 +687,23 @@ inline static int	__test_operator_lower(void)
 		256,
 		512,
 	};
-	t_uint	idx0;
-	t_uint	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const>								it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> const>	std_rit1(it1);
 
 				if (ft::operator<(ft_rit0, ft_rit1) != std::operator<(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -703,13 +713,14 @@ inline static int	__test_operator_lower(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
 
 inline static int	__test_operator_greater(void)
 {
-	int		arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -721,23 +732,23 @@ inline static int	__test_operator_greater(void)
 		256,
 		512,
 	};
-	t_uint	idx0;
-	t_uint	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const> const							it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> const>	std_rit1(it1);
 
 				if (ft::operator>(ft_rit0, ft_rit1) != std::operator>(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -753,7 +764,7 @@ inline static int	__test_operator_greater(void)
 
 inline static int	__test_operator_lower_equal(void)
 {
-	int		arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -765,23 +776,23 @@ inline static int	__test_operator_lower_equal(void)
 		256,
 		512,
 	};
-	t_uint	idx0;
-	t_uint	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0U ; idx0 < 10U ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const> const							it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> const>	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> const>	std_rit1(it1);
 
 				if (ft::operator<=(ft_rit0, ft_rit1) != std::operator<=(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -797,7 +808,7 @@ inline static int	__test_operator_lower_equal(void)
 
 inline static int	__test_operator_greater_equal(void)
 {
-	int	arr[] = {
+	int const	arr[] = {
 		1,
 		2,
 		4,
@@ -809,23 +820,23 @@ inline static int	__test_operator_greater_equal(void)
 		256,
 		512,
 	};
-	int	idx0;
-	int	idx1;
+	t_uint		idx0;
+	t_uint		idx1;
 
 	title(__func__);
 	try
 	{
 		for (idx0 = 0 ; idx0 < 10 ; ++idx0)
 		{
-			ft::random_access_iterator<int>							it0(arr + idx0);
-			ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator<int> >	std_rit0(it0);
+			ft::random_access_iterator<int const>							it0(arr + idx0);
+			ft::reverse_iterator<ft::random_access_iterator<int const> >	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator<int const> >	std_rit0(it0);
 
 			for (idx1 = 0 ; idx1 < 10 ; ++idx1)
 			{
-				ft::random_access_iterator<int>							it1(arr + idx1);
-				ft::reverse_iterator<ft::random_access_iterator<int> >	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator<int> >	std_rit1(it1);
+				ft::random_access_iterator<int const> const							it1(arr + idx1);
+				ft::reverse_iterator<ft::random_access_iterator<int const> > const	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator<int const> > const	std_rit1(it1);
 
 				if (ft::operator>=(ft_rit0, ft_rit1) != std::operator>=(std_rit0, std_rit1))
 					return EXIT_FAILURE;

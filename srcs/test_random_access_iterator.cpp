@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 04:19:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:26:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 09:50:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ inline static int	__test_operator_equal(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 == it1) != (idx0 == idx1))
 					return EXIT_FAILURE;
@@ -145,6 +145,7 @@ inline static int	__test_operator_equal(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -175,7 +176,7 @@ inline static int	__test_operator_difference(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 != it1) != (idx0 != idx1))
 					return EXIT_FAILURE;
@@ -185,6 +186,7 @@ inline static int	__test_operator_difference(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -372,7 +374,7 @@ inline static int	__test_operator_add_assign(void)
 		{
 			ft::random_access_iterator<t_luint>	it(arr);
 
-			it += idx;
+			it = (it += idx);
 			if (*it != arr[idx])
 				return EXIT_FAILURE;
 		}
@@ -408,7 +410,7 @@ inline static int	__test_operator_sub_assign(void)
 		{
 			ft::random_access_iterator<t_luint>	it(arr + 9);
 
-			it -= idx;
+			it = (it -= idx);
 			if (*it != arr[9 - idx])
 				return EXIT_FAILURE;
 		}
@@ -443,7 +445,7 @@ inline static int	__test_operator_add(void)
 		ft::random_access_iterator<float>	it(arr);
 
 		for (idx = 0U ; idx < 10U ; ++idx)
-			if (*(it + idx) != arr[idx])
+			if (*(it + idx) != arr[idx] || *(idx + it) != arr[idx])
 				return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -588,7 +590,7 @@ inline static int	__test_operator_lower(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 < it1) != (idx0 < idx1))
 					return EXIT_FAILURE;
@@ -598,6 +600,7 @@ inline static int	__test_operator_lower(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -628,7 +631,7 @@ inline static int	__test_operator_greater(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 > it1) != (idx0 > idx1))
 					return EXIT_FAILURE;
@@ -638,6 +641,7 @@ inline static int	__test_operator_greater(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -668,7 +672,7 @@ inline static int	__test_operator_lower_equal(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 <= it1) != (idx0 <= idx1))
 					return EXIT_FAILURE;
@@ -678,6 +682,7 @@ inline static int	__test_operator_lower_equal(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }
@@ -708,7 +713,7 @@ inline static int	__test_operator_greater_equal(void)
 
 			for (idx1 = 0U ; idx1 < 10U ; ++idx1)
 			{
-				ft::random_access_iterator<int>	it1(arr + idx1);
+				ft::random_access_iterator<int const>	it1(arr + idx1);
 
 				if ((it0 >= it1) != (idx0 >= idx1))
 					return EXIT_FAILURE;
@@ -718,6 +723,7 @@ inline static int	__test_operator_greater_equal(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
 }

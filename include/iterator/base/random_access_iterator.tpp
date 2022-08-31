@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:38:13 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/08/31 09:51:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@
 
 namespace ft
 {
+
+template <typename T, typename Category, typename Diff, typename Ptr, typename Ref>
+class input_iterator;
+
 template <
 	typename T,
 	typename Category = std::random_access_iterator_tag,
@@ -48,6 +52,102 @@ public:
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Check if two random_access_iterator are equivalent.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return 	Either true if the two random_access_iterator are equivalent, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator==(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() == rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two random_access_iterator are different.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return	Either true if the two random_access_iterator are different, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator!=(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() != rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two random_access_iterator are strictly ordered.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return	Either true if the two random_access_iterator are strictly ordered, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator<(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() < rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two random_access_iterator are strictly reverse ordered.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return	Either true if the two random_access_iterator are strictly reverse ordered, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator>(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() > rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two random_access_iterator are ordered or equivalent.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return	Either true if the two random_access_iterator are ordered or equivalent, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator<=(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() <= rhs.base();
+	}
+
+	/**
+	 * @brief	Check if two random_access_iterator are reverse ordered or equivalent.
+	 * 			Allow comparison between mutable and constant random_access_iterator.
+	 * 
+	 * @tparam	U The type of the random_access_iterator to compare with.
+	 * 
+	 * @param	rhs The random_access_iterator to compare with.
+	 * 
+	 * @return	Either true if the two random_access_iterator are reverse ordered or equivalent, or false if not.
+	 */
+	template <typename U>
+	inline bool	operator>=(random_access_iterator<U> const &rhs) const
+	{
+		return this->base() >= rhs.base();
+	}
 
 	/**
 	 * @brief	Increase the wrapped pointer value by N.
@@ -128,55 +228,22 @@ public:
 	{
 		return *(this->_ptr + idx);
 	}
-
-	/**
-	 * @brief	Check if two random_access_iterator are strictly ordered.
-	 * 
-	 * @param	rhs The random_access_iterator to compare with.
-	 * 
-	 * @return	Either true if the two random_access_iterator are strictly ordered, or false if not.
-	 */
-	inline bool	operator<(random_access_iterator const &rhs) const
-	{
-		return this->_ptr < rhs._ptr;
-	}
-
-	/**
-	 * @brief	Check if two random_access_iterator are strictly reverse ordered.
-	 * 
-	 * @param	rhs The random_access_iterator to compare with.
-	 * 
-	 * @return	Either true if the two random_access_iterator are strictly reverse ordered, or false if not.
-	 */
-	inline bool	operator>(random_access_iterator const &rhs) const
-	{
-		return this->_ptr > rhs._ptr;
-	}
-
-	/**
-	 * @brief	Check if two random_access_iterator are ordered or equivalent.
-	 * 
-	 * @param	rhs The random_access_iterator to compare with.
-	 * 
-	 * @return	Either true if the two random_access_iterator are ordered or equivalent, or false if not.
-	 */
-	inline bool	operator<=(random_access_iterator const &rhs) const
-	{
-		return this->_ptr <= rhs._ptr;
-	}
-
-	/**
-	 * @brief	Check if two random_access_iterator are reverse ordered or equivalent.
-	 * 
-	 * @param	rhs The random_access_iterator to compare with.
-	 * 
-	 * @return	Either true if the two random_access_iterator are reverse ordered or equivalent, or false if not.
-	 */
-	inline bool	operator>=(random_access_iterator const &rhs) const
-	{
-		return this->_ptr >= rhs._ptr;
-	}
 };
+
+/**
+ * @brief	Increment the wrapped pointer of a random_access_iterator by N.
+ * 
+ * @param	lhs The number to increment the pointer with.
+ * 
+ * @return	A random_access_iterator pointing to the new position.
+ */
+template<typename T, typename Category, typename Diff, typename Ptr, typename Ref>
+inline random_access_iterator<T, Category, Diff, Ptr, Ref>	operator+(
+	typename random_access_iterator<T, Category, Diff, Ptr, Ref>::difference_type const lhs,
+	random_access_iterator<T, Category, Diff, Ptr, Ref> const &rhs)
+{
+	return rhs + lhs;
+}
 }
 
 #endif
