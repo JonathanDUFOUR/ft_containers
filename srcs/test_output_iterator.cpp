@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 01:05:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:26:21 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 04:27:06 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,12 @@
 #include <cstring>
 #include <iomanip>
 #include <iostream>
+#include "arrays.hpp"
 #include "iterator/base/output_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_constructor(void)
 {
-	int		arr[] = {
-		0,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8,
-		9,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -38,19 +27,19 @@ inline static int	__test_constructor(void)
 	{
 		// Pointer constructor
 		{
-			for (idx = 0U ; idx < 10U ; ++idx)
+			for (idx = 0U ; idx < g_int_size ; ++idx)
 			{
-				ft::output_iterator<int>	it(arr + idx);
+				ft::output_iterator<int>	it(&g_int[idx]);
 
-				if (*it != arr[idx])
+				if (*it != g_int[idx])
 					return EXIT_FAILURE;
 			}
 		}
 		// Copy constructor
 		{
-			for (idx = 0U ; idx < 10U ; ++idx)
+			for (idx = 0U ; idx < g_int_size ; ++idx)
 			{
-				ft::output_iterator<int>	it0(arr + idx);
+				ft::output_iterator<int>	it0(&g_int[idx]);
 				ft::output_iterator<int>	it1(it0);
 
 				if (memcmp(&it0, &it1, sizeof(it0)))
@@ -68,29 +57,16 @@ inline static int	__test_constructor(void)
 
 inline static int	__test_operator_assign(void)
 {
-	std::string	arr[] = {
-		std::string("I"),
-		std::string("wanna"),
-		std::string("be"),
-		std::string("the"),
-		std::string("very"),
-		std::string("best"),
-		std::string("like"),
-		std::string("no"),
-		std::string("one"),
-		std::string("ever"),
-		std::string("was"),
-	};
-	t_uint		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
 	{
 		ft::output_iterator<std::string>	it0(NULL);
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_string_size ; ++idx)
 		{
-			ft::output_iterator<std::string>	it1(arr + idx);
+			ft::output_iterator<std::string>	it1(&g_string[idx]);
 
 			it0 = it1;
 			if (memcmp(&it0, &it1, sizeof(it0)))
@@ -107,29 +83,17 @@ inline static int	__test_operator_assign(void)
 
 inline static int	__test_operator_dereference(void)
 {
-	t_hint	arr[] = {
-		-0,
-		-1,
-		-2,
-		-3,
-		-4,
-		-5,
-		-6,
-		-7,
-		-8,
-		-9,
-	};
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_hint_size ; ++idx)
 		{
-			ft::output_iterator<t_hint>	it(arr + idx);
+			ft::output_iterator<t_hint>	it(&g_hint[idx]);
 
 			*it += 42;
-			if (*it != arr[idx])
+			if (*it != g_hint[idx])
 				return EXIT_FAILURE;
 		}
 	}
@@ -143,18 +107,6 @@ inline static int	__test_operator_dereference(void)
 
 inline static int	__test_operator_increment(void)
 {
-	t_luint	arr[] = {
-		424242424242420,
-		424242424242421,
-		424242424242422,
-		424242424242423,
-		424242424242424,
-		424242424242425,
-		424242424242426,
-		424242424242427,
-		424242424242428,
-		424242424242429,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -162,18 +114,18 @@ inline static int	__test_operator_increment(void)
 	{
 		// Prefix incrementation
 		{
-			ft::output_iterator<t_luint>	it(arr);
+			ft::output_iterator<t_luint>	it(&g_luint[0]);
 
-			for (idx = 0U ; idx < 9U ; ++idx)
-				if (*++it != arr[idx + 1])
+			for (idx = 1U ; idx < g_luint_size ; ++idx)
+				if (*++it != g_luint[idx])
 					return EXIT_FAILURE;
 		}
 		// Postfix incrementation
 		{
-			ft::output_iterator<t_luint>	it(arr);
+			ft::output_iterator<t_luint>	it(&g_luint[0]);
 
-			for (idx = 0U ; idx < 9U ; ++idx)
-				if (*it++ != arr[idx] || *it != arr[idx + 1])
+			for (idx = 1U ; idx < g_luint_size ; ++idx)
+				if (*it++ != g_luint[idx - 1] || *it != g_luint[idx])
 					return EXIT_FAILURE;
 		}
 	}
@@ -204,18 +156,20 @@ int	test_output_iterator(void)
 	std::cerr << "\033[0m";
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
-		if (tests[idx]())
+		switch (tests[idx]())
 		{
-			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << "[KO]" << '\n';
-			std::cerr << "\033[0m";
-			++koCount;
-		}
-		else
-		{
-			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << "[OK]" << '\n';
-			std::cerr << "\033[0m";
+			case EXIT_SUCCESS:
+				std::cerr << "\033[38;2;0;255;0m";
+				std::cout << "[OK]" << '\n';
+				std::cerr << "\033[0m";
+				break;
+
+			case EXIT_FAILURE:
+				std::cerr << "\033[38;2;255;0;0m";
+				std::cout << "[KO]" << '\n';
+				std::cerr << "\033[0m";
+				++koCount;
+				break;
 		}
 	}
 	std::cout << '\n';

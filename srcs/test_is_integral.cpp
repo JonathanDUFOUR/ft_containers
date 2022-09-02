@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:26:15 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 04:26:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "iterator/base/input_iterator.tpp"
 #include "type_traits.hpp"
 #include "tester.hpp"
+#include "t_int.hpp"
 
 inline static int	__test_bool(void)
 {
@@ -355,18 +356,20 @@ int	test_is_integral(void)
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
-		if (tests[idx]())
+		switch (tests[idx]())
 		{
-			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << "[KO]" << '\n';
-			std::cerr << "\033[0m";
-			++koCount;
-		}
-		else
-		{
-			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << "[OK]" << '\n';
-			std::cerr << "\033[0m";
+			case EXIT_SUCCESS:
+				std::cerr << "\033[38;2;0;255;0m";
+				std::cout << "[OK]" << '\n';
+				std::cerr << "\033[0m";
+				break;
+
+			case EXIT_FAILURE:
+				std::cerr << "\033[38;2;255;0;0m";
+				std::cout << "[KO]" << '\n';
+				std::cerr << "\033[0m";
+				++koCount;
+				break;
 		}
 	}
 	std::cout << '\n';

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 22:30:56 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 04:36:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,19 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include "arrays.hpp"
 #include "stack.hpp"
 #include "tester.hpp"
+#include "e_ret.hpp"
 
 inline static int	__test_constructor(void)
 {
+	int					ret;
 	std::vector<t_uint>	vec;
 	t_uint				idx;
 
 	title(__func__);
+	ret = IMP_OK;
 	try
 	{
 		// Default constructor
@@ -34,7 +38,7 @@ inline static int	__test_constructor(void)
 
 			if (sizeof(ft_sta) != sizeof(std_sta)
 				|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
-				return EXIT_FAILURE;
+				ret = ISO_OK;
 		}
 		// Wrap constructor
 		{
@@ -43,82 +47,58 @@ inline static int	__test_constructor(void)
 				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
 				if (sizeof(ft_sta) != sizeof(std_sta)
 					|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
-					return EXIT_FAILURE;
+					ret = ISO_OK;
 			}
-			for (idx = 0U ; idx < 10U ; ++idx)
+			for (idx = 0U ; idx < g_uint_size ; ++idx)
 			{
-				vec.push_back(idx);
+				vec.push_back(g_uint[idx]);
 
 				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
 				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
 
 				if (sizeof(ft_sta) != sizeof(std_sta))
-					return EXIT_FAILURE;
+					ret = ISO_OK;
 			}
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return ret;
 }
 
 inline static int	__test_function_top(void)
 {
-	char				arr[] = {
-		'H',
-		'e',
-		'l',
-		'l',
-		'o',
-		' ',
-		'y',
-		'o',
-		'u',
-		'!',
-	};
 	std::vector<char>	vec;
-	t_uint					idx;
+	t_uint				idx;
 
 	title(__func__);
 	try
 	{
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_char_size ; ++idx)
 		{
-			vec.push_back(arr[idx]);
+			vec.push_back(g_char[idx]);
 
 			ft::stack<char, std::vector<char> >		ft_sta(vec);
 			std::stack<char, std::vector<char> >	std_sta(vec);
 
 			if (ft_sta.top() != std_sta.top())
-				return EXIT_FAILURE;
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_function_push(void)
 {
-	std::string	arr[] = {
-		std::string("Une"),
-		std::string("souris"),
-		std::string("verte"),
-		std::string("qui"),
-		std::string("courait"),
-		std::string("dans"),
-		std::string("l'herbe"),
-		std::string("je"),
-		std::string("l'attrape"),
-		std::string("par"),
-	};
-	t_uint		idx;
+	t_uint	idx;
 
 	title(__func__);
 	try
@@ -126,37 +106,25 @@ inline static int	__test_function_push(void)
 		ft::stack<std::string, std::vector<std::string> >	ft_sta;
 		std::stack<std::string, std::vector<std::string> >	std_sta;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_string_size ; ++idx)
 		{
-			ft_sta.push(arr[idx]);
-			std_sta.push(arr[idx]);
+			ft_sta.push(g_string[idx]);
+			std_sta.push(g_string[idx]);
 
 			if (ft_sta.top() != std_sta.top())
-				return EXIT_FAILURE;
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_function_pop(void)
 {
-	float	arr[] = {
-		0.0f,
-		1.0f,
-		10.0f,
-		11.0f,
-		100.0f,
-		101.0f,
-		110.0f,
-		111.0f,
-		1000.0f,
-		1001.0f,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -165,19 +133,19 @@ inline static int	__test_function_pop(void)
 		ft::stack<float, std::vector<float> >	ft_sta;
 		std::stack<float, std::vector<float> >	std_sta;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_float_size ; ++idx)
 		{
-			ft_sta.push(arr[idx]);
-			std_sta.push(arr[idx]);
+			ft_sta.push(g_float[idx]);
+			std_sta.push(g_float[idx]);
 		}
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_float_size ; ++idx)
 		{
 			if (ft_sta.top() != std_sta.top())
-				return EXIT_FAILURE;
+				return KO;
 			ft_sta.pop();
 			std_sta.pop();
 		}
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_float_size ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
@@ -186,25 +154,13 @@ inline static int	__test_function_pop(void)
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_function_empty(void)
 {
-	t_lint	arr[] = {
-		0x0000000000000000L,
-		0x000000000000000fL,
-		0x00000000000000ffL,
-		0x0000000000000fffL,
-		0x000000000000ffffL,
-		0x00000000000fffffL,
-		0x0000000000ffffffL,
-		0x000000000fffffffL,
-		0x00000000ffffffffL,
-		0x0000000fffffffffL,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -213,45 +169,33 @@ inline static int	__test_function_empty(void)
 		ft::stack<t_lint, std::vector<t_lint> >		ft_sta;
 		std::stack<t_lint, std::vector<t_lint> >	std_sta;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
 			if (ft_sta.empty() != std_sta.empty())
-				return EXIT_FAILURE;
-			ft_sta.push(arr[idx]);
-			std_sta.push(arr[idx]);
+				return KO;
+			ft_sta.push(g_lint[idx]);
+			std_sta.push(g_lint[idx]);
 		}
 		if (ft_sta.empty() != std_sta.empty())
-			return EXIT_FAILURE;
-		for (idx = 0U ; idx < 10U ; ++idx)
+			return KO;
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
 			if (ft_sta.empty() != std_sta.empty())
-				return EXIT_FAILURE;
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
 	}
-	
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_function_size(void)
 {
-	t_uint	arr[] = {
-		0x01234567U,
-		0xf0123456U,
-		0xef012345U,
-		0xdef01234U,
-		0xcdef0123U,
-		0xbcdef012U,
-		0xabcdef01U,
-		0x9abcdef0U,
-		0x89abcdefU,
-		0x789abcdeU,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -260,45 +204,33 @@ inline static int	__test_function_size(void)
 		ft::stack<t_uint, std::vector<t_uint> >		ft_sta;
 		std::stack<t_uint, std::vector<t_uint> >	std_sta;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_uint_size ; ++idx)
 		{
 			if (ft_sta.size() != std_sta.size())
-				return EXIT_FAILURE;
-			ft_sta.push(arr[idx]);
-			std_sta.push(arr[idx]);
+				return KO;
+			ft_sta.push(g_uint[idx]);
+			std_sta.push(g_uint[idx]);
 		}
 		if (ft_sta.size() != std_sta.size())
-			return EXIT_FAILURE;
-		for (idx = 0U ; idx < 10U ; ++idx)
+			return KO;
+		for (idx = 0U ; idx < g_uint_size ; ++idx)
 		{
 			ft_sta.pop();
 			std_sta.pop();
 			if (ft_sta.size() != std_sta.size())
-				return EXIT_FAILURE;
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
 	{
-		std::cerr << e.what() << '\n';
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
 	}
-	
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_equal(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -309,40 +241,28 @@ inline static int	__test_operator_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_difference(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -353,40 +273,28 @@ inline static int	__test_operator_difference(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_lower(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -397,40 +305,28 @@ inline static int	__test_operator_lower(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_greater(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -441,40 +337,28 @@ inline static int	__test_operator_greater(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_lower_equal(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -485,40 +369,28 @@ inline static int	__test_operator_lower_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 inline static int	__test_operator_greater_equal(void)
 {
-	int		arr[] = {
-		1,
-		2,
-		4,
-		8,
-		16,
-		32,
-		64,
-		128,
-		256,
-		512,
-	};
 	t_uint	idx;
 
 	title(__func__);
@@ -529,24 +401,24 @@ inline static int	__test_operator_greater_equal(void)
 		std::stack<int, std::vector<int> >	std_sta0;
 		std::stack<int, std::vector<int> >	std_sta1;
 
-		for (idx = 0U ; idx < 10U ; ++idx)
+		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
 			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta0.push(arr[idx]);
-			std_sta0.push(arr[idx]);
+				return KO;
+			ft_sta0.push(g_int[idx]);
+			std_sta0.push(g_int[idx]);
 			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
-				return EXIT_FAILURE;
-			ft_sta1.push(arr[idx]);
-			std_sta1.push(arr[idx]);
+				return KO;
+			ft_sta1.push(g_int[idx]);
+			std_sta1.push(g_int[idx]);
 		}
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
+		return KO;
 	}
-	return EXIT_SUCCESS;
+	return IMP_OK;
 }
 
 int	test_stack(void)
@@ -577,18 +449,26 @@ int	test_stack(void)
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
-		if (tests[idx]())
+		switch (tests[idx]())
 		{
-			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << "[KO]" << '\n';
-			std::cerr << "\033[0m";
-			++koCount;
-		}
-		else
-		{
-			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << "[OK]" << '\n';
-			std::cerr << "\033[0m";
+			case IMP_OK:
+				std::cerr << "\033[38;2;0;255;0m";
+				std::cout << "[OK]" << '\n';
+				std::cerr << "\033[0m";
+				break;
+
+			case ISO_OK:
+				std::cerr << "\033[38;2;255;255;0m";
+				std::cout << "[OK]" << '\n';
+				std::cerr << "\033[0m";
+				break;
+
+			case KO:
+				std::cerr << "\033[38;2;255;0;0m";
+				std::cout << "[KO]" << '\n';
+				std::cerr << "\033[0m";
+				++koCount;
+				break;
 		}
 	}
 	std::cout << '\n';

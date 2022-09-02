@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/30 22:51:05 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 04:22:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,92 @@
 #include "algorithm.hpp"
 #include "iterator/base/input_iterator.tpp"
 #include "tester.hpp"
+#include "t_int.hpp"
+
+static int const			g_int0[] = {
+	-54321,
+	-4321,
+	-321,
+	-21,
+	-1,
+	0,
+	1,
+	21,
+	321,
+	4321,
+};
+
+static int const			g_int1[] = {
+	-54321,
+	-4321,
+	-321,
+	-21,
+	-1,
+	0,
+	1,
+	21,
+	321,
+	43210,
+};
+
+static t_huint const		g_huint0[] = {
+	2U,
+	3U,
+	5U,
+	7U,
+	11U,
+	13U,
+	17U,
+	19U,
+	23U,
+	29U,
+};
+
+static t_huint const		g_huint1[] = {
+	2U,
+	3U,
+	5U,
+	7U,
+	11U,
+	13U,
+	17U,
+	19U,
+	23U,
+	31U,
+};
+
+static std::string const	g_string0[] = {
+	std::string("Half-past twelve"),
+	std::string("And I'm watching the late show in my flat all alone"),
+	std::string("How I hate to spend the evening on my own"),
+	std::string("Autumn winds"),
+	std::string("Blowing outside the window as I look around the room"),
+	std::string("And it makes me so depressed to see the gloom"),
+	std::string("There's not a soul out there"),
+	std::string("No one to hear my prayer"),
+	std::string("Gimme, gimme, gimme a man after midnight"),
+	std::string("Won't somebody help me chase the shadows away ?"),
+};
+
+static std::string const	g_string1[] = {
+	std::string("Half-past twelve"),
+	std::string("And I'm watching the late show in my flat all alone"),
+	std::string("How I hate to spend the evening on my own"),
+	std::string("Autumn winds"),
+	std::string("Blowing outside the window as I look around the room"),
+	std::string("And it makes me so depressed to see the gloom"),
+	std::string("There's not a soul out there"),
+	std::string("No one to hear my prayer"),
+	std::string("Gimme, gimme, gimme a man after midnight"),
+	std::string("Won't somebody help me chase the shadows away?"),
+};
+
+static size_t const			g_int0_size = sizeof(g_int0) / sizeof(*g_int0);
+static size_t const			g_int1_size = sizeof(g_int1) / sizeof(*g_int1);
+static size_t const			g_huint0_size = sizeof(g_huint0) / sizeof(*g_huint0);
+static size_t const			g_huint1_size = sizeof(g_huint1) / sizeof(*g_huint1);
+static size_t const			g_string0_size = sizeof(g_string0) / sizeof(*g_string0);
+static size_t const			g_string1_size = sizeof(g_string1) / sizeof(*g_string1);
 
 inline static int	__test_equal(void)
 {
@@ -26,36 +112,11 @@ inline static int	__test_equal(void)
 	{
 		// Array of int
 		{
-			int const	arr0[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				4321,
-			};
-			int const	arr1[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				43210,
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<int const>	first0(arr0);
-				ft::input_iterator<int const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<int const>	first1(arr1);
+				ft::input_iterator<int const>	first0(&g_int0[0]);
+				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator<int const>	first1(&g_int1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -63,9 +124,9 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<int const>	first0(arr0);
-				ft::input_iterator<int const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<int const>	first1(arr1);
+				ft::input_iterator<int const>	first0(&g_int0[0]);
+				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator<int const>	first1(&g_int1[0]);
 				std::less_equal<int const>		cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
@@ -75,36 +136,11 @@ inline static int	__test_equal(void)
 		}
 		// Array of unsigned short
 		{
-			t_huint const	arr0[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				29U,
-			};
-			t_huint const	arr1[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				31U,
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<t_huint const>	first0(arr0);
-				ft::input_iterator<t_huint const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<t_huint const>	first1(arr1);
+				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
+				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -112,9 +148,9 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<t_huint const>	first0(arr0);
-				ft::input_iterator<t_huint const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<t_huint const>	first1(arr1);
+				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
+				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
 				std::less_equal<t_huint const>		cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
@@ -124,36 +160,11 @@ inline static int	__test_equal(void)
 		}
 		// Array of string
 		{
-			std::string const	arr0[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away ?"),
-			};
-			std::string const	arr1[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away?"),
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<std::string const>	first0(arr0);
-				ft::input_iterator<std::string const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<std::string const>	first1(arr1);
+				ft::input_iterator<std::string const>	first0(&g_string0[0]);
+				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator<std::string const>	first1(&g_string1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -161,9 +172,9 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<std::string const>	first0(arr0);
-				ft::input_iterator<std::string const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<std::string const>	first1(arr1);
+				ft::input_iterator<std::string const>	first0(&g_string0[0]);
+				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator<std::string const>	first1(&g_string1[0]);
 				std::less_equal<std::string const>		cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
@@ -174,32 +185,8 @@ inline static int	__test_equal(void)
 		}
 		// Vector of int
 		{
-			int const				arr0[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				4321
-			};
-			int const				arr1[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				43210
-			};
-			std::vector<int> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<int> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<int> const	vec0(&g_int0[0], &g_int0[g_int0_size]);
+			std::vector<int> const	vec1(&g_int1[0], &g_int1[g_int1_size]);
 
 			// Default comparison
 			{
@@ -225,32 +212,8 @@ inline static int	__test_equal(void)
 		}
 		// Vector of unsigned short
 		{
-			t_huint const				arr0[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				29U
-			};
-			t_huint const				arr1[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				31U
-			};
-			std::vector<t_huint> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<t_huint> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<t_huint> const	vec0(&g_huint0[0], &g_huint0[g_huint0_size]);
+			std::vector<t_huint> const	vec1(&g_huint1[0], &g_huint1[g_huint1_size]);
 
 			// Default comparison
 			{
@@ -276,32 +239,8 @@ inline static int	__test_equal(void)
 		}
 		// Vector of string
 		{
-			std::string const				arr0[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away ?"),
-			};
-			std::string const				arr1[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away?"),
-			};
-			std::vector<std::string> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<std::string> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<std::string> const	vec0(&g_string0[0], &g_string0[g_string0_size]);
+			std::vector<std::string> const	vec1(&g_string1[0], &g_string1[g_string1_size]);
 
 			// Default comparison
 			{
@@ -341,37 +280,12 @@ inline static int	__test_lexicographical_compare(void)
 	{
 		// Array of int
 		{
-			int const	arr0[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				4321,
-			};
-			int const	arr1[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				43210,
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<int const>	first0(arr0);
-				ft::input_iterator<int const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<int const>	first1(arr1);
-				ft::input_iterator<int const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<int const>	first0(&g_int0[0]);
+				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator<int const>	first1(&g_int1[0]);
+				ft::input_iterator<int const>	last1(&g_int1[g_int1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -381,10 +295,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<int const>	first0(arr0);
-				ft::input_iterator<int const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<int const>	first1(arr1);
-				ft::input_iterator<int const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<int const>	first0(&g_int0[0]);
+				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator<int const>	first1(&g_int1[0]);
+				ft::input_iterator<int const>	last1(&g_int1[g_int1_size]);
 				std::greater<int const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
@@ -396,37 +310,12 @@ inline static int	__test_lexicographical_compare(void)
 		}
 		// Array of unsigned short
 		{
-			t_huint const	arr0[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				29U,
-			};
-			t_huint const	arr1[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				31U,
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<t_huint const>	first0(arr0);
-				ft::input_iterator<t_huint const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<t_huint const>	first1(arr1);
-				ft::input_iterator<t_huint const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
+				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
+				ft::input_iterator<t_huint const>	last1(&g_huint1[g_huint1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -436,10 +325,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<t_huint const>	first0(arr0);
-				ft::input_iterator<t_huint const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<t_huint const>	first1(arr1);
-				ft::input_iterator<t_huint const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
+				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
+				ft::input_iterator<t_huint const>	last1(&g_huint1[g_huint1_size]);
 				std::greater<t_huint const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
@@ -451,37 +340,12 @@ inline static int	__test_lexicographical_compare(void)
 		}
 		// Array of string
 		{
-			std::string const	arr0[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away ?"),
-			};
-			std::string const	arr1[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away?"),
-			};
-
 			// Default comparison
 			{
-				ft::input_iterator<std::string const>	first0(arr0);
-				ft::input_iterator<std::string const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<std::string const>	first1(arr1);
-				ft::input_iterator<std::string const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<std::string const>	first0(&g_string0[0]);
+				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator<std::string const>	first1(&g_string1[0]);
+				ft::input_iterator<std::string const>	last1(&g_string1[g_string1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -491,10 +355,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<std::string const>	first0(arr0);
-				ft::input_iterator<std::string const>	last0(arr0 + sizeof(arr0) / sizeof(*arr0));
-				ft::input_iterator<std::string const>	first1(arr1);
-				ft::input_iterator<std::string const>	last1(arr1 + sizeof(arr1) / sizeof(*arr1));
+				ft::input_iterator<std::string const>	first0(&g_string0[0]);
+				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator<std::string const>	first1(&g_string1[0]);
+				ft::input_iterator<std::string const>	last1(&g_string1[g_string1_size]);
 				std::greater<std::string const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
@@ -507,32 +371,8 @@ inline static int	__test_lexicographical_compare(void)
 		}
 		// Vector of int
 		{
-			int const				arr0[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				4321
-			};
-			int const				arr1[] = {
-				-54321,
-				-4321,
-				-321,
-				-21,
-				-1,
-				0,
-				1,
-				21,
-				321,
-				43210
-			};
-			std::vector<int> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<int> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<int> const	vec0(&g_int0[0], &g_int0[g_int0_size]);
+			std::vector<int> const	vec1(&g_int1[0], &g_int1[g_int1_size]);
 
 			// Default comparison
 			{
@@ -564,32 +404,8 @@ inline static int	__test_lexicographical_compare(void)
 		}
 		// Vector of unsigned short
 		{
-			t_huint const				arr0[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				29U
-			};
-			t_huint const				arr1[] = {
-				2U,
-				3U,
-				5U,
-				7U,
-				11U,
-				13U,
-				17U,
-				19U,
-				23U,
-				31U
-			};
-			std::vector<t_huint> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<t_huint> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<t_huint> const	vec0(&g_huint0[0], &g_huint0[g_int0_size]);
+			std::vector<t_huint> const	vec1(&g_huint1[0], &g_huint1[g_int1_size]);
 
 			// Default comparison
 			{
@@ -621,32 +437,8 @@ inline static int	__test_lexicographical_compare(void)
 		}
 		// Vector of string
 		{
-			std::string const				arr0[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away ?"),
-			};
-			std::string const				arr1[] = {
-				std::string("Half-past twelve"),
-				std::string("And I'm watching the late show in my flat all alone"),
-				std::string("How I hate to spend the evening on my own"),
-				std::string("Autumn winds"),
-				std::string("Blowing outside the window as I look around the room"),
-				std::string("And it makes me so depressed to see the gloom"),
-				std::string("There's not a soul out there"),
-				std::string("No one to hear my prayer"),
-				std::string("Gimme, gimme, gimme a man after midnight"),
-				std::string("Won't somebody help me chase the shadows away?"),
-			};
-			std::vector<std::string> const	vec0(arr0, arr0 + sizeof(arr0) / sizeof(*arr0));
-			std::vector<std::string> const	vec1(arr1, arr1 + sizeof(arr1) / sizeof(*arr1));
+			std::vector<std::string> const	vec0(&g_string0[0], &g_string0[g_string0_size]);
+			std::vector<std::string> const	vec1(&g_string1[0], &g_string1[g_string1_size]);
 
 			// Default comparison
 			{
@@ -767,18 +559,20 @@ int	test_algorithm(void)
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
 	{
-		if (tests[idx]())
+		switch (tests[idx]())
 		{
-			std::cerr << "\033[38;2;255;0;0m";
-			std::cout << "[KO]" << '\n';
-			std::cerr << "\033[0m";
-			++koCount;
-		}
-		else
-		{
-			std::cerr << "\033[38;2;0;255;0m";
-			std::cout << "[OK]" << '\n';
-			std::cerr << "\033[0m";
+			case EXIT_SUCCESS:
+				std::cerr << "\033[38;2;0;255;0m";
+				std::cout << "[OK]" << '\n';
+				std::cerr << "\033[0m";
+				break;
+
+			case EXIT_FAILURE:
+				std::cerr << "\033[38;2;255;0;0m";
+				std::cout << "[KO]" << '\n';
+				std::cerr << "\033[0m";
+				++koCount;
+				break;
 		}
 	}
 	std::cout << '\n';
