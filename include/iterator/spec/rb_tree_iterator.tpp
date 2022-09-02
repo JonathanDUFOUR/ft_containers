@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:43:20 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:05:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,79 @@ public:
 	template <typename _Iterator>
 	rb_tree_iterator(rb_tree_iterator<_Iterator> const &src) :
 		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(src.base()) {}
+
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Update the wrapped pointer to pointe to the next element. (prefix incrementation)
+	 * 
+	 * @return	A reference to the incremented rb_tree_iterator.
+	 */
+	inline rb_tree_iterator &operator++(void)
+	{
+		if (this->child[RIGHT])
+		{
+			this->_pointer = this->child[RIGHT];
+			while (this->child[LEFT])
+				this->_pointer = this->child[LEFT];
+		}
+		else
+		{
+			while (this->parent && this->_pointer == this->parent->child[RIGHT])
+				this->_pointer = this->parent;
+			this->_pointer = this->parent;
+		}
+		return *this;
+	}
+
+	/**
+	 * @brief	Update the wrapped pointer to pointe to the next element. (postfix incrementation)
+	 * 
+	 * @return	A copy of the rb_tree_iterator before the incrementation.
+	 */
+	inline rb_tree_iterator operator++(int)
+	{
+		rb_tree_iterator	original(*this);
+
+		++*this;
+		return original;
+	}
+
+	/**
+	 * @brief	Update the wrapped pointer to pointe to the previous element. (prefix decrementation)
+	 * 
+	 * @return	A reference to the decremented rb_tree_iterator.
+	 */
+	inline rb_tree_iterator &operator--(void)
+	{
+		if (this->child[LEFT])
+		{
+			this->_pointer = this->child[LEFT];
+			while (this->child[RIGHT])
+				this->_pointer = this->child[RIGHT];
+		}
+		else
+		{
+			while (this->parent && this->_pointer == this->parent->child[LEFT])
+				this->_pointer = this->parent;
+			this->_pointer = this->parent;
+		}
+	}
+
+	/**
+	 * @brief	Update the wrapped pointer to pointe to the previous element. (postfix decrementation)
+	 * 
+	 * @return	A copy of the rb_tree_iterator before the decrementation.
+	 */
+	inline rb_tree_iterator operator--(int)
+	{
+		rb_tree_iterator	original(*this);
+
+		--*this;
+		return original;
+	}
 };
 }
 

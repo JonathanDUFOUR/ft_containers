@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 08:35:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:18:51 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1. (prefix decrementation)
+	 * @brief	Decrement the wrapped pointer value by 1. (prefix decrementation)
 	 * 
 	 * @return	A reference to the decremented bidirectional_iterator.
 	 */
@@ -101,7 +101,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1. (postfix decrementation)
+	 * @brief	Decrement the wrapped pointer value by 1. (postfix decrementation)
 	 * 
 	 * @return	A copy of the bidirectional_iterator before the decrementation.
 	 */

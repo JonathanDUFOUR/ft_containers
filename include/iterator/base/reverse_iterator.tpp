@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 11:01:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:22:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1. (prefix incrementation)
+	 * @brief	Decrement the wrapped pointer value by 1. (prefix incrementation)
 	 * 
 	 * @return	A reference to the incremented reverse_iterator.
 	 */
@@ -110,7 +110,7 @@ public:
 	}
 
 	/**
-	 * @brief	Decrease the wrapped pointer value by 1. (postfix incrementation)
+	 * @brief	Decrement the wrapped pointer value by 1. (postfix incrementation)
 	 * 
 	 * @return	A copy of the reverse_iterator before the incrementation.
 	 */
@@ -123,7 +123,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1. (prefix decrementation)
+	 * @brief	Increment the wrapped pointer value by 1. (prefix decrementation)
 	 * 
 	 * @return	A reference to the decremented reverse_iterator.
 	 */
@@ -134,7 +134,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1. (postfix decrementation)
+	 * @brief	Increment the wrapped pointer value by 1. (postfix decrementation)
 	 * 
 	 * @return	A copy of the reverse_iterator before the decrementation.
 	 */

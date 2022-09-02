@@ -6,13 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:20:22 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:49:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_TPP
 # define RB_TREE_TPP
 
+# include <functional>
 # include <memory>
 # include "iterator/base/reverse_iterator.tpp"
 # include "iterator/spec/rb_tree_iterator.tpp"
@@ -20,6 +21,20 @@
 
 namespace ft
 {
+
+/**
+ * @file	This file contains the implementation of the rb_tree class. (Red Black Tree)
+ * 			A Red Black Tree is a self-balancing Binary Search Tree (BST) which is ruled by the following properties:
+ * 				1. Every node has a color either red or black.
+ * 				2. All NULL nodes are considered black.
+ * 				3. A red node cannot have a red child.
+ * 				4. Every path from a node to its descendant NULL nodes goes through the same number of black nodes.
+ * 
+ * 			In this implementation:
+ * 				- a violation of the 3rd property is called a "red violation"
+ * 				- a violation of the 4th property is called a "black violation".
+ */
+
 enum e_rb_color
 {
 	RED,
@@ -59,7 +74,7 @@ struct rb_node
 		child{NULL, NULL} {}
 };
 
-template <typename T, typename Compare, typename Alloc = std::allocator<rb_node<T>>>
+template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<rb_node<T> > >
 class rb_tree
 {
 public:
@@ -87,7 +102,128 @@ public:
 
 private:
 	// Attributes
-	pointer	_root;
+	pointer		_root;
+
+	size_type	_size;
+
+// ****************************************************************************************************************** //
+//                                              Private Member Functions                                              //
+// ****************************************************************************************************************** //
+
+	/**
+	 * @par		Balance a tree after an insertion.
+	 * 
+	 * @param	node The newly inserted node.
+	 */
+	static void	_balanceInsert(pointer const node)
+		__attribute__((nonnull))
+	{
+		pointer		parent;
+		pointer		grandParent;
+		pointer		uncle;
+		uint8_t		dir;
+
+		// At this point, the node is red.
+		parent = node->parent;
+		if (!parent || parent->color == BLACK)
+			return ;
+
+		// At this point, the node is red, and has red parent. (red violation)
+		grandParent = parent->parent;
+		if (!grandParent)
+		{
+			// At this point, the node is red, has red parent, and has no grandparent. (red violation)
+			node->parent->color = BLACK;
+			return ;
+		}
+
+		// At this point, the node is red, has a red parent, and has a black grand-parent. (red violation)
+		dir = rb_tree::childDirection(parent);
+		uncle = grandParent->child[!dir];
+		if (!uncle || uncle->color == BLACK)
+		{
+			// At this point, the node is red, has a red parent, has a black grand-parent, and has a black uncle.
+			// (red violation)
+			if (node == parent->child[!dir])
+			{
+				// At this point, the node is red, has a red parent, has a black grand-parent, has a black uncle,
+				// and is the inner grand-child of its grand-parent. (red violation)
+				parent = this->_rotate(parent, dir);
+				node = parent->child[dir];
+			}
+
+			// At this point, the node is red, has a red parent, has a black grand-parent, has a black uncle,
+			// and is the outer grand-child of its grand-parent. (red violation)
+			this->_rotate(grandParent, !dir);
+			parent->color = BLACK;
+			grandParent->color = RED;
+		}
+		else
+		{
+			// At this point, the node is red, has a red parent, has a black grand-parent, and has a red uncle.
+			// (red violation)
+			parent->color = BLACK;
+			uncle->color = BLACK;
+			grandParent->color = RED;
+			rb_tree::_balanceInsert(grandParent);
+		}
+	}
+
+	/**
+	 * @brief	Calculate the size of a tree.
+	 * 
+	 * @param	root The root of the tree.
+	 * 
+	 * @return	The size of the tree.
+	 */
+	static size_type	_calculateSize(pointer const root)
+	{
+		if (!root)
+			return 0LU;
+		return rb_tree::_calculateSize(root->child[LEFT]) + rb_tree::_calculateSize(root->child[RIGHT]) + 1LU;
+	}
+
+	/**
+	 * @brief	Rotate a tree to the given direction. The colors are not modified. The rotating tree may be a subtree.
+	 * 
+	 * @param	root The root of the tree to rotate.
+	 * @param	dir The direction to rotate the subtree.
+	 * 
+	 * @return	The new root of the rotated tree. Upon failure, NULL is returned instead.
+	 */
+	pointer	_rotate(pointer const root, uint8_t const dir)
+		__attribute__((nonnull))
+	{
+		node_type	*parent;
+		node_type	*oppositeChild;
+		node_type	*grandChild;
+
+		parent = root->parent;
+		oppositeChild = root->child[!dir];
+		if (!oppositeChild)
+			return NULL;
+		grandChild = oppositeChild->child[dir];
+
+		root->child[!dir] = grandChild;
+		if (grandChild)
+			grandChild->parent = root;
+
+		oppositeChild->child[dir] = root;
+		root->parent = oppositeChild;
+
+		oppositeChild->parent = parent;
+		if (parent)
+		{
+			if (root == parent->child[LEFT])
+				parent->child[LEFT] = oppositeChild;
+			else
+				parent->child[RIGHT] = oppositeChild;
+		}
+		else
+			this->_root = oppositeChild;
+
+		return oppositeChild;
+	}
 
 public:
 // ****************************************************************************************************************** //
@@ -100,7 +236,8 @@ public:
 	 * @param	root The root node of the new tree.
 	 */
 	rb_tree(const_pointer const root = NULL) :
-		_root(root) {}
+		_root(root),
+		_size(rb_tree::_calculateSize(this->_root)) {}
 
 	/**
 	 * @brief	Construct a new rb_tree object. (copy constructor)
@@ -108,11 +245,8 @@ public:
 	 * @param	src The rb_tree to copy
 	 */
 	rb_tree(rb_tree const &src) :
-		_root(NULL)
-	{
-		if (src._root)
-			this->_root = rb_tree::dup(src._root);
-	}
+		_root(rb_tree::dup(src._root)),
+		_size(src._size) {}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //
@@ -129,6 +263,40 @@ public:
 // ***************************************************************************************************************** //
 //                                              Public Member Functions                                              //
 // ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Get an iterator to the first element of the tree.
+	 * 
+	 * @return	An iterator to the first element of the tree.
+	 */
+	iterator	begin(void)
+	{
+		pointer	pos;
+
+		if (!this->_root)
+			return iterator();
+		pos = this->_root;
+		while (pos->child[LEFT])
+			pos = pos->child[LEFT];
+		return iterator(pos);
+	}
+
+	/**
+	 * @brief	Get a const_iterator to the first element of the tree.
+	 * 
+	 * @return	A const_iterator to the first element of the tree.
+	 */
+	const_iterator	begin(void) const
+	{
+		const_pointer	pos;
+
+		if (!this->_root)
+			return const_iterator();
+		pos = this->_root;
+		while (pos->child[LEFT])
+			pos = pos->child[LEFT];
+		return const_iterator(pos);
+	}
 
 	/**
 	 * @brief	Remove every nodes of the given tree.
@@ -172,60 +340,51 @@ public:
 	 * @return	The root of the new tree.
 	 */
 	static pointer	dup(const_pointer const src)
-		__attribute__((nonnull))
 	{
 		pointer			dst;
 		allocator_type	alloc;
 
+		if (!src)
+			return NULL;
 		dst = alloc.allocate(1);
 		alloc.construct(dst, *src);
-		if (src->child[LEFT])
-			dst->child[LEFT] = rb_tree::dup(src->child[LEFT]);
-		if (src->child[RIGHT])
-			dst->child[RIGHT] = rb_tree::dup(src->child[RIGHT]);
+		dst->child[LEFT] = rb_tree::dup(src->child[LEFT]);
+		dst->child[RIGHT] = rb_tree::dup(src->child[RIGHT]);
 		return dst;
 	}
 
 	/**
-	 * @brief	Rotate a portion of the tree to the given direction. The colors are not modified.
+	 * @brief	Get an iterator to the post-last element of the tree.
 	 * 
-	 * @param	root The root of the subtree to rotate.
-	 * @param	dir The direction to rotate the subtree.
-	 * 
-	 * @return	The new root of the rotated subtree. Upon failure, NULL is returned instead.
+	 * @return	An iterator to the last element of the tree.
 	 */
-	pointer	rotate(pointer const root, uint8_t const dir)
-		__attribute__((nonnull))
+	iterator	end(void)
 	{
-		node_type	*parent;
-		node_type	*oppositeChild;
-		node_type	*grandChild;
+		pointer	pos;
 
-		parent = root->parent;
-		oppositeChild = root->child[!dir];
-		if (!oppositeChild)
-			return NULL;
-		grandChild = oppositeChild->child[dir];
+		if (!this->_root)
+			return iterator();
+		pos = this->_root;
+		while (pos->child[RIGHT])
+			pos = pos->child[RIGHT];
+		return iterator(pos);
+	}
 
-		root->child[!dir] = grandChild;
-		if (grandChild)
-			grandChild->parent = root;
+	/**
+	 * @brief	Get a const_iterator to the post-last element of the tree.
+	 * 
+	 * @return	A const_iterator to the last element of the tree.
+	 */
+	const_iterator	end(void) const
+	{
+		const_pointer	pos;
 
-		oppositeChild->child[dir] = root;
-		root->parent = oppositeChild;
-
-		oppositeChild->parent = parent;
-		if (parent)
-		{
-			if (root == parent->child[LEFT])
-				parent->child[LEFT] = oppositeChild;
-			else
-				parent->child[RIGHT] = oppositeChild;
-		}
-		else
-			this->_root = oppositeChild;
-
-		return oppositeChild;
+		if (!this->_root)
+			return const_iterator();
+		pos = this->_root;
+		while (pos->child[RIGHT])
+			pos = pos->child[RIGHT];
+		return const_iterator(pos);
 	}
 
 	/**
@@ -273,7 +432,59 @@ public:
 			parent->child[RIGHT] = node;
 		else
 			parent->child[LEFT] = node;
-		// REMIND: continue here
+		++this->_size;
+		this->_balanceInsert();
+		return pair<iterator, bool>(iterator(node), true);
+	}
+
+	/**
+	 * @brief	Get a reverse_iterator to the last element of the tree.
+	 * 
+	 * @return	A reverse_iterator to the last element of the tree.
+	 */
+	reverse_iterator	rbegin(void)
+	{
+		return reverse_iterator(this->end());
+	}
+
+	/**
+	 * @brief	Get a const_reverse_iterator to the last element of the tree.
+	 * 
+	 * @return	A const_reverse_iterator to the last element of the tree.
+	 */
+	const_reverse_iterator	rbegin(void) const
+	{
+		return const_reverse_iterator(this->end());
+	}
+
+	/**
+	 * @brief	Get a reverse_iterator to the pre-first element of the tree.
+	 * 
+	 * @return	A reverse_iterator to the pre-first element of the tree.
+	 */
+	reverse_iterator	rend(void)
+	{
+		return reverse_iterator(this->begin());
+	}
+
+	/**
+	 * @brief	Get a const_reverse_iterator to the pre-first element of the tree.
+	 * 
+	 * @return	A const_reverse_iterator to the pre-first element of the tree.
+	 */
+	const_reverse_iterator	rend(void) const
+	{
+		return const_reverse_iterator(this->begin());
+	}
+
+	/**
+	 * @brief	Get the size of the tree.
+	 * 
+	 * @return	The size of the tree.
+	 */
+	size_type	size(void) const
+	{
+		return this->_size;
 	}
 };
 }

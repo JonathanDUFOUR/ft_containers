@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 06:26:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 10:44:36 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -600,7 +600,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get a reverse_iterator to the first element of the vector.
+	 * @brief	Get a reverse_iterator to the pre-first element of the vector.
 	 * 
 	 * @return	A reverse_iterator to the first element of the vector.
 	 */
@@ -610,7 +610,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_reverse_iterator to the first element of the vector.
+	 * @brief	Get a const_reverse_iterator to the pre-first element of the vector.
 	 * 
 	 * @return	A const_reverse_iterator to the first element of the vector.
 	 */

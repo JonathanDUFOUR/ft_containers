@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 08:35:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 09:19:25 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1. (prefix incrementation)
+	 * @brief	Increment the wrapped pointer value by 1. (prefix incrementation)
 	 * 
 	 * @return 	A reference to the incremented input_iterator.
 	 */
@@ -157,7 +157,7 @@ public:
 	}
 
 	/**
-	 * @brief	Increase the wrapped pointer value by 1. (postfix incrementation)
+	 * @brief	Increment the wrapped pointer value by 1. (postfix incrementation)
 	 * 
 	 * @return 	A copy of the input_iterator before the incrementation.
 	 */
