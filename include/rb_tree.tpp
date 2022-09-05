@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 10:49:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 18:48:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@
 # include "iterator/base/reverse_iterator.tpp"
 # include "iterator/spec/rb_tree_iterator.tpp"
 # include "utility.hpp"
+# include "rb_node.tpp"
+# include "e_rb_color.hpp"
+# include "e_rb_direction.hpp"
 
 namespace ft
 {
-
 /**
  * @file	This file contains the implementation of the rb_tree class. (Red Black Tree)
  * 			A Red Black Tree is a self-balancing Binary Search Tree (BST) which is ruled by the following properties:
@@ -35,44 +37,8 @@ namespace ft
  * 				- a violation of the 4th property is called a "black violation".
  */
 
-enum e_rb_color
-{
-	RED,
-	BLACK
-};
-
-enum e_rb_direction
-{
-	LEFT,
-	RIGHT
-};
-
 template <typename T>
-struct rb_node
-{
-	// Attributes
-	T		data;
-
-	uint8_t	color;
-
-	rb_node	*parent;
-	rb_node	*child[2];
-
-// ****************************************************************************************************************** //
-//                                                    Constructors                                                    //
-// ****************************************************************************************************************** //
-
-	/**
-	 * @brief	Construct a new rb_node object. (default constructor)
-	 * 
-	 * @param	data The data to store in the node.
-	 */
-	rb_node(T const &data = T()) :
-		data(data),
-		color(RED),
-		parent(NULL),
-		child{NULL, NULL} {}
-};
+struct rb_node;
 
 template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<rb_node<T> > >
 class rb_tree
@@ -103,6 +69,8 @@ public:
 private:
 	// Attributes
 	pointer		_root;
+	pointer		_min;
+	pointer		_max;
 
 	size_type	_size;
 
@@ -115,7 +83,7 @@ private:
 	 * 
 	 * @param	node The newly inserted node.
 	 */
-	static void	_balanceInsert(pointer const node)
+	void	_balanceInsert(pointer const node)
 		__attribute__((nonnull))
 	{
 		pointer		parent;
@@ -165,22 +133,25 @@ private:
 			parent->color = BLACK;
 			uncle->color = BLACK;
 			grandParent->color = RED;
-			rb_tree::_balanceInsert(grandParent);
+			this->_balanceInsert(grandParent);
 		}
 	}
 
 	/**
-	 * @brief	Calculate the size of a tree.
+	 * @brief	Remove every nodes of a tree.
 	 * 
-	 * @param	root The root of the tree.
-	 * 
-	 * @return	The size of the tree.
+	 * @param	root The root of the tree to clear.
 	 */
-	static size_type	_calculateSize(pointer const root)
+	static void	_clear(pointer const root)
 	{
+		allocator_type	alloc;
+
 		if (!root)
-			return 0LU;
-		return rb_tree::_calculateSize(root->child[LEFT]) + rb_tree::_calculateSize(root->child[RIGHT]) + 1LU;
+			return ;
+		rb_tree::_clear(root->child[LEFT]);
+		rb_tree::_clear(root->child[RIGHT]);
+		alloc.destroy(root);
+		alloc.deallocate(root, 1);
 	}
 
 	/**
@@ -235,9 +206,11 @@ public:
 	 * 
 	 * @param	root The root node of the new tree.
 	 */
-	rb_tree(const_pointer const root = NULL) :
+	rb_tree(pointer const root = NULL) :
 		_root(root),
-		_size(rb_tree::_calculateSize(this->_root)) {}
+		_min(rb_node<value_type>::leftMost(root)),
+		_max(rb_node<value_type>::rightMost(root)),
+		_size(rb_node<value_type>::descendantCount(root)) {}
 
 	/**
 	 * @brief	Construct a new rb_tree object. (copy constructor)
@@ -246,6 +219,8 @@ public:
 	 */
 	rb_tree(rb_tree const &src) :
 		_root(rb_tree::dup(src._root)),
+		_min(rb_node<value_type>::leftMost(this->_root)),
+		_max(rb_node<value_type>::rightMost(this->_root)),
 		_size(src._size) {}
 
 // ***************************************************************************************************************** //
@@ -257,7 +232,7 @@ public:
 	 */
 	~rb_tree(void)
 	{
-		rb_tree::clear(this->_root);
+		this->clear();
 	}
 
 // ***************************************************************************************************************** //
@@ -271,14 +246,7 @@ public:
 	 */
 	iterator	begin(void)
 	{
-		pointer	pos;
-
-		if (!this->_root)
-			return iterator();
-		pos = this->_root;
-		while (pos->child[LEFT])
-			pos = pos->child[LEFT];
-		return iterator(pos);
+		return iterator(this->_min, &this->_root);
 	}
 
 	/**
@@ -288,32 +256,7 @@ public:
 	 */
 	const_iterator	begin(void) const
 	{
-		const_pointer	pos;
-
-		if (!this->_root)
-			return const_iterator();
-		pos = this->_root;
-		while (pos->child[LEFT])
-			pos = pos->child[LEFT];
-		return const_iterator(pos);
-	}
-
-	/**
-	 * @brief	Remove every nodes of the given tree.
-	 * 
-	 * @param	root The root of the tree to clear.
-	 */
-	static void	clear(pointer const root)
-		__attribute__((nonnull))
-	{
-		allocator_type	alloc;
-
-		if (root->child[LEFT])
-			rb_tree::clear(root->child[LEFT]);
-		if (root->child[RIGHT])
-			rb_tree::clear(root->child[RIGHT]);
-		alloc.destroy(root);
-		alloc.deallocate(root, 1);
+		return const_iterator(this->_min, &this->_root);
 	}
 
 	/**
@@ -330,6 +273,16 @@ public:
 		if (node->parent->child[LEFT] == node)
 			return LEFT;
 		return RIGHT;
+	}
+
+	/**
+	 * @brief	Remove every nodes of the tree, and set its size accordingly.
+	 */
+	void	clear(void)
+	{
+		rb_tree::_clear(this->_root);
+		this->_root = NULL;
+		this->_size = 0LU;
 	}
 
 	/**
@@ -360,14 +313,7 @@ public:
 	 */
 	iterator	end(void)
 	{
-		pointer	pos;
-
-		if (!this->_root)
-			return iterator();
-		pos = this->_root;
-		while (pos->child[RIGHT])
-			pos = pos->child[RIGHT];
-		return iterator(pos);
+		return iterator(NULL, &this->_root);
 	}
 
 	/**
@@ -377,14 +323,7 @@ public:
 	 */
 	const_iterator	end(void) const
 	{
-		const_pointer	pos;
-
-		if (!this->_root)
-			return const_iterator();
-		pos = this->_root;
-		while (pos->child[RIGHT])
-			pos = pos->child[RIGHT];
-		return const_iterator(pos);
+		return const_iterator(NULL, &this->_root);
 	}
 
 	/**
@@ -444,6 +383,7 @@ public:
 	 */
 	reverse_iterator	rbegin(void)
 	{
+		
 		return reverse_iterator(this->end());
 	}
 

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 09:51:38 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:50:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,27 @@
 
 namespace ft
 {
-
-template <typename T, typename Category, typename Diff, typename Ptr, typename Ref>
-class input_iterator;
-
+/**
+ * @par		This class is the implementation of the radom_access_iterator.
+ * 			According to the C++98 standard, a Random Access Iterator must conform to the following requirements:
+ * 			- conform to the Bidirectional Iterator requirements
+ * 			- distance incrementable (it += n)
+ * 			- distance decrementable (it -= n)
+ * 			- distance addable (it + n || n + it)
+ * 			- distance subtractable (it - n)
+ * 			- distance calculable (it0 - it1)
+ * 			- subscriptable (it[n])
+ * 			- lower comparable (it0 < it1)
+ * 			- greater comparable (it0 > it1)
+ * 			- lower or equal comparable (it0 <= it1)
+ * 			- greater or equal comparable (it0 >= it1)
+ * 
+ * @tparam	T The type of the value pointed by the iterator.
+ * @tparam	Category One of the standard iterator tag to specify the iterator category.
+ * @tparam	Diff The type of the difference between two iterators.
+ * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
+ * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ */
 template <
 	typename T,
 	typename Category = std::random_access_iterator_tag,
@@ -49,6 +66,18 @@ public:
 	random_access_iterator(pointer const ptr = NULL) :
 		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(ptr) {}
 
+	/**
+	 * @brief	Construct a new random_access_iterator object.
+	 * 			Allow mutable to constant random_access_iterator conversion. (copy constructor)
+	 * 
+	 * @tparam	U The type of the random_access_iterator to copy.
+	 * 
+	 * @param	src The random_access_iterator to copy.
+	 */
+	template <typename U>
+	random_access_iterator(random_access_iterator<U> const &src) :
+		bidirectional_iterator<value_type, iterator_category, difference_type, pointer, reference>(src) {}
+
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
@@ -66,7 +95,7 @@ public:
 	template <typename U>
 	inline bool	operator==(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() == rhs.base();
+		return this->_ptr == rhs.base();
 	}
 
 	/**
@@ -82,7 +111,7 @@ public:
 	template <typename U>
 	inline bool	operator!=(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() != rhs.base();
+		return this->_ptr != rhs.base();
 	}
 
 	/**
@@ -98,7 +127,7 @@ public:
 	template <typename U>
 	inline bool	operator<(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() < rhs.base();
+		return this->_ptr < rhs.base();
 	}
 
 	/**
@@ -114,7 +143,7 @@ public:
 	template <typename U>
 	inline bool	operator>(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() > rhs.base();
+		return this->_ptr > rhs.base();
 	}
 
 	/**
@@ -130,7 +159,7 @@ public:
 	template <typename U>
 	inline bool	operator<=(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() <= rhs.base();
+		return this->_ptr <= rhs.base();
 	}
 
 	/**
@@ -146,7 +175,7 @@ public:
 	template <typename U>
 	inline bool	operator>=(random_access_iterator<U> const &rhs) const
 	{
-		return this->base() >= rhs.base();
+		return this->_ptr >= rhs.base();
 	}
 
 	/**
@@ -214,7 +243,7 @@ public:
 	 */
 	inline difference_type operator-(random_access_iterator const &rhs) const
 	{
-		return this->_ptr - rhs._ptr;
+		return this->_ptr - rhs.base();
 	}
 
 	/**
@@ -226,7 +255,7 @@ public:
 	 */
 	inline reference	operator[](difference_type const idx) const
 	{
-		return *(this->_ptr + idx);
+		return this->_ptr[idx];
 	}
 };
 

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 09:19:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:57:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@
 
 namespace ft
 {
+/**
+ * @par		This class is the implementation of the input_iterator.
+ * 			According to the C++98 standard, an Input Iterator must conform to the following requirements:
+ * 			- copy constructible (it0(it1))
+ * 			- copy assignable (it0 = it1)
+ * 			- equivalent comparable with another iterator of the same type (it0 == it1)
+ * 			- different comparable with another iterator of the same type (it0 != it1)
+ * 			- dereferenceable in read mode, and in write mode if the value type is mutable (*it)
+ * 			- if `(*it).m` is a valid expression, then so is `it->m` (it->m)
+ * 			- prefix incrementable (++it)
+ * 			- postfix incrementable (it++)
+ * 
+ * @tparam	T The type of the value pointed by the iterator.
+ * @tparam	Category One of the standard iterator tag to specify the iterator category.
+ * @tparam	Diff The type of the difference between two iterators.
+ * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
+ * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ */
 template <
 	typename T,
 	typename Category = std::input_iterator_tag,
@@ -37,16 +55,10 @@ protected:
 	// Attributes
 	pointer	_ptr;
 
+public:
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
 // ****************************************************************************************************************** //
-
-	/**
-	 * @brief	Construct a new input_iterator object. (default constructor)
-	 */
-	input_iterator(void) : _ptr(NULL) {}
-
-public:
 
 	/**
 	 * @brief	Construct a new input_iterator object from a pointer. (wrap constructor)
@@ -56,24 +68,28 @@ public:
 	input_iterator(pointer const ptr) : _ptr(ptr) {}
 
 	/**
-	 * @brief	Construct a new input_iterator object from another one. (copy constructor)
+	 * @brief	Construct a new input_iterator object from another one.
+	 * 			Allow mutable to constant input_iterator conversion. (copy constructor)
 	 * 
-	 * @param	src The iterator to copy.
+	 * @tparam	U The type of the input_iterator to copy.
+	 * 
+	 * @param	src The input_iterator to copy.
 	 */
-	input_iterator(input_iterator const &src) : _ptr(src._ptr) {}
+	template <typename U>
+	input_iterator(input_iterator<U> const &src) : _ptr(src.base()) {}
 
 // ***************************************************************************************************************** //
 //                                                     Accessors                                                     //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get the pointer wrapped by the iterator.
+	 * @brief	Get the wrapped pointer wrapped in the input_iterator.
 	 * 
-	 * @return	The pointer wrapped by the iterator.
+	 * @return	The wrapped pointer in the input_iterator.
 	 */
-	pointer	base(void) const
+	inline pointer	base(void) const
 	{
-		return _ptr;
+		return this->_ptr;
 	}
 
 // ***************************************************************************************************************** //
@@ -81,7 +97,7 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Assign a new pointer to the iterator.
+	 * @brief	Assign a new pointer to the input_iterator.
 	 * 
 	 * @param	rhs The input_iterator to copy the pointer from.
 	 * 
@@ -89,7 +105,8 @@ public:
 	 */
 	inline input_iterator	&operator=(input_iterator const &rhs)
 	{
-		this->_ptr = rhs._ptr;
+		if (this != &rhs)
+			this->_ptr = rhs.base();
 		return *this;
 	}
 
@@ -106,7 +123,7 @@ public:
 	template <typename U>
 	inline bool	operator==(input_iterator<U> const &rhs) const
 	{
-		return this->base() == rhs.base();
+		return this->_ptr == rhs.base();
 	}
 
 	/**
@@ -122,7 +139,7 @@ public:
 	template <typename U>
 	inline bool	operator!=(input_iterator<U> const &rhs) const
 	{
-		return this->base() != rhs.base();
+		return this->_ptr != rhs.base();
 	}
 
 	/**

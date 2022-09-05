@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 09:18:51 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:50:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,19 @@
 
 namespace ft
 {
+/**
+ * @par		This class is the implementation of the bidirectional_iterator.
+ * 			According to the C++98 standard, a Bidirectional Iterator must conform to the following requirements:
+ * 			- conform to the Forward Iterator requirements
+ * 			- prefix decrementable (--it)
+ * 			- postfix decrementable (it--)
+ * 
+ * @tparam	T The type of the value pointed by the iterator.
+ * @tparam	Category One of the standard iterator tag to specify the iterator category.
+ * @tparam	Diff The type of the difference between two iterators.
+ * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
+ * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ */
 template <
 	typename T,
 	typename Category = std::bidirectional_iterator_tag,
@@ -46,11 +59,15 @@ public:
 		forward_iterator<value_type, iterator_category, difference_type, pointer, reference>(ptr) {}
 
 	/**
-	 * @brief	Construct a new bidirectional_iterator object. (copy constructor)
+	 * @brief	Construct a new bidirectional_iterator object.
+	 * 			Allow mutable to constant bidirectional_iterator conversion. (copy constructor)
 	 * 
-	 * @param	src The iterator to copy.
+	 * @tparam	U The type of the bidirectional_iterator to copy.
+	 * 
+	 * @param	src The bidirectional_iterator to copy.
 	 */
-	bidirectional_iterator(bidirectional_iterator const &src) :
+	template <typename U>
+	bidirectional_iterator(bidirectional_iterator<U> const &src) :
 		forward_iterator<value_type, iterator_category, difference_type, pointer, reference>(src) {}
 
 // ***************************************************************************************************************** //
@@ -70,7 +87,7 @@ public:
 	template <typename U>
 	inline bool	operator==(bidirectional_iterator<U> const &rhs) const
 	{
-		return this->base() == rhs.base();
+		return this->_ptr == rhs.base();
 	}
 
 	/**
@@ -86,7 +103,7 @@ public:
 	template <typename U>
 	inline bool	operator!=(bidirectional_iterator<U> const &rhs) const
 	{
-		return this->base() != rhs.base();
+		return this->_ptr != rhs.base();
 	}
 
 	/**

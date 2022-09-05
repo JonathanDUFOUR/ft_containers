@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:36:24 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:47:04 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,21 @@
 
 namespace ft
 {
+/**
+ * @par		This class is the implementation of the output_iterator.
+ * 			According to the C++98 standard, an Output Iterator must conform to the following requirements:
+ * 			- copy constructible (it0(it1))
+ * 			- copy assignable (it0 = it1)
+ * 			- dereferenceable in write mode (*it = value)
+ * 			- prefix incrementable (++it)
+ * 			- postfix incrementable (it++)
+ * 
+ * @tparam	T The type of the value pointed by the iterator.
+ * @tparam	Category One of the standard iterator tag to specify the iterator category.
+ * @tparam	Diff The type of the difference between two iterators.
+ * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
+ * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ */
 template <
 	typename T,
 	typename Category = std::output_iterator_tag,
@@ -50,9 +65,29 @@ public:
 	output_iterator(pointer const ptr) : _ptr(ptr) {}
 
 	/**
-	 * @brief	Construct a new output_iterator object. (copy constructor)
+	 * @brief	Construct a new output_iterator object.
+	 * 			Allow mutable to constant output_iterator conversion. (copy constructor)
+	 * 
+	 * @tparam	U The type of the output_iterator to copy.
+	 * 
+	 * @param	src The output_iterator to copy.
 	 */
-	output_iterator(output_iterator const &src) : _ptr(src._ptr) {}
+	template <typename U>
+	output_iterator(output_iterator<U> const &src) : _ptr(src.base()) {}
+
+// ***************************************************************************************************************** //
+//                                                     Accessors                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Get the wrapped pointer in the output_iterator.
+	 * 
+	 * @return	The wrapped pointer in the output_iterator.
+	 */
+	inline pointer base(void) const
+	{
+		return this->_ptr;
+	}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
@@ -67,7 +102,8 @@ public:
 	 */
 	inline output_iterator	&operator=(output_iterator const &rhs)
 	{
-		this->_ptr = rhs._ptr;
+		if (this != &rhs)
+			this->_ptr = rhs.base();
 		return *this;
 	}
 

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 08:35:11 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 16:49:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,18 @@
 
 namespace ft
 {
+/**
+ * @par		This class is the implementation of the forward_iterator.
+ * 			According to the C++98 standard, a Forward Iterator must conform to the following requirements:
+ * 			- conform to the Input Iterator requirements
+ * 			- default constructible (it) (it())
+ * 
+ * @tparam	T The type of the value pointed by the iterator.
+ * @tparam	Category One of the standard iterator tag to specify the iterator category.
+ * @tparam	Diff The type of the difference between two iterators.
+ * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
+ * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ */
 template <
 	typename T,
 	typename Category = std::forward_iterator_tag,
@@ -46,11 +58,15 @@ public:
 		input_iterator<value_type, iterator_category, difference_type, pointer, reference>(ptr) {}
 
 	/**
-	 * @brief	Construct a new forward iterator object from another one. (copy constructor)
+	 * @brief	Construct a new forward iterator object from another one.
+	 * 			Allow mutable to constant forward_iterator conversion. (copy constructor)
 	 * 
-	 * @param	src The iterator to copy.
+	 * @tparam	U The type of the forward_iterator to copy.
+	 * 
+	 * @param	src The forward_iterator to copy.
 	 */
-	forward_iterator(forward_iterator const &src) :
+	template <typename U>
+	forward_iterator(forward_iterator<U> const &src) :
 		input_iterator<value_type, iterator_category, difference_type, pointer, reference>(src) {}
 
 // ***************************************************************************************************************** //
@@ -70,7 +86,7 @@ public:
 	template <typename U>
 	inline bool	operator==(forward_iterator<U> const &rhs) const
 	{
-		return this->base() == rhs.base();
+		return this->_ptr == rhs.base();
 	}
 
 	/**
@@ -86,7 +102,7 @@ public:
 	template <typename U>
 	inline bool	operator!=(forward_iterator<U> const &rhs) const
 	{
-		return this->base() != rhs.base();
+		return this->_ptr != rhs.base();
 	}
 };
 }

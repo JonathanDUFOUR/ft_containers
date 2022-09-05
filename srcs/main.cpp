@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/01 22:03:44 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/02 12:25:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(void)
 		test_algorithm,
 		test_stack,
 		test_vector,
+		test_rb_tree,
 		NULL
 	};
 	t_uint	koCount;

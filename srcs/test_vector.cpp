@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:13:21 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/05 18:55:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -604,6 +604,256 @@ inline static int	__test_function_rend(void)
 		return KO;
 	}
 	return IMP_OK;
+}
+
+inline static int	__test_type_iterator(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
+		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
+		ft::vector<int>::iterator const			ft_end(ft_vec.end());
+		std::vector<int>::iterator const		std_end(std_vec.end());
+		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
+		std::vector<int>::const_iterator const	std_cend(std_vec.end());
+		ft::vector<int>::iterator				ft_it;
+		std::vector<int>::iterator				std_it;
+
+		if (sizeof(ft_it) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_it = ft_vec.begin(), std_it = std_vec.begin() ;
+			ft_it != ft_vec.end() && std_it != std_vec.end() ;
+			++ft_it, ++std_it)
+		{
+			ft_it = ++ft_it;
+			ft_it = ft_it++;
+			ft_it = --ft_it;
+			ft_it = ft_it--;
+			ft_it = (ft_it += 2);
+			ft_it = (ft_it -= 2);
+			ft_it = (ft_it + 3);
+			ft_it = (ft_it - 3);
+			ft_it = (4 + ft_it);
+			ft_it -= 4;
+			std_it = ++std_it;
+			std_it = std_it++;
+			std_it = --std_it;
+			std_it = std_it--;
+			std_it = (std_it += 2);
+			std_it = (std_it -= 2);
+			std_it = (std_it + 3);
+			std_it = (std_it - 3);
+			std_it = (4 + std_it);
+			std_it -= 4;
+
+			if (!!ft_it.base() != !!std_it.base() ||
+				(ft_it - ft_end) != (std_it - std_end) || (ft_it - ft_cend) != (std_it - std_cend) ||
+				(ft_it < ft_end) != (std_it < std_end) || (ft_it < ft_cend) != (std_it < std_cend) ||
+				(ft_it > ft_end) != (std_it > std_end) || (ft_it > ft_cend) != (std_it > std_cend) ||
+				(ft_it <= ft_end) != (std_it <= std_end) || (ft_it <= ft_cend) != (std_it <= std_cend) ||
+				(ft_it >= ft_end) != (std_it >= std_end) || (ft_it >= ft_cend) != (std_it >= std_cend) ||
+				(*ft_it)++ != (*std_it)++ || ++(ft_it[0]) != ++(std_it[0]) ||
+				(*ft_it)-- != (*std_it)-- || --(ft_it[0]) != --(std_it[0]))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_iterator(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
+		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
+		ft::vector<int>::iterator const			ft_end(ft_vec.end());
+		std::vector<int>::iterator const		std_end(std_vec.end());
+		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
+		std::vector<int>::const_iterator const	std_cend(std_vec.end());
+		ft::vector<int>::const_iterator			ft_cit;
+		std::vector<int>::const_iterator		std_cit;
+
+		if (sizeof(ft_cit) != sizeof(std_cit))
+			ret = ISO_OK;
+
+		for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
+			ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
+			++ft_cit, ++std_cit)
+		{
+			ft_cit = ++ft_cit;
+			ft_cit = ft_cit++;
+			ft_cit = --ft_cit;
+			ft_cit = ft_cit--;
+			ft_cit = (ft_cit += 2);
+			ft_cit = (ft_cit -= 2);
+			ft_cit = (ft_cit + 3);
+			ft_cit = (ft_cit - 3);
+			ft_cit = (4 + ft_cit);
+			ft_cit -= 4;
+			std_cit = ++std_cit;
+			std_cit = std_cit++;
+			std_cit = --std_cit;
+			std_cit = std_cit--;
+			std_cit = (std_cit += 2);
+			std_cit = (std_cit -= 2);
+			std_cit = (std_cit + 3);
+			std_cit = (std_cit - 3);
+			std_cit = (4 + std_cit);
+			std_cit -= 4;
+
+			if (!!ft_cit.base() != !!std_cit.base() ||
+				(ft_cit - ft_end) != (std_cit - std_end) || (ft_cit - ft_cend) != (std_cit - std_cend) ||
+				(ft_cit < ft_end) != (std_cit < std_end) || (ft_cit < ft_cend) != (std_cit < std_cend) ||
+				(ft_cit > ft_end) != (std_cit > std_end) || (ft_cit > ft_cend) != (std_cit > std_cend) ||
+				(ft_cit <= ft_end) != (std_cit <= std_end) || (ft_cit <= ft_cend) != (std_cit <= std_cend) ||
+				(ft_cit >= ft_end) != (std_cit >= std_end) || (ft_cit >= ft_cend) != (std_cit >= std_cend) ||
+				*ft_cit != *std_cit || ft_cit[0] != std_cit[0])
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_reverse_iterator(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::vector<int>									ft_vec(&g_int[0], &g_int[g_int_size]);
+		std::vector<int>								std_vec(&g_int[0], &g_int[g_int_size]);
+		ft::vector<int>::reverse_iterator const			ft_rend(ft_vec.rend());
+		std::vector<int>::reverse_iterator const		std_rend(std_vec.rend());
+		ft::vector<int>::const_reverse_iterator const	ft_crend(ft_vec.rend());
+		std::vector<int>::const_reverse_iterator const	std_crend(std_vec.rend());
+		ft::vector<int>::reverse_iterator				ft_rit;
+		std::vector<int>::reverse_iterator				std_rit;
+
+		if (sizeof(ft_rit) != sizeof(std_rit))
+			ret = ISO_OK;
+
+		for (ft_rit = ft_vec.rbegin(), std_rit = std_vec.rbegin() ;
+			ft_rit != ft_vec.rend() && std_rit != std_vec.rend() ;
+			++ft_rit, ++std_rit)
+		{
+			ft_rit = ++ft_rit;
+			ft_rit = ft_rit++;
+			ft_rit = --ft_rit;
+			ft_rit = ft_rit--;
+			ft_rit = (ft_rit += 2);
+			ft_rit = (ft_rit -= 2);
+			ft_rit = (ft_rit + 3);
+			ft_rit = (ft_rit - 3);
+			ft_rit = (4 + ft_rit);
+			ft_rit -= 4;
+			std_rit = ++std_rit;
+			std_rit = std_rit++;
+			std_rit = --std_rit;
+			std_rit = std_rit--;
+			std_rit = (std_rit += 2);
+			std_rit = (std_rit -= 2);
+			std_rit = (std_rit + 3);
+			std_rit = (std_rit - 3);
+			std_rit = (4 + std_rit);
+			std_rit -= 4;
+
+			if (!!ft_rit.base().base() != !!std_rit.base().base() ||
+				(ft_rit - ft_rend) != (std_rit - std_rend) || (ft_rit - ft_crend) != (std_rit - std_crend) ||
+				(ft_rit < ft_rend) != (std_rit < std_rend) || (ft_rit < ft_crend) != (std_rit < std_crend) ||
+				(ft_rit > ft_rend) != (std_rit > std_rend) || (ft_rit > ft_crend) != (std_rit > std_crend) ||
+				(ft_rit <= ft_rend) != (std_rit <= std_rend) || (ft_rit <= ft_crend) != (std_rit <= std_crend) ||
+				(ft_rit >= ft_rend) != (std_rit >= std_rend) || (ft_rit >= ft_crend) != (std_rit >= std_crend) ||
+				(*ft_rit)++ != (*std_rit)++ || ++(ft_rit[0]) != ++(std_rit[0]) ||
+				(*ft_rit)-- != (*std_rit)-- || --(ft_rit[0]) != --(std_rit[0]))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_reverse_iterator(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::vector<int> const						ft_vec(&g_int[0], &g_int[g_int_size]);
+		std::vector<int> const						std_vec(&g_int[0], &g_int[g_int_size]);
+		ft::vector<int>::const_reverse_iterator		ft_crit;
+		std::vector<int>::const_reverse_iterator	std_crit;
+
+		if (sizeof(ft_crit) != sizeof(std_crit))
+			ret = ISO_OK;
+
+		for (ft_crit = ft_vec.rbegin(), std_crit = std_vec.rbegin() ;
+			ft_crit != ft_vec.rend() && std_crit != std_vec.rend() ;
+			++ft_crit, ++std_crit)
+		{
+			ft_crit = ++ft_crit;
+			ft_crit = ft_crit++;
+			ft_crit = --ft_crit;
+			ft_crit = ft_crit--;
+			ft_crit = (ft_crit += 2);
+			ft_crit = (ft_crit -= 2);
+			ft_crit = (ft_crit + 3);
+			ft_crit = (ft_crit - 3);
+			ft_crit = (4 + ft_crit);
+			ft_crit -= 4;
+			std_crit = ++std_crit;
+			std_crit = std_crit++;
+			std_crit = --std_crit;
+			std_crit = std_crit--;
+			std_crit = (std_crit += 2);
+			std_crit = (std_crit -= 2);
+			std_crit = (std_crit + 3);
+			std_crit = (std_crit - 3);
+			std_crit = (4 + std_crit);
+			std_crit -= 4;
+
+			if (!!ft_crit.base().base() != !!std_crit.base().base() ||
+				(ft_crit - ft_vec.rend()) != (std_crit - std_vec.rend()) ||
+				(ft_crit < ft_vec.rend()) != (std_crit < std_vec.rend()) ||
+				(ft_crit > ft_vec.rend()) != (std_crit > std_vec.rend()) ||
+				(ft_crit <= ft_vec.rend()) != (std_crit <= std_vec.rend()) ||
+				(ft_crit >= ft_vec.rend()) != (std_crit >= std_vec.rend()) ||
+				*ft_crit != *std_crit || ft_crit[0] != std_crit[0])
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
 }
 
 inline static int	__test_function_front(void)
@@ -1745,232 +1995,6 @@ inline static int	__test_operator_greater_equal(void)
 	return IMP_OK;
 }
 
-inline static int	__test_type_iterator(void)
-{
-	title(__func__);
-	try
-	{
-		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
-		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::iterator const			ft_end(ft_vec.end());
-		std::vector<int>::iterator const		std_end(std_vec.end());
-		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
-		std::vector<int>::const_iterator const	std_cend(std_vec.end());
-		ft::vector<int>::iterator				ft_it;
-		std::vector<int>::iterator				std_it;
-
-		for (ft_it = ft_vec.begin(), std_it = std_vec.begin() ;
-			ft_it != ft_vec.end() && std_it != std_vec.end() ;
-			++ft_it, ++std_it)
-		{
-			ft_it = ++ft_it;
-			ft_it = ft_it++;
-			ft_it = --ft_it;
-			ft_it = ft_it--;
-			ft_it = (ft_it += 2);
-			ft_it = (ft_it -= 2);
-			ft_it = (ft_it + 3);
-			ft_it = (ft_it - 3);
-			ft_it = (4 + ft_it);
-			ft_it -= 4;
-			std_it = ++std_it;
-			std_it = std_it++;
-			std_it = --std_it;
-			std_it = std_it--;
-			std_it = (std_it += 2);
-			std_it = (std_it -= 2);
-			std_it = (std_it + 3);
-			std_it = (std_it - 3);
-			std_it = (4 + std_it);
-			std_it -= 4;
-
-			if (!!ft_it.base() != !!std_it.base() ||
-				(ft_it - ft_end) != (std_it - std_end) || (ft_it - ft_cend) != (std_it - std_cend) ||
-				(ft_it < ft_end) != (std_it < std_end) || (ft_it < ft_cend) != (std_it < std_cend) ||
-				(ft_it > ft_end) != (std_it > std_end) || (ft_it > ft_cend) != (std_it > std_cend) ||
-				(ft_it <= ft_end) != (std_it <= std_end) || (ft_it <= ft_cend) != (std_it <= std_cend) ||
-				(ft_it >= ft_end) != (std_it >= std_end) || (ft_it >= ft_cend) != (std_it >= std_cend) ||
-				(*ft_it)++ != (*std_it)++ || ++(ft_it[0]) != ++(std_it[0]) ||
-				(*ft_it)-- != (*std_it)-- || --(ft_it[0]) != --(std_it[0]))
-				return KO;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return KO;
-	}
-	return IMP_OK;
-}
-
-inline static int	__test_type_const_iterator(void)
-{
-	title(__func__);
-	try
-	{
-		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
-		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::iterator const			ft_end(ft_vec.end());
-		std::vector<int>::iterator const		std_end(std_vec.end());
-		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
-		std::vector<int>::const_iterator const	std_cend(std_vec.end());
-		ft::vector<int>::const_iterator			ft_cit;
-		std::vector<int>::const_iterator		std_cit;
-
-		for (ft_cit = ft_vec.begin(), std_cit = std_vec.begin() ;
-			ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
-			++ft_cit, ++std_cit)
-		{
-			ft_cit = ++ft_cit;
-			ft_cit = ft_cit++;
-			ft_cit = --ft_cit;
-			ft_cit = ft_cit--;
-			ft_cit = (ft_cit += 2);
-			ft_cit = (ft_cit -= 2);
-			ft_cit = (ft_cit + 3);
-			ft_cit = (ft_cit - 3);
-			ft_cit = (4 + ft_cit);
-			ft_cit -= 4;
-			std_cit = ++std_cit;
-			std_cit = std_cit++;
-			std_cit = --std_cit;
-			std_cit = std_cit--;
-			std_cit = (std_cit += 2);
-			std_cit = (std_cit -= 2);
-			std_cit = (std_cit + 3);
-			std_cit = (std_cit - 3);
-			std_cit = (4 + std_cit);
-			std_cit -= 4;
-
-			if (!!ft_cit.base() != !!std_cit.base() ||
-				(ft_cit - ft_end) != (std_cit - std_end) || (ft_cit - ft_cend) != (std_cit - std_cend) ||
-				(ft_cit < ft_end) != (std_cit < std_end) || (ft_cit < ft_cend) != (std_cit < std_cend) ||
-				(ft_cit > ft_end) != (std_cit > std_end) || (ft_cit > ft_cend) != (std_cit > std_cend) ||
-				(ft_cit <= ft_end) != (std_cit <= std_end) || (ft_cit <= ft_cend) != (std_cit <= std_cend) ||
-				(ft_cit >= ft_end) != (std_cit >= std_end) || (ft_cit >= ft_cend) != (std_cit >= std_cend) ||
-				*ft_cit != *std_cit || ft_cit[0] != std_cit[0])
-				return KO;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return KO;
-	}
-	return IMP_OK;
-}
-
-inline static int	__test_type_reverse_iterator(void)
-{
-	title(__func__);
-	try
-	{
-		ft::vector<int>									ft_vec(&g_int[0], &g_int[g_int_size]);
-		std::vector<int>								std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::reverse_iterator const			ft_rend(ft_vec.rend());
-		std::vector<int>::reverse_iterator const		std_rend(std_vec.rend());
-		ft::vector<int>::const_reverse_iterator const	ft_crend(ft_vec.rend());
-		std::vector<int>::const_reverse_iterator const	std_crend(std_vec.rend());
-		ft::vector<int>::reverse_iterator				ft_rit;
-		std::vector<int>::reverse_iterator				std_rit;
-
-		for (ft_rit = ft_vec.rbegin(), std_rit = std_vec.rbegin() ;
-			ft_rit != ft_vec.rend() && std_rit != std_vec.rend() ;
-			++ft_rit, ++std_rit)
-		{
-			ft_rit = ++ft_rit;
-			ft_rit = ft_rit++;
-			ft_rit = --ft_rit;
-			ft_rit = ft_rit--;
-			ft_rit = (ft_rit += 2);
-			ft_rit = (ft_rit -= 2);
-			ft_rit = (ft_rit + 3);
-			ft_rit = (ft_rit - 3);
-			ft_rit = (4 + ft_rit);
-			ft_rit -= 4;
-			std_rit = ++std_rit;
-			std_rit = std_rit++;
-			std_rit = --std_rit;
-			std_rit = std_rit--;
-			std_rit = (std_rit += 2);
-			std_rit = (std_rit -= 2);
-			std_rit = (std_rit + 3);
-			std_rit = (std_rit - 3);
-			std_rit = (4 + std_rit);
-			std_rit -= 4;
-
-			if (!!ft_rit.base().base() != !!std_rit.base().base() ||
-				(ft_rit - ft_rend) != (std_rit - std_rend) || (ft_rit - ft_crend) != (std_rit - std_crend) ||
-				(ft_rit < ft_rend) != (std_rit < std_rend) || (ft_rit < ft_crend) != (std_rit < std_crend) ||
-				(ft_rit > ft_rend) != (std_rit > std_rend) || (ft_rit > ft_crend) != (std_rit > std_crend) ||
-				(ft_rit <= ft_rend) != (std_rit <= std_rend) || (ft_rit <= ft_crend) != (std_rit <= std_crend) ||
-				(ft_rit >= ft_rend) != (std_rit >= std_rend) || (ft_rit >= ft_crend) != (std_rit >= std_crend) ||
-				(*ft_rit)++ != (*std_rit)++ || ++(ft_rit[0]) != ++(std_rit[0]) ||
-				(*ft_rit)-- != (*std_rit)-- || --(ft_rit[0]) != --(std_rit[0]))
-				return KO;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return KO;
-	}
-	return IMP_OK;
-}
-
-inline static int	__test_type_const_reverse_iterator(void)
-{
-	title(__func__);
-	try
-	{
-		ft::vector<int> const						ft_vec(&g_int[0], &g_int[g_int_size]);
-		std::vector<int> const						std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::const_reverse_iterator		ft_crit;
-		std::vector<int>::const_reverse_iterator	std_crit;
-
-		for (ft_crit = ft_vec.rbegin(), std_crit = std_vec.rbegin() ;
-			ft_crit != ft_vec.rend() && std_crit != std_vec.rend() ;
-			++ft_crit, ++std_crit)
-		{
-			ft_crit = ++ft_crit;
-			ft_crit = ft_crit++;
-			ft_crit = --ft_crit;
-			ft_crit = ft_crit--;
-			ft_crit = (ft_crit += 2);
-			ft_crit = (ft_crit -= 2);
-			ft_crit = (ft_crit + 3);
-			ft_crit = (ft_crit - 3);
-			ft_crit = (4 + ft_crit);
-			ft_crit -= 4;
-			std_crit = ++std_crit;
-			std_crit = std_crit++;
-			std_crit = --std_crit;
-			std_crit = std_crit--;
-			std_crit = (std_crit += 2);
-			std_crit = (std_crit -= 2);
-			std_crit = (std_crit + 3);
-			std_crit = (std_crit - 3);
-			std_crit = (4 + std_crit);
-			std_crit -= 4;
-
-			if (!!ft_crit.base().base() != !!std_crit.base().base() ||
-				(ft_crit - ft_vec.rend()) != (std_crit - std_vec.rend()) ||
-				(ft_crit < ft_vec.rend()) != (std_crit < std_vec.rend()) ||
-				(ft_crit > ft_vec.rend()) != (std_crit > std_vec.rend()) ||
-				(ft_crit <= ft_vec.rend()) != (std_crit <= std_vec.rend()) ||
-				(ft_crit >= ft_vec.rend()) != (std_crit >= std_vec.rend()) ||
-				*ft_crit != *std_crit || ft_crit[0] != std_crit[0])
-				return KO;
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return KO;
-	}
-	return IMP_OK;
-}
-
 int	test_vector(void)
 {
 	t_test const	tests[] = {
@@ -1984,6 +2008,10 @@ int	test_vector(void)
 		__test_function_end,
 		__test_function_rbegin,
 		__test_function_rend,
+		__test_type_iterator,
+		__test_type_const_iterator,
+		__test_type_reverse_iterator,
+		__test_type_const_reverse_iterator,
 		__test_function_front,
 		__test_function_back,
 		__test_function_at,
@@ -2004,10 +2032,6 @@ int	test_vector(void)
 		__test_operator_greater,
 		__test_operator_lower_equal,
 		__test_operator_greater_equal,
-		__test_type_iterator,
-		__test_type_const_iterator,
-		__test_type_reverse_iterator,
-		__test_type_const_reverse_iterator,
 		NULL
 	};
 	t_uint			koCount;
