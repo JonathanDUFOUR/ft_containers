@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 10:44:36 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 18:13:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,7 +234,7 @@ public:
 	}
 
 	/**
-	 * @brief	Construct a new vector object with a range of iterators.
+	 * @brief	Construct a new vector object using a range of iterators.
 	 * 			The resulting vector will contain the elements from `first` included to `last` excluded.
 	 * 			(range constructor)
 	 * 

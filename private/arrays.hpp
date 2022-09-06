@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 20:27:44 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 02:48:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 20:31:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,15 +186,15 @@ static long double			g_long_double[] = {
 
 static std::string			g_string[] = {
 	std::string("Where is the moment we needed the most?"),
-	std::string("You kick up the leaves, and the magic is lost"),
-	std::string("They tell me your blue sky's faded to grey"),
-	std::string("They tell me your passion's gone away"),
-	std::string("And I don't need to carrying on"),
-	std::string("You stand in the line just to hit a new low"),
-	std::string("You're faking a smile with the coffee to go"),
-	std::string("You tell me your life's been way off line"),
-	std::string("You're falling to pieces every time"),
-	std::string("And I don't need to carrying on"),
+	std::string("You kick up the leaves, and the magic is lost."),
+	std::string("They tell me your blue sky's faded to grey."),
+	std::string("They tell me your passion's gone away."),
+	std::string("And I don't need to carrying on."),
+	std::string("You stand in the line just to hit a new low."),
+	std::string("You're faking a smile with the coffee to go."),
+	std::string("You tell me your life's been way off line."),
+	std::string("You're falling to pieces every time."),
+	std::string("And I don't need to carrying on!"),
 };
 
 static std::pair<int, char>	g_pair[] = {

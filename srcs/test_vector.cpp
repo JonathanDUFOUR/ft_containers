@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 13:27:23 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 20:16:25 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::vector<int>		ft_vec;
-			std::vector<int>	std_vec;
+			ft::vector<int> const	ft_vec;
+			std::vector<int> const	std_vec;
 
 			if (sizeof(ft_vec) != sizeof(std_vec) || memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
 				ret = ISO_OK;
@@ -44,22 +44,22 @@ inline static int	__test_constructor(void)
 		// Trivially copyable
 		{
 			{
-				ft::vector<char>	ft_vec(21LU);
-				std::vector<char>	std_vec(21LU);
+				ft::vector<char> const	ft_vec(21LU);
+				std::vector<char> const	std_vec(21LU);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<char>	ft_vec(0LU, 'A');
-				std::vector<char>	std_vec(0LU, 'A');
+				ft::vector<char> const	ft_vec(0LU, 'A');
+				std::vector<char> const	std_vec(0LU, 'A');
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<char>	ft_vec(42LU, 42);
-				std::vector<char>	std_vec(42LU, 42);
+				ft::vector<char> const	ft_vec(42LU, 42);
+				std::vector<char> const	std_vec(42LU, 42);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -70,22 +70,22 @@ inline static int	__test_constructor(void)
 		// Ambiguous
 		{
 			{
-				ft::vector<char>	ft_vec(static_cast<char>(21LU), '$');
-				std::vector<char>	std_vec(static_cast<char>(21LU), '$');
+				ft::vector<char> const	ft_vec(static_cast<char>(21LU), '$');
+				std::vector<char> const	std_vec(static_cast<char>(21LU), '$');
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<char>	ft_vec(static_cast<char>(0LU), 'A');
-				std::vector<char>	std_vec(static_cast<char>(0LU), 'A');
+				ft::vector<char> const	ft_vec(static_cast<char>(0LU), 'A');
+				std::vector<char> const	std_vec(static_cast<char>(0LU), 'A');
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<char>	ft_vec(static_cast<char>(42LU), 42);
-				std::vector<char>	std_vec(static_cast<char>(42LU), 42);
+				ft::vector<char> const	ft_vec(static_cast<char>(42LU), 42);
+				std::vector<char> const	std_vec(static_cast<char>(42LU), 42);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -95,22 +95,22 @@ inline static int	__test_constructor(void)
 		// Non-trivial copy required
 		{
 			{
-				ft::vector<std::string>		ft_vec(21LU);
-				std::vector<std::string>	std_vec(21LU);
+				ft::vector<std::string> const	ft_vec(21LU);
+				std::vector<std::string> const	std_vec(21LU);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<std::string>		ft_vec(0LU, std::string("pouic"));
-				std::vector<std::string>	std_vec(0LU, std::string("pouic"));
+				ft::vector<std::string> const	ft_vec(0LU, std::string("pouic"));
+				std::vector<std::string> const	std_vec(0LU, std::string("pouic"));
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
 			{
-				ft::vector<std::string>		ft_vec(42LU, std::string("Hello World !"));
-				std::vector<std::string>	std_vec(42LU, std::string("Hello World !"));
+				ft::vector<std::string> const	ft_vec(42LU, std::string("Hello World !"));
+				std::vector<std::string> const	std_vec(42LU, std::string("Hello World !"));
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -119,29 +119,40 @@ inline static int	__test_constructor(void)
 		// Range constructor
 		// Trivially copyable
 		{
+			// Range of input_iterator
 			{
-				ft::input_iterator<t_huint const>	it0(&g_huint[0]);
-				ft::input_iterator<t_huint const>	it1(&g_huint[0]);
-				ft::vector<t_huint>					ft_vec(it0, it1);
-				std::vector<t_huint>				std_vec(it0, it1);
+				ft::input_iterator<t_huint const> const	it0(&g_huint[0]);
+				ft::input_iterator<t_huint const> const	it1(&g_huint[0]);
+				ft::vector<t_huint> const				ft_vec(it0, it1);
+				std::vector<t_huint> const				std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Range of forward_iterator
 			{
-				ft::forward_iterator<void *>	it0;
-				ft::forward_iterator<void *>	it1;
-				ft::vector<void *>				ft_vec(it0, it1);
-				std::vector<void *>				std_vec(it0, it1);
+				ft::forward_iterator<void *> const	it0;
+				ft::forward_iterator<void *> const	it1;
+				ft::vector<void *> const			ft_vec(it0, it1);
+				std::vector<void *> const			std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Range of random_access_iterator
 			{
-				ft::random_access_iterator<t_huint const>	it0(&g_huint[0]);
-				ft::random_access_iterator<t_huint const>	it1(&g_huint[g_huint_size]);
-				ft::vector<t_huint>							ft_vec(it0, it1);
-				std::vector<t_huint>						std_vec(it0, it1);
+				ft::random_access_iterator<t_huint const> const	it0(&g_huint[0]);
+				ft::random_access_iterator<t_huint const> const	it1(&g_huint[g_huint_size]);
+				ft::vector<t_huint> const						ft_vec(it0, it1);
+				std::vector<t_huint> const						std_vec(it0, it1);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					ret = ISO_OK;
+			}
+			// Range of char const *
+			{
+				ft::vector<char> const	ft_vec(&g_char[0], &g_char[g_char_size]);
+				std::vector<char> const	std_vec(&g_char[0], &g_char[g_char_size]);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -150,29 +161,40 @@ inline static int	__test_constructor(void)
 		// Range constructor
 		// Non-trivial copy required
 		{
+			// Range of input_iterator
 			{
-				ft::input_iterator<std::string const>	it0(&g_string[0]);
-				ft::input_iterator<std::string const>	it1(&g_string[0]);
-				ft::vector<std::string>					ft_vec(it0, it1);
-				std::vector<std::string>				std_vec(it0, it1);
+				ft::input_iterator<std::string const> const	it0(&g_string[0]);
+				ft::input_iterator<std::string const> const	it1(&g_string[0]);
+				ft::vector<std::string> const				ft_vec(it0, it1);
+				std::vector<std::string> const				std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Range of forward_iterator
 			{
-				ft::forward_iterator<void *>	it0;
-				ft::forward_iterator<void *>	it1;
-				ft::vector<void *>				ft_vec(it0, it1);
-				std::vector<void *>				std_vec(it0, it1);
+				ft::forward_iterator<std::string const> const	it0;
+				ft::forward_iterator<std::string const> const	it1;
+				ft::vector<std::string> const					ft_vec(it0, it1);
+				std::vector<std::string> const					std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Range of random_access_iterator
 			{
-				ft::random_access_iterator<std::string const>	it0(&g_string[0]);
-				ft::random_access_iterator<std::string const>	it1(&g_string[g_string_size]);
-				ft::vector<std::string>							ft_vec(it0, it1);
-				std::vector<std::string>						std_vec(it0, it1);
+				ft::random_access_iterator<std::string const> const	it0(&g_string[0]);
+				ft::random_access_iterator<std::string const> const	it1(&g_string[g_string_size]);
+				ft::vector<std::string> const						ft_vec(it0, it1);
+				std::vector<std::string> const						std_vec(it0, it1);
+
+				if (sizeof(ft_vec) != sizeof(std_vec))
+					ret = ISO_OK;
+			}
+			// Range of std::string const *
+			{
+				ft::vector<std::string> const	ft_vec(&g_string[0], &g_string[g_string_size]);
+				std::vector<std::string> const	std_vec(&g_string[0], &g_string[g_string_size]);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -182,13 +204,13 @@ inline static int	__test_constructor(void)
 		// Trivially copyable
 		// Force naive iteration along the range
 		{
-			std::ifstream				ifs0(g_file[g_file_size - 1]);
-			std::ifstream				ifs1(g_file[g_file_size - 1]);
-			std::istream_iterator<char>	it0(ifs0);
-			std::istream_iterator<char>	it1(ifs1);
-			std::istream_iterator<char>	end_of_stream;
-			ft::vector<char>			ft_vec(it0, end_of_stream);
-			std::vector<char>			std_vec(it1, end_of_stream);
+			std::ifstream						ifs0(g_file[g_file_size - 1]);
+			std::ifstream						ifs1(g_file[g_file_size - 1]);
+			std::istream_iterator<char> const	it0(ifs0);
+			std::istream_iterator<char> const	it1(ifs1);
+			std::istream_iterator<char> const	end_of_stream;
+			ft::vector<char> const				ft_vec(it0, end_of_stream);
+			std::vector<char> const				std_vec(it1, end_of_stream);
 
 			if (sizeof(ft_vec) != sizeof(std_vec))
 				ret = ISO_OK;
@@ -196,12 +218,12 @@ inline static int	__test_constructor(void)
 		// Copy constructor
 		// Trivially copyable
 		{
-			ft::forward_iterator<t_huint const>	it0(&g_huint[0]);
-			ft::forward_iterator<t_huint const>	it1(&g_huint[g_huint_size]);
-			ft::vector<t_huint>					ft_vec0(it0, it1);
-			ft::vector<t_huint>					ft_vec1(ft_vec0);
-			std::vector<t_huint>				std_vec0(it0, it1);
-			std::vector<t_huint>				std_vec1(std_vec0);
+			ft::forward_iterator<t_huint const> const	it0(&g_huint[0]);
+			ft::forward_iterator<t_huint const> const	it1(&g_huint[g_huint_size]);
+			ft::vector<t_huint> const					ft_vec0(it0, it1);
+			ft::vector<t_huint> const					ft_vec1(ft_vec0);
+			std::vector<t_huint> const					std_vec0(it0, it1);
+			std::vector<t_huint> const					std_vec1(std_vec0);
 
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				ret = ISO_OK;
@@ -209,12 +231,12 @@ inline static int	__test_constructor(void)
 		// Copy constructor
 		// Non-trivial copy required
 		{
-			ft::forward_iterator<std::string const>	it0(&g_string[0]);
-			ft::forward_iterator<std::string const>	it1(&g_string[g_string_size]);
-			ft::vector<std::string>					ft_vec0(it0, it1);
-			ft::vector<std::string>					ft_vec1(ft_vec0);
-			std::vector<std::string>				std_vec0(it0, it1);
-			std::vector<std::string>				std_vec1(std_vec0);
+			ft::forward_iterator<std::string const> const	it0(&g_string[0]);
+			ft::forward_iterator<std::string const> const	it1(&g_string[g_string_size]);
+			ft::vector<std::string> const					ft_vec0(it0, it1);
+			ft::vector<std::string> const					ft_vec1(ft_vec0);
+			std::vector<std::string> const					std_vec0(it0, it1);
+			std::vector<std::string> const					std_vec1(std_vec0);
 
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				ret = ISO_OK;
@@ -237,8 +259,8 @@ inline static int	__test_function_size(void)
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
 		{
-			ft::vector<t_hhuint>	ft_vec(n, 42U);
-			std::vector<t_hhuint>	std_vec(n, 42U);
+			ft::vector<t_hhuint> const	ft_vec(n, 42U);
+			std::vector<t_hhuint> const	std_vec(n, 42U);
 
 			if (ft_vec.size() != std_vec.size())
 				return KO;
@@ -259,24 +281,24 @@ inline static int	__test_function_max_size(void)
 	{
 		// vector of signed char
 		{
-			ft::vector<t_hhint>		ft_vec;
-			std::vector<t_hhint>	std_vec;
+			ft::vector<t_hhint> const	ft_vec;
+			std::vector<t_hhint> const	std_vec;
 
 			if (ft_vec.max_size() != std_vec.max_size())
 				return KO;
 		}
 		// vector of unsigned int
 		{
-			ft::vector<t_uint>	ft_vec;
-			std::vector<t_uint>	std_vec;
+			ft::vector<t_uint> const	ft_vec;
+			std::vector<t_uint> const	std_vec;
 
 			if (ft_vec.max_size() != std_vec.max_size())
 				return KO;
 		}
 		// vector of pair<long double, signed long int>
 		{
-			ft::vector<std::pair<long double, t_lint> >	ft_vec;
-			std::vector<std::pair<long double, t_lint> >	std_vec;
+			ft::vector<std::pair<long double, t_lint> > const	ft_vec;
+			std::vector<std::pair<long double, t_lint> > const	std_vec;
 
 			if (ft_vec.max_size() != std_vec.max_size())
 				return KO;
@@ -301,8 +323,8 @@ inline static int	__test_function_capacity(void)
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
 		{
-			ft::vector<float>	ft_vec(n, 3.14f);
-			std::vector<float>	std_vec(n, 3.14f);
+			ft::vector<float> const		ft_vec(n, 3.14f);
+			std::vector<float> const	std_vec(n, 3.14f);
 
 			if (ft_vec.capacity() != std_vec.capacity())
 			{
@@ -325,8 +347,8 @@ inline static int	__test_function_get_allocator(void)
 	title(__func__);
 	try
 	{
-		ft::vector<char, std::allocator<char> >		ft_vec;
-		std::vector<char, std::allocator<char> >	std_vec;
+		ft::vector<char, std::allocator<char> > const	ft_vec;
+		std::vector<char, std::allocator<char> > const	std_vec;
 
 		if (ft_vec.get_allocator() != std_vec.get_allocator())
 			return KO;
@@ -348,8 +370,8 @@ inline static int	__test_function_empty(void)
 	{
 		for (n = 0LU ; n < 10LU ; ++n)
 		{
-			ft::vector<std::string>		ft_vec(n * (n % 2), std::string("Hello World"));
-			std::vector<std::string>	std_vec(n * (n % 2), std::string("Hello World"));
+			ft::vector<std::string> const	ft_vec(n * (n % 2), std::string("Hello World"));
+			std::vector<std::string> const	std_vec(n * (n % 2), std::string("Hello World"));
 
 			if (ft_vec.empty() != std_vec.empty())
 				return KO;
@@ -377,13 +399,13 @@ inline static int	__test_function_begin(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char>			ft_vec(it0, end_of_stream);
-				std::vector<char>			std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char>					ft_vec(it0, end_of_stream);
+				std::vector<char>					std_vec(it1, end_of_stream);
 
 				ft_it = ft_vec.begin();
 				std_it = std_vec.begin();
@@ -399,13 +421,13 @@ inline static int	__test_function_begin(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char> const		ft_vec(it0, end_of_stream);
-				std::vector<char> const		std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char> const				ft_vec(it0, end_of_stream);
+				std::vector<char> const				std_vec(it1, end_of_stream);
 
 				ft_cit = ft_vec.begin();
 				std_cit = std_vec.begin();
@@ -437,13 +459,13 @@ inline static int	__test_function_end(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char>			ft_vec(it0, end_of_stream);
-				std::vector<char>			std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char>					ft_vec(it0, end_of_stream);
+				std::vector<char>					std_vec(it1, end_of_stream);
 
 				ft_it = ft_vec.end();
 				std_it = std_vec.end();
@@ -459,13 +481,13 @@ inline static int	__test_function_end(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char> const		ft_vec(it0, end_of_stream);
-				std::vector<char> const		std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char> const				ft_vec(it0, end_of_stream);
+				std::vector<char> const				std_vec(it1, end_of_stream);
 
 				ft_cit = ft_vec.end();
 				std_cit = std_vec.end();
@@ -497,13 +519,13 @@ inline static int	__test_function_rbegin(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char>			ft_vec(it0, end_of_stream);
-				std::vector<char>			std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char>					ft_vec(it0, end_of_stream);
+				std::vector<char>					std_vec(it1, end_of_stream);
 
 				ft_rit = ft_vec.rbegin();
 				std_rit = std_vec.rbegin();
@@ -520,13 +542,13 @@ inline static int	__test_function_rbegin(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char> const		ft_vec(it0, end_of_stream);
-				std::vector<char> const		std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char> const				ft_vec(it0, end_of_stream);
+				std::vector<char> const				std_vec(it1, end_of_stream);
 
 				ft_crit = ft_vec.rbegin();
 				std_crit = std_vec.rbegin();
@@ -559,13 +581,13 @@ inline static int	__test_function_rend(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char>			ft_vec(it0, end_of_stream);
-				std::vector<char>			std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char>					ft_vec(it0, end_of_stream);
+				std::vector<char>					std_vec(it1, end_of_stream);
 
 				ft_rit = ft_vec.rend();
 				std_rit = std_vec.rend();
@@ -582,13 +604,13 @@ inline static int	__test_function_rend(void)
 
 			for (idx = 0U ; idx < g_file_size ; ++idx)
 			{
-				std::ifstream				ifs0(g_file[idx]);
-				std::ifstream				ifs1(g_file[idx]);
-				std::istream_iterator<char>	it0(ifs0);
-				std::istream_iterator<char>	it1(ifs1);
-				std::istream_iterator<char>	end_of_stream;
-				ft::vector<char> const		ft_vec(it0, end_of_stream);
-				std::vector<char> const		std_vec(it1, end_of_stream);
+				std::ifstream						ifs0(g_file[idx]);
+				std::ifstream						ifs1(g_file[idx]);
+				std::istream_iterator<char> const	it0(ifs0);
+				std::istream_iterator<char> const	it1(ifs1);
+				std::istream_iterator<char> const	end_of_stream;
+				ft::vector<char> const				ft_vec(it0, end_of_stream);
+				std::vector<char> const				std_vec(it1, end_of_stream);
 
 				ft_crit = ft_vec.rend();
 				std_crit = std_vec.rend();
@@ -631,8 +653,8 @@ inline static int	__test_type_iterator(void)
 			ft_it != ft_vec.end() && std_it != std_vec.end() ;
 			++ft_it, ++std_it)
 		{
-			RandomAccessIteratorCheck<ft::vector<int>::iterator>(ft_it);
-			RandomAccessIteratorCheck<std::vector<int>::iterator>(std_it);
+			RandomAccessIteratorCheck(ft_it);
+			RandomAccessIteratorCheck(std_it);
 
 			if (!!ft_it.base() != !!std_it.base() ||
 				(ft_it - ft_end) != (std_it - std_end) || (ft_it - ft_cend) != (std_it - std_cend) ||
@@ -677,8 +699,8 @@ inline static int	__test_type_const_iterator(void)
 			ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
 			++ft_cit, ++std_cit)
 		{
-			RandomAccessIteratorCheck<ft::vector<int>::const_iterator>(ft_cit);
-			RandomAccessIteratorCheck<std::vector<int>::const_iterator>(std_cit);
+			RandomAccessIteratorCheck(ft_cit);
+			RandomAccessIteratorCheck(std_cit);
 
 			if (!!ft_cit.base() != !!std_cit.base() ||
 				(ft_cit - ft_end) != (std_cit - std_end) || (ft_cit - ft_cend) != (std_cit - std_cend) ||
@@ -722,8 +744,8 @@ inline static int	__test_type_reverse_iterator(void)
 			ft_rit != ft_vec.rend() && std_rit != std_vec.rend() ;
 			++ft_rit, ++std_rit)
 		{
-			RandomAccessIteratorCheck<ft::vector<int>::reverse_iterator>(ft_rit);
-			RandomAccessIteratorCheck<std::vector<int>::reverse_iterator>(std_rit);
+			RandomAccessIteratorCheck(ft_rit);
+			RandomAccessIteratorCheck(std_rit);
 
 			if (!!ft_rit.base().base() != !!std_rit.base().base() ||
 				(ft_rit - ft_rend) != (std_rit - std_rend) || (ft_rit - ft_crend) != (std_rit - std_crend) ||
@@ -764,8 +786,8 @@ inline static int	__test_type_const_reverse_iterator(void)
 			ft_crit != ft_vec.rend() && std_crit != std_vec.rend() ;
 			++ft_crit, ++std_crit)
 		{
-			RandomAccessIteratorCheck<ft::vector<int>::const_reverse_iterator>(ft_crit);
-			RandomAccessIteratorCheck<std::vector<int>::const_reverse_iterator>(std_crit);
+			RandomAccessIteratorCheck(ft_crit);
+			RandomAccessIteratorCheck(std_crit);
 
 			if (!!ft_crit.base().base() != !!std_crit.base().base() ||
 				(ft_crit - ft_vec.rend()) != (std_crit - std_vec.rend()) ||

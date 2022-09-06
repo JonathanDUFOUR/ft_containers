@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 18:48:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 20:27:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ private:
 	 * 
 	 * @param	node The newly inserted node.
 	 */
-	void	_balanceInsert(pointer const node)
+	void	_balanceInsert(pointer node)
 		__attribute__((nonnull))
 	{
 		pointer		parent;
@@ -202,18 +202,40 @@ public:
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new rb_tree object. (default constructor)
+	 * @brief	Construct a new empty rb_tree object. (default constructor)
 	 * 
 	 * @param	root The root node of the new tree.
 	 */
-	rb_tree(pointer const root = NULL) :
-		_root(root),
-		_min(rb_node<value_type>::leftMost(root)),
-		_max(rb_node<value_type>::rightMost(root)),
-		_size(rb_node<value_type>::descendantCount(root)) {}
+	rb_tree(void) :
+		_root(NULL),
+		_min(NULL),
+		_max(NULL),
+		_size(0LU) {}
 
 	/**
-	 * @brief	Construct a new rb_tree object. (copy constructor)
+	 * @brief	Construct a new rb_tree object using a range of iterators.
+	 * 			The resulting rb_tree will contain elements from `first` included to `last` excluded.
+	 * 			(range constructor)
+	 * 
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
+	 * 
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	rb_tree(InputIterator first, InputIterator const last) :
+		_root(NULL),
+		_min(NULL),
+		_max(NULL),
+		_size(0LU)
+	{
+		for (; first != last; ++first)
+			this->insert(*first);
+	}
+
+	/**
+	 * @brief	Construct a new rb_tree object as a copy of another one. (copy constructor)
 	 * 
 	 * @param	src The rb_tree to copy
 	 */
@@ -233,6 +255,50 @@ public:
 	~rb_tree(void)
 	{
 		this->clear();
+	}
+
+// ***************************************************************************************************************** //
+//                                                     Accessors                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Get the node with the greatest value of the tree.
+	 * 
+	 * @return	The node with the greatest value of the tree.
+	 */
+	pointer const	&getMax(void) const
+	{
+		return this->_max;
+	}
+
+	/**
+	 * @brief	Get the node with the lowest value of the tree.
+	 * 
+	 * @return	The node with the lowest value of the tree.
+	 */
+	pointer const	&getMin(void) const
+	{
+		return this->_min;
+	}
+
+	/**
+	 * @brief	Get the root node of the tree.
+	 * 
+	 * @return	The root node of the tree.
+	 */
+	pointer const	&getRoot(void) const
+	{
+		return this->_root;
+	}
+
+	/**
+	 * @brief	Get the size of the tree.
+	 * 
+	 * @return	The size of the tree.
+	 */
+	size_type const	&getSize(void) const
+	{
+		return this->_size;
 	}
 
 // ***************************************************************************************************************** //
@@ -345,6 +411,9 @@ public:
 		if (!this->_root)
 		{
 			this->_root = alloc.allocate(1LU);
+			this->_min = this->_root;
+			this->_max = this->_root;
+			this->_size = 1LU;
 			alloc.construct(this->_root, node_type(data));
 			return pair<iterator, bool>(iterator(this->_root), true);
 		}
@@ -368,11 +437,19 @@ public:
 		alloc.construct(node, node_type(data));
 		node->parent = parent;
 		if (cmp(parent->data, data))
+		{
 			parent->child[RIGHT] = node;
+			if (parent == this->_max)
+				this->_max = node;
+		}
 		else
+		{
 			parent->child[LEFT] = node;
+			if (parent == this->_min)
+				this->_min = node;
+		}
 		++this->_size;
-		this->_balanceInsert();
+		this->_balanceInsert(node);
 		return pair<iterator, bool>(iterator(node), true);
 	}
 
@@ -415,16 +492,6 @@ public:
 	const_reverse_iterator	rend(void) const
 	{
 		return const_reverse_iterator(this->begin());
-	}
-
-	/**
-	 * @brief	Get the size of the tree.
-	 * 
-	 * @return	The size of the tree.
-	 */
-	size_type	size(void) const
-	{
-		return this->_size;
 	}
 };
 }
