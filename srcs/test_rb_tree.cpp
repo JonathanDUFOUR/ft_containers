@@ -6,13 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 19:00:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 14:38:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
 #include <iostream>
 #include "arrays.hpp"
+#include "iteratorCheck.tpp"
 #include "rb_tree.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
@@ -130,21 +131,17 @@ inline static int	__test_function_begin(void)
 		{
 			// Empty tree
 			{
-				ft::rb_tree<void *>				tree;
-				ft::rb_tree<void *>::iterator	it;
-
-				it = tree.begin();
+				ft::rb_tree<void *>					tree;
+				ft::rb_tree<void *>::iterator const	it(tree.begin());
 
 				if (it.base())
 					return EXIT_FAILURE;
 			}
 			// One node tree
 			{
-				ft::rb_node<t_hint> *const		node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint>				tree(node0);
-				ft::rb_tree<t_hint>::iterator	it;
-
-				it = tree.begin();
+				ft::rb_node<t_hint> *const			node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint>					tree(node0);
+				ft::rb_tree<t_hint>::iterator const	it(tree.begin());
 
 				if (it.base() != node0)
 					return EXIT_FAILURE;
@@ -157,10 +154,8 @@ inline static int	__test_function_begin(void)
 				node0->child[ft::RIGHT] = node1;
 				node1->parent = node0;
 
-				ft::rb_tree<t_luint>			tree(node0);
-				ft::rb_tree<t_luint>::iterator	it;
-
-				it = tree.begin();
+				ft::rb_tree<t_luint>					tree(node0);
+				ft::rb_tree<t_luint>::iterator const	it(tree.begin());
 
 				if (it.base() != node0)
 					return EXIT_FAILURE;
@@ -190,10 +185,8 @@ inline static int	__test_function_begin(void)
 				node2->child[ft::LEFT] = node6;
 				node6->parent = node2;
 
-				ft::rb_tree<float>				tree(node0);
-				ft::rb_tree<float>::iterator	it;
-
-				it = tree.begin();
+				ft::rb_tree<float>					tree(node0);
+				ft::rb_tree<float>::iterator const	it(tree.begin());
 
 				if (it.base() != node6)
 					return EXIT_FAILURE;
@@ -235,10 +228,8 @@ inline static int	__test_function_begin(void)
 				node7->child[ft::LEFT] = node8;
 				node8->parent = node7;
 
-				ft::rb_tree<char>			tree(node0);
-				ft::rb_tree<char>::iterator	it;
-
-				it = tree.begin();
+				ft::rb_tree<char>					tree(node0);
+				ft::rb_tree<char>::iterator const	it(tree.begin());
 
 				if (it.base() != node1)
 					return EXIT_FAILURE;
@@ -248,21 +239,17 @@ inline static int	__test_function_begin(void)
 		{
 			// Empty tree
 			{
-				ft::rb_tree<void *> const			tree;
-				ft::rb_tree<void *>::const_iterator	cit;
-
-				cit = tree.begin();
+				ft::rb_tree<void *> const					tree;
+				ft::rb_tree<void *>::const_iterator const	cit(tree.begin());
 
 				if (cit.base())
 					return EXIT_FAILURE;
 			}
 			// One node tree
 			{
-				ft::rb_node<t_hint> *const			node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint>					tree(node0);
-				ft::rb_tree<t_hint>::const_iterator	cit;
-
-				cit = tree.begin();
+				ft::rb_node<t_hint> *const					node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint> const					tree(node0);
+				ft::rb_tree<t_hint>::const_iterator const	cit(tree.begin());
 
 				if (cit.base() != node0)
 					return EXIT_FAILURE;
@@ -275,10 +262,8 @@ inline static int	__test_function_begin(void)
 				node0->child[ft::RIGHT] = node1;
 				node1->parent = node0;
 
-				ft::rb_tree<t_luint>					tree(node0);
-				ft::rb_tree<t_luint>::const_iterator	cit;
-
-				cit = tree.begin();
+				ft::rb_tree<t_luint> const					tree(node0);
+				ft::rb_tree<t_luint>::const_iterator const	cit(tree.begin());
 
 				if (cit.base() != node0)
 					return EXIT_FAILURE;
@@ -308,10 +293,8 @@ inline static int	__test_function_begin(void)
 				node2->child[ft::LEFT] = node6;
 				node6->parent = node2;
 
-				ft::rb_tree<float>					tree(node0);
-				ft::rb_tree<float>::const_iterator	cit;
-
-				cit = tree.begin();
+				ft::rb_tree<float> const					tree(node0);
+				ft::rb_tree<float>::const_iterator const	cit(tree.begin());
 
 				if (cit.base() != node6)
 					return EXIT_FAILURE;
@@ -353,10 +336,8 @@ inline static int	__test_function_begin(void)
 				node7->child[ft::LEFT] = node8;
 				node8->parent = node7;
 
-				ft::rb_tree<char>					tree(node0);
-				ft::rb_tree<char>::const_iterator	cit;
-
-				cit = tree.begin();
+				ft::rb_tree<char> const					tree(node0);
+				ft::rb_tree<char>::const_iterator const	cit(tree.begin());
 
 				if (cit.base() != node1)
 					return EXIT_FAILURE;
@@ -380,10 +361,8 @@ inline static int	__test_function_end(void)
 		{
 			// Empty tree
 			{
-				ft::rb_tree<void *>				tree;
-				ft::rb_tree<void *>::iterator	it;
-
-				it = tree.end();
+				ft::rb_tree<void *>					tree;
+				ft::rb_tree<void *>::iterator const	it(--tree.end());
 
 				if (it.base())
 					return EXIT_FAILURE;
@@ -392,263 +371,9 @@ inline static int	__test_function_end(void)
 			{
 				ft::rb_node<t_hint> *const		node0 = new ft::rb_node<t_hint>(g_hint[0]);
 				ft::rb_tree<t_hint>				tree(node0);
-				ft::rb_tree<t_hint>::iterator	it;
+				ft::rb_tree<t_hint>::iterator const	it(--tree.end());
 
-				it = tree.end();
-
-				if ((--it).base() != node0)
-					return EXIT_FAILURE;
-			}
-			// Two nodes tree
-			{
-				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
-				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
-
-				node0->child[ft::LEFT] = node1;
-				node1->parent = node0;
-
-				ft::rb_tree<t_luint>			tree(node0);
-				ft::rb_tree<t_luint>::iterator	it;
-
-				it = tree.end();
-
-				if ((--it).base() != node0)
-					return EXIT_FAILURE;
-			}
-			// Many nodes tree
-			{
-				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
-				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
-				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
-				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
-				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
-				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
-				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-				node0->child[ft::LEFT] = node2;
-				node2->parent = node0;
-
-				node1->child[ft::RIGHT] = node3;
-				node3->parent = node1;
-				node1->child[ft::LEFT] = node4;
-				node4->parent = node1;
-
-				node2->child[ft::RIGHT] = node5;
-				node5->parent = node2;
-				node2->child[ft::LEFT] = node6;
-				node6->parent = node2;
-
-				ft::rb_tree<float>				tree(node0);
-				ft::rb_tree<float>::iterator	it;
-
-				it = tree.end();
-
-				if ((--it).base() != node3)
-					return EXIT_FAILURE;
-			}
-			// Chaotic tree
-			{
-				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
-				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
-				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
-				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
-				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
-				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
-				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
-				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
-				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
-				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-
-				node1->child[ft::RIGHT] = node3;
-				node3->parent = node1;
-				node1->child[ft::LEFT] = node2;
-				node2->parent = node1;
-
-				node2->child[ft::RIGHT] = node4;
-				node4->parent = node2;
-
-				node4->child[ft::RIGHT] = node5;
-				node5->parent = node4;
-
-				node5->child[ft::RIGHT] = node6;
-				node6->parent = node5;
-				node5->child[ft::LEFT] = node7;
-				node7->parent = node5;
-
-				node7->child[ft::RIGHT] = node8;
-				node8->parent = node7;
-
-				node8->child[ft::RIGHT] = node9;
-				node9->parent = node8;
-
-				ft::rb_tree<char>			tree(node0);
-				ft::rb_tree<char>::iterator	it;
-
-				it = tree.end();
-
-				if ((--it).base() != node3)
-					return EXIT_FAILURE;
-			}
-		}
-		// Constant access
-		{
-			// Empty tree
-			{
-				ft::rb_tree<void *> const			tree;
-				ft::rb_tree<void *>::const_iterator	cit;
-
-				cit = tree.end();
-
-				if (cit.base())
-					return EXIT_FAILURE;
-			}
-			// One node tree
-			{
-				ft::rb_node<t_hint> *const			node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint> const			tree(node0);
-				ft::rb_tree<t_hint>::const_iterator	cit;
-
-				cit = tree.end();
-
-				if ((--cit).base() != node0)
-					return EXIT_FAILURE;
-			}
-			// Two nodes tree
-			{
-				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
-				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
-
-				node0->child[ft::LEFT] = node1;
-				node1->parent = node0;
-
-				ft::rb_tree<t_luint> const				tree(node0);
-				ft::rb_tree<t_luint>::const_iterator	cit;
-
-				cit = tree.end();
-
-				if ((--cit).base() != node0)
-					return EXIT_FAILURE;
-			}
-			// Many nodes tree
-			{
-				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
-				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
-				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
-				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
-				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
-				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
-				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-				node0->child[ft::LEFT] = node2;
-				node2->parent = node0;
-
-				node1->child[ft::RIGHT] = node3;
-				node3->parent = node1;
-				node1->child[ft::LEFT] = node4;
-				node4->parent = node1;
-
-				node2->child[ft::RIGHT] = node5;
-				node5->parent = node2;
-				node2->child[ft::LEFT] = node6;
-				node6->parent = node2;
-
-				ft::rb_tree<float> const			tree(node0);
-				ft::rb_tree<float>::const_iterator	cit;
-
-				cit = tree.end();
-
-				if ((--cit).base() != node3)
-					return EXIT_FAILURE;
-			}
-			// Chaotic tree
-			{
-				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
-				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
-				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
-				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
-				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
-				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
-				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
-				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
-				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
-				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-
-				node1->child[ft::RIGHT] = node3;
-				node3->parent = node1;
-				node1->child[ft::LEFT] = node2;
-				node2->parent = node1;
-
-				node2->child[ft::RIGHT] = node4;
-				node4->parent = node2;
-
-				node4->child[ft::RIGHT] = node5;
-				node5->parent = node4;
-
-				node5->child[ft::RIGHT] = node6;
-				node6->parent = node5;
-				node5->child[ft::LEFT] = node7;
-				node7->parent = node5;
-
-				node7->child[ft::RIGHT] = node8;
-				node8->parent = node7;
-
-				node8->child[ft::RIGHT] = node9;
-				node9->parent = node8;
-
-				ft::rb_tree<char> const				tree(node0);
-				ft::rb_tree<char>::const_iterator	cit;
-
-				cit = tree.end();
-
-				if ((--cit).base() != node3)
-					return EXIT_FAILURE;
-			}
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_function_rbegin(void)
-{
-	title(__func__);
-	try
-	{
-		// Mutable access
-		{
-			// Empty tree
-			{
-				ft::rb_tree<void *>						tree;
-				ft::rb_tree<void *>::reverse_iterator	rit;
-
-				rit = tree.rbegin();
-
-				if (rit.base().base())
-					return EXIT_FAILURE;
-			}
-			// One node tree
-			{
-				ft::rb_node<t_hint> *const				node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint>						tree(node0);
-				ft::rb_tree<t_hint>::reverse_iterator	rit;
-
-				rit = tree.rbegin();
-
-				if (rit.base() != tree.end())
+				if (it.base() != node0)
 					return EXIT_FAILURE;
 			}
 			// Two nodes tree
@@ -660,11 +385,9 @@ inline static int	__test_function_rbegin(void)
 				node1->parent = node0;
 
 				ft::rb_tree<t_luint>					tree(node0);
-				ft::rb_tree<t_luint>::reverse_iterator	rit;
+				ft::rb_tree<t_luint>::iterator const	it(--tree.end());
 
-				rit = tree.rbegin();
-
-				if (rit.base() != tree.end())
+				if (it.base() != node0)
 					return EXIT_FAILURE;
 			}
 			// Many nodes tree
@@ -692,12 +415,10 @@ inline static int	__test_function_rbegin(void)
 				node2->child[ft::LEFT] = node6;
 				node6->parent = node2;
 
-				ft::rb_tree<float>						tree(node0);
-				ft::rb_tree<float>::reverse_iterator	rit;
+				ft::rb_tree<float>					tree(node0);
+				ft::rb_tree<float>::iterator const	it(--tree.end());
 
-				rit = tree.rbegin();
-
-				if (rit.base() != tree.end())
+				if (it.base() != node3)
 					return EXIT_FAILURE;
 			}
 			// Chaotic tree
@@ -739,9 +460,239 @@ inline static int	__test_function_rbegin(void)
 				node9->parent = node8;
 
 				ft::rb_tree<char>					tree(node0);
-				ft::rb_tree<char>::reverse_iterator	rit;
+				ft::rb_tree<char>::iterator const	it(--tree.end());
 
-				rit = tree.rbegin();
+				if (it.base() != node3)
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			// Empty tree
+			{
+				ft::rb_tree<void *> const					tree;
+				ft::rb_tree<void *>::const_iterator const	cit(--tree.end());
+
+				if (cit.base())
+					return EXIT_FAILURE;
+			}
+			// One node tree
+			{
+				ft::rb_node<t_hint> *const					node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint> const					tree(node0);
+				ft::rb_tree<t_hint>::const_iterator const	cit(--tree.end());
+
+				if (cit.base() != node0)
+					return EXIT_FAILURE;
+			}
+			// Two nodes tree
+			{
+				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
+				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
+
+				node0->child[ft::LEFT] = node1;
+				node1->parent = node0;
+
+				ft::rb_tree<t_luint> const					tree(node0);
+				ft::rb_tree<t_luint>::const_iterator const	cit(--tree.end());
+
+				if (cit.base() != node0)
+					return EXIT_FAILURE;
+			}
+			// Many nodes tree
+			{
+				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+				node0->child[ft::LEFT] = node2;
+				node2->parent = node0;
+
+				node1->child[ft::RIGHT] = node3;
+				node3->parent = node1;
+				node1->child[ft::LEFT] = node4;
+				node4->parent = node1;
+
+				node2->child[ft::RIGHT] = node5;
+				node5->parent = node2;
+				node2->child[ft::LEFT] = node6;
+				node6->parent = node2;
+
+				ft::rb_tree<float> const					tree(node0);
+				ft::rb_tree<float>::const_iterator const	cit(--tree.end());
+
+				if (cit.base() != node3)
+					return EXIT_FAILURE;
+			}
+			// Chaotic tree
+			{
+				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
+				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
+				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
+				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
+				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
+				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
+				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
+				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
+				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
+				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+
+				node1->child[ft::RIGHT] = node3;
+				node3->parent = node1;
+				node1->child[ft::LEFT] = node2;
+				node2->parent = node1;
+
+				node2->child[ft::RIGHT] = node4;
+				node4->parent = node2;
+
+				node4->child[ft::RIGHT] = node5;
+				node5->parent = node4;
+
+				node5->child[ft::RIGHT] = node6;
+				node6->parent = node5;
+				node5->child[ft::LEFT] = node7;
+				node7->parent = node5;
+
+				node7->child[ft::RIGHT] = node8;
+				node8->parent = node7;
+
+				node8->child[ft::RIGHT] = node9;
+				node9->parent = node8;
+
+				ft::rb_tree<char> const					tree(node0);
+				ft::rb_tree<char>::const_iterator const	cit(--tree.end());
+
+				if (cit.base() != node3)
+					return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_rbegin(void)
+{
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			// Empty tree
+			{
+				ft::rb_tree<void *>							tree;
+				ft::rb_tree<void *>::reverse_iterator const	rit(tree.rbegin());
+
+				if (rit.base() != tree.end())
+					return EXIT_FAILURE;
+			}
+			// One node tree
+			{
+				ft::rb_node<t_hint> *const					node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint>							tree(node0);
+				ft::rb_tree<t_hint>::reverse_iterator const	rit(tree.rbegin());
+
+				if (rit.base() != tree.end())
+					return EXIT_FAILURE;
+			}
+			// Two nodes tree
+			{
+				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
+				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
+
+				node0->child[ft::LEFT] = node1;
+				node1->parent = node0;
+
+				ft::rb_tree<t_luint>							tree(node0);
+				ft::rb_tree<t_luint>::reverse_iterator const	rit(tree.rbegin());
+
+				if (rit.base() != tree.end())
+					return EXIT_FAILURE;
+			}
+			// Many nodes tree
+			{
+				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+				node0->child[ft::LEFT] = node2;
+				node2->parent = node0;
+
+				node1->child[ft::RIGHT] = node3;
+				node3->parent = node1;
+				node1->child[ft::LEFT] = node4;
+				node4->parent = node1;
+
+				node2->child[ft::RIGHT] = node5;
+				node5->parent = node2;
+				node2->child[ft::LEFT] = node6;
+				node6->parent = node2;
+
+				ft::rb_tree<float>							tree(node0);
+				ft::rb_tree<float>::reverse_iterator const	rit(tree.rbegin());
+
+				if (rit.base() != tree.end())
+					return EXIT_FAILURE;
+			}
+			// Chaotic tree
+			{
+				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
+				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
+				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
+				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
+				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
+				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
+				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
+				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
+				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
+				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+
+				node1->child[ft::RIGHT] = node3;
+				node3->parent = node1;
+				node1->child[ft::LEFT] = node2;
+				node2->parent = node1;
+
+				node2->child[ft::RIGHT] = node4;
+				node4->parent = node2;
+
+				node4->child[ft::RIGHT] = node5;
+				node5->parent = node4;
+
+				node5->child[ft::RIGHT] = node6;
+				node6->parent = node5;
+				node5->child[ft::LEFT] = node7;
+				node7->parent = node5;
+
+				node7->child[ft::RIGHT] = node8;
+				node8->parent = node7;
+
+				node8->child[ft::RIGHT] = node9;
+				node9->parent = node8;
+
+				ft::rb_tree<char>							tree(node0);
+				ft::rb_tree<char>::reverse_iterator const	rit(tree.rbegin());
 
 				if (rit.base() != tree.end())
 					return EXIT_FAILURE;
@@ -751,21 +702,17 @@ inline static int	__test_function_rbegin(void)
 		{
 			// Empty tree
 			{
-				ft::rb_tree<void *> const					tree;
-				ft::rb_tree<void *>::const_reverse_iterator	crit;
+				ft::rb_tree<void *> const							tree;
+				ft::rb_tree<void *>::const_reverse_iterator const	crit(tree.rbegin());
 
-				crit = tree.rbegin();
-
-				if (crit.base().base())
+				if (crit.base() != tree.end())
 					return EXIT_FAILURE;
 			}
 			// One node tree
 			{
-				ft::rb_node<t_hint> *const					node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint> const					tree(node0);
-				ft::rb_tree<t_hint>::const_reverse_iterator	crit;
-
-				crit = tree.rbegin();
+				ft::rb_node<t_hint> *const							node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint> const							tree(node0);
+				ft::rb_tree<t_hint>::const_reverse_iterator const	crit(tree.rbegin());
 
 				if (crit.base() != tree.end())
 					return EXIT_FAILURE;
@@ -778,10 +725,8 @@ inline static int	__test_function_rbegin(void)
 				node0->child[ft::LEFT] = node1;
 				node1->parent = node0;
 
-				ft::rb_tree<t_luint> const						tree(node0);
-				ft::rb_tree<t_luint>::const_reverse_iterator	crit;
-
-				crit = tree.rbegin();
+				ft::rb_tree<t_luint> const							tree(node0);
+				ft::rb_tree<t_luint>::const_reverse_iterator const	crit(tree.rbegin());
 
 				if (crit.base() != tree.end())
 					return EXIT_FAILURE;
@@ -811,10 +756,8 @@ inline static int	__test_function_rbegin(void)
 				node2->child[ft::LEFT] = node6;
 				node6->parent = node2;
 
-				ft::rb_tree<float> const					tree(node0);
-				ft::rb_tree<float>::const_reverse_iterator	crit;
-
-				crit = tree.rbegin();
+				ft::rb_tree<float> const							tree(node0);
+				ft::rb_tree<float>::const_reverse_iterator const	crit(tree.rbegin());
 
 				if (crit.base() != tree.end())
 					return EXIT_FAILURE;
@@ -857,10 +800,8 @@ inline static int	__test_function_rbegin(void)
 				node8->child[ft::RIGHT] = node9;
 				node9->parent = node8;
 
-				ft::rb_tree<char> const				tree(node0);
-				ft::rb_tree<char>::const_reverse_iterator	crit;
-
-				crit = tree.rbegin();
+				ft::rb_tree<char> const							tree(node0);
+				ft::rb_tree<char>::const_reverse_iterator const	crit(tree.rbegin());
 
 				if (crit.base() != tree.end())
 					return EXIT_FAILURE;
@@ -884,141 +825,19 @@ inline static int	__test_function_rend(void)
 		{
 			// Empty tree
 			{
-				ft::rb_tree<void *>						tree;
-				ft::rb_tree<void *>::reverse_iterator	rit;
-
-				rit = tree.rend();
-
-				if (rit.base().base())
-					return EXIT_FAILURE;
-			}
-			// One node tree
-			{
-				ft::rb_node<t_hint> *const				node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint>						tree(node0);
-				ft::rb_tree<t_hint>::reverse_iterator	rit;
-
-				rit = tree.rend();
+				ft::rb_tree<void *>							tree;
+				ft::rb_tree<void *>::reverse_iterator const	rit(tree.rend());
 
 				if (rit.base() != tree.begin())
-					return EXIT_FAILURE;
-			}
-			// Two nodes tree
-			{
-				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
-				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-
-				ft::rb_tree<t_luint>					tree(node0);
-				ft::rb_tree<t_luint>::reverse_iterator	rit;
-
-				rit = tree.rend();
-
-				if (rit.base() != tree.begin())
-					return EXIT_FAILURE;
-			}
-			// Many nodes tree
-			{
-				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
-				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
-				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
-				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
-				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
-				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
-				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
-
-				node0->child[ft::RIGHT] = node1;
-				node1->parent = node0;
-				node0->child[ft::LEFT] = node2;
-				node2->parent = node0;
-
-				node1->child[ft::RIGHT] = node3;
-				node3->parent = node1;
-				node1->child[ft::LEFT] = node4;
-				node4->parent = node1;
-
-				node2->child[ft::RIGHT] = node5;
-				node5->parent = node2;
-				node2->child[ft::LEFT] = node6;
-				node6->parent = node2;
-
-				ft::rb_tree<float>						tree(node0);
-				ft::rb_tree<float>::reverse_iterator	rit;
-
-				rit = tree.rend();
-
-				if (rit.base() != tree.begin())
-					return EXIT_FAILURE;
-			}
-			// Chaotic tree
-			{
-				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
-				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
-				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
-				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
-				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
-				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
-				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
-				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
-				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
-				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
-
-				node0->child[ft::RIGHT] = node6;
-				node6->parent = node0;
-				node0->child[ft::LEFT] = node1;
-				node1->parent = node0;
-
-				node1->child[ft::RIGHT] = node2;
-				node2->parent = node1;
-
-				node2->child[ft::RIGHT] = node3;
-				node3->parent = node2;
-				node2->child[ft::LEFT] = node5;
-				node5->parent = node2;
-
-				node3->child[ft::LEFT] = node4;
-				node4->parent = node3;
-
-				node5->child[ft::LEFT] = node7;
-				node7->parent = node5;
-
-				node7->child[ft::RIGHT] = node9;
-				node9->parent = node7;
-				node7->child[ft::LEFT] = node8;
-				node8->parent = node7;
-
-				ft::rb_tree<char>					tree(node0);
-				ft::rb_tree<char>::reverse_iterator	rit;
-
-				rit = tree.rend();
-
-				if (rit.base() != tree.begin())
-					return EXIT_FAILURE;
-			}
-		}
-		// Constant access
-		{
-			// Empty tree
-			{
-				ft::rb_tree<void *> const					tree;
-				ft::rb_tree<void *>::const_reverse_iterator	crit;
-
-				crit = tree.rend();
-
-				if (crit.base().base())
 					return EXIT_FAILURE;
 			}
 			// One node tree
 			{
 				ft::rb_node<t_hint> *const					node0 = new ft::rb_node<t_hint>(g_hint[0]);
-				ft::rb_tree<t_hint> const					tree(node0);
-				ft::rb_tree<t_hint>::const_reverse_iterator	crit;
+				ft::rb_tree<t_hint>							tree(node0);
+				ft::rb_tree<t_hint>::reverse_iterator const	rit(tree.rend());
 
-				crit = tree.rend();
-
-				if (crit.base() != tree.begin())
+				if (rit.base() != tree.begin())
 					return EXIT_FAILURE;
 			}
 			// Two nodes tree
@@ -1029,12 +848,10 @@ inline static int	__test_function_rend(void)
 				node0->child[ft::RIGHT] = node1;
 				node1->parent = node0;
 
-				ft::rb_tree<t_luint> const						tree(node0);
-				ft::rb_tree<t_luint>::const_reverse_iterator	crit;
+				ft::rb_tree<t_luint>							tree(node0);
+				ft::rb_tree<t_luint>::reverse_iterator const	rit(tree.rend());
 
-				crit = tree.rend();
-
-				if (crit.base() != tree.begin())
+				if (rit.base() != tree.begin())
 					return EXIT_FAILURE;
 			}
 			// Many nodes tree
@@ -1062,12 +879,10 @@ inline static int	__test_function_rend(void)
 				node2->child[ft::LEFT] = node6;
 				node6->parent = node2;
 
-				ft::rb_tree<float> const					tree(node0);
-				ft::rb_tree<float>::const_reverse_iterator	crit;
+				ft::rb_tree<float>							tree(node0);
+				ft::rb_tree<float>::reverse_iterator const	rit(tree.rend());
 
-				crit = tree.rend();
-
-				if (crit.base() != tree.begin())
+				if (rit.base() != tree.begin())
 					return EXIT_FAILURE;
 			}
 			// Chaotic tree
@@ -1108,9 +923,115 @@ inline static int	__test_function_rend(void)
 				node8->parent = node7;
 
 				ft::rb_tree<char>							tree(node0);
-				ft::rb_tree<char>::const_reverse_iterator	crit;
+				ft::rb_tree<char>::reverse_iterator const	rit(tree.rend());
 
-				crit = tree.rend();
+				if (rit.base() != tree.begin())
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			// Empty tree
+			{
+				ft::rb_tree<void *> const							tree;
+				ft::rb_tree<void *>::const_reverse_iterator const	crit(tree.rend());
+
+				if (crit.base() != tree.begin())
+					return EXIT_FAILURE;
+			}
+			// One node tree
+			{
+				ft::rb_node<t_hint> *const							node0 = new ft::rb_node<t_hint>(g_hint[0]);
+				ft::rb_tree<t_hint> const							tree(node0);
+				ft::rb_tree<t_hint>::const_reverse_iterator const	crit(tree.rend());
+
+				if (crit.base() != tree.begin())
+					return EXIT_FAILURE;
+			}
+			// Two nodes tree
+			{
+				ft::rb_node<t_luint> *const	node0 = new ft::rb_node<t_luint>(g_luint[0]);
+				ft::rb_node<t_luint> *const	node1 = new ft::rb_node<t_luint>(g_luint[1]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+
+				ft::rb_tree<t_luint> const							tree(node0);
+				ft::rb_tree<t_luint>::const_reverse_iterator const	crit(tree.rend());
+
+				if (crit.base() != tree.begin())
+					return EXIT_FAILURE;
+			}
+			// Many nodes tree
+			{
+				ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+				ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+				ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+				ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+				ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+				ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+				ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+				node0->child[ft::RIGHT] = node1;
+				node1->parent = node0;
+				node0->child[ft::LEFT] = node2;
+				node2->parent = node0;
+
+				node1->child[ft::RIGHT] = node3;
+				node3->parent = node1;
+				node1->child[ft::LEFT] = node4;
+				node4->parent = node1;
+
+				node2->child[ft::RIGHT] = node5;
+				node5->parent = node2;
+				node2->child[ft::LEFT] = node6;
+				node6->parent = node2;
+
+				ft::rb_tree<float> const							tree(node0);
+				ft::rb_tree<float>::const_reverse_iterator const	crit(tree.rend());
+
+				if (crit.base() != tree.begin())
+					return EXIT_FAILURE;
+			}
+			// Chaotic tree
+			{
+				ft::rb_node<char> *const	node0 = new ft::rb_node<char>(g_char[0]);
+				ft::rb_node<char> *const	node1 = new ft::rb_node<char>(g_char[1]);
+				ft::rb_node<char> *const	node2 = new ft::rb_node<char>(g_char[2]);
+				ft::rb_node<char> *const	node3 = new ft::rb_node<char>(g_char[3]);
+				ft::rb_node<char> *const	node4 = new ft::rb_node<char>(g_char[4]);
+				ft::rb_node<char> *const	node5 = new ft::rb_node<char>(g_char[5]);
+				ft::rb_node<char> *const	node6 = new ft::rb_node<char>(g_char[6]);
+				ft::rb_node<char> *const	node7 = new ft::rb_node<char>(g_char[7]);
+				ft::rb_node<char> *const	node8 = new ft::rb_node<char>(g_char[8]);
+				ft::rb_node<char> *const	node9 = new ft::rb_node<char>(g_char[9]);
+
+				node0->child[ft::RIGHT] = node6;
+				node6->parent = node0;
+				node0->child[ft::LEFT] = node1;
+				node1->parent = node0;
+
+				node1->child[ft::RIGHT] = node2;
+				node2->parent = node1;
+
+				node2->child[ft::RIGHT] = node3;
+				node3->parent = node2;
+				node2->child[ft::LEFT] = node5;
+				node5->parent = node2;
+
+				node3->child[ft::LEFT] = node4;
+				node4->parent = node3;
+
+				node5->child[ft::LEFT] = node7;
+				node7->parent = node5;
+
+				node7->child[ft::RIGHT] = node9;
+				node9->parent = node7;
+				node7->child[ft::LEFT] = node8;
+				node8->parent = node7;
+
+				ft::rb_tree<char>								tree(node0);
+				ft::rb_tree<char>::const_reverse_iterator const	crit(tree.rend());
 
 				if (crit.base() != tree.begin())
 					return EXIT_FAILURE;
@@ -1127,9 +1048,40 @@ inline static int	__test_function_rend(void)
 
 inline static int	__test_type_iterator(void)
 {
+	title(__func__);
 	try
 	{
-		// TODO: Implement those tests
+		ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+		ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+		ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+		ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+		ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+		ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+		ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+		node0->child[ft::RIGHT] = node1;
+		node1->parent = node0;
+		node0->child[ft::LEFT] = node2;
+		node2->parent = node0;
+
+		node1->child[ft::RIGHT] = node3;
+		node3->parent = node1;
+		node1->child[ft::LEFT] = node4;
+		node4->parent = node1;
+
+		node2->child[ft::RIGHT] = node5;
+		node5->parent = node2;
+		node2->child[ft::LEFT] = node6;
+		node6->parent = node2;
+
+		ft::rb_tree<float>				tree(node0);
+		ft::rb_tree<float>::iterator	it;
+
+		it = tree.begin();
+		BidirectionalIteratorCheck<ft::rb_tree<float>::iterator>(it);
+
+		if (it.base() != node6)
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
@@ -1141,9 +1093,40 @@ inline static int	__test_type_iterator(void)
 
 inline static int	__test_type_const_iterator(void)
 {
+	title(__func__);
 	try
 	{
-		// TODO: Implement those tests
+		ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+		ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+		ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+		ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+		ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+		ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+		ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+		node0->child[ft::RIGHT] = node1;
+		node1->parent = node0;
+		node0->child[ft::LEFT] = node2;
+		node2->parent = node0;
+
+		node1->child[ft::RIGHT] = node3;
+		node3->parent = node1;
+		node1->child[ft::LEFT] = node4;
+		node4->parent = node1;
+
+		node2->child[ft::RIGHT] = node5;
+		node5->parent = node2;
+		node2->child[ft::LEFT] = node6;
+		node6->parent = node2;
+
+		ft::rb_tree<float> const			tree(node0);
+		ft::rb_tree<float>::const_iterator	cit;
+
+		cit = tree.begin();
+		BidirectionalIteratorCheck<ft::rb_tree<float>::const_iterator>(cit);
+
+		if (cit.base() != node6)
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
@@ -1155,9 +1138,40 @@ inline static int	__test_type_const_iterator(void)
 
 inline static int	__test_type_reverse_iterator(void)
 {
+	title(__func__);
 	try
 	{
-		
+		ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+		ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+		ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+		ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+		ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+		ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+		ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+		node0->child[ft::RIGHT] = node1;
+		node1->parent = node0;
+		node0->child[ft::LEFT] = node2;
+		node2->parent = node0;
+
+		node1->child[ft::RIGHT] = node3;
+		node3->parent = node1;
+		node1->child[ft::LEFT] = node4;
+		node4->parent = node1;
+
+		node2->child[ft::RIGHT] = node5;
+		node5->parent = node2;
+		node2->child[ft::LEFT] = node6;
+		node6->parent = node2;
+
+		ft::rb_tree<float>						tree(node0);
+		ft::rb_tree<float>::reverse_iterator	rit;
+
+		rit = tree.rbegin();
+		BidirectionalIteratorCheck<ft::rb_tree<float>::reverse_iterator>(rit);
+
+		if (rit.base() != tree.end())
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
@@ -1169,9 +1183,40 @@ inline static int	__test_type_reverse_iterator(void)
 
 inline static int	__test_type_const_reverse_iterator(void)
 {
+	title(__func__);
 	try
 	{
-		
+		ft::rb_node<float> *const	node0 = new ft::rb_node<float>(g_float[0]);
+		ft::rb_node<float> *const	node1 = new ft::rb_node<float>(g_float[1]);
+		ft::rb_node<float> *const	node2 = new ft::rb_node<float>(g_float[2]);
+		ft::rb_node<float> *const	node3 = new ft::rb_node<float>(g_float[3]);
+		ft::rb_node<float> *const	node4 = new ft::rb_node<float>(g_float[4]);
+		ft::rb_node<float> *const	node5 = new ft::rb_node<float>(g_float[5]);
+		ft::rb_node<float> *const	node6 = new ft::rb_node<float>(g_float[6]);
+
+		node0->child[ft::RIGHT] = node1;
+		node1->parent = node0;
+		node0->child[ft::LEFT] = node2;
+		node2->parent = node0;
+
+		node1->child[ft::RIGHT] = node3;
+		node3->parent = node1;
+		node1->child[ft::LEFT] = node4;
+		node4->parent = node1;
+
+		node2->child[ft::RIGHT] = node5;
+		node5->parent = node2;
+		node2->child[ft::LEFT] = node6;
+		node6->parent = node2;
+
+		ft::rb_tree<float> const					tree(node0);
+		ft::rb_tree<float>::const_reverse_iterator	crit;
+
+		crit = tree.rbegin();
+		BidirectionalIteratorCheck<ft::rb_tree<float>::const_reverse_iterator>(crit);
+
+		if (crit.base() != tree.end())
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 20:02:43 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/16 20:11:08 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 13:25:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * @brief	Display a title for a test function
  * 
  * @param	funcName The name of the running test function.
- * 			It must be formatted like this: __test_<explicit_name>.
+ * 			It is assumed to be formatted like this: __test_<explicit_name>.
  */
 void	title(char const *const funcName)
 {
@@ -27,4 +27,3 @@ void	title(char const *const funcName)
 		str.append(PADDING - str.length(), ' ');
 	std::cout << str << " : ";
 }
-

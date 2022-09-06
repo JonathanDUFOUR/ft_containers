@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 18:55:53 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 13:27:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iostream>
 #include <vector>
 #include "arrays.hpp"
+#include "iteratorCheck.tpp"
 #include "tester.hpp"
 #include "utility.hpp"
 #include "vector.hpp"
@@ -630,26 +631,8 @@ inline static int	__test_type_iterator(void)
 			ft_it != ft_vec.end() && std_it != std_vec.end() ;
 			++ft_it, ++std_it)
 		{
-			ft_it = ++ft_it;
-			ft_it = ft_it++;
-			ft_it = --ft_it;
-			ft_it = ft_it--;
-			ft_it = (ft_it += 2);
-			ft_it = (ft_it -= 2);
-			ft_it = (ft_it + 3);
-			ft_it = (ft_it - 3);
-			ft_it = (4 + ft_it);
-			ft_it -= 4;
-			std_it = ++std_it;
-			std_it = std_it++;
-			std_it = --std_it;
-			std_it = std_it--;
-			std_it = (std_it += 2);
-			std_it = (std_it -= 2);
-			std_it = (std_it + 3);
-			std_it = (std_it - 3);
-			std_it = (4 + std_it);
-			std_it -= 4;
+			RandomAccessIteratorCheck<ft::vector<int>::iterator>(ft_it);
+			RandomAccessIteratorCheck<std::vector<int>::iterator>(std_it);
 
 			if (!!ft_it.base() != !!std_it.base() ||
 				(ft_it - ft_end) != (std_it - std_end) || (ft_it - ft_cend) != (std_it - std_cend) ||
@@ -694,26 +677,8 @@ inline static int	__test_type_const_iterator(void)
 			ft_cit != ft_vec.end() && std_cit != std_vec.end() ;
 			++ft_cit, ++std_cit)
 		{
-			ft_cit = ++ft_cit;
-			ft_cit = ft_cit++;
-			ft_cit = --ft_cit;
-			ft_cit = ft_cit--;
-			ft_cit = (ft_cit += 2);
-			ft_cit = (ft_cit -= 2);
-			ft_cit = (ft_cit + 3);
-			ft_cit = (ft_cit - 3);
-			ft_cit = (4 + ft_cit);
-			ft_cit -= 4;
-			std_cit = ++std_cit;
-			std_cit = std_cit++;
-			std_cit = --std_cit;
-			std_cit = std_cit--;
-			std_cit = (std_cit += 2);
-			std_cit = (std_cit -= 2);
-			std_cit = (std_cit + 3);
-			std_cit = (std_cit - 3);
-			std_cit = (4 + std_cit);
-			std_cit -= 4;
+			RandomAccessIteratorCheck<ft::vector<int>::const_iterator>(ft_cit);
+			RandomAccessIteratorCheck<std::vector<int>::const_iterator>(std_cit);
 
 			if (!!ft_cit.base() != !!std_cit.base() ||
 				(ft_cit - ft_end) != (std_cit - std_end) || (ft_cit - ft_cend) != (std_cit - std_cend) ||
@@ -757,26 +722,8 @@ inline static int	__test_type_reverse_iterator(void)
 			ft_rit != ft_vec.rend() && std_rit != std_vec.rend() ;
 			++ft_rit, ++std_rit)
 		{
-			ft_rit = ++ft_rit;
-			ft_rit = ft_rit++;
-			ft_rit = --ft_rit;
-			ft_rit = ft_rit--;
-			ft_rit = (ft_rit += 2);
-			ft_rit = (ft_rit -= 2);
-			ft_rit = (ft_rit + 3);
-			ft_rit = (ft_rit - 3);
-			ft_rit = (4 + ft_rit);
-			ft_rit -= 4;
-			std_rit = ++std_rit;
-			std_rit = std_rit++;
-			std_rit = --std_rit;
-			std_rit = std_rit--;
-			std_rit = (std_rit += 2);
-			std_rit = (std_rit -= 2);
-			std_rit = (std_rit + 3);
-			std_rit = (std_rit - 3);
-			std_rit = (4 + std_rit);
-			std_rit -= 4;
+			RandomAccessIteratorCheck<ft::vector<int>::reverse_iterator>(ft_rit);
+			RandomAccessIteratorCheck<std::vector<int>::reverse_iterator>(std_rit);
 
 			if (!!ft_rit.base().base() != !!std_rit.base().base() ||
 				(ft_rit - ft_rend) != (std_rit - std_rend) || (ft_rit - ft_crend) != (std_rit - std_crend) ||
@@ -817,26 +764,8 @@ inline static int	__test_type_const_reverse_iterator(void)
 			ft_crit != ft_vec.rend() && std_crit != std_vec.rend() ;
 			++ft_crit, ++std_crit)
 		{
-			ft_crit = ++ft_crit;
-			ft_crit = ft_crit++;
-			ft_crit = --ft_crit;
-			ft_crit = ft_crit--;
-			ft_crit = (ft_crit += 2);
-			ft_crit = (ft_crit -= 2);
-			ft_crit = (ft_crit + 3);
-			ft_crit = (ft_crit - 3);
-			ft_crit = (4 + ft_crit);
-			ft_crit -= 4;
-			std_crit = ++std_crit;
-			std_crit = std_crit++;
-			std_crit = --std_crit;
-			std_crit = std_crit--;
-			std_crit = (std_crit += 2);
-			std_crit = (std_crit -= 2);
-			std_crit = (std_crit + 3);
-			std_crit = (std_crit - 3);
-			std_crit = (4 + std_crit);
-			std_crit -= 4;
+			RandomAccessIteratorCheck<ft::vector<int>::const_reverse_iterator>(ft_crit);
+			RandomAccessIteratorCheck<std::vector<int>::const_reverse_iterator>(std_crit);
 
 			if (!!ft_crit.base().base() != !!std_crit.base().base() ||
 				(ft_crit - ft_vec.rend()) != (std_crit - std_vec.rend()) ||

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 18:44:08 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/06 14:27:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,53 @@ struct rb_node
 			node = node->child[RIGHT];
 		return node;
 	}
+
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * friend keyword is here to call the non-member operators,
+	 * instead of redefining them.
+	 */
+
+	template <typename _T>
+	friend bool	operator==(rb_node<_T> const &lhs, rb_node<_T> const &rhs);
+	template <typename _T>
+	friend bool	operator!=(rb_node<_T> const &lhs, rb_node<_T> const &rhs);
 };
+
+/**
+ * @brief	Check if two rb_node are equivalent.
+ * 
+ * @tparam	T The type of the data stored in both rb_node. 
+ * 
+ * @param	lhs The left hand side rb_node to compare.
+ * @param	rhs The right hand side rb_node to compare.
+ * 
+ * @return	Either true if the two rb_node are equivalent, or false if not.
+ */
+template <typename T>
+bool	operator==(rb_node<T> const &lhs, rb_node<T> const &rhs)
+{
+	return lhs.data == rhs.data;
+}
+
+/**
+ * @brief	Check if two rb_node are different.
+ * 
+ * @tparam	T The type of the data stored in both rb_node. 
+ * 
+ * @param	lhs The left hand side rb_node to compare.
+ * @param	rhs The right hand side rb_node to compare.
+ * 
+ * @return	Either true if the two rb_node are different, or false if not.
+ */
+template <typename T>
+bool	operator!=(rb_node<T> const &lhs, rb_node<T> const &rhs)
+{
+	return lhs.data != rhs.data;
+}
 }
 
 #endif
