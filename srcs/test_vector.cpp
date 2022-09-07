@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 20:16:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:14:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1263,21 +1263,25 @@ inline static int	__test_function_pop_back(void)
 inline static int	__test_function_clear(void)
 {
 	int		ret;
+	t_uint	idx;
 
 	title(__func__);
 	ret = IMP_OK;
 	try
 	{
-		ft::vector<std::string>		ft_vec(&g_string[0], &g_string[g_string_size]);
-		std::vector<std::string>	std_vec(&g_string[0], &g_string[g_string_size]);
+		for (idx = 0U ; idx < g_string_size ; ++idx)
+		{
+			ft::vector<std::string>		ft_vec(&g_string[0], &g_string[idx]);
+			std::vector<std::string>	std_vec(&g_string[0], &g_string[idx]);
 
-		ft_vec.clear();
-		std_vec.clear();
+			ft_vec.clear();
+			std_vec.clear();
 
-		if (ft_vec.capacity() != std_vec.capacity())
-			return ISO_OK;
-		if (ft_vec.size() != std_vec.size())
-			return KO;
+			if (ft_vec.capacity() != std_vec.capacity())
+				return ISO_OK;
+			if (ft_vec.size() != std_vec.size())
+				return KO;
+		}
 	}
 	catch (std::exception const &e)
 	{

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/07 20:43:05 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:23:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,6 +369,8 @@ public:
 	{
 		rb_tree::_clear(this->_root);
 		this->_root = NULL;
+		this->_min = NULL;
+		this->_max = NULL;
 		this->_size = 0LU;
 	}
 

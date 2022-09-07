@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/07 20:41:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:23:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -529,6 +529,30 @@ inline static int	__test_function_insert(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_clear(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		for (idx = 0U ; idx < g_char_size ; ++idx)
+		{
+			ft::rb_tree<char>	tree(&g_char[0], &g_char[idx]);
+
+			tree.clear();
+			if (tree.getMax() || tree.getMin() || tree.getRoot() || tree.getSize())
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
 int	test_rb_tree(void)
 {
 	t_test const	tests[] = {
@@ -546,6 +570,7 @@ int	test_rb_tree(void)
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
 		__test_function_insert,
+		__test_function_clear,
 		NULL
 	};
 	t_uint			koCount;
