@@ -6,13 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 20:10:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/07 20:41:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <list>
 #include <set>
 #include "arrays.hpp"
 #include "iteratorCheck.tpp"
@@ -20,27 +21,51 @@
 #include "rb_tree.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
+#include "utility.hpp"
 
 template <typename T>
-inline static int	__propertiesCheck(ft::rb_tree<T> const &tree)
+inline static void	__blackSteps(ft::rb_node<T> const *const node, std::list<t_uint> &lst, t_uint const steps)
 {
-	// Check colors in the tree
+	if (!node)
+		return lst.push_back(steps);
+	__blackSteps(node->child[ft::LEFT], lst, steps + (node->color == ft::BLACK));
+	__blackSteps(node->child[ft::RIGHT], lst, steps + (node->color == ft::BLACK));
+}
+
+template <typename T, typename Compare>
+inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare const cmp)
+{
+	std::list<t_uint>					lst;
+	std::list<t_uint>::const_iterator	it;
+
+	if (!node)
+		return EXIT_SUCCESS;
+	// Color check
 	{
-		
+		if (node->color != ft::RED && node->color != ft::BLACK)
+			return EXIT_FAILURE;
 	}
-	// Check red violation
+	// Order check
 	{
-		
+		if ((node->child[ft::LEFT] && !cmp(node->child[ft::LEFT]->data, node->data)) ||
+			(node->child[ft::RIGHT] && !cmp(node->data, node->child[ft::RIGHT]->data)))
+			return EXIT_FAILURE;
 	}
-	// Check black violation
+	// Red violation check
 	{
-		
+		if (node->color == ft::RED &&
+			((node->child[ft::LEFT] && node->child[ft::LEFT]->color == ft::RED) ||
+			(node->child[ft::RIGHT] && node->child[ft::RIGHT]->color == ft::RED)))
+			return EXIT_FAILURE;
 	}
-	// Check order violation
+	// Black violation check
 	{
-		
+		__blackSteps(node, lst, 0U);
+		for (it = lst.begin() ; it != lst.end() ; ++it)
+			if (*it != *lst.begin())
+				return EXIT_FAILURE;
 	}
-	return EXIT_SUCCESS;
+	return __propertiesCheck(node->child[ft::LEFT], cmp) || __propertiesCheck(node->child[ft::RIGHT], cmp);
 }
 
 template <typename T>
@@ -476,21 +501,23 @@ inline static int	__test_function_insert(void)
 	title(__func__);
 	try
 	{
-		ft::rb_tree<std::string>	tree;
-		std::set<std::string>		ref;
+		ft::rb_tree<std::string>							tree;
+		std::set<std::string>								ref;
+		ft::pair<ft::rb_tree<std::string>::iterator, bool>	ft_bi;
+		std::pair<std::set<std::string>::iterator, bool>	std_bi;
 
-		for (idx = 0U ; idx < g_string_size ; ++idx)
+		for (idx = 0U ; idx < g_string_size * 2 ; ++idx)
 		{
-			tree.insert(g_string[idx]);
-			ref.insert(g_string[idx]);
+			ft_bi = tree.insert(g_string[idx / 2]);
+			std_bi = ref.insert(g_string[idx / 2]);
 
-			if (tree.getSize() != ref.size() ||
+			if (ft_bi.first->data != *std_bi.first || ft_bi.second != std_bi.second || tree.getSize() != ref.size() ||
+				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_function_type()) ||
 				!std::equal<
 					ft::rb_tree<std::string>::const_iterator,
 					std::set<std::string>::const_iterator,
 					bool (*)(ft::rb_node<std::string> const &, std::string const &)>
-					(tree.begin(), tree.end(), ref.begin(), __cmp) ||
-				__propertiesCheck(tree))
+					(tree.begin(), tree.end(), ref.begin(), __cmp))
 				return EXIT_FAILURE;
 		}
 	}
@@ -518,6 +545,7 @@ int	test_rb_tree(void)
 		__test_type_const_iterator,
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
+		__test_function_insert,
 		NULL
 	};
 	t_uint			koCount;

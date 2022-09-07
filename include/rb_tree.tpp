@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 20:27:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/07 20:43:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ private:
 		}
 
 		// At this point, the node is red, has a red parent, and has a black grand-parent. (red violation)
-		dir = rb_tree::childDirection(parent);
+		dir = rb_tree::_childDirection(parent);
 		uncle = grandParent->child[!dir];
 		if (!uncle || uncle->color == BLACK)
 		{
@@ -138,6 +138,22 @@ private:
 	}
 
 	/**
+	 * @brief	Get the direction of the given node, relative to its parent.
+	 * 
+	 * @param	node The node we want to check the direction.
+	 * 
+	 * @return	Either LEFT if the given node is the left child of its parent,
+	 * 			or RIGHT if the given node is the right child of its parent.
+	 */
+	static uint8_t	_childDirection(const_pointer const node)
+		__attribute__((nonnull))
+	{
+		if (node->parent->child[LEFT] == node)
+			return LEFT;
+		return RIGHT;
+	}
+
+	/**
 	 * @brief	Remove every nodes of a tree.
 	 * 
 	 * @param	root The root of the tree to clear.
@@ -152,6 +168,27 @@ private:
 		rb_tree::_clear(root->child[RIGHT]);
 		alloc.destroy(root);
 		alloc.deallocate(root, 1);
+	}
+
+	/**
+	 * @brief	Duplicate every node from a tree to another, using deep copy.
+	 * 
+	 * @param	src The source root.
+	 * 
+	 * @return	The root of the new tree.
+	 */
+	static pointer	_dup(const_pointer const src)
+	{
+		pointer			dst;
+		allocator_type	alloc;
+
+		if (!src)
+			return NULL;
+		dst = alloc.allocate(1);
+		alloc.construct(dst, *src);
+		dst->child[LEFT] = rb_tree::_dup(src->child[LEFT]);
+		dst->child[RIGHT] = rb_tree::_dup(src->child[RIGHT]);
+		return dst;
 	}
 
 	/**
@@ -240,7 +277,7 @@ public:
 	 * @param	src The rb_tree to copy
 	 */
 	rb_tree(rb_tree const &src) :
-		_root(rb_tree::dup(src._root)),
+		_root(rb_tree::_dup(src._root)),
 		_min(rb_node<value_type>::leftMost(this->_root)),
 		_max(rb_node<value_type>::rightMost(this->_root)),
 		_size(src._size) {}
@@ -326,22 +363,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the direction of the given node, relative to its parent.
-	 * 
-	 * @param	node The node we want to check the direction.
-	 * 
-	 * @return	Either LEFT if the given node is the left child of its parent,
-	 * 			or RIGHT if the given node is the right child of its parent.
-	 */
-	static uint8_t	childDirection(const_pointer const node)
-		__attribute__((nonnull))
-	{
-		if (node->parent->child[LEFT] == node)
-			return LEFT;
-		return RIGHT;
-	}
-
-	/**
 	 * @brief	Remove every nodes of the tree, and set its size accordingly.
 	 */
 	void	clear(void)
@@ -349,27 +370,6 @@ public:
 		rb_tree::_clear(this->_root);
 		this->_root = NULL;
 		this->_size = 0LU;
-	}
-
-	/**
-	 * @brief	Duplicate every node from a tree to another, using deep copy.
-	 * 
-	 * @param	src The source root.
-	 * 
-	 * @return	The root of the new tree.
-	 */
-	static pointer	dup(const_pointer const src)
-	{
-		pointer			dst;
-		allocator_type	alloc;
-
-		if (!src)
-			return NULL;
-		dst = alloc.allocate(1);
-		alloc.construct(dst, *src);
-		dst->child[LEFT] = rb_tree::dup(src->child[LEFT]);
-		dst->child[RIGHT] = rb_tree::dup(src->child[RIGHT]);
-		return dst;
 	}
 
 	/**

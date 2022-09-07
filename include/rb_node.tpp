@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 14:27:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/07 20:26:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,6 @@ struct rb_node
 // ***************************************************************************************************************** //
 //                                              Public Member Functions                                              //
 // ***************************************************************************************************************** //
-
-	/**
-	 * @brief	Calculate the number of descendant nodes of another one.
-	 * 
-	 * @param	node The node to count the descendant nodes of.
-	 * 
-	 * @return	The number of descendant nodes of the given one.
-	 */
-	static size_t	descendantCount(rb_node const *const node)
-	{
-		if (!node)
-			return 0LU;
-		return rb_node::descendantCount(node->child[LEFT]) + rb_node::descendantCount(node->child[RIGHT]) + 1LU;
-	}
 
 	/**
 	 * @brief	Get the node placed the most on the left of another one.
