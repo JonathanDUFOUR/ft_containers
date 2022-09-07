@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 04:19:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:27:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:46:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -545,7 +545,6 @@ int	test_random_access_iterator(void)
 	std::cerr << "\033[0m";
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
@@ -561,7 +560,6 @@ int	test_random_access_iterator(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 03:43:30 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:22:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:54:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,6 @@ int	test_bidirectional_iterator(void)
 	std::cout << "####################################################" << '\n';
 	std::cerr << "\033[0m";
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
@@ -292,7 +291,6 @@ int	test_bidirectional_iterator(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }

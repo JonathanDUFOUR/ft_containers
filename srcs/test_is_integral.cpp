@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:26:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:48:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,6 @@ int	test_is_integral(void)
 	std::cerr << "\033[0m";
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
@@ -371,7 +370,6 @@ int	test_is_integral(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 03:26:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:23:36 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:52:08 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,6 @@ int	test_forward_iterator(void)
 	std::cout << "####################################################" << '\n';
 	std::cerr << "\033[0m";
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
@@ -259,7 +258,6 @@ int	test_forward_iterator(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }

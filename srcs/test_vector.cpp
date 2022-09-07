@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:14:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:37:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ inline static int	__test_constructor(void)
 		// Fill constructor
 		// Trivially copyable
 		{
+			// Non-null size | default value
 			{
 				ft::vector<char> const	ft_vec(21LU);
 				std::vector<char> const	std_vec(21LU);
@@ -50,6 +51,7 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Null size | defined value
 			{
 				ft::vector<char> const	ft_vec(0LU, 'A');
 				std::vector<char> const	std_vec(0LU, 'A');
@@ -57,6 +59,7 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Non-null size | defined value
 			{
 				ft::vector<char> const	ft_vec(42LU, 42);
 				std::vector<char> const	std_vec(42LU, 42);
@@ -69,13 +72,15 @@ inline static int	__test_constructor(void)
 		// Trivially copyable
 		// Ambiguous
 		{
+			// Non-null size | default value
 			{
-				ft::vector<char> const	ft_vec(static_cast<char>(21LU), '$');
-				std::vector<char> const	std_vec(static_cast<char>(21LU), '$');
+				ft::vector<char> const	ft_vec(static_cast<char>(21LU));
+				std::vector<char> const	std_vec(static_cast<char>(21LU));
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Null size | defined value
 			{
 				ft::vector<char> const	ft_vec(static_cast<char>(0LU), 'A');
 				std::vector<char> const	std_vec(static_cast<char>(0LU), 'A');
@@ -83,6 +88,7 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Non-null size | defined value
 			{
 				ft::vector<char> const	ft_vec(static_cast<char>(42LU), 42);
 				std::vector<char> const	std_vec(static_cast<char>(42LU), 42);
@@ -94,6 +100,7 @@ inline static int	__test_constructor(void)
 		// Fill constructor
 		// Non-trivial copy required
 		{
+			// Non-null size | default value
 			{
 				ft::vector<std::string> const	ft_vec(21LU);
 				std::vector<std::string> const	std_vec(21LU);
@@ -101,6 +108,7 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Null size | defined value
 			{
 				ft::vector<std::string> const	ft_vec(0LU, std::string("pouic"));
 				std::vector<std::string> const	std_vec(0LU, std::string("pouic"));
@@ -108,6 +116,7 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
+			// Non-null size | defined value
 			{
 				ft::vector<std::string> const	ft_vec(42LU, std::string("Hello World !"));
 				std::vector<std::string> const	std_vec(42LU, std::string("Hello World !"));
@@ -1999,7 +2008,6 @@ int	test_vector(void)
 	std::cerr << "\033[0m";
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case IMP_OK:
@@ -2021,7 +2029,6 @@ int	test_vector(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }

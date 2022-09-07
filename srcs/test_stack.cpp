@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 04:36:53 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 00:40:11 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ inline static int	__test_constructor(void)
 		}
 		// Wrap constructor
 		{
+			// Empty underlying container
 			{
 				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
 				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
@@ -49,15 +50,18 @@ inline static int	__test_constructor(void)
 					|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
 					ret = ISO_OK;
 			}
-			for (idx = 0U ; idx < g_uint_size ; ++idx)
+			// Non-empty underlying container
 			{
-				vec.push_back(g_uint[idx]);
+				for (idx = 0U ; idx < g_uint_size ; ++idx)
+				{
+					vec.push_back(g_uint[idx]);
 
-				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
-				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
+					ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
+					std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
 
-				if (sizeof(ft_sta) != sizeof(std_sta))
-					ret = ISO_OK;
+					if (sizeof(ft_sta) != sizeof(std_sta))
+						ret = ISO_OK;
+				}
 			}
 		}
 	}
@@ -448,7 +452,6 @@ int	test_stack(void)
 	std::cerr << "\033[0m";
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
-	{
 		switch (tests[idx]())
 		{
 			case IMP_OK:
@@ -470,7 +473,6 @@ int	test_stack(void)
 				++koCount;
 				break;
 		}
-	}
 	std::cout << '\n';
 	return koCount;
 }
