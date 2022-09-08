@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:23:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/08 02:15:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,32 @@ private:
 		return oppositeChild;
 	}
 
+protected:
+// ****************************************************************************************************************** //
+//                                             Protected Member Functions                                             //
+// ****************************************************************************************************************** //
+
+	/**
+	 * @brief	Search for a node in the tree.
+	 * 
+	 * @param	data The data of the node to search for.
+	 * 
+	 * @return	A pointer to the node if found, or NULL if not.
+	 */
+	pointer	_find(value_type const &data) const
+	{
+		pointer					node;
+		compare_function_type	cmp;
+
+		node = this->_root;
+		while (node && node->data != data)
+			if (cmp(data, node->data))
+				node = node->child[LEFT];
+			else
+				node = node->right;
+		return node;
+	}
+
 public:
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
@@ -395,6 +421,22 @@ public:
 	}
 
 	/**
+	 * @brief	Remove a node from the tree.
+	 * 
+	 * @param	data The data of the node to remove.
+	 * 
+	 * @return	The number of removed node(s).
+	 */
+	size_type	erase(value_type const &data)
+	{
+		pointer const	node = this->_find(data);
+
+		if (!node)
+			return 0LU;
+		return 1LU;
+	}
+
+	/**
 	 * @brief	Insert a new node in the tree.
 	 * 
 	 * @param	data The data to insert in the tree.
@@ -421,7 +463,6 @@ public:
 		}
 		pos = this->_root;
 		while (pos)
-		{
 			if (cmp(pos->data, data))
 			{
 				parent = pos;
@@ -434,7 +475,6 @@ public:
 			}
 			else
 				return pair<iterator, bool>(iterator(pos), false);
-		}
 		node = alloc.allocate(1LU);
 		alloc.construct(node, node_type(data));
 		node->parent = parent;
@@ -462,7 +502,6 @@ public:
 	 */
 	reverse_iterator	rbegin(void)
 	{
-		
 		return reverse_iterator(this->end());
 	}
 
