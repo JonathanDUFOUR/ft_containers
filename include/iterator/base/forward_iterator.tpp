@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:49:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/12 14:23:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ class forward_iterator : public input_iterator<T, Category, Diff, Ptr, Ref>
 {
 public:
 	// Member types
-	using typename input_iterator<T, Category, Diff, Ptr, Ref>::iterator_category;
-	using typename input_iterator<T, Category, Diff, Ptr, Ref>::value_type;
-	using typename input_iterator<T, Category, Diff, Ptr, Ref>::pointer;
-	using typename input_iterator<T, Category, Diff, Ptr, Ref>::reference;
-	using typename input_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::	iterator_category;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::	value_type;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::	pointer;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::	reference;
+	using typename input_iterator<T, Category, Diff, Ptr, Ref>::	difference_type;
 
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //

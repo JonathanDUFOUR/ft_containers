@@ -6,15 +6,17 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 02:15:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/12 20:15:28 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_TPP
 # define RB_TREE_TPP
 
+# include <cstring>
 # include <functional>
 # include <memory>
+# include "algorithm.hpp"
 # include "iterator/base/reverse_iterator.tpp"
 # include "iterator/spec/rb_tree_iterator.tpp"
 # include "utility.hpp"
@@ -34,7 +36,11 @@ namespace ft
  * 
  * 			In this implementation:
  * 				- a violation of the 3rd property is called a "red violation"
- * 				- a violation of the 4th property is called a "black violation".
+ * 				- a violation of the 4th property is called a "black violation"
+ * 				- the "I1", "I2", ... and "D1", "D2", ... notations refer to the different situations
+ * 				that can be encountered during an insertion or a deletion
+ * 				as described on the Red Black Tree Wikipedia page.
+ * 				(https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
  */
 
 template <typename T>
@@ -46,10 +52,10 @@ class rb_tree
 public:
 	// Member types
 	typedef T													value_type;
-	typedef Compare												compare_function_type;
+	typedef Compare												compare_type;
 	typedef Alloc												allocator_type;
 
-	typedef typename ft::rb_node<value_type>					node_type;
+	typedef rb_node<value_type>									node_type;
 
 	typedef typename allocator_type::pointer					pointer;
 	typedef typename allocator_type::const_pointer				const_pointer;
@@ -57,11 +63,11 @@ public:
 	typedef typename allocator_type::reference					reference;
 	typedef typename allocator_type::const_reference			const_reference;
 
-	typedef typename ft::rb_tree_iterator<pointer>				iterator;
-	typedef typename ft::rb_tree_iterator<const_pointer>		const_iterator;
+	typedef rb_tree_iterator<const_pointer>						const_iterator;
+	typedef rb_tree_iterator<pointer>							iterator;
 
-	typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
-	typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+	typedef reverse_iterator<const_iterator>					const_reverse_iterator;
+	typedef reverse_iterator<iterator>							reverse_iterator;
 
 	typedef typename iterator_traits<iterator>::difference_type	difference_type;
 	typedef size_t												size_type;
@@ -79,7 +85,108 @@ private:
 // ****************************************************************************************************************** //
 
 	/**
-	 * @par		Balance a tree after an insertion.
+	 * @brief	Balance the tree before an erase of a non-root black leaf node.
+	 * 
+	 * @param	node	The black leaf node to be erased.
+	 */
+	void	_balanceErase1(pointer node)
+		__attribute__((nonnull))
+	{
+		
+	}
+
+	/**
+	 * @brief	Balance the tree before an erase of a non-root black leaf node.
+	 * 
+	 * @param	node	The black leaf node to be erased.
+	 */
+	void	_balanceErase0(pointer node) // Wikipedia version
+		__attribute__((nonnull))
+	{
+		pointer	parent;
+		pointer	sibling;
+		pointer	closeNephew;
+		pointer	distantNephew;
+
+		// At this point, the node is black.
+		parent = node->parent;
+		if (!parent)
+			// At this point, the node has no parent. (D2)
+			return ;
+
+		// At this point, the node is black, and has a parent.
+		sibling = node->parent->child[!dir];
+		if (sibling)
+		{
+			// At this point, the node is black, has a parent, has a sibling, and has a distant newphew.
+			closeNephew = sibling->child[dir];
+			distantNephew = sibling->child[!dir];
+			if (closeNephew)
+			{
+				// At this point, the node is black, has a parent, has a sibling, has a distant newphew,
+				// and has a close newphew.
+				if (closeNephew->color == BLACK)
+				{
+					// At this point, the node is black, has a parent, has a sibling, has a distant newphew,
+					// and has a black close newphew.
+					if (parent->color == RED)
+					{
+						// At this point, the node is black, has a red parent, has a black sibling,
+						// has a black distant nephew, and has a black close nephew. (D4)
+						sibling->color = RED;
+						parent->color = BLACK;
+						return ;
+					}
+
+					// At this point, the node is black, has a black parent, has a sibling, has a distant newphew,
+					// and has a black close newphew.
+					if (sibling->color == RED)
+					{
+						// At this point, the node is black, has a black parent, has a red sibling,
+						// has a black distant nephew, and has a black close nephew. (D3)
+						this->_rotate(parent, dir);
+						parent->color = RED;
+						sibling->color = BLACK;
+						return this->_balanceErase(node, dir);
+					}
+					else
+					{
+						// At this point, the node is black, has a black parent, has a black sibling,
+						// has a black distant nephew, and has a black close nephew. (D1)
+						sibling->color = RED;
+						return this->_balanceErase(parent, rb_tree::_childDirection(parent));
+					}
+				}
+				else
+				{
+					// At this point, the node is black, has a parent, has a black sibling, has a black distant newphew,
+					// and has a red close newphew. (D5)
+					this->_rotate(sibling, !dir);
+					sibling->color = RED;
+					closeNephew->color = BLACK;
+					distantNephew = sibling;
+					sibling = closeNephew;
+				}
+			}
+
+			// At this point, the node is black, has a parent, has a black sibling, has a red distant newphew,
+			// and has no close newphew. (D6)
+			this->_rotate(parent, dir);
+			sibling->color = parent->color;
+			parent->color = BLACK;
+			distantNephew->color = BLACK;
+			return ;
+		}
+		else
+		{
+			// At this point, the node is black, has a parent, has no sibling, has no distant nephew,
+			// and has no close nephew.
+			
+		}
+	}
+
+	/**
+	 * @par		Balance the tree after an insertion.
 	 * 
 	 * @param	node The newly inserted node.
 	 */
@@ -94,13 +201,14 @@ private:
 		// At this point, the node is red.
 		parent = node->parent;
 		if (!parent || parent->color == BLACK)
+			// At this point, the node has a black parent. (I1 + I3)
 			return ;
 
 		// At this point, the node is red, and has red parent. (red violation)
 		grandParent = parent->parent;
 		if (!grandParent)
 		{
-			// At this point, the node is red, has red parent, and has no grandparent. (red violation)
+			// At this point, the node is red, has red parent, and has no grandparent. (red violation) (I4)
 			node->parent->color = BLACK;
 			return ;
 		}
@@ -115,13 +223,13 @@ private:
 			if (node == parent->child[!dir])
 			{
 				// At this point, the node is red, has a red parent, has a black grand-parent, has a black uncle,
-				// and is the inner grand-child of its grand-parent. (red violation)
+				// and is the inner grand-child of its grand-parent. (red violation) (I5)
 				parent = this->_rotate(parent, dir);
 				node = parent->child[dir];
 			}
 
 			// At this point, the node is red, has a red parent, has a black grand-parent, has a black uncle,
-			// and is the outer grand-child of its grand-parent. (red violation)
+			// and is the outer grand-child of its grand-parent. (red violation) (I6)
 			this->_rotate(grandParent, !dir);
 			parent->color = BLACK;
 			grandParent->color = RED;
@@ -129,7 +237,7 @@ private:
 		else
 		{
 			// At this point, the node is red, has a red parent, has a black grand-parent, and has a red uncle.
-			// (red violation)
+			// (red violation) (I2)
 			parent->color = BLACK;
 			uncle->color = BLACK;
 			grandParent->color = RED;
@@ -145,7 +253,7 @@ private:
 	 * @return	Either LEFT if the given node is the left child of its parent,
 	 * 			or RIGHT if the given node is the right child of its parent.
 	 */
-	static uint8_t	_childDirection(const_pointer const node)
+	inline static uint8_t	_childDirection(const_pointer const node)
 		__attribute__((nonnull))
 	{
 		if (node->parent->child[LEFT] == node)
@@ -167,7 +275,7 @@ private:
 		rb_tree::_clear(root->child[LEFT]);
 		rb_tree::_clear(root->child[RIGHT]);
 		alloc.destroy(root);
-		alloc.deallocate(root, 1);
+		alloc.deallocate(root, 1LU);
 	}
 
 	/**
@@ -233,6 +341,46 @@ private:
 		return oppositeChild;
 	}
 
+	/**
+	 * @brief	Swap indirectly the values stored in two different nodes, changing the links and the colors of nodes
+	 * 			instead of just swapping values, because we can not be certain that the assignation operator will be
+	 * 			available for the value_type.
+	 * 
+	 * @param	a The first node to be swapped.
+	 * @param	b The second node to be swapped.
+	 */
+	static void	_valueSwap(pointer a, pointer b)
+	{
+		// Swaping pointers going to a and b
+		if (a->parent)
+		{
+			// At this point, a has a parent.
+			if (a->parent == b)
+			{
+				// At this point, a is the child of b.
+				if (b->parent)
+				{
+					// At this point, a is the child of b, and b has a parent.
+					b->parent->child[rb_tree::_childDirection(b)] = a;
+				}
+				if (b->child[LEFT] == a)
+				{
+					// At this point, a is the left child of b.
+					if (b->child[RIGHT])
+					{
+						b->child[RIGHT]->parent = a;
+						// REMIND: continue here
+					}
+				}
+				else
+				{
+					// At this point, a is the right child of b.
+					
+				}
+			}
+		}
+	}
+
 protected:
 // ****************************************************************************************************************** //
 //                                             Protected Member Functions                                             //
@@ -248,14 +396,14 @@ protected:
 	pointer	_find(value_type const &data) const
 	{
 		pointer					node;
-		compare_function_type	cmp;
+		compare_type	cmp;
 
 		node = this->_root;
 		while (node && node->data != data)
 			if (cmp(data, node->data))
 				node = node->child[LEFT];
 			else
-				node = node->right;
+				node = node->child[RIGHT];
 		return node;
 	}
 
@@ -394,10 +542,7 @@ public:
 	void	clear(void)
 	{
 		rb_tree::_clear(this->_root);
-		this->_root = NULL;
-		this->_min = NULL;
-		this->_max = NULL;
-		this->_size = 0LU;
+		bzero(this, sizeof(*this));
 	}
 
 	/**
@@ -430,10 +575,23 @@ public:
 	size_type	erase(value_type const &data)
 	{
 		pointer const	node = this->_find(data);
+		pointer			successor;
+		allocator_type	alloc;
 
 		if (!node)
 			return 0LU;
-		return 1LU;
+
+		// At this point, the node exists.
+		if (node->color == RED)
+		{
+			// At this point, the node is red.
+			if (node->child[LEFT])
+			{
+				// At this point, the node is red, has a black left child, and has a black right child.
+				successor = rb_node<value_type>::leftMost(node->child[RIGHT]);
+				rb_tree::_valueSwap(node, successor);
+			}
+		}
 	}
 
 	/**
@@ -449,7 +607,7 @@ public:
 		pointer					parent;
 		pointer					node;
 		pointer					pos;
-		compare_function_type	cmp;
+		compare_type	cmp;
 		allocator_type			alloc;
 
 		if (!this->_root)
@@ -461,6 +619,7 @@ public:
 			alloc.construct(this->_root, node_type(data));
 			return pair<iterator, bool>(iterator(this->_root), true);
 		}
+
 		pos = this->_root;
 		while (pos)
 			if (cmp(pos->data, data))
@@ -475,6 +634,7 @@ public:
 			}
 			else
 				return pair<iterator, bool>(iterator(pos), false);
+
 		node = alloc.allocate(1LU);
 		alloc.construct(node, node_type(data));
 		node->parent = parent;

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:37:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/12 16:33:01 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -503,20 +503,56 @@ inline static int	__test_function_insert(void)
 	{
 		ft::rb_tree<std::string>							tree;
 		std::set<std::string>								ref;
-		ft::pair<ft::rb_tree<std::string>::iterator, bool>	ft_bi;
-		std::pair<std::set<std::string>::iterator, bool>	std_bi;
+		ft::pair<ft::rb_tree<std::string>::iterator, bool>	ft_ret;
+		std::pair<std::set<std::string>::iterator, bool>	std_ret;
 
 		for (idx = 0U ; idx < g_string_size * 2 ; ++idx)
 		{
-			ft_bi = tree.insert(g_string[idx / 2]);
-			std_bi = ref.insert(g_string[idx / 2]);
+			ft_ret = tree.insert(g_string[idx / 2]);
+			std_ret = ref.insert(g_string[idx / 2]);
 
-			if (ft_bi.first->data != *std_bi.first || ft_bi.second != std_bi.second || tree.getSize() != ref.size() ||
-				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_function_type()) ||
+			if (tree.getSize() != ref.size() ||
+				ft_ret.first->data != *std_ret.first || ft_ret.second != std_ret.second ||
+				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal<
 					ft::rb_tree<std::string>::const_iterator,
 					std::set<std::string>::const_iterator,
 					bool (*)(ft::rb_node<std::string> const &, std::string const &)>
+					(tree.begin(), tree.end(), ref.begin(), __cmp))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_erase(void)
+{
+	t_uint idx;
+
+	title(__func__);
+	try
+	{
+		ft::rb_tree<char>	tree(&g_char[0], &g_char[g_char_size]);
+		std::set<char>		ref(&g_char[0], &g_char[g_char_size]);
+		size_t				ft_ret;
+		size_t				std_ret;
+
+		for (idx = 0U ; idx < g_char_size * 2 ; ++idx)
+		{
+			ft_ret = tree.erase(g_char[idx / 2]);
+			std_ret = ref.erase(g_char[idx / 2]);
+
+			if (tree.getSize() != ref.size() || ft_ret != std_ret ||
+				__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
+				!std::equal<
+					ft::rb_tree<char>::const_iterator,
+					std::set<char>::const_iterator,
+					bool (*)(ft::rb_node<char> const &, char const &)>
 					(tree.begin(), tree.end(), ref.begin(), __cmp))
 				return EXIT_FAILURE;
 		}
@@ -570,6 +606,7 @@ int	test_rb_tree(void)
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
 		__test_function_insert,
+		__test_function_erase,
 		__test_function_clear,
 		NULL
 	};

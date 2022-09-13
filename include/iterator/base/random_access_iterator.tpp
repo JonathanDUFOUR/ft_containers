@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:50:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/12 14:23:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ class random_access_iterator : public bidirectional_iterator<T, Category, Diff, 
 {
 public:
 	// Member types
-	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::iterator_category;
-	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::value_type;
-	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::pointer;
-	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::reference;
-	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
+	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::	iterator_category;
+	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::	value_type;
+	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::	pointer;
+	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::	reference;
+	using typename bidirectional_iterator<T, Category, Diff, Ptr, Ref>::	difference_type;
 
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //

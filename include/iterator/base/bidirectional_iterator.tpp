@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:50:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/12 14:23:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ class bidirectional_iterator : public forward_iterator<T, Category, Diff, Ptr, R
 {
 public:
 	// Member types
-	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::iterator_category;
-	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::value_type;
-	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::pointer;
-	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::reference;
-	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::difference_type;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::	iterator_category;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::	value_type;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::	pointer;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::	reference;
+	using typename forward_iterator<T, Category, Diff, Ptr, Ref>::	difference_type;
 
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
