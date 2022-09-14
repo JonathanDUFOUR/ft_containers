@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/12 16:33:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 06:04:43 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,18 @@ inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare co
 				return EXIT_FAILURE;
 	}
 	return __propertiesCheck(node->child[ft::LEFT], cmp) || __propertiesCheck(node->child[ft::RIGHT], cmp);
+}
+
+template <typename T>
+inline static int	__integrityCheck(ft::rb_node<T> const *const node)
+{
+	if (!node)
+		return EXIT_SUCCESS;
+	if (node->child[ft::LEFT] && node->child[ft::LEFT]->parent != node)
+		return EXIT_FAILURE;
+	if (node->child[ft::RIGHT] && node->child[ft::RIGHT]->parent != node)
+		return EXIT_FAILURE;
+	return __integrityCheck(node->child[ft::LEFT]) || __integrityCheck(node->child[ft::RIGHT]);
 }
 
 template <typename T>
@@ -513,6 +525,7 @@ inline static int	__test_function_insert(void)
 
 			if (tree.getSize() != ref.size() ||
 				ft_ret.first->data != *std_ret.first || ft_ret.second != std_ret.second ||
+				__integrityCheck(tree.getRoot()) ||
 				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal<
 					ft::rb_tree<std::string>::const_iterator,
@@ -548,6 +561,7 @@ inline static int	__test_function_erase(void)
 			std_ret = ref.erase(g_char[idx / 2]);
 
 			if (tree.getSize() != ref.size() || ft_ret != std_ret ||
+				__integrityCheck(tree.getRoot()) ||
 				__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
 				!std::equal<
 					ft::rb_tree<char>::const_iterator,

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/12 11:09:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 05:18:01 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -843,11 +843,5 @@ void	swap(vector<T, Alloc> &a, vector<T, Alloc> &b)
 	a.swap(b);
 }
 }
-
-/*
-	template<InputIterator It>
-	void insert(It first, It end,
-	typename <ft::enable_if<ft::isinteg<It>::value, It>::type* = 0)
-*/
 
 #endif

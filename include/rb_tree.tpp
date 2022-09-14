@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/12 20:15:28 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 06:00:13 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,100 +89,82 @@ private:
 	 * 
 	 * @param	node	The black leaf node to be erased.
 	 */
-	void	_balanceErase1(pointer node)
+	void	_balanceErase(pointer node) // Wikipedia version
 		__attribute__((nonnull))
 	{
-		
-	}
-
-	/**
-	 * @brief	Balance the tree before an erase of a non-root black leaf node.
-	 * 
-	 * @param	node	The black leaf node to be erased.
-	 */
-	void	_balanceErase0(pointer node) // Wikipedia version
-		__attribute__((nonnull))
-	{
+		uint8_t	dir;
 		pointer	parent;
 		pointer	sibling;
 		pointer	closeNephew;
 		pointer	distantNephew;
 
-		// At this point, the node is black.
+		// At this point, the node is black, and has no any child.
+		dir = rb_tree::_childDirection(node);
 		parent = node->parent;
-		if (!parent)
-			// At this point, the node has no parent. (D2)
-			return ;
+		parent->child[dir] = NULL;
+		goto Start_D;
 
-		// At this point, the node is black, and has a parent.
-		sibling = node->parent->child[!dir];
-		if (sibling)
+		do
 		{
-			// At this point, the node is black, has a parent, has a sibling, and has a distant newphew.
-			closeNephew = sibling->child[dir];
-			distantNephew = sibling->child[!dir];
-			if (closeNephew)
+			dir = rb_tree::_childDirection(node);
+Start_D:
+			sibling = parent->child[!dir];
+			if (sibling)
 			{
-				// At this point, the node is black, has a parent, has a sibling, has a distant newphew,
-				// and has a close newphew.
-				if (closeNephew->color == BLACK)
-				{
-					// At this point, the node is black, has a parent, has a sibling, has a distant newphew,
-					// and has a black close newphew.
-					if (parent->color == RED)
-					{
-						// At this point, the node is black, has a red parent, has a black sibling,
-						// has a black distant nephew, and has a black close nephew. (D4)
-						sibling->color = RED;
-						parent->color = BLACK;
-						return ;
-					}
-
-					// At this point, the node is black, has a black parent, has a sibling, has a distant newphew,
-					// and has a black close newphew.
-					if (sibling->color == RED)
-					{
-						// At this point, the node is black, has a black parent, has a red sibling,
-						// has a black distant nephew, and has a black close nephew. (D3)
-						this->_rotate(parent, dir);
-						parent->color = RED;
-						sibling->color = BLACK;
-						return this->_balanceErase(node, dir);
-					}
-					else
-					{
-						// At this point, the node is black, has a black parent, has a black sibling,
-						// has a black distant nephew, and has a black close nephew. (D1)
-						sibling->color = RED;
-						return this->_balanceErase(parent, rb_tree::_childDirection(parent));
-					}
-				}
-				else
-				{
-					// At this point, the node is black, has a parent, has a black sibling, has a black distant newphew,
-					// and has a red close newphew. (D5)
-					this->_rotate(sibling, !dir);
-					sibling->color = RED;
-					closeNephew->color = BLACK;
-					distantNephew = sibling;
-					sibling = closeNephew;
-				}
+				closeNephew = sibling->child[dir];
+				distantNephew = sibling->child[!dir];
 			}
+			else
+			{
+				closeNephew = NULL;
+				distantNephew = NULL;
+			}
+			if (sibling && sibling->color == RED)
+				goto Case_D3;
+			if (distantNephew && distantNephew->color == RED)
+				goto Case_D6;
+			if (closeNephew && closeNephew->color == RED)
+				goto Case_D5;
+			if (parent->color == RED)
+				goto Case_D4;
+// Case_D1:
+			if (sibling)
+				sibling->color = RED;
+			node = parent;
+			parent = node->parent;
+		} while (parent);
+// Case_D2:
+		return ;
 
-			// At this point, the node is black, has a parent, has a black sibling, has a red distant newphew,
-			// and has no close newphew. (D6)
-			this->_rotate(parent, dir);
-			sibling->color = parent->color;
-			parent->color = BLACK;
-			distantNephew->color = BLACK;
-			return ;
-		}
-		else
-		{
-			// At this point, the node is black, has a parent, has no sibling, has no distant nephew,
-			// and has no close nephew.
-			
-		}
+Case_D3:
+		this->_rotate(parent, dir);
+		parent->color = RED;
+		sibling->color = BLACK;
+		sibling = closeNephew;
+		distantNephew = sibling->child[!dir];
+		if (distantNephew && distantNephew->color == RED)
+			goto Case_D6;
+		closeNephew = sibling->child[dir];
+		if (closeNephew && closeNephew->color == RED)
+			goto Case_D5;
+
+Case_D4:
+		sibling->color = RED;
+		parent->color = BLACK;
+		return ;
+
+Case_D5:
+		this->_rotate(sibling, !dir);
+		sibling->color = RED;
+		closeNephew->color = BLACK;
+		distantNephew = sibling;
+		sibling = closeNephew;
+
+Case_D6:
+		this->_rotate(parent, dir);
+		sibling->color = parent->color;
+		parent->color = BLACK;
+		distantNephew->color = BLACK;
 	}
 
 	/**
@@ -299,6 +281,44 @@ private:
 		return dst;
 	}
 
+	// DBG: Used to find bugs, to be removed.
+	/**
+	 * @brief	Check the integrity of the links between the nodes of a tree.
+	 * 
+	 * @param	root The root of the tree to check.
+	 */
+	static void	_checkLinks(const_pointer const root)
+	{
+		if (!root)
+			return ;
+		if ((root->child[LEFT] && root->child[LEFT]->parent != root) || 
+			(root->child[RIGHT] && root->child[RIGHT]->parent != root))
+		{
+			std::cerr << "A link is broken" << std::endl;
+			exit(1);
+		}
+		rb_tree::_checkLinks(root->child[LEFT]);
+		rb_tree::_checkLinks(root->child[RIGHT]);
+	}
+
+	/**
+	 * @brief	Relink the children and the parent of a given node to another one,
+	 * 			assuming that the nodes are not father and son.
+	 * 
+	 * @param	dst The destination node.
+	 * @param	src The source node.
+	 */
+	inline static void	_relinkGoingTo(pointer const dst, pointer const src)
+		__attribute__((nonnull))
+	{
+		if (src->parent)
+			src->parent->child[rb_tree::_childDirection(src)] = dst;
+		if (src->child[LEFT])
+			src->child[LEFT]->parent = dst;
+		if (src->child[RIGHT])
+			src->child[RIGHT]->parent = dst;
+	}
+
 	/**
 	 * @brief	Rotate a tree to the given direction. The colors are not modified. The rotating tree may be a subtree.
 	 * 
@@ -342,43 +362,84 @@ private:
 	}
 
 	/**
-	 * @brief	Swap indirectly the values stored in two different nodes, changing the links and the colors of nodes
+	 * @brief	Swap indirectly the values stored in two different nodes, assuming that the nodes aren't father and son,
+	 * 			changing the links and the colors of the nodes instead of just swapping the values, because we can not
+	 * 			be certain that the assignation operator will be available for the value_type.
+	 * 
+	 * @param	node0 The first node to be swapped.
+	 * @param	node1 The second node to be swapped.
+	 */
+	inline static void	_valueSwapFarNodes(pointer const node0, pointer const node1)
+	{
+		// Step 0:
+		// Swap pointers going to node0 and node1.
+		rb_tree::_relinkGoingTo(node1, node0);
+		rb_tree::_relinkGoingTo(node0, node1);
+
+		// Step 1:
+		// Swap pointers leaving from node0 and node1.
+		ft::swap<pointer>(node0->parent, node1->parent);
+		ft::swap<pointer>(node0->child[LEFT], node1->child[LEFT]);
+		ft::swap<pointer>(node0->child[RIGHT], node1->child[RIGHT]);
+
+		// Step 2:
+		// Swap colors of node0 and node1.
+		ft::swap<uint8_t>(node0->color, node1->color);
+	}
+
+	/**
+	 * @brief	Swap indirectly the values stored in two different nodes, assuming that the nodes are father and son,
+	 * 			changing the links and the colors of the nodes instead of just swapping the values, because we can not
+	 * 			be certain that the assignation operator will be available for the value_type.
+	 * 
+	 * @param	father The father node.
+	 * @param	son The son node.
+	 */
+	inline static void	_valueSwapFatherSon(pointer const father, pointer const son)
+	{
+		uint8_t const	dir = rb_tree::_childDirection(son);
+
+		// Step 0:
+		// Swap pointers going to father and son.
+		if (father->parent)
+			father->parent->child[rb_tree::_childDirection(father)] = son;
+		if (father->child[!dir])
+			father->child[!dir]->parent = son;
+		if (son->child[LEFT])
+			son->child[LEFT]->parent = father;
+		if (son->child[RIGHT])
+			son->child[RIGHT]->parent = father;
+
+		// Step 1:
+		// Swap the pointers leaving from father and son.
+		son->parent = father->parent;
+		father->parent = son;
+		father->child[dir] = son->child[dir];
+		son->child[dir] = father;
+		ft::swap<pointer>(father->child[!dir], son->child[!dir]);
+
+		// Step 2:
+		// Swap the colors.
+		ft::swap<uint8_t>(father->color, son->color);
+	}
+
+	/**
+	 * @brief	Swap indirectly the values stored in two different nodes, changing the links and the colors of the nodes
 	 * 			instead of just swapping values, because we can not be certain that the assignation operator will be
 	 * 			available for the value_type.
 	 * 
-	 * @param	a The first node to be swapped.
-	 * @param	b The second node to be swapped.
+	 * @param	node0 The first node to be swapped.
+	 * @param	node1 The second node to be swapped.
 	 */
-	static void	_valueSwap(pointer a, pointer b)
+	inline static void	_valueSwap(pointer const node0, pointer const node1)
+		__attribute__((nonnull))
 	{
-		// Swaping pointers going to a and b
-		if (a->parent)
-		{
-			// At this point, a has a parent.
-			if (a->parent == b)
-			{
-				// At this point, a is the child of b.
-				if (b->parent)
-				{
-					// At this point, a is the child of b, and b has a parent.
-					b->parent->child[rb_tree::_childDirection(b)] = a;
-				}
-				if (b->child[LEFT] == a)
-				{
-					// At this point, a is the left child of b.
-					if (b->child[RIGHT])
-					{
-						b->child[RIGHT]->parent = a;
-						// REMIND: continue here
-					}
-				}
-				else
-				{
-					// At this point, a is the right child of b.
-					
-				}
-			}
-		}
+		if (node0->parent == node1)
+			rb_tree::_valueSwapFatherSon(node1, node0);
+		else if (node1->parent == node0)
+			rb_tree::_valueSwapFatherSon(node0, node1);
+		else
+			rb_tree::_valueSwapFarNodes(node0, node1);
 	}
 
 protected:
@@ -441,7 +502,7 @@ public:
 		_max(NULL),
 		_size(0LU)
 	{
-		for (; first != last; ++first)
+		for (; first != last ; ++first)
 			this->insert(*first);
 	}
 
@@ -582,16 +643,66 @@ public:
 			return 0LU;
 
 		// At this point, the node exists.
-		if (node->color == RED)
+		if (this->_size == 1LU)
 		{
-			// At this point, the node is red.
-			if (node->child[LEFT])
-			{
-				// At this point, the node is red, has a black left child, and has a black right child.
-				successor = rb_node<value_type>::leftMost(node->child[RIGHT]);
-				rb_tree::_valueSwap(node, successor);
-			}
+			// At this point, the node is the only one in the tree.
+			bzero(this, sizeof(*this));
+			alloc.destroy(node);
+			alloc.deallocate(node, 1LU);
+			return 1LU;
 		}
+
+		// At this point, the node is not the only one of the tree.
+		if (node->child[LEFT] && node->child[RIGHT])
+		{
+			// At this point, the node has a left child, and has a right child.
+			// So we just swap the node with its successor
+			successor = rb_node<value_type>::leftMost(node->child[RIGHT]);
+			rb_tree::_valueSwap(node, successor);
+			if (node == this->_root)
+				this->_root = successor;
+		}
+
+		// At this point, the node has at most one child.
+		if (node->child[LEFT])
+		{
+			// At this point, the node is black, and has only one red left child.
+			if (node->parent)
+				node->parent->child[rb_tree::_childDirection(node)] = node->child[LEFT];
+			node->child[LEFT]->parent = node->parent;
+			node->child[LEFT]->color = BLACK;
+			if (node == this->_root)
+				this->_root = node->child[LEFT];
+			if (node == this->_max)
+				this->_max = node->child[LEFT];
+		}
+		else if (node->child[RIGHT])
+		{
+			// At this point, the node is black, and has only one red right child.
+			if (node->parent)
+				node->parent->child[rb_tree::_childDirection(node)] = node->child[RIGHT];
+			node->child[RIGHT]->parent = node->parent;
+			node->child[RIGHT]->color = BLACK;
+			if (node == this->_root)
+				this->_root = node->child[RIGHT];
+			if (node == this->_min)
+				this->_min = node->child[RIGHT];
+		}
+		else if (node->color == RED)
+		{
+			// At this point, the is red, and has no any child.
+			if (node->parent)
+				node->parent->child[rb_tree::_childDirection(node)] = NULL;
+		}
+		else
+		{
+			// At this point, the node is black, and has no any child.
+			this->_balanceErase(node);
+		}
+		alloc.destroy(node);
+		alloc.deallocate(node, 1LU);
+		--this->_size;
+		return 1LU;
 	}
 
 	/**
@@ -604,11 +715,11 @@ public:
 	 */
 	pair<iterator, bool> insert(value_type const &data)
 	{
-		pointer					parent;
-		pointer					node;
-		pointer					pos;
+		pointer			parent;
+		pointer			node;
+		pointer			pos;
 		compare_type	cmp;
-		allocator_type			alloc;
+		allocator_type	alloc;
 
 		if (!this->_root)
 		{
