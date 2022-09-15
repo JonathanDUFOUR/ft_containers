@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:28:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 20:44:18 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ template <> class is_trivially_copyable<unsigned long> : public true_type {};
 template <> class is_trivially_copyable<float> : public true_type {};
 template <> class is_trivially_copyable<double> : public true_type {};
 template <> class is_trivially_copyable<long double> : public true_type {};
-
 
 }
 

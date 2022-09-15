@@ -6,13 +6,21 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/02 12:25:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 23:59:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <vector>
+#include <cstdlib>
+#include <ctime>
 #include "tester.hpp"
 #include "t_int.hpp"
+
+static void	__init(void) __attribute__((constructor));
+
+static void	__init(void)
+{
+	srand(time(NULL));
+}
 
 int	main(void)
 {
@@ -25,8 +33,8 @@ int	main(void)
 		test_reverse_iterator,
 		test_is_integral,
 		test_algorithm,
-		test_stack,
 		test_vector,
+		test_stack,
 		test_rb_tree,
 		NULL
 	};

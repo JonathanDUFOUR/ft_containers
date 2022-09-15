@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 06:00:13 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 00:01:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,84 +87,78 @@ private:
 	/**
 	 * @brief	Balance the tree before an erase of a non-root black leaf node.
 	 * 
-	 * @param	node	The black leaf node to be erased.
+	 * @param	node	The current node to consider for the balancing.
+	 * @param	dir		The direction of the node from its parent.
 	 */
-	void	_balanceErase(pointer node) // Wikipedia version
+	void	_balanceErase(pointer const node, uint8_t const dir)
 		__attribute__((nonnull))
 	{
-		uint8_t	dir;
-		pointer	parent;
-		pointer	sibling;
-		pointer	closeNephew;
-		pointer	distantNephew;
+		pointer const	parent = node->parent;
+		pointer			sibling;
+		pointer			closeNephew;
+		pointer			distantNephew;
 
-		// At this point, the node is black, and has no any child.
-		dir = rb_tree::_childDirection(node);
-		parent = node->parent;
-		parent->child[dir] = NULL;
-		goto Start_D;
-
-		do
+		// At this point, the node has a parent, and has a sibling.
+		sibling = parent->child[!dir];
+		if (sibling->color == RED)
 		{
-			dir = rb_tree::_childDirection(node);
-Start_D:
-			sibling = parent->child[!dir];
-			if (sibling)
-			{
-				closeNephew = sibling->child[dir];
-				distantNephew = sibling->child[!dir];
-			}
-			else
-			{
-				closeNephew = NULL;
-				distantNephew = NULL;
-			}
-			if (sibling && sibling->color == RED)
-				goto Case_D3;
-			if (distantNephew && distantNephew->color == RED)
-				goto Case_D6;
-			if (closeNephew && closeNephew->color == RED)
-				goto Case_D5;
-			if (parent->color == RED)
-				goto Case_D4;
-// Case_D1:
-			if (sibling)
-				sibling->color = RED;
-			node = parent;
-			parent = node->parent;
-		} while (parent);
-// Case_D2:
-		return ;
+			// At this point, the node has a black-deducted parent, and has a red sibling.
+			// (D3)
+			this->_rotate(parent, dir);
+			parent->color = RED;
+			sibling->color = BLACK;
+			return this->_balanceErase(node, dir);
+		}
 
-Case_D3:
-		this->_rotate(parent, dir);
-		parent->color = RED;
-		sibling->color = BLACK;
-		sibling = closeNephew;
-		distantNephew = sibling->child[!dir];
-		if (distantNephew && distantNephew->color == RED)
-			goto Case_D6;
+		// At this point, the node has a parent, and has a black sibling.
 		closeNephew = sibling->child[dir];
 		if (closeNephew && closeNephew->color == RED)
-			goto Case_D5;
+		{
+			// At this point, the node has a parent, has a black sibling, and has a red close nephew.
+			// (D5)
+			sibling = this->_rotate(sibling, !dir);
+			sibling->color = BLACK;
+			sibling->child[!dir]->color = RED;
+		}
+		distantNephew = sibling->child[!dir];
+		if (distantNephew && distantNephew->color == RED)
+		{
+			// At this point, the node has a parent, has a black sibling, and has a red distant nephew.
+			// (D6)
+			this->_rotate(parent, dir);
+			sibling->color = parent->color;
+			parent->color = BLACK;
+			distantNephew->color = BLACK;
+			return ;
+		}
 
-Case_D4:
+		// At this point, the node has a parent, has a black sibling,
+		// has either no close nephew or a black close nephew,
+		// and has either no distant nephew or a black distant nephew.
+		if (parent->color == RED)
+		{
+			// At this point, the node has a red parent, has a black sibling,
+			// has either no close nephew or a black close nephew,
+			// and has either no distant nephew or a black distant nephew.
+			// (D4)
+			sibling->color = RED;
+			parent->color = BLACK;
+			return ;
+		}
+
+		// At this point, the node has a black parent, has a black sibling,
+		// has either no close nephew or a black close nephew,
+		// and has either no distant nephew or a black distant nephew.
+		// (D1)
 		sibling->color = RED;
-		parent->color = BLACK;
-		return ;
+		if (parent->parent)
+			return this->_balanceErase(parent, rb_tree::_childDirection(parent));
 
-Case_D5:
-		this->_rotate(sibling, !dir);
-		sibling->color = RED;
-		closeNephew->color = BLACK;
-		distantNephew = sibling;
-		sibling = closeNephew;
-
-Case_D6:
-		this->_rotate(parent, dir);
-		sibling->color = parent->color;
-		parent->color = BLACK;
-		distantNephew->color = BLACK;
+		// At this point, the node has a black parent, has a black sibling,
+		// has either no close nephew or a black close nephew,
+		// and has either no distant nephew or a black distant nephew,
+		// and is the child of the root of tree.
+		// (D2)
 	}
 
 	/**
@@ -175,10 +169,10 @@ Case_D6:
 	void	_balanceInsert(pointer node)
 		__attribute__((nonnull))
 	{
-		pointer		parent;
-		pointer		grandParent;
-		pointer		uncle;
-		uint8_t		dir;
+		pointer	parent;
+		pointer	grandParent;
+		pointer	uncle;
+		uint8_t	dir;
 
 		// At this point, the node is red.
 		parent = node->parent;
@@ -279,26 +273,6 @@ Case_D6:
 		dst->child[LEFT] = rb_tree::_dup(src->child[LEFT]);
 		dst->child[RIGHT] = rb_tree::_dup(src->child[RIGHT]);
 		return dst;
-	}
-
-	// DBG: Used to find bugs, to be removed.
-	/**
-	 * @brief	Check the integrity of the links between the nodes of a tree.
-	 * 
-	 * @param	root The root of the tree to check.
-	 */
-	static void	_checkLinks(const_pointer const root)
-	{
-		if (!root)
-			return ;
-		if ((root->child[LEFT] && root->child[LEFT]->parent != root) || 
-			(root->child[RIGHT] && root->child[RIGHT]->parent != root))
-		{
-			std::cerr << "A link is broken" << std::endl;
-			exit(1);
-		}
-		rb_tree::_checkLinks(root->child[LEFT]);
-		rb_tree::_checkLinks(root->child[RIGHT]);
 	}
 
 	/**
@@ -440,32 +414,6 @@ Case_D6:
 			rb_tree::_valueSwapFatherSon(node0, node1);
 		else
 			rb_tree::_valueSwapFarNodes(node0, node1);
-	}
-
-protected:
-// ****************************************************************************************************************** //
-//                                             Protected Member Functions                                             //
-// ****************************************************************************************************************** //
-
-	/**
-	 * @brief	Search for a node in the tree.
-	 * 
-	 * @param	data The data of the node to search for.
-	 * 
-	 * @return	A pointer to the node if found, or NULL if not.
-	 */
-	pointer	_find(value_type const &data) const
-	{
-		pointer					node;
-		compare_type	cmp;
-
-		node = this->_root;
-		while (node && node->data != data)
-			if (cmp(data, node->data))
-				node = node->child[LEFT];
-			else
-				node = node->child[RIGHT];
-		return node;
 	}
 
 public:
@@ -635,8 +583,9 @@ public:
 	 */
 	size_type	erase(value_type const &data)
 	{
-		pointer const	node = this->_find(data);
+		pointer const	node = this->find(data);
 		pointer			successor;
+		uint8_t			dir;
 		allocator_type	alloc;
 
 		if (!node)
@@ -690,19 +639,46 @@ public:
 		}
 		else if (node->color == RED)
 		{
-			// At this point, the is red, and has no any child.
+			// At this point, the node is red, and has no any child.
 			if (node->parent)
 				node->parent->child[rb_tree::_childDirection(node)] = NULL;
 		}
 		else
 		{
-			// At this point, the node is black, and has no any child.
-			this->_balanceErase(node);
+			// At this point, the node is black, has a parent, and has no any child.
+			if (node == this->_min)
+				this->_min = node->parent;
+			if (node == this->_max)
+				this->_max = node->parent;
+			dir = rb_tree::_childDirection(node);
+			node->parent->child[dir] = NULL;
+			this->_balanceErase(node, dir);
 		}
 		alloc.destroy(node);
 		alloc.deallocate(node, 1LU);
 		--this->_size;
 		return 1LU;
+	}
+
+	/**
+	 * @brief	Search for a node in the tree.
+	 * 
+	 * @param	data The data of the node to search for.
+	 * 
+	 * @return	A pointer to the node if found, or NULL if not.
+	 */
+	pointer	find(value_type const &data) const
+	{
+		pointer			node;
+		compare_type	cmp;
+
+		node = this->_root;
+		while (node && node->data != data)
+			if (cmp(data, node->data))
+				node = node->child[LEFT];
+			else
+				node = node->child[RIGHT];
+		return node;
 	}
 
 	/**

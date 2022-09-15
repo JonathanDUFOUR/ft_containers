@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 06:04:43 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/14 23:57:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -603,6 +603,39 @@ inline static int	__test_function_clear(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_find(void)
+{
+	t_uint	idx;
+	t_lint	nb;
+
+	title(__func__);
+	try
+	{
+		ft::rb_tree<t_lint>	tree(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint>	ref(&g_lint[0], &g_lint[g_lint_size]);
+
+		for (idx = 0U ; idx < g_lint_size * 2 ; ++idx)
+		{
+			if (idx % 2)
+			{
+				nb = rand();
+				while (std::find(&g_lint[0], &g_lint[g_lint_size], nb) != &g_lint[g_lint_size])
+					nb = rand();
+				if (tree.find(nb))
+					return EXIT_FAILURE;
+			}
+			else if (tree.find(g_lint[idx / 2])->data != *ref.find(g_lint[idx / 2]))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
 int	test_rb_tree(void)
 {
 	t_test const	tests[] = {
@@ -622,6 +655,7 @@ int	test_rb_tree(void)
 		__test_function_insert,
 		__test_function_erase,
 		__test_function_clear,
+		__test_function_find,
 		NULL
 	};
 	t_uint			koCount;
