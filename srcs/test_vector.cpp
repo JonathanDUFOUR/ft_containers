@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:37:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 01:33:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,9 @@ inline static int	__test_constructor(void)
 			}
 			// Range of forward_iterator
 			{
-				ft::forward_iterator<void *> const	it0;
-				ft::forward_iterator<void *> const	it1;
-				ft::vector<void *> const			ft_vec(it0, it1);
-				std::vector<void *> const			std_vec(it0, it1);
+				ft::forward_iterator<void *> const	it;
+				ft::vector<void *> const			ft_vec(it, it);
+				std::vector<void *> const			std_vec(it, it);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;

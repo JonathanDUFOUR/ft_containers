@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 23:57:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 01:34:29 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,8 @@ inline static int	__test_constructor(void)
 			}
 			// Range of forward_iterator
 			{
-				ft::forward_iterator<void *> const	it0;
-				ft::forward_iterator<void *> const	it1;
-				ft::rb_tree<void *> const			tree(it0, it1);
+				ft::forward_iterator<void *> const	it;
+				ft::rb_tree<void *> const			tree(it, it);
 			}
 			// Range of random_access_iterator
 			{

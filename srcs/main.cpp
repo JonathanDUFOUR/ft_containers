@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 23:59:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 00:23:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ int	main(void)
 		test_reverse_iterator,
 		test_is_integral,
 		test_algorithm,
+		test_rb_tree,
 		test_vector,
 		test_stack,
-		test_rb_tree,
+		test_map,
 		NULL
 	};
 	t_uint	koCount;

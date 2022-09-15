@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 17:27:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 00:22:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	test_bidirectional_iterator(void);
 int	test_forward_iterator(void);
 int	test_input_iterator(void);
 int	test_is_integral(void);
+int	test_map(void);
 int	test_output_iterator(void);
 int	test_random_access_iterator(void);
 int	test_rb_tree(void);

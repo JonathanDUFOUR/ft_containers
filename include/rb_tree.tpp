@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/15 00:01:41 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/15 01:55:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,8 +423,6 @@ public:
 
 	/**
 	 * @brief	Construct a new empty rb_tree object. (default constructor)
-	 * 
-	 * @param	root The root node of the new tree.
 	 */
 	rb_tree(void) :
 		_root(NULL),
