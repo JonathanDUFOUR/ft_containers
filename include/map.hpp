@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/15 01:19:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 05:28:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,19 @@ public:
 	typedef typename iterator_traits<iterator>::difference_type	difference_type;
 	typedef size_t												size_type;
 
-	struct value_compare
+	class value_compare : public std::binary_function<value_type, value_type, bool>
 	{
-		bool	operator()(value_type const &a, value_type const &b) const
+	private:
+		// Attributes
+		key_compare	_cmp;
+
+		friend class map<Key, T, Compare, Alloc>;
+
+	public:
+		// Operators
+		bool operator()(value_type const &lhs, value_type const &rhs) const
 		{
-			return key_compare(a.first, b.first);
+			return this->_cmp(lhs, rhs);
 		}
 	};
 

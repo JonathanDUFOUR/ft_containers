@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/15 01:55:41 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 05:41:01 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -449,7 +449,9 @@ public:
 		_size(0LU)
 	{
 		for (; first != last ; ++first)
+		{
 			this->insert(*first);
+		}
 	}
 
 	/**

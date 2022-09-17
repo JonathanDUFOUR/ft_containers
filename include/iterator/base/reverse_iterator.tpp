@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:13:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 06:16:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ class reverse_iterator
 {
 public:
 	// Member types
-	typedef typename iterator_traits<BidirectionalIterator>::iterator_category	iterator_category;
-	typedef typename iterator_traits<BidirectionalIterator>::value_type			value_type;
-	typedef typename iterator_traits<BidirectionalIterator>::pointer			pointer;
-	typedef typename iterator_traits<BidirectionalIterator>::reference			reference;
-	typedef typename iterator_traits<BidirectionalIterator>::difference_type	difference_type;
+	typedef BidirectionalIterator										iterator_type;
 
-	typedef BidirectionalIterator												iterator_type;
+	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
+	typedef typename iterator_traits<iterator_type>::value_type			value_type;
+	typedef typename iterator_traits<iterator_type>::pointer			pointer;
+	typedef typename iterator_traits<iterator_type>::reference			reference;
+	typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
+
 
 private:
 	// Attributes

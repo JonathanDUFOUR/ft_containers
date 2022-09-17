@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/25 20:29:19 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 05:40:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,57 @@ struct pair
 	first_type	first;
 	second_type	second;
 
-	// Constructors
+// ****************************************************************************************************************** //
+//                                                    Constructors                                                    //
+// ****************************************************************************************************************** //
+
+	/**
+	 * @brief	Construct a new pair object. (Default constructor)
+	 * 
+	 * @param	a The first value of the pair.
+	 * @param	b The second value of the pair.
+	 */
 	pair(first_type const &a = first_type(), second_type const &b = second_type()) :
 		first(a),
 		second(b) {}
-	pair(pair const &src) :
+	
+	/**
+	 * @brief	Construct a new pair object from another one.
+	 * 			Allow mutable to constant pair conversion. (copy constructor)
+	 * 
+	 * @tparam	U0 The first type of the pair to copy.
+	 * @tparam	U1 The second type of the pair to copy.
+	 * 
+	 * @param	src The pair to copy.
+	 */
+	template <typename U0, typename U1>
+	pair(pair<U0, U1> const &src) :
 		first(src.first),
 		second(src.second) {}
-	
-	// Destructors
-	~pair(void) {}
 
-	// Operators
-	pair	&operator=(pair const &rhs)
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Assign a new content to the pair.
+	 * 			Allow mutable to constant pair conversion.
+	 * 
+	 * @tparam	U0 The first type of the pair to copy.
+	 * @tparam	U1 The second type of the pair to copy.
+	 * 
+	 * @param	rhs The pair to copy the content from.
+	 * 
+	 * @return	A reference to the assigned pair.
+	 */
+	template <typename U0, typename U1>
+	pair	&operator=(pair<U0, U1> const &rhs)
 	{
-		first = rhs.first;
-		second = rhs.second;
+		if (this != &rhs)
+		{
+			first = rhs.first;
+			second = rhs.second;
+		}
 		return *this;
 	}
 };

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:57:37 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 06:32:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get the wrapped pointer wrapped in the input_iterator.
+	 * @brief	Get a copy of the wrapped pointer in the input_iterator.
 	 * 
-	 * @return	The wrapped pointer in the input_iterator.
+	 * @return	A copy of the wrapped pointer in the input_iterator.
 	 */
 	inline pointer	base(void) const
 	{
@@ -98,12 +98,16 @@ public:
 
 	/**
 	 * @brief	Assign a new pointer to the input_iterator.
+	 * 			Allow mutable to constant input_iterator conversion.
+	 * 
+	 * @tparam	U The type of the input_iterator to copy.
 	 * 
 	 * @param	rhs The input_iterator to copy the pointer from.
 	 * 
 	 * @return 	A reference to the assigned input_iterator.
 	 */
-	inline input_iterator	&operator=(input_iterator const &rhs)
+	template <typename U>
+	inline input_iterator	&operator=(input_iterator<U> const &rhs)
 	{
 		if (this != &rhs)
 			this->_ptr = rhs.base();

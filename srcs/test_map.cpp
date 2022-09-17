@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/15 01:49:12 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 05:56:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ inline static int	__test_constructor(void)
 					std_lst.push_back(std::pair<int, t_hhuint>(g_int[idx], g_hhuint[idx]));
 				}
 
-				ft::input_iterator<ft::pair<int, t_hhuint> >	ft_it0(&*ft_lst.begin());
-				ft::input_iterator<ft::pair<int, t_hhuint> >	ft_it1(&*ft_lst.end());
-				ft::input_iterator<std::pair<int, t_hhuint> >	std_it0(&*std_lst.begin());
-				ft::input_iterator<std::pair<int, t_hhuint> >	std_it1(&*std_lst.end());
-				ft::map<int, t_hhuint>							ft_map(ft_it0, ft_it1);
+				ft::input_iterator<ft::pair<int, t_hhuint> >	ft_it0(ft_lst.begin());
+				ft::input_iterator<ft::pair<int, t_hhuint> >	ft_it1(ft_lst.end());
+				ft::input_iterator<std::pair<int, t_hhuint> >	std_it0(std_lst.begin());
+				ft::input_iterator<std::pair<int, t_hhuint> >	std_it1(std_lst.end());
 				std::map<int, t_hhuint>							std_map(std_it0, std_it1);
+				ft::map<int, t_hhuint>							ft_map(ft_it0, ft_it1);
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;

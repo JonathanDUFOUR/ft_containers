@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/05 16:47:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/17 06:34:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get the wrapped pointer in the output_iterator.
+	 * @brief	Get a copy of the wrapped pointer in the output_iterator.
 	 * 
-	 * @return	The wrapped pointer in the output_iterator.
+	 * @return	A copy of the wrapped pointer in the output_iterator.
 	 */
 	inline pointer base(void) const
 	{
@@ -94,13 +94,17 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Assign a new pointer to the iterator.
+	 * @brief	Assign a new pointer to the output_iterator.
+	 * 			Allow mutable to constant output_iterator conversion. (copy assignment)
+	 * 
+	 * @tparam	U The type of the output_iterator to copy.
 	 * 
 	 * @param	rhs The output_iterator to copy the pointer from.
 	 * 
 	 * @return	A reference to the assigned output_iterator.
 	 */
-	inline output_iterator	&operator=(output_iterator const &rhs)
+	template <typename U>
+	inline output_iterator	&operator=(output_iterator<U> const &rhs)
 	{
 		if (this != &rhs)
 			this->_ptr = rhs.base();
