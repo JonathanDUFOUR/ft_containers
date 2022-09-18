@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/17 06:16:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 08:09:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ class vector_iterator : public random_access_iterator<
 {
 public:
 	// Member types
+	typedef Iterator													iterator_type;
+
 	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
 	typedef typename iterator_traits<iterator_type>::value_type			value_type;
 	typedef typename iterator_traits<iterator_type>::pointer			pointer;
 	typedef typename iterator_traits<iterator_type>::reference			reference;
 	typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
-
 
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //

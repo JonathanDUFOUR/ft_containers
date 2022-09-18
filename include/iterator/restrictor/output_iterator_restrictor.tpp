@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 06:26:53 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/17 06:35:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 07:05:04 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,7 @@ namespace ft
  * 			- prefix incrementable (++it)
  * 			- postfix incrementable (it++)
  * 
- * @tparam	T The type of the value pointed by the iterator.
- * @tparam	Category One of the standard iterator tag to specify the iterator category.
- * @tparam	Diff The type of the difference between two iterators.
- * @tparam	Ptr The type of the pointer to the value pointed by the iterator.
- * @tparam	Ref The type of the reference to the value pointed by the iterator.
+ * @tparam	Iterator The type of the iterator to restrict.
  */
 template <typename Iterator>
 class output_iterator_restrictor

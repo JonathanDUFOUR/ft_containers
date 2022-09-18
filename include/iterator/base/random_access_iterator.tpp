@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/12 14:23:59 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 07:46:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,7 @@ public:
  * @brief	Increment the wrapped pointer of a random_access_iterator by N.
  * 
  * @param	lhs The number to increment the pointer with.
+ * @param	rhs The random_access_iterator to increment.
  * 
  * @return	A random_access_iterator pointing to the new position.
  */
