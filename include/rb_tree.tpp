@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/17 05:41:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 19:07:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -442,7 +442,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	rb_tree(InputIterator first, InputIterator const last) :
+	rb_tree(InputIterator first, InputIterator const &last) :
 		_root(NULL),
 		_min(NULL),
 		_max(NULL),
@@ -482,8 +482,6 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get the node with the greatest value of the tree.
-	 * 
 	 * @return	The node with the greatest value of the tree.
 	 */
 	pointer const	&getMax(void) const
@@ -492,8 +490,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the node with the lowest value of the tree.
-	 * 
 	 * @return	The node with the lowest value of the tree.
 	 */
 	pointer const	&getMin(void) const
@@ -502,8 +498,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the root node of the tree.
-	 * 
 	 * @return	The root node of the tree.
 	 */
 	pointer const	&getRoot(void) const
@@ -512,8 +506,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the size of the tree.
-	 * 
 	 * @return	The size of the tree.
 	 */
 	size_type const	&getSize(void) const
@@ -526,8 +518,6 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get an iterator to the first element of the tree.
-	 * 
 	 * @return	An iterator to the first element of the tree.
 	 */
 	iterator	begin(void)
@@ -536,8 +526,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_iterator to the first element of the tree.
-	 * 
 	 * @return	A const_iterator to the first element of the tree.
 	 */
 	const_iterator	begin(void) const
@@ -555,8 +543,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get an iterator to the post-last element of the tree.
-	 * 
 	 * @return	An iterator to the last element of the tree.
 	 */
 	iterator	end(void)
@@ -565,8 +551,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_iterator to the post-last element of the tree.
-	 * 
 	 * @return	A const_iterator to the last element of the tree.
 	 */
 	const_iterator	end(void) const
@@ -575,106 +559,120 @@ public:
 	}
 
 	/**
-	 * @brief	Remove a node from the tree.
+	 * @brief	Remove a node from the tree. (value erase)
 	 * 
-	 * @param	data The data of the node to remove.
+	 * @param	val The value of the node to remove.
 	 * 
 	 * @return	The number of removed node(s).
 	 */
-	size_type	erase(value_type const &data)
+	size_type	erase(value_type const &val)
 	{
-		pointer const	node = this->find(data);
+		pointer const	pos = this->find(val);
+
+		if (!pos)
+			return 0LU;
+		this->erase(pos);
+		return 1LU;
+	}
+
+	/**
+	 * @brief	Remove a node from the tree. (position erase)
+	 * 
+	 * @param	pos The position of the node to remove.
+	 */
+	void	erase(pointer const pos)
+	{
 		pointer			successor;
 		uint8_t			dir;
 		allocator_type	alloc;
-
-		if (!node)
-			return 0LU;
 
 		// At this point, the node exists.
 		if (this->_size == 1LU)
 		{
 			// At this point, the node is the only one in the tree.
 			bzero(this, sizeof(*this));
-			alloc.destroy(node);
-			alloc.deallocate(node, 1LU);
-			return 1LU;
+			alloc.destroy(pos);
+			alloc.deallocate(pos, 1LU);
+			return ;
 		}
 
 		// At this point, the node is not the only one of the tree.
-		if (node->child[LEFT] && node->child[RIGHT])
+		if (pos->child[LEFT] && pos->child[RIGHT])
 		{
 			// At this point, the node has a left child, and has a right child.
 			// So we just swap the node with its successor
-			successor = rb_node<value_type>::leftMost(node->child[RIGHT]);
-			rb_tree::_valueSwap(node, successor);
-			if (node == this->_root)
+			successor = rb_node<value_type>::leftMost(pos->child[RIGHT]);
+			rb_tree::_valueSwap(pos, successor);
+			if (pos == this->_root)
 				this->_root = successor;
 		}
 
 		// At this point, the node has at most one child.
-		if (node->child[LEFT])
+		if (pos->child[LEFT])
 		{
 			// At this point, the node is black, and has only one red left child.
-			if (node->parent)
-				node->parent->child[rb_tree::_childDirection(node)] = node->child[LEFT];
-			node->child[LEFT]->parent = node->parent;
-			node->child[LEFT]->color = BLACK;
-			if (node == this->_root)
-				this->_root = node->child[LEFT];
-			if (node == this->_max)
-				this->_max = node->child[LEFT];
+			if (pos->parent)
+				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[LEFT];
+			pos->child[LEFT]->parent = pos->parent;
+			pos->child[LEFT]->color = BLACK;
+			if (pos == this->_root)
+				this->_root = pos->child[LEFT];
+			if (pos == this->_max)
+				this->_max = pos->child[LEFT];
 		}
-		else if (node->child[RIGHT])
+		else if (pos->child[RIGHT])
 		{
 			// At this point, the node is black, and has only one red right child.
-			if (node->parent)
-				node->parent->child[rb_tree::_childDirection(node)] = node->child[RIGHT];
-			node->child[RIGHT]->parent = node->parent;
-			node->child[RIGHT]->color = BLACK;
-			if (node == this->_root)
-				this->_root = node->child[RIGHT];
-			if (node == this->_min)
-				this->_min = node->child[RIGHT];
+			if (pos->parent)
+				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[RIGHT];
+			pos->child[RIGHT]->parent = pos->parent;
+			pos->child[RIGHT]->color = BLACK;
+			if (pos == this->_root)
+				this->_root = pos->child[RIGHT];
+			if (pos == this->_min)
+				this->_min = pos->child[RIGHT];
 		}
-		else if (node->color == RED)
+		else if (pos->color == RED)
 		{
 			// At this point, the node is red, and has no any child.
-			if (node->parent)
-				node->parent->child[rb_tree::_childDirection(node)] = NULL;
+			if (pos->parent)
+				pos->parent->child[rb_tree::_childDirection(pos)] = NULL;
+			if (pos == this->_min)
+				this->_min = pos->parent;
+			if (pos == this->_max)
+				this->_max = pos->parent;
 		}
 		else
 		{
 			// At this point, the node is black, has a parent, and has no any child.
-			if (node == this->_min)
-				this->_min = node->parent;
-			if (node == this->_max)
-				this->_max = node->parent;
-			dir = rb_tree::_childDirection(node);
-			node->parent->child[dir] = NULL;
-			this->_balanceErase(node, dir);
+			if (pos == this->_min)
+				this->_min = pos->parent;
+			if (pos == this->_max)
+				this->_max = pos->parent;
+			dir = rb_tree::_childDirection(pos);
+			pos->parent->child[dir] = NULL;
+			this->_balanceErase(pos, dir);
 		}
-		alloc.destroy(node);
-		alloc.deallocate(node, 1LU);
+		alloc.destroy(pos);
+		alloc.deallocate(pos, 1LU);
 		--this->_size;
-		return 1LU;
 	}
 
 	/**
 	 * @brief	Search for a node in the tree.
 	 * 
-	 * @param	data The data of the node to search for.
+	 * @param	val The value of the node to search for.
 	 * 
 	 * @return	A pointer to the node if found, or NULL if not.
 	 */
-	pointer	find(value_type const &data) const
+	pointer	find(value_type const &val) const
 	{
 		pointer			node;
 		compare_type	cmp;
 
 		node = this->_root;
-		while (node && node->data != data)
-			if (cmp(data, node->data))
+		while (node && node->val != val)
+			if (cmp(val, node->val))
 				node = node->child[LEFT];
 			else
 				node = node->child[RIGHT];
@@ -684,12 +682,12 @@ public:
 	/**
 	 * @brief	Insert a new node in the tree.
 	 * 
-	 * @param	data The data to insert in the tree.
+	 * @param	val The value to insert in the tree.
 	 * 
-	 * @return	A pair containing an iterator to the node of the tree as `first` member,
+	 * @return	A pair containing an iterator to the node of the tree with the given value as `first` member,
 	 * 			and a boolean indicating whether a new node has been inserted as `second` member.
 	 */
-	pair<iterator, bool> insert(value_type const &data)
+	pair<iterator, bool> insert(value_type const &val)
 	{
 		pointer			parent;
 		pointer			node;
@@ -703,18 +701,18 @@ public:
 			this->_min = this->_root;
 			this->_max = this->_root;
 			this->_size = 1LU;
-			alloc.construct(this->_root, node_type(data));
+			alloc.construct(this->_root, node_type(val));
 			return pair<iterator, bool>(iterator(this->_root), true);
 		}
 
 		pos = this->_root;
 		while (pos)
-			if (cmp(pos->data, data))
+			if (cmp(pos->val, val))
 			{
 				parent = pos;
 				pos = pos->child[RIGHT];
 			}
-			else if (cmp(data, pos->data))
+			else if (cmp(val, pos->val))
 			{
 				parent = pos;
 				pos = pos->child[LEFT];
@@ -723,9 +721,9 @@ public:
 				return pair<iterator, bool>(iterator(pos), false);
 
 		node = alloc.allocate(1LU);
-		alloc.construct(node, node_type(data));
+		alloc.construct(node, node_type(val));
 		node->parent = parent;
-		if (cmp(parent->data, data))
+		if (cmp(parent->val, val))
 		{
 			parent->child[RIGHT] = node;
 			if (parent == this->_max)
@@ -743,8 +741,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a reverse_iterator to the last element of the tree.
-	 * 
 	 * @return	A reverse_iterator to the last element of the tree.
 	 */
 	reverse_iterator	rbegin(void)
@@ -753,8 +749,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_reverse_iterator to the last element of the tree.
-	 * 
 	 * @return	A const_reverse_iterator to the last element of the tree.
 	 */
 	const_reverse_iterator	rbegin(void) const
@@ -763,8 +757,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a reverse_iterator to the pre-first element of the tree.
-	 * 
 	 * @return	A reverse_iterator to the pre-first element of the tree.
 	 */
 	reverse_iterator	rend(void)
@@ -773,13 +765,24 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_reverse_iterator to the pre-first element of the tree.
-	 * 
 	 * @return	A const_reverse_iterator to the pre-first element of the tree.
 	 */
 	const_reverse_iterator	rend(void) const
 	{
 		return const_reverse_iterator(this->begin());
+	}
+
+	/**
+	 * @brief	Swap the content of the given tree with the content of the current tree.
+	 * 
+	 * @param	other The tree to swap with.
+	 */
+	void	swap(rb_tree &other)
+	{
+		ft::swap<pointer>(this->_root, other._root);
+		ft::swap<pointer>(this->_min, other._min);
+		ft::swap<pointer>(this->_max, other._max);
+		ft::swap<size_type>(this->_size, other._size);
 	}
 };
 }

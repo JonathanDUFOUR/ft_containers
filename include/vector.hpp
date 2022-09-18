@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 05:18:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 18:18:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ private:
 	 * @param	param2 The element value to fill the vector with.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, true_type const)
+	inline void	_insertDispatch(iterator const &pos, U const &param1, U const &param2, true_type const)
 	{
 		this->_insertFill(pos, param1, param2);
 	}
@@ -80,7 +80,7 @@ private:
 	 * @param	param2 The last element of the range to insert.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, false_type const)
+	inline void	_insertDispatch(iterator const &pos, U const &param1, U const &param2, false_type const)
 	{
 		this->_insertRange(pos, param1, param2);
 	}
@@ -92,7 +92,7 @@ private:
 	 * @param	n The number of elements to insert.
 	 * @param	val The element value to fill the vector with.
 	 */
-	inline void	_insertFill(iterator const pos, size_type const n, value_type const &val)
+	inline void	_insertFill(iterator const &pos, size_type const n, value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
 		size_type		newCapacity;
@@ -140,7 +140,7 @@ private:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	_insertRange(iterator const pos, InputIterator first, InputIterator const last)
+	void	_insertRange(iterator const &pos, InputIterator first, InputIterator const &last)
 	{
 		size_type const	offset = this->end() - pos;
 		size_type		newCapacity;
@@ -307,15 +307,13 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	assign(InputIterator const first, InputIterator const last)
+	void	assign(InputIterator const &first, InputIterator const &last)
 	{
 		this->clear();
 		this->_insertDispatch(this->begin(), first, last, is_integral<InputIterator>());
 	}
 
 	/**
-	 * @brief	Access to an element of the vector.
-	 * 
 	 * @param	n The position of the element to access.
 	 * 
 	 * @return	The element at the given position.
@@ -328,9 +326,7 @@ public:
 	}
 
 	/**
-	 * @brief	Access to a constant element of the vector.
-	 * 
-	 * @param	n The position of the element to access.
+	 * @param	n The position of the constant element to access.
 	 * 
 	 * @return	The constant element at the given position.
 	 */
@@ -342,8 +338,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access to the last element of the vector.
-	 * 
 	 * @return	The last element of the vector.
 	 */
 	reference	back(void)
@@ -352,8 +346,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access the constant last element of the vector.
-	 * 
 	 * @return	The constant last element of the vector.
 	 */
 	const_reference	back(void) const
@@ -362,8 +354,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get an iterator to the first element of the vector.
-	 * 
 	 * @return	An iterator to the first element of the vector.
 	 */
 	iterator	begin(void)
@@ -372,8 +362,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_iterator to the first element of the vector.
-	 * 
 	 * @return	A const_iterator to the first element of the vector.
 	 */
 	const_iterator	begin(void) const
@@ -382,8 +370,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the number of allocated memory in the vector.
-	 * 
 	 * @return	The number of allocated memory in the vector.
 	 */
 	size_type	capacity(void) const
@@ -406,8 +392,6 @@ public:
 	}
 
 	/**
-	 * @brief	Check if the vector is empty.
-	 * 
 	 * @return	Either true if the vector is empty, or false if not.
 	 */
 	bool	empty(void) const
@@ -416,8 +400,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get an iterator to the post-last element of the vector.
-	 * 
 	 * @return	An iterator to the post-last element of the vector.
 	 */
 	iterator	end(void)
@@ -426,8 +408,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_iterator to the post-last element of the vector.
-	 * 
 	 * @return	A const_iterator to the post-last element of the vector.
 	 */
 	const_iterator	end(void) const
@@ -456,7 +436,7 @@ public:
 	 * 
 	 * @return	An iterator to the element after the removed ones.
 	 */
-	iterator	erase(iterator const first, iterator const last)
+	iterator	erase(iterator const &first, iterator const &last)
 	{
 		allocator_type	alloc;
 		iterator		it;
@@ -469,8 +449,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access to the first element of the vector.
-	 * 
 	 * @return	The first element of the vector.
 	 */
 	reference	front(void)
@@ -479,8 +457,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access the constant first element of the vector.
-	 * 
 	 * @return	The constant first element of the vector.
 	 */
 	const_reference	front(void) const
@@ -489,9 +465,7 @@ public:
 	}
 
 	/**
-	 * @brief	Get an allocator_type object, corresponding to the one used in the vector.
-	 * 
-	 * @return	An allocator object.
+	 * @return	An allocator_type default object.
 	 */
 	allocator_type	get_allocator(void) const
 	{
@@ -528,7 +502,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(iterator const pos, InputIterator first, InputIterator const last)
+	void	insert(iterator const pos, InputIterator const &first, InputIterator const &last)
 	{
 		this->_insertDispatch(pos, first, last, is_integral<InputIterator>());
 	}
@@ -550,8 +524,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the maximum number of elements that can be stored in the vector.
-	 * 
 	 * @return	The maximum number of elements that can be stored in the vector.
 	 */
 	size_type	max_size(void) const
@@ -580,8 +552,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a reverse_iterator to the last element of the vector.
-	 * 
 	 * @return	A reverse_iterator to the last element of the vector.
 	 */
 	reverse_iterator	rbegin(void)
@@ -590,8 +560,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_reverse_iterator to the last element of the vector.
-	 * 
 	 * @return	A const_reverse_iterator to the last element of the vector.
 	 */
 	const_reverse_iterator	rbegin(void) const
@@ -600,8 +568,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a reverse_iterator to the pre-first element of the vector.
-	 * 
 	 * @return	A reverse_iterator to the first element of the vector.
 	 */
 	reverse_iterator	rend(void)
@@ -610,8 +576,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get a const_reverse_iterator to the pre-first element of the vector.
-	 * 
 	 * @return	A const_reverse_iterator to the first element of the vector.
 	 */
 	const_reverse_iterator	rend(void) const
@@ -662,8 +626,6 @@ public:
 	}
 
 	/**
-	 * @brief	Get the number of stored elements in the vector.
-	 * 
 	 * @return	The number of stored elements in the vector.
 	 */
 	size_type	size(void) const
@@ -702,8 +664,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access to an element of the vector.
-	 * 
 	 * @param	idx The index of the element to get.
 	 * 
 	 * @return	The element at the given index.
@@ -714,8 +674,6 @@ public:
 	}
 
 	/**
-	 * @brief	Access to a constant element of the vector.
-	 * 
 	 * @param	idx The index of the constant element to get.
 	 * 
 	 * @return	The constant element at the given index.

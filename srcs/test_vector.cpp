@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 07:50:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 23:37:12 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,21 +258,16 @@ inline static int	__test_constructor(void)
 	return ret;
 }
 
-inline static int	__test_function_size(void)
+inline static int	__test_function_get_allocator(void)
 {
-	size_t	n;
-
 	title(__func__);
 	try
 	{
-		for (n = 0LU ; n < 10LU ; ++n)
-		{
-			ft::vector<t_hhuint> const	ft_vec(n, 42U);
-			std::vector<t_hhuint> const	std_vec(n, 42U);
+		ft::vector<char> const	ft_vec;
+		std::vector<char> const	std_vec;
 
-			if (ft_vec.size() != std_vec.size())
-				return KO;
-		}
+		if (ft_vec.get_allocator() != std_vec.get_allocator())
+			return KO;
 	}
 	catch (std::exception const &e)
 	{
@@ -284,40 +279,33 @@ inline static int	__test_function_size(void)
 
 inline static int	__test_function_max_size(void)
 {
+	int	ret;
+
 	title(__func__);
+	ret = IMP_OK;
 	try
 	{
-		// vector of signed char
-		{
-			ft::vector<t_hhint> const	ft_vec;
-			std::vector<t_hhint> const	std_vec;
+		ft::vector<t_hhint> const							ft_vec0;
+		ft::vector<t_uint> const							ft_vec1;
+		ft::vector<std::pair<long double, t_lint> > const	ft_vec2;
+		std::vector<t_hhint> const							std_vec0;
+		std::vector<t_uint> const							std_vec1;
+		std::vector<std::pair<long double, t_lint> > const	std_vec2;
 
-			if (ft_vec.max_size() != std_vec.max_size())
-				return KO;
-		}
-		// vector of unsigned int
-		{
-			ft::vector<t_uint> const	ft_vec;
-			std::vector<t_uint> const	std_vec;
-
-			if (ft_vec.max_size() != std_vec.max_size())
-				return KO;
-		}
-		// vector of pair<long double, signed long int>
-		{
-			ft::vector<std::pair<long double, t_lint> > const	ft_vec;
-			std::vector<std::pair<long double, t_lint> > const	std_vec;
-
-			if (ft_vec.max_size() != std_vec.max_size())
-				return KO;
-		}
+		if (ft_vec0.max_size() != std_vec0.max_size() || ft_vec1.max_size() != std_vec1.max_size() ||
+			ft_vec2.max_size() != std_vec2.max_size())
+			ret = ISO_OK;
+		if ((ft_vec0.max_size() < ft_vec1.max_size()) != (std_vec0.max_size() < std_vec1.max_size()) ||
+			(ft_vec0.max_size() < ft_vec2.max_size()) != (std_vec0.max_size() < std_vec2.max_size()) ||
+			(ft_vec1.max_size() < ft_vec2.max_size()) != (std_vec1.max_size() < std_vec2.max_size()))
+			return KO;
 	}
 	catch (std::exception const &e)
 	{
 		std::cerr << "Exception: " << e.what() << '\n';
 		return KO;
 	}
-	return IMP_OK;
+	return ret;
 }
 
 inline static int	__test_function_capacity(void)
@@ -350,16 +338,21 @@ inline static int	__test_function_capacity(void)
 	return ret;
 }
 
-inline static int	__test_function_get_allocator(void)
+inline static int	__test_function_size(void)
 {
+	size_t	n;
+
 	title(__func__);
 	try
 	{
-		ft::vector<char, std::allocator<char> > const	ft_vec;
-		std::vector<char, std::allocator<char> > const	std_vec;
+		for (n = 0LU ; n < 10LU ; ++n)
+		{
+			ft::vector<t_hhuint> const	ft_vec(n, 42U);
+			std::vector<t_hhuint> const	std_vec(n, 42U);
 
-		if (ft_vec.get_allocator() != std_vec.get_allocator())
-			return KO;
+			if (ft_vec.size() != std_vec.size())
+				return KO;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1962,10 +1955,10 @@ int	test_vector(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
-		__test_function_size,
+		__test_function_get_allocator,
 		__test_function_max_size,
 		__test_function_capacity,
-		__test_function_get_allocator,
+		__test_function_size,
 		__test_function_empty,
 		__test_function_begin,
 		__test_function_end,

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/07 20:26:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 13:35:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ template <typename T>
 struct rb_node
 {
 	// Attributes
-	T		data;
+	T		val;
 
 	uint8_t	color;
 
@@ -36,10 +36,10 @@ struct rb_node
 	/**
 	 * @brief	Construct a new rb_node object. (default constructor)
 	 * 
-	 * @param	data The data to store in the node.
+	 * @param	val The value to store in the node.
 	 */
-	rb_node(T const &data = T()) :
-		data(data),
+	rb_node(T const &val = T()) :
+		val(val),
 		color(RED),
 		parent(NULL)
 	{
@@ -133,7 +133,7 @@ struct rb_node
 /**
  * @brief	Check if two rb_node are equivalent.
  * 
- * @tparam	T The type of the data stored in both rb_node. 
+ * @tparam	T The type of the value stored in both rb_node. 
  * 
  * @param	lhs The left hand side rb_node to compare.
  * @param	rhs The right hand side rb_node to compare.
@@ -143,13 +143,13 @@ struct rb_node
 template <typename T>
 bool	operator==(rb_node<T> const &lhs, rb_node<T> const &rhs)
 {
-	return lhs.data == rhs.data;
+	return lhs.val == rhs.val;
 }
 
 /**
  * @brief	Check if two rb_node are different.
  * 
- * @tparam	T The type of the data stored in both rb_node. 
+ * @tparam	T The type of the value stored in both rb_node. 
  * 
  * @param	lhs The left hand side rb_node to compare.
  * @param	rhs The right hand side rb_node to compare.
@@ -159,7 +159,7 @@ bool	operator==(rb_node<T> const &lhs, rb_node<T> const &rhs)
 template <typename T>
 bool	operator!=(rb_node<T> const &lhs, rb_node<T> const &rhs)
 {
-	return lhs.data != rhs.data;
+	return lhs.val != rhs.val;
 }
 }
 

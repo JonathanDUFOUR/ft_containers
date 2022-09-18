@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 06:52:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/18 19:18:29 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare co
 	}
 	// Order check
 	{
-		if ((node->child[ft::LEFT] && !cmp(node->child[ft::LEFT]->data, node->data)) ||
-			(node->child[ft::RIGHT] && !cmp(node->data, node->child[ft::RIGHT]->data)))
+		if ((node->child[ft::LEFT] && !cmp(node->child[ft::LEFT]->val, node->val)) ||
+			(node->child[ft::RIGHT] && !cmp(node->val, node->child[ft::RIGHT]->val)))
 			return EXIT_FAILURE;
 	}
 	// Red violation check
@@ -83,7 +83,7 @@ inline static int	__integrityCheck(ft::rb_node<T> const *const node)
 template <typename T>
 inline static bool	__cmp(ft::rb_node<T> const &lhs, T const &rhs)
 {
-	return lhs.data == rhs;
+	return lhs.val == rhs;
 }
 
 inline static int	__test_constructor(void)
@@ -153,7 +153,7 @@ inline static int	__test_accessor_getMax(void)
 			{
 				ft::rb_tree<long double>	tree(&g_long_double[0], &g_long_double[idx]);
 
-				if (!tree.getMax() || tree.getMax()->data != *std::max_element(&g_long_double[0], &g_long_double[idx]))
+				if (!tree.getMax() || tree.getMax()->val != *std::max_element(&g_long_double[0], &g_long_double[idx]))
 					return EXIT_FAILURE;
 			}
 		}
@@ -186,7 +186,7 @@ inline static int	__test_accessor_getMin(void)
 			{
 				ft::rb_tree<t_uint>	tree(&g_uint[0], &g_uint[idx]);
 
-				if (!tree.getMin() || tree.getMin()->data != *std::min_element(&g_uint[0], &g_uint[idx]))
+				if (!tree.getMin() || tree.getMin()->val != *std::min_element(&g_uint[0], &g_uint[idx]))
 					return EXIT_FAILURE;
 			}
 		}
@@ -219,7 +219,8 @@ inline static int	__test_accessor_getRoot(void)
 			{
 				ft::rb_tree<int>	tree(&g_int[0], &g_int[idx]);
 
-				if (!tree.getRoot() || std::find(&g_int[0], &g_int[idx], tree.getRoot()->data) == &g_int[idx])
+				if (!tree.getRoot() || tree.getRoot()->parent ||
+					std::find(&g_int[0], &g_int[idx], tree.getRoot()->val) == &g_int[idx])
 					return EXIT_FAILURE;
 			}
 		}
@@ -523,7 +524,7 @@ inline static int	__test_function_insert(void)
 			std_ret = ref.insert(g_string[idx / 2]);
 
 			if (tree.getSize() != ref.size() ||
-				ft_ret.first->data != *std_ret.first || ft_ret.second != std_ret.second ||
+				ft_ret.first->val != *std_ret.first || ft_ret.second != std_ret.second ||
 				__integrityCheck(tree.getRoot()) ||
 				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal<
@@ -549,25 +550,57 @@ inline static int	__test_function_erase(void)
 	title(__func__);
 	try
 	{
-		ft::rb_tree<char>	tree(&g_char[0], &g_char[g_char_size]);
-		std::set<char>		ref(&g_char[0], &g_char[g_char_size]);
-		size_t				ft_ret;
-		size_t				std_ret;
-
-		for (idx = 0U ; idx < g_char_size * 2 ; ++idx)
+		// Position erase
 		{
-			ft_ret = tree.erase(g_char[idx / 2]);
-			std_ret = ref.erase(g_char[idx / 2]);
+			ft::rb_tree<long double>	tree(&g_long_double[0], &g_long_double[g_long_double_size]);
+			std::set<long double>		ref(&g_long_double[0], &g_long_double[g_long_double_size]);
 
-			if (tree.getSize() != ref.size() || ft_ret != std_ret ||
-				__integrityCheck(tree.getRoot()) ||
-				__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<char>::const_iterator,
-					std::set<char>::const_iterator,
-					bool (*)(ft::rb_node<char> const &, char const &)>
-					(tree.begin(), tree.end(), ref.begin(), __cmp))
-				return EXIT_FAILURE;
+			for (idx = 0U ; idx < g_long_double_size ; ++idx)
+			{
+				if (idx % 2)
+				{
+					tree.erase(tree.begin().base());
+					ref.erase(ref.begin());
+				}
+				else
+				{
+					tree.erase((--tree.end()).base());
+					ref.erase(--ref.end());
+				}
+
+				if (tree.getSize() != ref.size() ||
+					__integrityCheck(tree.getRoot()) ||
+					__propertiesCheck(tree.getRoot(), ft::rb_tree<long double>::compare_type()) ||
+					!std::equal<
+						ft::rb_tree<long double>::const_iterator,
+						std::set<long double>::const_iterator,
+						bool (*)(ft::rb_node<long double> const &, long double const &)>
+						(tree.begin(), tree.end(), ref.begin(), __cmp))
+					return EXIT_FAILURE;
+			}
+		}
+		// Value erase
+		{
+			ft::rb_tree<char>	tree(&g_char[0], &g_char[g_char_size]);
+			std::set<char>		ref(&g_char[0], &g_char[g_char_size]);
+			size_t				ft_ret;
+			size_t				std_ret;
+
+			for (idx = 0U ; idx < g_char_size * 2 ; ++idx)
+			{
+				ft_ret = tree.erase(g_char[idx / 2]);
+				std_ret = ref.erase(g_char[idx / 2]);
+
+				if (tree.getSize() != ref.size() || ft_ret != std_ret ||
+					__integrityCheck(tree.getRoot()) ||
+					__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
+					!std::equal<
+						ft::rb_tree<char>::const_iterator,
+						std::set<char>::const_iterator,
+						bool (*)(ft::rb_node<char> const &, char const &)>
+						(tree.begin(), tree.end(), ref.begin(), __cmp))
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -623,7 +656,121 @@ inline static int	__test_function_find(void)
 				if (tree.find(nb))
 					return EXIT_FAILURE;
 			}
-			else if (tree.find(g_lint[idx / 2])->data != *ref.find(g_lint[idx / 2]))
+			else if (tree.find(g_lint[idx / 2])->val != *ref.find(g_lint[idx / 2]))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_swap(void)
+{
+	title(__func__);
+	try
+	{
+		// Swapping empty | empty
+		{
+			ft::rb_tree<float>	tree0;
+			ft::rb_tree<float>	tree1;
+			std::set<float>		ref0;
+			std::set<float>		ref1;
+
+			tree0.swap(tree1);
+			ref0.swap(ref1);
+			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
+				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				return EXIT_FAILURE;
+		}
+		// Swapping empty | non-empty
+		{
+			ft::rb_tree<float>	tree0;
+			ft::rb_tree<float>	tree1(&g_float[g_float_size / 2], &g_float[g_float_size]);
+			std::set<float>		ref0;
+			std::set<float>		ref1(&g_float[g_float_size / 2], &g_float[g_float_size]);
+
+			tree0.swap(tree1);
+			ref0.swap(ref1);
+			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
+				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				return EXIT_FAILURE;
+		}
+		// Swapping non-empty | empty
+		{
+			ft::rb_tree<float>	tree0(&g_float[0], &g_float[g_float_size / 2]);
+			ft::rb_tree<float>	tree1;
+			std::set<float>		ref0(&g_float[0], &g_float[g_float_size / 2]);
+			std::set<float>		ref1;
+
+			tree0.swap(tree1);
+			ref0.swap(ref1);
+			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
+				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				return EXIT_FAILURE;
+		}
+		// Swapping non-empty | non-empty
+		{
+			ft::rb_tree<float>	tree0(&g_float[0], &g_float[g_float_size / 2]);
+			ft::rb_tree<float>	tree1(&g_float[g_float_size / 2], &g_float[g_float_size]);
+			std::set<float>		ref0(&g_float[0], &g_float[g_float_size / 2]);
+			std::set<float>		ref1(&g_float[g_float_size / 2], &g_float[g_float_size]);
+
+			tree0.swap(tree1);
+			ref0.swap(ref1);
+			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
+				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
+				!std::equal<
+					ft::rb_tree<float>::const_iterator,
+					std::set<float>::const_iterator,
+					bool (*)(ft::rb_node<float> const &, float const &)>
+					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
 				return EXIT_FAILURE;
 		}
 	}
@@ -655,6 +802,7 @@ int	test_rb_tree(void)
 		__test_function_erase,
 		__test_function_clear,
 		__test_function_find,
+		__test_function_swap,
 		NULL
 	};
 	t_uint			koCount;
