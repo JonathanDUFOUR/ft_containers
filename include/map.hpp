@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 22:50:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 13:21:10 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace ft
 template <
 	typename Key,
 	typename T,
-	typename Compare = std::less<pair<Key, T> >,
+	typename Compare = std::less<Key>,
 	typename Alloc = std::allocator<rb_node<pair<Key const, T> > > >
 class map
 {
@@ -28,7 +28,6 @@ public:
 	// Member types
 	typedef Key													key_type;
 	typedef T													mapped_type;
-	typedef pair<key_type const, mapped_type>					value_type;
 	typedef Compare												key_compare;
 	typedef Alloc												allocator_type;
 
@@ -47,6 +46,8 @@ public:
 	typedef typename iterator_traits<iterator>::difference_type	difference_type;
 	typedef size_t												size_type;
 
+	typedef pair<key_type const, mapped_type>					value_type;
+
 	class value_compare : public std::binary_function<value_type, value_type, bool>
 	{
 	private:
@@ -59,7 +60,7 @@ public:
 		// Operators
 		bool operator()(value_type const &lhs, value_type const &rhs) const
 		{
-			return this->_cmp(lhs, rhs);
+			return this->_cmp(lhs.first, rhs.first);
 		}
 	};
 
