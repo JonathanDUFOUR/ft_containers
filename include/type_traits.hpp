@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/14 20:44:18 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/20 18:19:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ template <> class is_integral<unsigned char> : public true_type {};
 template <> class is_integral<unsigned short> : public true_type {};
 template <> class is_integral<unsigned int> : public true_type {};
 template <> class is_integral<unsigned long> : public true_type {};
+
+template <typename T> class is_pointer : public false_type {};
+template <typename T> class is_pointer<T *> : public true_type {};
 
 template <typename T> class is_trivially_copyable : public false_type {};
 template <> class is_trivially_copyable<bool> : public true_type {};

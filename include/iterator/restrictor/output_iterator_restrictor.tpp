@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 06:26:53 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 07:05:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/20 18:43:47 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ namespace ft
 {
 /**
  * @par		This class is the implementation of the output_iterator_restrictor.
- * 			It is designed to restrict any type of iterator to the Output Iterator requirements only.
+ * 			It is designed to restrict any type of iterator to the Output Iterator requirements at most.
  * 			According to the C++98 standard, an Output Iterator must conform to the following requirements:
  * 			- copy constructible (it0(it1))
  * 			- copy assignable (it0 = it1)
@@ -32,15 +32,19 @@ namespace ft
 template <typename Iterator>
 class output_iterator_restrictor
 {
+private:
+	// Member types
+	typedef output_iterator_restrictor<Iterator>						_self_type;
+
 public:
 	// Member types
-	typedef typename Iterator											iterator_type;
+	typedef Iterator													iterator_type;
+	typedef typename std::output_iterator_tag							iterator_category;
 
-	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
 	typedef typename iterator_traits<iterator_type>::value_type			value_type;
 	typedef typename iterator_traits<iterator_type>::pointer			pointer;
 	typedef typename iterator_traits<iterator_type>::reference			reference;
-	typedef typename iterator_traits<iterator_type>::					difference_type;
+	typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
 
 protected:
 	// Attributes
@@ -62,26 +66,12 @@ public:
 	 * @brief	Construct a new output_iterator_restrictor object.
 	 * 			Allow mutable to constant output_iterator_restrictor conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the output_iterator_restrictor to copy.
+	 * @tparam	_Iterator The type of the restricted iterator of the output_iterator_restrictor to copy.
 	 * 
 	 * @param	src The output_iterator_restrictor to copy.
 	 */
-	template <typename U>
-	output_iterator_restrictor(output_iterator_restrictor<U> const &src) : _it(src.base()) {}
-
-// ***************************************************************************************************************** //
-//                                                     Accessors                                                     //
-// ***************************************************************************************************************** //
-
-	/**
-	 * @brief	Get a copy of the wrapped iterator in the output_iterator_restrictor.
-	 * 
-	 * @return	A copy of the wrapped iterator in the output_iterator_restrictor.
-	 */
-	inline iterator base(void) const
-	{
-		return this->_it;
-	}
+	template <typename _Iterator>
+	output_iterator_restrictor(output_iterator_restrictor<_Iterator> const &src) : _it(src.base()) {}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
@@ -91,14 +81,14 @@ public:
 	 * @brief	Assign a new iterator to the output_iterator_restrictor.
 	 * 			Allow mutable to constant output_iterator_restrictor conversion. (copy assignment)
 	 * 
-	 * @tparam	U The type of the output_iterator_restrictor to copy.
+	 * @tparam	_Iterator The type of the restricted iterator of the output_iterator_restrictor to copy.
 	 * 
 	 * @param	rhs The output_iterator_restrictor to copy the iterator from.
 	 * 
 	 * @return	A reference to the assigned output_iterator_restrictor.
 	 */
-	template <typename U>
-	inline output_iterator_restrictor	&operator=(output_iterator_restrictor<U> const &rhs)
+	template <typename _Iterator>
+	inline _self_type	&operator=(output_iterator_restrictor<_Iterator> const &rhs)
 	{
 		if (this != &rhs)
 			this->_it = rhs.base();
@@ -120,7 +110,7 @@ public:
 	 * 
 	 * @return	A reference to the incremented output_iterator_restrictor.
 	 */
-	inline output_iterator_restrictor	&operator++(void)
+	inline _self_type	&operator++(void)
 	{
 		++this->_it;
 		return *this;
@@ -131,9 +121,9 @@ public:
 	 * 
 	 * @return	A copy of the output_iterator_restrictor before the incrementation.
 	 */
-	inline output_iterator_restrictor	operator++(int)
+	inline _self_type	operator++(int)
 	{
-		return output_iterator_restrictor(this->_it++);
+		return _self_type(this->_it++);
 	}
 };
 }

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/17 05:40:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 17:09:08 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,44 +81,139 @@ struct pair
 	}
 };
 
+/**
+ * @brief	Create a new pair object.
+ * 
+ * @tparam	T0 The type of the `first` member of the pair.
+ * @tparam	T1 The type of the `second` member of the pair.
+ * 
+ * @param	a The value of the `first` member of the pair.
+ * @param	b The value of the `second` member of the pair.
+ * 
+ * @return	The newly created pair.
+ */
 template <typename T0, typename T1>
 pair<T0, T1>	make_pair(T0 const &a, T1 const &b)
 {
 	return pair<T0, T1>(a, b);
 }
 
-template <typename T0, typename T1>
+/**
+ * @brief	Check if two pair are equivalent.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are equivalent, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
 inline bool	operator==(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
 {
 	return (lhs.first == rhs.first) && (lhs.second == rhs.second);
 }
 
-template <typename T0, typename T1>
-inline bool	operator!=(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+/**
+ * @brief	Check if two pair are different.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are different, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
+inline bool	operator!=(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (!lhs.first != rhs.first) || (!lhs.second != rhs.second);
 }
 
-template <typename T0, typename T1>
-inline bool	operator<(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+/**
+ * @brief	Check if two pair are strictly ordered.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are strictly ordered, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
+inline bool	operator<(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first < rhs.first) || (lhs.second < rhs.second);
 }
 
-template <typename T0, typename T1>
-inline bool	operator>(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+/**
+ * @brief	Check if two pair are strictly reverse ordered.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are strictly reverse ordered, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
+inline bool	operator>(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first > rhs.first) || (lhs.second > rhs.second);
 }
 
-template <typename T0, typename T1>
-inline bool	operator<=(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+/**
+ * @brief	Check if two pair are ordered or equivalent.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are ordered or equivalent, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
+inline bool	operator<=(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first <= rhs.first) || (lhs.second <= rhs.second);
 }
 
-template <typename T0, typename T1>
-inline bool	operator>=(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+/**
+ * @brief	Check if two pair are reverse ordered or equivalent.
+ * 			Allow comparison between mutable and constant pair.
+ * 
+ * @tparam	T0 The type of the `first` member of the first pair.
+ * @tparam	T1 The type of the `second` member of the first pair.
+ * @tparam	U0 The type of the `first` member of the second pair.
+ * @tparam	U1 The type of the `second` member of the second pair.
+ * 
+ * @param	lhs The left hand side pair to compare.
+ * @param	rhs The right hand side pair to compare.
+ * 
+ * @return	Either true if the two pair are reverse ordered or equivalent, or false if not.
+ */
+template <typename T0, typename T1, typename U0, typename U1>
+inline bool	operator>=(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first >= rhs.first) || (lhs.second >= rhs.second);
 }

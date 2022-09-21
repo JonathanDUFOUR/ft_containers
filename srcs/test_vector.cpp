@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 23:37:12 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/21 18:54:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <vector>
 #include "arrays.hpp"
 #include "iteratorCheck.tpp"
+#include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "tester.hpp"
 #include "utility.hpp"
 #include "vector.hpp"
@@ -128,31 +129,31 @@ inline static int	__test_constructor(void)
 		// Range constructor
 		// Trivially copyable
 		{
-			// Range of input_iterator
+			// Range of input_iterator_restrictor
 			{
-				ft::input_iterator<t_huint const> const	it0(&g_huint[0]);
-				ft::input_iterator<t_huint const> const	it1(&g_huint[0]);
-				ft::vector<t_huint> const				ft_vec(it0, it1);
-				std::vector<t_huint> const				std_vec(it0, it1);
+				ft::input_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+				ft::input_iterator_restrictor<t_huint const *> const	it1(&g_huint[0]);
+				ft::vector<t_huint> const								ft_vec(it0, it1);
+				std::vector<t_huint> const								std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
-			// Range of forward_iterator
+			// Range of forward_iterator_restrictor
 			{
-				ft::forward_iterator<void *> const	it;
-				ft::vector<void *> const			ft_vec(it, it);
-				std::vector<void *> const			std_vec(it, it);
+				ft::forward_iterator_restrictor<void const *const *> const	it;
+				ft::vector<void const *> const								ft_vec(it, it);
+				std::vector<void const *> const								std_vec(it, it);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
-			// Range of random_access_iterator
+			// Range of random_access_iterator_restrictor
 			{
-				ft::random_access_iterator<t_huint const> const	it0(&g_huint[0]);
-				ft::random_access_iterator<t_huint const> const	it1(&g_huint[g_huint_size]);
-				ft::vector<t_huint> const						ft_vec(it0, it1);
-				std::vector<t_huint> const						std_vec(it0, it1);
+				ft::random_access_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+				ft::random_access_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
+				ft::vector<t_huint> const										ft_vec(it0, it1);
+				std::vector<t_huint> const										std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -169,32 +170,32 @@ inline static int	__test_constructor(void)
 		// Range constructor
 		// Non-trivial copy required
 		{
-			// Range of input_iterator
+			// Range of input_iterator_restrictor
 			{
-				ft::input_iterator<std::string const> const	it0(&g_string[0]);
-				ft::input_iterator<std::string const> const	it1(&g_string[0]);
-				ft::vector<std::string> const				ft_vec(it0, it1);
-				std::vector<std::string> const				std_vec(it0, it1);
+				ft::input_iterator_restrictor<std::string const *> const	it0(&g_string[0]);
+				ft::input_iterator_restrictor<std::string const *> const	it1(&g_string[0]);
+				ft::vector<std::string> const								ft_vec(it0, it1);
+				std::vector<std::string> const								std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
-			// Range of forward_iterator
+			// Range of forward_iterator_restrictor
 			{
-				ft::forward_iterator<std::string const> const	it0;
-				ft::forward_iterator<std::string const> const	it1;
-				ft::vector<std::string> const					ft_vec(it0, it1);
-				std::vector<std::string> const					std_vec(it0, it1);
+				ft::forward_iterator_restrictor<std::string const *> const	it0;
+				ft::forward_iterator_restrictor<std::string const *> const	it1;
+				ft::vector<std::string> const								ft_vec(it0, it1);
+				std::vector<std::string> const								std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
 			}
-			// Range of random_access_iterator
+			// Range of random_access_iterator_restrictor
 			{
-				ft::random_access_iterator<std::string const> const	it0(&g_string[0]);
-				ft::random_access_iterator<std::string const> const	it1(&g_string[g_string_size]);
-				ft::vector<std::string> const						ft_vec(it0, it1);
-				std::vector<std::string> const						std_vec(it0, it1);
+				ft::random_access_iterator_restrictor<std::string const *> const	it0(&g_string[0]);
+				ft::random_access_iterator_restrictor<std::string const *> const	it1(&g_string[g_string_size]);
+				ft::vector<std::string> const										ft_vec(it0, it1);
+				std::vector<std::string> const										std_vec(it0, it1);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -226,12 +227,12 @@ inline static int	__test_constructor(void)
 		// Copy constructor
 		// Trivially copyable
 		{
-			ft::forward_iterator<t_huint const> const	it0(&g_huint[0]);
-			ft::forward_iterator<t_huint const> const	it1(&g_huint[g_huint_size]);
-			ft::vector<t_huint> const					ft_vec0(it0, it1);
-			ft::vector<t_huint> const					ft_vec1(ft_vec0);
-			std::vector<t_huint> const					std_vec0(it0, it1);
-			std::vector<t_huint> const					std_vec1(std_vec0);
+			ft::forward_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+			ft::forward_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
+			ft::vector<t_huint> const								ft_vec0(it0, it1);
+			ft::vector<t_huint> const								ft_vec1(ft_vec0);
+			std::vector<t_huint> const								std_vec0(it0, it1);
+			std::vector<t_huint> const								std_vec1(std_vec0);
 
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				ret = ISO_OK;
@@ -239,12 +240,12 @@ inline static int	__test_constructor(void)
 		// Copy constructor
 		// Non-trivial copy required
 		{
-			ft::forward_iterator<std::string const> const	it0(&g_string[0]);
-			ft::forward_iterator<std::string const> const	it1(&g_string[g_string_size]);
-			ft::vector<std::string> const					ft_vec0(it0, it1);
-			ft::vector<std::string> const					ft_vec1(ft_vec0);
-			std::vector<std::string> const					std_vec0(it0, it1);
-			std::vector<std::string> const					std_vec1(std_vec0);
+			ft::forward_iterator_restrictor<std::string const *> const	it0(&g_string[0]);
+			ft::forward_iterator_restrictor<std::string const *> const	it1(&g_string[g_string_size]);
+			ft::vector<std::string> const								ft_vec0(it0, it1);
+			ft::vector<std::string> const								ft_vec1(ft_vec0);
+			std::vector<std::string> const								std_vec0(it0, it1);
+			std::vector<std::string> const								std_vec1(std_vec0);
 
 			if (sizeof(ft_vec1) != sizeof(std_vec1))
 				ret = ISO_OK;

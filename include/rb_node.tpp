@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 13:35:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 17:21:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdint.h>
 # include "e_rb_color.hpp"
+# include "e_rb_direction.hpp"
 
 namespace ft
 {
@@ -114,50 +115,40 @@ struct rb_node
 			node = node->child[RIGHT];
 		return node;
 	}
-
-// ***************************************************************************************************************** //
-//                                                     Operators                                                     //
-// ***************************************************************************************************************** //
-
-	/**
-	 * friend keyword is here to call the non-member operators,
-	 * instead of redefining them.
-	 */
-
-	template <typename _T>
-	friend bool	operator==(rb_node<_T> const &lhs, rb_node<_T> const &rhs);
-	template <typename _T>
-	friend bool	operator!=(rb_node<_T> const &lhs, rb_node<_T> const &rhs);
 };
 
 /**
  * @brief	Check if two rb_node are equivalent.
+ * 			Allow comparison between mutable and constant rb_node.
  * 
- * @tparam	T The type of the value stored in both rb_node. 
+ * @tparam	T0 The type of the value stored in the left hand side rb_node.
+ * @tparam	T1 The type of the value stored in the right hand side rb_node.
  * 
  * @param	lhs The left hand side rb_node to compare.
  * @param	rhs The right hand side rb_node to compare.
  * 
  * @return	Either true if the two rb_node are equivalent, or false if not.
  */
-template <typename T>
-bool	operator==(rb_node<T> const &lhs, rb_node<T> const &rhs)
+template <typename T0, typename T1>
+bool	operator==(rb_node<T0> const &lhs, rb_node<T1> const &rhs)
 {
 	return lhs.val == rhs.val;
 }
 
 /**
  * @brief	Check if two rb_node are different.
+ * 			Allow comparison between mutable and constant rb_node.
  * 
- * @tparam	T The type of the value stored in both rb_node. 
+ * @tparam	T0 The type of the value stored in the left hand side rb_node.
+ * @tparam	T1 The type of the value stored in the right hand side rb_node.
  * 
  * @param	lhs The left hand side rb_node to compare.
  * @param	rhs The right hand side rb_node to compare.
  * 
  * @return	Either true if the two rb_node are different, or false if not.
  */
-template <typename T>
-bool	operator!=(rb_node<T> const &lhs, rb_node<T> const &rhs)
+template <typename T0, typename T1>
+bool	operator!=(rb_node<T0> const &lhs, rb_node<T1> const &rhs)
 {
 	return lhs.val != rhs.val;
 }

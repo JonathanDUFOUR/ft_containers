@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 19:18:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/20 17:07:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <set>
 #include "arrays.hpp"
 #include "iteratorCheck.tpp"
-#include "iterator/base/random_access_iterator.tpp"
+#include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "rb_tree.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
@@ -97,22 +97,22 @@ inline static int	__test_constructor(void)
 		}
 		// Range constructor
 		{
-			// Range of input_iterator
+			// Range of input_iterator_restrictor
 			{
-				ft::input_iterator<t_huint const> const	it0(&g_huint[0]);
-				ft::input_iterator<t_huint const> const	it1(&g_huint[0]);
-				ft::rb_tree<t_huint> const				tree(it0, it1);
+				ft::input_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+				ft::input_iterator_restrictor<t_huint const *> const	it1(&g_huint[0]);
+				ft::rb_tree<t_huint> const								tree(it0, it1);
 			}
-			// Range of forward_iterator
+			// Range of forward_iterator_restrictor
 			{
-				ft::forward_iterator<void *> const	it;
-				ft::rb_tree<void *> const			tree(it, it);
+				ft::forward_iterator_restrictor<void *const *> const	it;
+				ft::rb_tree<void *> const								tree(it, it);
 			}
 			// Range of random_access_iterator
 			{
-				ft::random_access_iterator<t_huint const> const	it0(&g_huint[0]);
-				ft::random_access_iterator<t_huint const> const	it1(&g_huint[g_huint_size]);
-				ft::rb_tree<t_huint> const						tree(it0, it1);
+				ft::random_access_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+				ft::random_access_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
+				ft::rb_tree<t_huint> const										tree(it0, it1);
 			}
 			// Range of char const *
 			{
@@ -280,7 +280,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint>					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::iterator const	it(tree.begin());
 
-				if (it.base() != tree.getMin())
+				if (it.getCurr() != tree.getMin())
 					return EXIT_FAILURE;
 			}
 		}
@@ -291,7 +291,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint> const					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::const_iterator const	cit(tree.begin());
 
-				if (cit.base() != tree.getMin())
+				if (cit.getCurr() != tree.getMin())
 					return EXIT_FAILURE;
 			}
 		}
@@ -318,7 +318,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint>					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::iterator const	it(--tree.end());
 
-				if (it.base() != tree.getMax())
+				if (it.getCurr() != tree.getMax())
 					return EXIT_FAILURE;
 			}
 		}
@@ -329,7 +329,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint> const					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::const_iterator const	cit(--tree.end());
 
-				if (cit.base() != tree.getMax())
+				if (cit.getCurr() != tree.getMax())
 					return EXIT_FAILURE;
 			}
 		}
@@ -429,7 +429,7 @@ inline static int	__test_type_iterator(void)
 		it = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::iterator>(it);
 
-		if (it.base() != tree.getMin())
+		if (it.getCurr() != tree.getMin())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -451,7 +451,7 @@ inline static int	__test_type_const_iterator(void)
 		cit = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::const_iterator>(cit);
 
-		if (cit.base() != tree.getMin())
+		if (cit.getCurr() != tree.getMin())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -524,7 +524,7 @@ inline static int	__test_function_insert(void)
 			std_ret = ref.insert(g_string[idx / 2]);
 
 			if (tree.getSize() != ref.size() ||
-				ft_ret.first->val != *std_ret.first || ft_ret.second != std_ret.second ||
+				*ft_ret.first != *std_ret.first || ft_ret.second != std_ret.second ||
 				__integrityCheck(tree.getRoot()) ||
 				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal<
@@ -559,12 +559,12 @@ inline static int	__test_function_erase(void)
 			{
 				if (idx % 2)
 				{
-					tree.erase(tree.begin().base());
+					tree.erase(tree.begin().getCurr());
 					ref.erase(ref.begin());
 				}
 				else
 				{
-					tree.erase((--tree.end()).base());
+					tree.erase((--tree.end()).getCurr());
 					ref.erase(--ref.end());
 				}
 

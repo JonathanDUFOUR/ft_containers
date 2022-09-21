@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 14:03:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 23:24:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ inline static int	__test_constructor(void)
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
 			}
-			// Range of forward_iterator
+			// Range of forward_iterator_restrictor
 			{
-				ft::forward_iterator<ft::pair<int, void *> >	ft_it;
-				ft::forward_iterator<std::pair<int, void *> >	std_it;
-				ft::map<int, void *>							ft_map(ft_it, ft_it);
-				std::map<int, void *>							std_map(std_it, std_it);
+				ft::forward_iterator_restrictor<ft::pair<int, void *> const *>	ft_it;
+				ft::forward_iterator_restrictor<std::pair<int, void *> const *>	std_it;
+				ft::map<int, void *>											ft_map(ft_it, ft_it);
+				std::map<int, void *>											std_map(std_it, std_it);
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
@@ -415,6 +415,51 @@ inline static int	__test_function_empty(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_begin(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::map<char, int>::iterator		ft_it;
+			std::map<char, int>::iterator		std_it;
+			std::vector<ft::pair<char, int> >	ft_vec;
+			std::vector<std::pair<char, int> >	std_vec;
+
+			for (idx = 0U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			{
+				ft_vec.push_back(ft::pair<char, int>(g_char[idx], g_int[idx]));
+				std_vec.push_back(std::pair<char, int>(g_char[idx], g_int[idx]));
+			}
+			for (idx = 0U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			{
+				ft::map<char, int>	ft_map(&ft_vec[idx], &*ft_vec.end());
+				std::map<char, int>	std_map(&std_vec[idx], &*std_vec.end());
+
+				ft_it = ft_map.begin();
+				std_it = std_map.begin();
+
+				if (!!ft_it.getPtr() != !!std_it.operator->() ||
+					(ft_it.getPtr() && std_it.operator->() && ft_it->first != std_it->first))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_map(void)
 {
 	t_test const	tests[] = {
@@ -425,6 +470,10 @@ int	test_map(void)
 		__test_function_value_comp,
 		__test_function_size,
 		__test_function_empty,
+		__test_function_begin,
+		// __test_function_end,
+		// __test_function_rbegin,
+		// __test_function_rend,
 		NULL
 	};
 	t_uint			koCount;

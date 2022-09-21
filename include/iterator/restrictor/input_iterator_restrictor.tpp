@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 06:06:43 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 07:08:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/21 10:18:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 # define INPUT_ITERATOR_RESTRICTOR_TPP
 
 # include "iterator.hpp"
+# include "type_traits.hpp"
 
 namespace ft
 {
 /**
  * @par		This class is the implementation of the input_iterator_restrictor.
- * 			It is designed to restrict any type of iterator to the Input Iterator requirements only.
+ * 			It is designed to restrict any type of iterator to the Input Iterator requirements at most.
  * 			According to the C++98 standard, an Input Iterator must conform to the following requirements:
  * 			- copy constructible (it0(it1))
  * 			- copy assignable (it0 = it1)
@@ -35,11 +36,15 @@ namespace ft
 template <typename Iterator>
 class input_iterator_restrictor
 {
+private:
+	// Member types
+	typedef input_iterator_restrictor<Iterator>							_self_type;
+
 public:
 	// Member types
 	typedef Iterator													iterator_type;
+	typedef typename std::input_iterator_tag							iterator_category;
 
-	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
 	typedef typename iterator_traits<iterator_type>::value_type			value_type;
 	typedef typename iterator_traits<iterator_type>::pointer			pointer;
 	typedef typename iterator_traits<iterator_type>::reference			reference;
@@ -48,6 +53,27 @@ public:
 protected:
 	// Attributes
 	iterator_type	_it;
+
+private:
+// ****************************************************************************************************************** //
+//                                              Private Member Functions                                              //
+// ****************************************************************************************************************** //
+
+	/**
+	 * @return	The wrapped pointer value.
+	 */
+	inline pointer	_maddressDispatch(true_type const) const
+	{
+		return this->_it;
+	}
+
+	/**
+	 * @return	The wrapped pointer value.
+	 */
+	inline pointer	_maddressDispatch(false_type const) const
+	{
+		return this->_it.operator->();
+	}
 
 public:
 // ****************************************************************************************************************** //
@@ -65,23 +91,23 @@ public:
 	 * @brief	Construct a new input_iterator_restrictor object from another one.
 	 * 			Allow mutable to constant input_iterator_restrictor conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the input_iterator_restrictor to copy.
+	 * @tparam	_Iterator The type of the restricted iterator of the input_iterator_restrictor to copy.
 	 * 
 	 * @param	src The input_iterator_restrictor to copy.
 	 */
-	template <typename U>
-	input_iterator_restrictor(input_iterator_restrictor<U> const &src) : _it(src.base()) {}
+	template <typename _Iterator>
+	input_iterator_restrictor(input_iterator_restrictor<_Iterator> const &src) : _it(src.base()) {}
 
 // ***************************************************************************************************************** //
 //                                                     Accessors                                                     //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Get a copy of the wrapped iterator in the input_iterator_restrictor.
+	 * @brief	Return the wrapped iterator.
 	 * 
-	 * @return	A copy of the wrapped iterator in the input_iterator_restrictor.
+	 * @return	iterator_type const & The wrapped iterator.
 	 */
-	inline iterator_type	base(void) const
+	iterator_type const &base() const
 	{
 		return this->_it;
 	}
@@ -91,35 +117,17 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Assign a new iterator to the input_iterator_restrictor.
-	 * 			Allow mutable to constant input_iterator_restrictor conversion.
-	 * 
-	 * @tparam	U The type of the input_iterator_restrictor to copy.
-	 * 
-	 * @param	rhs The input_iterator_restrictor to copy the iterator from.
-	 * 
-	 * @return 	A reference to the assigned input_iterator_restrictor.
-	 */
-	template <typename U>
-	inline input_iterator_restrictor	&operator=(input_iterator_restrictor<U> const &rhs)
-	{
-		if (this != &rhs)
-			this->_it = rhs.base();
-		return *this;
-	}
-
-	/**
 	 * @brief	Check if two input_iterator_restrictor are equivalent.
 	 * 			Allow comparison between mutable and constant input_iterator_restrictor.
 	 * 
-	 * @tparam	U The type of the input_iterator_restrictor to compare with.
+	 * @tparam	_Iterator The type of the restricted iterator of the input_iterator_restrictor to compare with.
 	 * 
 	 * @param	rhs The input_iterator_restrictor to compare with.
 	 * 
 	 * @return 	Either true if the two input_iterator_restrictor are equivalent, or false if not.
 	 */
-	template <typename U>
-	inline bool	operator==(input_iterator_restrictor<U> const &rhs) const
+	template <typename _Iterator>
+	inline bool	operator==(input_iterator_restrictor<_Iterator> const &rhs) const
 	{
 		return this->_it == rhs.base();
 	}
@@ -128,21 +136,19 @@ public:
 	 * @brief	Check if two input_iterator_restrictor are different.
 	 * 			Allow comparison between mutable and constant input_iterator_restrictor.
 	 * 
-	 * @tparam	U The type of the input_iterator_restrictor to compare with.
+	 * @tparam	_Iterator The type of the restricted iterator of the input_iterator_restrictor to compare with.
 	 * 
 	 * @param	rhs The input_iterator_restrictor to compare with.
 	 * 
 	 * @return	Either true if the two input_iterator_restrictor are different, or false if not.
 	 */
-	template <typename U>
-	inline bool	operator!=(input_iterator_restrictor<U> const &rhs) const
+	template <typename _Iterator>
+	inline bool	operator!=(input_iterator_restrictor<_Iterator> const &rhs) const
 	{
 		return this->_it != rhs.base();
 	}
 
 	/**
-	 * @brief	Dereference the wrapped iterator.
-	 * 
 	 * @return 	The element pointed by the wrapped iterator.
 	 */
 	inline reference	operator*(void) const
@@ -151,13 +157,29 @@ public:
 	}
 
 	/**
-	 * @brief	Get the wrapped pointer value.
-	 * 
 	 * @return 	The wrapped pointer value.
 	 */
 	inline pointer	operator->(void) const
 	{
-		return this->_it.operator->();
+		return this->_maddressDispatch(is_pointer<pointer>());
+	}
+
+	/**
+	 * @brief	Assign a new iterator to the input_iterator_restrictor.
+	 * 			Allow mutable to constant input_iterator_restrictor conversion.
+	 * 
+	 * @tparam	_Iterator The type of the restricted iterator of the input_iterator_restrictor to copy.
+	 * 
+	 * @param	rhs The input_iterator_restrictor to copy the iterator from.
+	 * 
+	 * @return 	A reference to the assigned input_iterator_restrictor.
+	 */
+	template <typename _Iterator>
+	inline _self_type	&operator=(input_iterator_restrictor<_Iterator> const &rhs)
+	{
+		if (this != &rhs)
+			this->_it = rhs.base();
+		return *this;
 	}
 
 	/**
@@ -165,7 +187,7 @@ public:
 	 * 
 	 * @return 	A reference to the incremented input_iterator_restrictor.
 	 */
-	inline input_iterator_restrictor	&operator++(void)
+	inline _self_type	&operator++(void)
 	{
 		++this->_it;
 		return *this;
@@ -176,9 +198,9 @@ public:
 	 * 
 	 * @return 	A copy of the input_iterator_restrictor before the incrementation.
 	 */
-	inline input_iterator_restrictor	operator++(int)
+	inline _self_type	operator++(int)
 	{
-		return input_iterator_restrictor(this->_it++);
+		return _self_type(this->_it++);
 	}
 };
 }

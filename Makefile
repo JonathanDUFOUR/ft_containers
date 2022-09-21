@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/09/17 04:42:09 by jodufour         ###   ########.fr        #
+#    Updated: 2022/09/20 17:02:40 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,13 +38,8 @@ PRV_DIR		=	private/
 SRC			=	\
 				main.cpp						\
 				test_algorithm.cpp				\
-				test_bidirectional_iterator.cpp	\
-				test_forward_iterator.cpp		\
-				test_input_iterator.cpp			\
 				test_is_integral.cpp			\
 				test_map.cpp					\
-				test_output_iterator.cpp		\
-				test_random_access_iterator.cpp	\
 				test_rb_tree.cpp				\
 				test_reverse_iterator.cpp		\
 				test_stack.cpp					\
@@ -68,6 +63,7 @@ CXXFLAGS	+=	-Wshadow
 CXXFLAGS	+=	-Weffc++
 CXXFLAGS	+=	-std=c++98
 CXXFLAGS	+=	-pedantic
+CXXFLAGS	+=	-ferror-limit=1
 CXXFLAGS	+=	-MMD -MP
 CXXFLAGS	+=	-I${INC_DIR}
 CXXFLAGS	+=	-I${PRV_DIR}

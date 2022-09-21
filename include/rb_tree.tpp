@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 19:07:59 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/21 19:04:25 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,30 @@ struct rb_node;
 template <typename T, typename Compare = std::less<T>, typename Alloc = std::allocator<rb_node<T> > >
 class rb_tree
 {
+private:
+	// Member types
+	typedef rb_node<T>												_node_type;
+
 public:
 	// Member types
-	typedef T													value_type;
-	typedef Compare												compare_type;
-	typedef Alloc												allocator_type;
+	typedef T														value_type;
+	typedef Compare													compare_type;
+	typedef Alloc													allocator_type;
 
-	typedef rb_node<value_type>									node_type;
+	typedef typename allocator_type::pointer						pointer;
+	typedef typename allocator_type::const_pointer					const_pointer;
 
-	typedef typename allocator_type::pointer					pointer;
-	typedef typename allocator_type::const_pointer				const_pointer;
+	typedef typename allocator_type::reference						reference;
+	typedef typename allocator_type::const_reference				const_reference;
 
-	typedef typename allocator_type::reference					reference;
-	typedef typename allocator_type::const_reference			const_reference;
+	typedef rb_tree_iterator<value_type const, _node_type const>	const_iterator;
+	typedef rb_tree_iterator<value_type, _node_type>				iterator;
 
-	typedef rb_tree_iterator<const_pointer>						const_iterator;
-	typedef rb_tree_iterator<pointer>							iterator;
+	typedef reverse_iterator<const_iterator>						const_reverse_iterator;
+	typedef reverse_iterator<iterator>								reverse_iterator;
 
-	typedef reverse_iterator<const_iterator>					const_reverse_iterator;
-	typedef reverse_iterator<iterator>							reverse_iterator;
-
-	typedef typename iterator_traits<iterator>::difference_type	difference_type;
-	typedef size_t												size_type;
+	typedef typename iterator_traits<iterator>::difference_type		difference_type;
+	typedef size_t													size_type;
 
 private:
 	// Attributes
@@ -304,9 +306,9 @@ private:
 	pointer	_rotate(pointer const root, uint8_t const dir)
 		__attribute__((nonnull))
 	{
-		node_type	*parent;
-		node_type	*oppositeChild;
-		node_type	*grandChild;
+		_node_type	*parent;
+		_node_type	*oppositeChild;
+		_node_type	*grandChild;
 
 		parent = root->parent;
 		oppositeChild = root->child[!dir];
@@ -484,7 +486,7 @@ public:
 	/**
 	 * @return	The node with the greatest value of the tree.
 	 */
-	pointer const	&getMax(void) const
+	const_pointer const	&getMax(void) const
 	{
 		return this->_max;
 	}
@@ -492,7 +494,7 @@ public:
 	/**
 	 * @return	The node with the lowest value of the tree.
 	 */
-	pointer const	&getMin(void) const
+	const_pointer const	&getMin(void) const
 	{
 		return this->_min;
 	}
@@ -500,7 +502,7 @@ public:
 	/**
 	 * @return	The root node of the tree.
 	 */
-	pointer const	&getRoot(void) const
+	const_pointer const	&getRoot(void) const
 	{
 		return this->_root;
 	}
@@ -701,8 +703,8 @@ public:
 			this->_min = this->_root;
 			this->_max = this->_root;
 			this->_size = 1LU;
-			alloc.construct(this->_root, node_type(val));
-			return pair<iterator, bool>(iterator(this->_root), true);
+			alloc.construct(this->_root, _node_type(val));
+			return pair<iterator, bool>(iterator(this->_root, &this->_root), true);
 		}
 
 		pos = this->_root;
@@ -718,10 +720,10 @@ public:
 				pos = pos->child[LEFT];
 			}
 			else
-				return pair<iterator, bool>(iterator(pos), false);
+				return pair<iterator, bool>(iterator(pos, &this->_root), false);
 
 		node = alloc.allocate(1LU);
-		alloc.construct(node, node_type(val));
+		alloc.construct(node, _node_type(val));
 		node->parent = parent;
 		if (cmp(parent->val, val))
 		{
@@ -737,7 +739,7 @@ public:
 		}
 		++this->_size;
 		this->_balanceInsert(node);
-		return pair<iterator, bool>(iterator(node), true);
+		return pair<iterator, bool>(iterator(node, &this->_root), true);
 	}
 
 	/**

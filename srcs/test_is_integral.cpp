@@ -6,13 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:48:37 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 19:20:34 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
 #include <iostream>
-#include "iterator/base/input_iterator.tpp"
+#include "iterator/restrictor/input_iterator_restrictor.tpp"
 #include "type_traits.hpp"
 #include "tester.hpp"
 #include "t_int.hpp"
@@ -310,7 +310,7 @@ inline static int	__test_ft_input_iterator(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<ft::input_iterator<t_huint> >	ie;
+		ft::is_integral<ft::input_iterator_restrictor<t_huint const *> >	ie;
 
 		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;

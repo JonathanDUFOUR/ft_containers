@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/08 00:58:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/19 18:44:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <iostream>
 #include <vector>
 #include "algorithm.hpp"
-#include "iterator/base/input_iterator.tpp"
+#include "iterator/restrictor/input_iterator_restrictor.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
 
@@ -114,9 +114,9 @@ inline static int	__test_equal(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<int const>	first0(&g_int0[0]);
-				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
-				ft::input_iterator<int const>	first1(&g_int1[0]);
+				ft::input_iterator_restrictor<int const *>	first0(&g_int0[0]);
+				ft::input_iterator_restrictor<int const *>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator_restrictor<int const *>	first1(&g_int1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -124,10 +124,10 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<int const>	first0(&g_int0[0]);
-				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
-				ft::input_iterator<int const>	first1(&g_int1[0]);
-				std::less_equal<int const>		cmp;
+				ft::input_iterator_restrictor<int const *>	first0(&g_int0[0]);
+				ft::input_iterator_restrictor<int const *>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator_restrictor<int const *>	first1(&g_int1[0]);
+				std::less_equal<int const>					cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
 					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
@@ -138,9 +138,9 @@ inline static int	__test_equal(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
-				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
-				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
+				ft::input_iterator_restrictor<t_huint const *>	first0(&g_huint0[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first1(&g_huint1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -148,10 +148,10 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
-				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
-				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
-				std::less_equal<t_huint const>		cmp;
+				ft::input_iterator_restrictor<t_huint const *>	first0(&g_huint0[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first1(&g_huint1[0]);
+				std::less_equal<t_huint const>					cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
 					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
@@ -162,9 +162,9 @@ inline static int	__test_equal(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<std::string const>	first0(&g_string0[0]);
-				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
-				ft::input_iterator<std::string const>	first1(&g_string1[0]);
+				ft::input_iterator_restrictor<std::string const *>	first0(&g_string0[0]);
+				ft::input_iterator_restrictor<std::string const *>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator_restrictor<std::string const *>	first1(&g_string1[0]);
 
 				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
 					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
@@ -172,16 +172,15 @@ inline static int	__test_equal(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<std::string const>	first0(&g_string0[0]);
-				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
-				ft::input_iterator<std::string const>	first1(&g_string1[0]);
-				std::less_equal<std::string const>		cmp;
+				ft::input_iterator_restrictor<std::string const *>	first0(&g_string0[0]);
+				ft::input_iterator_restrictor<std::string const *>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator_restrictor<std::string const *>	first1(&g_string1[0]);
+				std::less_equal<std::string const>					cmp;
 
 				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
 					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
 					return EXIT_FAILURE;
 			}
-			
 		}
 		// Vector of int
 		{
@@ -282,10 +281,10 @@ inline static int	__test_lexicographical_compare(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<int const>	first0(&g_int0[0]);
-				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
-				ft::input_iterator<int const>	first1(&g_int1[0]);
-				ft::input_iterator<int const>	last1(&g_int1[g_int1_size]);
+				ft::input_iterator_restrictor<int const *>	first0(&g_int0[0]);
+				ft::input_iterator_restrictor<int const *>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator_restrictor<int const *>	first1(&g_int1[0]);
+				ft::input_iterator_restrictor<int const *>	last1(&g_int1[g_int1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -295,10 +294,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<int const>	first0(&g_int0[0]);
-				ft::input_iterator<int const>	last0(&g_int0[g_int0_size]);
-				ft::input_iterator<int const>	first1(&g_int1[0]);
-				ft::input_iterator<int const>	last1(&g_int1[g_int1_size]);
+				ft::input_iterator_restrictor<int const *>	first0(&g_int0[0]);
+				ft::input_iterator_restrictor<int const *>	last0(&g_int0[g_int0_size]);
+				ft::input_iterator_restrictor<int const *>	first1(&g_int1[0]);
+				ft::input_iterator_restrictor<int const *>	last1(&g_int1[g_int1_size]);
 				std::greater<int const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
@@ -312,10 +311,10 @@ inline static int	__test_lexicographical_compare(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
-				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
-				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
-				ft::input_iterator<t_huint const>	last1(&g_huint1[g_huint1_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first0(&g_huint0[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first1(&g_huint1[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last1(&g_huint1[g_huint1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -325,10 +324,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<t_huint const>	first0(&g_huint0[0]);
-				ft::input_iterator<t_huint const>	last0(&g_huint0[g_huint0_size]);
-				ft::input_iterator<t_huint const>	first1(&g_huint1[0]);
-				ft::input_iterator<t_huint const>	last1(&g_huint1[g_huint1_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first0(&g_huint0[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last0(&g_huint0[g_huint0_size]);
+				ft::input_iterator_restrictor<t_huint const *>	first1(&g_huint1[0]);
+				ft::input_iterator_restrictor<t_huint const *>	last1(&g_huint1[g_huint1_size]);
 				std::greater<t_huint const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
@@ -342,10 +341,10 @@ inline static int	__test_lexicographical_compare(void)
 		{
 			// Default comparison
 			{
-				ft::input_iterator<std::string const>	first0(&g_string0[0]);
-				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
-				ft::input_iterator<std::string const>	first1(&g_string1[0]);
-				ft::input_iterator<std::string const>	last1(&g_string1[g_string1_size]);
+				ft::input_iterator_restrictor<std::string const *>	first0(&g_string0[0]);
+				ft::input_iterator_restrictor<std::string const *>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator_restrictor<std::string const *>	first1(&g_string1[0]);
+				ft::input_iterator_restrictor<std::string const *>	last1(&g_string1[g_string1_size]);
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
 					std::lexicographical_compare(first0, last0, first0, last0) ||
@@ -355,10 +354,10 @@ inline static int	__test_lexicographical_compare(void)
 			}
 			// Custom comparison
 			{
-				ft::input_iterator<std::string const>	first0(&g_string0[0]);
-				ft::input_iterator<std::string const>	last0(&g_string0[g_string0_size]);
-				ft::input_iterator<std::string const>	first1(&g_string1[0]);
-				ft::input_iterator<std::string const>	last1(&g_string1[g_string1_size]);
+				ft::input_iterator_restrictor<std::string const *>	first0(&g_string0[0]);
+				ft::input_iterator_restrictor<std::string const *>	last0(&g_string0[g_string0_size]);
+				ft::input_iterator_restrictor<std::string const *>	first1(&g_string1[0]);
+				ft::input_iterator_restrictor<std::string const *>	last1(&g_string1[g_string1_size]);
 				std::greater<std::string const>			cmp;
 
 				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=

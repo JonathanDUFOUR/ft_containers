@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/17 06:16:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/20 19:05:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,19 @@ namespace ft
 template <typename BidirectionalIterator>
 class reverse_iterator
 {
+private:
+	// Member types
+	typedef reverse_iterator<BidirectionalIterator>	_self_type;
+
 public:
 	// Member types
 	typedef BidirectionalIterator										iterator_type;
 
-	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
 	typedef typename iterator_traits<iterator_type>::value_type			value_type;
+	typedef typename iterator_traits<iterator_type>::iterator_category	iterator_category;
+	typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
 	typedef typename iterator_traits<iterator_type>::pointer			pointer;
 	typedef typename iterator_traits<iterator_type>::reference			reference;
-	typedef typename iterator_traits<iterator_type>::difference_type	difference_type;
 
 
 private:
@@ -125,9 +129,9 @@ public:
 	 * 
 	 * @return	A copy of the reverse_iterator before the incrementation.
 	 */
-	inline reverse_iterator	operator++(int)
+	inline _self_type	operator++(int)
 	{
-		reverse_iterator	original(*this);
+		_self_type	original(*this);
 
 		--this->_it;
 		return original;
@@ -138,7 +142,7 @@ public:
 	 * 
 	 * @return	A reference to the decremented reverse_iterator.
 	 */
-	inline reverse_iterator	&operator--(void)
+	inline _self_type	&operator--(void)
 	{
 		++this->_it;
 		return *this;
@@ -149,9 +153,9 @@ public:
 	 * 
 	 * @return	A copy of the reverse_iterator before the decrementation.
 	 */
-	inline reverse_iterator	operator--(int)
+	inline _self_type	operator--(int)
 	{
-		reverse_iterator	original(*this);
+		_self_type	original(*this);
 
 		++this->_it;
 		return original;
@@ -164,7 +168,7 @@ public:
 	 * 
 	 * @return	A reference to the updated random_access_iterator.
 	 */
-	inline reverse_iterator	&operator+=(difference_type const rhs)
+	inline _self_type	&operator+=(difference_type const rhs)
 	{
 		this->_it -= rhs;
 		return *this;
@@ -177,7 +181,7 @@ public:
 	 * 
 	 * @return	A reference to the updated random_access_iterator.
 	 */
-	inline reverse_iterator	&operator-=(difference_type const rhs)
+	inline _self_type	&operator-=(difference_type const rhs)
 	{
 		this->_it += rhs;
 		return *this;
@@ -190,12 +194,9 @@ public:
 	 * 
 	 * @return	A random_access_iterator pointing to the new position.
 	 */
-	inline reverse_iterator operator+(difference_type const n) const
+	inline _self_type operator+(difference_type const n) const
 	{
-		reverse_iterator	rit(*this);
-
-		rit += n;
-		return rit;
+		return _self_type(this->_it) += n;
 	}
 
 	/**
@@ -207,10 +208,7 @@ public:
 	 */
 	inline reverse_iterator operator-(difference_type const n) const
 	{
-		reverse_iterator	rit(*this);
-
-		rit -= n;
-		return rit;
+		return _self_type(this->_it) -= n;
 	}
 
 	/**
