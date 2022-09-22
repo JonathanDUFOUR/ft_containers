@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 19:18:58 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/22 17:32:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,8 @@ public:
 	 * 
 	 * @param	ptr The pointer to wrap.
 	 */
-	A_input_iterator(pointer const ptr) : _ptr(ptr) {}
+	A_input_iterator(pointer const ptr) :
+		_ptr(ptr) {}
 
 	/**
 	 * @brief	Construct a new A_input_iterator object from another one.
@@ -87,7 +88,8 @@ public:
 	 * @param	src The A_input_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_input_iterator(A_input_iterator<_Derived, _T> const &src) : _ptr(src.base()) {}
+	A_input_iterator(A_input_iterator<_Derived, _T> const &src) :
+		_ptr(src.base()) {}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //

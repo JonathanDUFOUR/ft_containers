@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 17:07:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/22 17:20:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,22 +275,26 @@ inline static int	__test_function_begin(void)
 	{
 		// Mutable access
 		{
+			ft::rb_tree<t_luint>::iterator	it;
+
 			for (idx = 0U ; idx <= g_luint_size ; ++idx)
 			{
-				ft::rb_tree<t_luint>					tree(&g_luint[0], &g_luint[idx]);
-				ft::rb_tree<t_luint>::iterator const	it(tree.begin());
+				ft::rb_tree<t_luint>	tree(&g_luint[0], &g_luint[idx]);
 
+				it = tree.begin();
 				if (it.getCurr() != tree.getMin())
 					return EXIT_FAILURE;
 			}
 		}
 		// Constant access
 		{
+			ft::rb_tree<t_luint>::const_iterator	cit;
+
 			for (idx = 0U ; idx <= g_luint_size ; ++idx)
 			{
-				ft::rb_tree<t_luint> const					tree(&g_luint[0], &g_luint[idx]);
-				ft::rb_tree<t_luint>::const_iterator const	cit(tree.begin());
+				ft::rb_tree<t_luint> const	tree(&g_luint[0], &g_luint[idx]);
 
+				cit = tree.begin();
 				if (cit.getCurr() != tree.getMin())
 					return EXIT_FAILURE;
 			}
