@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/31 11:07:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 10:06:58 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,7 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * friend keyword is here to call the non-member operators,
-	 * instead of redefining them.
+	 * friend keyword allows non-member functions to access private and protected members of the class.
 	 */
 
 	template <typename _T, typename _Container>

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 17:09:08 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 10:49:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ pair<T0, T1>	make_pair(T0 const &a, T1 const &b)
  * @return	Either true if the two pair are equivalent, or false if not.
  */
 template <typename T0, typename T1, typename U0, typename U1>
-inline bool	operator==(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
+inline bool	operator==(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first == rhs.first) && (lhs.second == rhs.second);
 }
@@ -135,7 +135,7 @@ inline bool	operator==(pair<T0, T1> const &lhs, pair<T0, T1> const &rhs)
 template <typename T0, typename T1, typename U0, typename U1>
 inline bool	operator!=(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
-	return (!lhs.first != rhs.first) || (!lhs.second != rhs.second);
+	return (lhs.first != rhs.first) || (lhs.second != rhs.second);
 }
 
 /**

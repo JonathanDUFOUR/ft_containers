@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/22 18:57:41 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 11:42:01 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <map>
 #include <vector>
 #include "arrays.hpp"
+#include "iteratorCheck.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "map.hpp"
 #include "tester.hpp"
@@ -451,6 +452,7 @@ inline static int	__test_function_begin(void)
 				if (ft_it->first != std_it->first || ft_it->second != std_it->second)
 					return KO;
 			}
+
 			ft::map<char, int>	ft_map;
 			std::map<char, int>	std_map;
 
@@ -478,6 +480,7 @@ inline static int	__test_function_begin(void)
 				if (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)
 					return KO;
 			}
+
 			ft::map<char, int> const	ft_map;
 			std::map<char, int> const	std_map;
 
@@ -536,6 +539,7 @@ inline static int	__test_function_end(void)
 				if (ft_it->first != std_it->first || ft_it->second != std_it->second)
 					return KO;
 			}
+
 			ft::map<char, int>	ft_map;
 			std::map<char, int>	std_map;
 
@@ -567,6 +571,7 @@ inline static int	__test_function_end(void)
 				if (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)
 					return KO;
 			}
+
 			ft::map<char, int> const	ft_map;
 			std::map<char, int> const	std_map;
 
@@ -621,6 +626,7 @@ inline static int	__test_function_rbegin(void)
 				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
 					return KO;
 			}
+
 			ft::map<char, int>	ft_map;
 			std::map<char, int>	std_map;
 
@@ -648,6 +654,7 @@ inline static int	__test_function_rbegin(void)
 				if (ft_crit->first != std_crit->first || ft_crit->second != std_crit->second)
 					return KO;
 			}
+
 			ft::map<char, int> const	ft_map;
 			std::map<char, int> const	std_map;
 
@@ -706,6 +713,7 @@ inline static int	__test_function_rend(void)
 				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
 					return KO;
 			}
+
 			ft::map<char, int>	ft_map;
 			std::map<char, int>	std_map;
 
@@ -737,6 +745,7 @@ inline static int	__test_function_rend(void)
 				if (ft_crit->first != std_crit->first || ft_crit->second != std_crit->second)
 					return KO;
 			}
+
 			ft::map<char, int> const	ft_map;
 			std::map<char, int> const	std_map;
 
@@ -745,6 +754,202 @@ inline static int	__test_function_rend(void)
 
 			if (!!ft_crit.base().getCurr() != !!std_crit.base()._M_node)
 				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		std::vector<ft::pair<float, t_hhint> >	ft_vec;
+		std::vector<std::pair<float, t_hhint> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_hhint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+			std_vec.push_back(std::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+		}
+
+		ft::map<float, t_hhint>				ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, t_hhint>			std_map(std_vec.begin(), std_vec.end());
+		ft::map<float, t_hhint>::iterator	ft_it;
+		std::map<float, t_hhint>::iterator	std_it;
+
+		if (sizeof(ft_it) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_it = ft_map.begin(), std_it = std_map.begin(), idx = 0U ;
+			ft_it != ft_map.end() && std_it != std_map.end() ;
+			++ft_it, ++std_it, ++idx)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_it);
+				BidirectionalIteratorCheck(std_it);
+			}
+
+			if ((ft_it->first != std_it->first) ||
+				(ft_it->second)++ != (std_it->second)++ || ++(ft_it->second) != ++(std_it->second) ||
+				(ft_it->second)-- != (std_it->second)-- || --(ft_it->second) != --(std_it->second))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		std::vector<ft::pair<float, t_hhint> >	ft_vec;
+		std::vector<std::pair<float, t_hhint> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_hhint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+			std_vec.push_back(std::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+		}
+
+		ft::map<float, t_hhint>						ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, t_hhint>					std_map(std_vec.begin(), std_vec.end());
+		ft::map<float, t_hhint>::const_iterator		ft_it;
+		std::map<float, t_hhint>::const_iterator	std_it;
+
+		if (sizeof(ft_it) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_it = ft_map.begin(), std_it = std_map.begin(), idx = 0U ;
+			ft_it != ft_map.end() && std_it != std_map.end() ;
+			++ft_it, ++std_it)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_it);
+				BidirectionalIteratorCheck(std_it);
+			}
+
+			if (ft_it->first != std_it->first || ft_it->second != std_it->second)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_reverse_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		std::vector<ft::pair<float, t_hhint> >	ft_vec;
+		std::vector<std::pair<float, t_hhint> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_hhint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+			std_vec.push_back(std::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+		}
+
+		ft::map<float, t_hhint>						ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, t_hhint>					std_map(std_vec.begin(), std_vec.end());
+		ft::map<float, t_hhint>::reverse_iterator	ft_rit;
+		std::map<float, t_hhint>::reverse_iterator	std_it;
+
+		if (sizeof(ft_rit) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_rit = ft_map.rbegin(), std_it = std_map.rbegin(), idx = 0U ;
+			ft_rit != ft_map.rend() && std_it != std_map.rend() ;
+			++ft_rit, ++std_it, ++idx)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_rit);
+				BidirectionalIteratorCheck(std_it);
+			}
+
+			if ((ft_rit->first != std_it->first) ||
+				(ft_rit->second)++ != (std_it->second)++ || ++(ft_rit->second) != ++(std_it->second) ||
+				(ft_rit->second)-- != (std_it->second)-- || --(ft_rit->second) != --(std_it->second))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_reverse_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		std::vector<ft::pair<float, t_hhint> >	ft_vec;
+		std::vector<std::pair<float, t_hhint> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_hhint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+			std_vec.push_back(std::pair<float, t_hhint>(g_float[idx], g_hhint[idx]));
+		}
+
+		ft::map<float, t_hhint>								ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, t_hhint>							std_map(std_vec.begin(), std_vec.end());
+		ft::map<float, t_hhint>::const_reverse_iterator		ft_crit;
+		std::map<float, t_hhint>::const_reverse_iterator	std_crit;
+
+		if (sizeof(ft_crit) != sizeof(std_crit))
+			ret = ISO_OK;
+
+		for (ft_crit = ft_map.rbegin(), std_crit = std_map.rbegin(), idx = 0U ;
+			ft_crit != ft_map.rend() && std_crit != std_map.rend() ;
+			++ft_crit, ++std_crit)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_crit);
+				BidirectionalIteratorCheck(std_crit);
+			}
+
+			if (ft_crit->first != std_crit->first || ft_crit->second != std_crit->second)
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -769,6 +974,10 @@ int	test_map(void)
 		__test_function_end,
 		__test_function_rbegin,
 		__test_function_rend,
+		__test_type_iterator,
+		__test_type_const_iterator,
+		__test_type_reverse_iterator,
+		__test_type_const_reverse_iterator,
 		NULL
 	};
 	t_uint			koCount;

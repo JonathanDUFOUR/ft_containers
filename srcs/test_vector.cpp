@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/21 18:54:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 10:23:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -641,10 +641,10 @@ inline static int	__test_type_iterator(void)
 	{
 		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
 		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::iterator const			ft_end(ft_vec.end());
-		std::vector<int>::iterator const		std_end(std_vec.end());
-		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
-		std::vector<int>::const_iterator const	std_cend(std_vec.end());
+		ft::vector<int>::iterator const			ft_mid(&ft_vec[ft_vec.size() / 2]);
+		std::vector<int>::iterator const		std_mid(&std_vec[std_vec.size() / 2]);
+		ft::vector<int>::const_iterator const	ft_cmid(ft_mid);
+		std::vector<int>::const_iterator const	std_cmid(std_mid);
 		ft::vector<int>::iterator				ft_it;
 		std::vector<int>::iterator				std_it;
 
@@ -659,11 +659,11 @@ inline static int	__test_type_iterator(void)
 			RandomAccessIteratorCheck(std_it);
 
 			if (!!ft_it.base() != !!std_it.base() ||
-				(ft_it - ft_end) != (std_it - std_end) || (ft_it - ft_cend) != (std_it - std_cend) ||
-				(ft_it < ft_end) != (std_it < std_end) || (ft_it < ft_cend) != (std_it < std_cend) ||
-				(ft_it > ft_end) != (std_it > std_end) || (ft_it > ft_cend) != (std_it > std_cend) ||
-				(ft_it <= ft_end) != (std_it <= std_end) || (ft_it <= ft_cend) != (std_it <= std_cend) ||
-				(ft_it >= ft_end) != (std_it >= std_end) || (ft_it >= ft_cend) != (std_it >= std_cend) ||
+				(ft_it - ft_mid) != (std_it - std_mid) || (ft_it - ft_cmid) != (std_it - std_cmid) ||
+				(ft_it < ft_mid) != (std_it < std_mid) || (ft_it < ft_cmid) != (std_it < std_cmid) ||
+				(ft_it > ft_mid) != (std_it > std_mid) || (ft_it > ft_cmid) != (std_it > std_cmid) ||
+				(ft_it <= ft_mid) != (std_it <= std_mid) || (ft_it <= ft_cmid) != (std_it <= std_cmid) ||
+				(ft_it >= ft_mid) != (std_it >= std_mid) || (ft_it >= ft_cmid) != (std_it >= std_cmid) ||
 				(*ft_it)++ != (*std_it)++ || ++(ft_it[0]) != ++(std_it[0]) ||
 				(*ft_it)-- != (*std_it)-- || --(ft_it[0]) != --(std_it[0]))
 				return KO;
@@ -687,10 +687,10 @@ inline static int	__test_type_const_iterator(void)
 	{
 		ft::vector<int>							ft_vec(&g_int[0], &g_int[g_int_size]);
 		std::vector<int>						std_vec(&g_int[0], &g_int[g_int_size]);
-		ft::vector<int>::iterator const			ft_end(ft_vec.end());
-		std::vector<int>::iterator const		std_end(std_vec.end());
-		ft::vector<int>::const_iterator const	ft_cend(ft_vec.end());
-		std::vector<int>::const_iterator const	std_cend(std_vec.end());
+		ft::vector<int>::iterator const			ft_mid(&ft_vec[ft_vec.size() / 2]);
+		std::vector<int>::iterator const		std_mid(&std_vec[std_vec.size() / 2]);
+		ft::vector<int>::const_iterator const	ft_cmid(ft_mid);
+		std::vector<int>::const_iterator const	std_cmid(std_mid);
 		ft::vector<int>::const_iterator			ft_cit;
 		std::vector<int>::const_iterator		std_cit;
 
@@ -705,11 +705,11 @@ inline static int	__test_type_const_iterator(void)
 			RandomAccessIteratorCheck(std_cit);
 
 			if (!!ft_cit.base() != !!std_cit.base() ||
-				(ft_cit - ft_end) != (std_cit - std_end) || (ft_cit - ft_cend) != (std_cit - std_cend) ||
-				(ft_cit < ft_end) != (std_cit < std_end) || (ft_cit < ft_cend) != (std_cit < std_cend) ||
-				(ft_cit > ft_end) != (std_cit > std_end) || (ft_cit > ft_cend) != (std_cit > std_cend) ||
-				(ft_cit <= ft_end) != (std_cit <= std_end) || (ft_cit <= ft_cend) != (std_cit <= std_cend) ||
-				(ft_cit >= ft_end) != (std_cit >= std_end) || (ft_cit >= ft_cend) != (std_cit >= std_cend) ||
+				(ft_cit - ft_mid) != (std_cit - std_mid) || (ft_cit - ft_cmid) != (std_cit - std_cmid) ||
+				(ft_cit < ft_mid) != (std_cit < std_mid) || (ft_cit < ft_cmid) != (std_cit < std_cmid) ||
+				(ft_cit > ft_mid) != (std_cit > std_mid) || (ft_cit > ft_cmid) != (std_cit > std_cmid) ||
+				(ft_cit <= ft_mid) != (std_cit <= std_mid) || (ft_cit <= ft_cmid) != (std_cit <= std_cmid) ||
+				(ft_cit >= ft_mid) != (std_cit >= std_mid) || (ft_cit >= ft_cmid) != (std_cit >= std_cmid) ||
 				*ft_cit != *std_cit || ft_cit[0] != std_cit[0])
 				return KO;
 		}

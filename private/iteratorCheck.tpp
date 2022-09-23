@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 11:10:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/06 13:41:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 11:28:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,10 +90,9 @@ template <typename BidirectionalIterator>
 void	BidirectionalIteratorCheck(BidirectionalIterator &it)
 {
 	BidirectionalIterator const	it0(it);
-	BidirectionalIterator const	it1(it--);
-	BidirectionalIterator const	it2(--it);
+	BidirectionalIterator const	it1(it--++);
+	BidirectionalIterator const	it2(--it++);
 
-	++++it;
 	ForwardIteratorCheck<BidirectionalIterator>(it);
 
 	(void)it0;
