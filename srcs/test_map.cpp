@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 11:42:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/25 17:16:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@
 #include "map.hpp"
 #include "tester.hpp"
 #include "e_ret.hpp"
+
+template <typename T0, typename T1>
+inline static bool	__cmp(ft::pair<T0, T1> const &a, std::pair<T0, T1> const &b)
+{
+	return a.first == b.first && a.second == b.second;
+}
 
 inline static int	__test_constructor(void)
 {
@@ -960,6 +966,61 @@ inline static int	__test_type_const_reverse_iterator(void)
 	return ret;
 }
 
+inline static int	__test_function_insert(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<std::string, t_luint> >	ft_vec;
+		std::vector<std::pair<std::string, t_luint> >	std_vec;
+
+		for (idx = 0U ; idx < g_string_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<std::string, t_luint>(g_string[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<std::string, t_luint>(g_string[idx], g_luint[idx]));
+		}
+
+		// Range insertion
+		{
+			ft::map<std::string, t_luint>	ft_map;
+			std::map<std::string, t_luint>	std_map;
+
+			for (idx = 1U ; idx < g_string_size && idx < g_luint_size ; ++idx)
+			{
+				ft_map.insert(&ft_vec[idx - 1], &ft_vec[idx + 1]);
+				std_map.insert(&std_vec[idx - 1], &std_vec[idx + 1]);
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
+					return KO;
+			}
+		}
+		// Single insertion
+		{
+			ft::map<std::string, t_luint>	ft_map;
+			std::map<std::string, t_luint>	std_map;
+
+			for (idx = 1U ; idx < g_string_size && idx < g_luint_size ; ++idx)
+			{
+				ft_map.insert(&ft_vec[idx - 1], &ft_vec[idx + 1]);
+				std_map.insert(&std_vec[idx - 1], &std_vec[idx + 1]);
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_map(void)
 {
 	t_test const	tests[] = {
@@ -978,6 +1039,7 @@ int	test_map(void)
 		__test_type_const_iterator,
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
+		__test_function_insert,
 		NULL
 	};
 	t_uint			koCount;

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/21 19:05:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/25 14:40:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,9 +203,9 @@ public:
 	 */
 	inline _self_type	&operator++(void)
 	{
-		if (!this->_curr && this->_root && *this->_root)
+		if (!this->_curr)
 			this->_curr = _node_type::leftMost(*this->_root);
-		else if (this->_curr)
+		else
 		{
 			if (this->_curr->child[RIGHT])
 			{
@@ -247,9 +247,9 @@ public:
 	 */
 	inline _self_type	&operator--(void)
 	{
-		if (!this->_curr && this->_root && *this->_root)
+		if (!this->_curr)
 			this->_curr = _node_type::rightMost(*this->_root);
-		else if (this->_curr)
+		else
 		{
 			if (this->_curr->child[LEFT])
 			{

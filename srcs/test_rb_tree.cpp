@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/22 17:20:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/25 13:02:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -531,11 +531,7 @@ inline static int	__test_function_insert(void)
 				*ft_ret.first != *std_ret.first || ft_ret.second != std_ret.second ||
 				__integrityCheck(tree.getRoot()) ||
 				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<std::string>::const_iterator,
-					std::set<std::string>::const_iterator,
-					bool (*)(ft::rb_node<std::string> const &, std::string const &)>
-					(tree.begin(), tree.end(), ref.begin(), __cmp))
+				!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<std::string>))
 				return EXIT_FAILURE;
 		}
 	}
@@ -575,11 +571,7 @@ inline static int	__test_function_erase(void)
 				if (tree.getSize() != ref.size() ||
 					__integrityCheck(tree.getRoot()) ||
 					__propertiesCheck(tree.getRoot(), ft::rb_tree<long double>::compare_type()) ||
-					!std::equal<
-						ft::rb_tree<long double>::const_iterator,
-						std::set<long double>::const_iterator,
-						bool (*)(ft::rb_node<long double> const &, long double const &)>
-						(tree.begin(), tree.end(), ref.begin(), __cmp))
+					!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<long double>))
 					return EXIT_FAILURE;
 			}
 		}
@@ -598,11 +590,7 @@ inline static int	__test_function_erase(void)
 				if (tree.getSize() != ref.size() || ft_ret != std_ret ||
 					__integrityCheck(tree.getRoot()) ||
 					__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
-					!std::equal<
-						ft::rb_tree<char>::const_iterator,
-						std::set<char>::const_iterator,
-						bool (*)(ft::rb_node<char> const &, char const &)>
-						(tree.begin(), tree.end(), ref.begin(), __cmp))
+					!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<char>))
 					return EXIT_FAILURE;
 			}
 		}
@@ -647,8 +635,8 @@ inline static int	__test_function_find(void)
 	title(__func__);
 	try
 	{
-		ft::rb_tree<t_lint>	tree(&g_lint[0], &g_lint[g_lint_size]);
-		std::set<t_lint>	ref(&g_lint[0], &g_lint[g_lint_size]);
+		ft::rb_tree<t_lint> const	tree(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint> const		ref(&g_lint[0], &g_lint[g_lint_size]);
 
 		for (idx = 0U ; idx < g_lint_size * 2 ; ++idx)
 		{
@@ -690,16 +678,8 @@ inline static int	__test_function_swap(void)
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
 				return EXIT_FAILURE;
 		}
 		// Swapping empty | non-empty
@@ -715,16 +695,8 @@ inline static int	__test_function_swap(void)
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
 				return EXIT_FAILURE;
 		}
 		// Swapping non-empty | empty
@@ -740,16 +712,8 @@ inline static int	__test_function_swap(void)
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
 				return EXIT_FAILURE;
 		}
 		// Swapping non-empty | non-empty
@@ -765,16 +729,8 @@ inline static int	__test_function_swap(void)
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree0.begin(), tree0.end(), ref0.begin(), __cmp) ||
-				!std::equal<
-					ft::rb_tree<float>::const_iterator,
-					std::set<float>::const_iterator,
-					bool (*)(ft::rb_node<float> const &, float const &)>
-					(tree1.begin(), tree1.end(), ref1.begin(), __cmp))
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
 				return EXIT_FAILURE;
 		}
 	}

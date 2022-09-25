@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/21 19:04:25 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/25 17:14:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -682,7 +682,7 @@ public:
 	}
 
 	/**
-	 * @brief	Insert a new node in the tree.
+	 * @brief	Insert a new node in the tree. (single insertion)
 	 * 
 	 * @param	val The value to insert in the tree.
 	 * 
@@ -709,37 +709,152 @@ public:
 
 		pos = this->_root;
 		while (pos)
-			if (cmp(pos->val, val))
-			{
-				parent = pos;
-				pos = pos->child[RIGHT];
-			}
-			else if (cmp(val, pos->val))
+			if (cmp(val, pos->val))
 			{
 				parent = pos;
 				pos = pos->child[LEFT];
 			}
+			else if (cmp(pos->val, val))
+			{
+				parent = pos;
+				pos = pos->child[RIGHT];
+			}
 			else
 				return pair<iterator, bool>(iterator(pos, &this->_root), false);
 
+		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
 		alloc.construct(node, _node_type(val));
 		node->parent = parent;
-		if (cmp(parent->val, val))
-		{
-			parent->child[RIGHT] = node;
-			if (parent == this->_max)
-				this->_max = node;
-		}
-		else
+		if (cmp(val, parent->val))
 		{
 			parent->child[LEFT] = node;
 			if (parent == this->_min)
 				this->_min = node;
 		}
+		else
+		{
+			parent->child[RIGHT] = node;
+			if (parent == this->_max)
+				this->_max = node;
+		}
 		++this->_size;
 		this->_balanceInsert(node);
 		return pair<iterator, bool>(iterator(node, &this->_root), true);
+	}
+
+	/**
+	 * @brief	Insert a new node in the tree. (single insertion with hint)
+	 * 
+	 * @param	pos The hint position of the parent of the node to insert.
+	 * 			Invalid position causes undefined behavior.
+	 * @param	val The value to insert in the tree.
+	 * 
+	 * @return	An iterator to the node of the tree with the given value.
+	 */
+	iterator insert(pointer pos, value_type const &val)
+	{
+		pointer			parent;
+		pointer			node;
+		compare_type	cmp;
+		allocator_type	alloc;
+
+		node = pos;
+		parent = node->parent;
+		if (cmp(val, pos->val))
+		{
+			// At this point, the node to insert will be placed on the left of the hint node.
+
+			// Check for highly wrong position.
+			while (parent && node == parent->child[LEFT])
+			{
+				node = parent;
+				parent = node->parent;
+			}
+			if (cmp(val, parent->val))
+				return this->insert(val).first;
+
+			// At this point, the node to insert will be placed on the left of the hint node,
+			// and the position is on a correct branch.
+			parent = pos;
+			if (pos->child[LEFT])
+			{
+				// At this point, the node to insert will be placed on the left of the hint node,
+				// and the position is on a correct branch, and is a non-leaf.
+				pos = pos->child[LEFT];
+				while (pos)
+					if (cmp(val, pos->val))
+					{
+						parent = pos;
+						pos = pos->child[LEFT];
+					}
+					else if (cmp(pos->val, val))
+					{
+						parent = pos;
+						pos = pos->child[RIGHT];
+					}
+					else
+						return iterator(pos, &this->_root);
+			}
+		}
+		else if (cmp(pos->val, val))
+		{
+			// At this point, the node to insert will be placed on the right of the hint node.
+
+			// Check for highly wrong position.
+			while (parent && node == parent->child[RIGHT])
+			{
+				node = parent;
+				parent = node->parent;
+			}
+			if (cmp(parent->val, val))
+				return this->insert(val).first;
+
+			// At this point, the node to insert will be placed on the right of the hint node,
+			// and the position is on a correct branch.
+			parent = pos;
+			if (pos->child[RIGHT])
+			{
+				// At this point, the node to insert will be placed on the right of the hint node,
+				// and the position is on a correct branch, and is a non-leaf.
+				pos = pos->child[RIGHT];
+				while (pos)
+					if (cmp(val, pos->val))
+					{
+						parent = pos;
+						pos = pos->child[LEFT];
+					}
+					else if (cmp(pos->val, val))
+					{
+						parent = pos;
+						pos = pos->child[RIGHT];
+					}
+					else
+						return iterator(pos, &this->_root);
+			}
+		}
+		else
+			return iterator(pos, &this->_root);
+
+		// At this point, `parent` is the leaf node where the new node will be inserted.
+		node = alloc.allocate(1LU);
+		alloc.construct(node, _node_type(val));
+		node->parent = parent;
+		if (cmp(val, parent->val))
+		{
+			parent->child[LEFT] = node;
+			if (parent == this->_min)
+				this->_min = node;
+		}
+		else
+		{
+			parent->child[RIGHT] = node;
+			if (parent == this->_max)
+				this->_max = node;
+		}
+		++this->_size;
+		this->_balanceInsert(node);
+		return iterator(node, &this->_root);
 	}
 
 	/**

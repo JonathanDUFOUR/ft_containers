@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 19:20:34 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/25 12:26:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,7 +305,7 @@ inline static int	__test_std_string(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_ft_input_iterator(void)
+inline static int	__test_ft_input_iterator_restrictor(void)
 {
 	title(__func__);
 	try
@@ -342,7 +342,7 @@ int	test_is_integral(void)
 		__test_float,
 		__test_double,
 		__test_std_string,
-		__test_ft_input_iterator,
+		__test_ft_input_iterator_restrictor,
 		NULL
 	};
 	t_uint			koCount;

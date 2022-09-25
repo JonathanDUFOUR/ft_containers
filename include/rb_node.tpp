@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 17:21:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/23 12:20:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ struct rb_node
 	static rb_node	*leftMost(rb_node *node)
 	{
 		if (!node)
-			return (NULL);
+			return NULL;
 		while (node->child[LEFT])
 			node = node->child[LEFT];
 		return node;
@@ -78,7 +78,7 @@ struct rb_node
 	static rb_node const	*leftMost(rb_node const *node)
 	{
 		if (!node)
-			return (NULL);
+			return NULL;
 		while (node->child[LEFT])
 			node = node->child[LEFT];
 		return node;
@@ -94,7 +94,7 @@ struct rb_node
 	static rb_node	*rightMost(rb_node *node)
 	{
 		if (!node)
-			return (NULL);
+			return NULL;
 		while (node->child[RIGHT])
 			node = node->child[RIGHT];
 		return node;
@@ -110,7 +110,7 @@ struct rb_node
 	static rb_node const	*rightMost(rb_node const *node)
 	{
 		if (!node)
-			return (NULL);
+			return NULL;
 		while (node->child[RIGHT])
 			node = node->child[RIGHT];
 		return node;
