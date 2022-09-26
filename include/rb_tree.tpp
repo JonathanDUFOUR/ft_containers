@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/25 17:14:53 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 11:43:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -771,7 +771,7 @@ public:
 				node = parent;
 				parent = node->parent;
 			}
-			if (cmp(val, parent->val))
+			if (parent && cmp(val, parent->val))
 				return this->insert(val).first;
 
 			// At this point, the node to insert will be placed on the left of the hint node,
@@ -780,7 +780,7 @@ public:
 			if (pos->child[LEFT])
 			{
 				// At this point, the node to insert will be placed on the left of the hint node,
-				// and the position is on a correct branch, and is a non-leaf.
+				// the position is on a correct branch, and is a non-leaf.
 				pos = pos->child[LEFT];
 				while (pos)
 					if (cmp(val, pos->val))
@@ -807,7 +807,7 @@ public:
 				node = parent;
 				parent = node->parent;
 			}
-			if (cmp(parent->val, val))
+			if (parent && cmp(parent->val, val))
 				return this->insert(val).first;
 
 			// At this point, the node to insert will be placed on the right of the hint node,

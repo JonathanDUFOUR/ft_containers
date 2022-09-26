@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/22 17:42:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 10:42:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,7 +321,7 @@ public:
 	 */
 	iterator	insert(iterator const &pos, value_type const &val)
 	{
-		return this->_tree.insert(pos, val);
+		return this->_tree.insert(pos.getCurr(), val);
 	}
 
 	/**

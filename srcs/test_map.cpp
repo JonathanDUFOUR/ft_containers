@@ -6,10 +6,11 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/25 17:16:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 11:46:06 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fstream>
 #include <iostream>
 #include <list>
 #include <map>
@@ -1012,6 +1013,27 @@ inline static int	__test_function_insert(void)
 					return KO;
 			}
 		}
+		// Single insertion with hint
+		{
+			ft::map<std::string, t_luint>				ft_map;
+			std::map<std::string, t_luint>				std_map;
+			ft::map<std::string, t_luint>::iterator		ft_it;
+			std::map<std::string, t_luint>::iterator	std_it;
+
+			ft_map.insert(ft_vec[0]);
+			std_map.insert(std_vec[0]);
+			for (ft_it = ft_map.begin(), std_it = std_map.begin(), idx = 1U ;
+				idx < g_string_size && idx < g_luint_size ;
+				++idx)
+			{
+				ft_it = ft_map.insert(ft_it, ft_vec[idx]);
+				std_it = std_map.insert(std_it, std_vec[idx]);
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1044,7 +1066,7 @@ int	test_map(void)
 	};
 	t_uint			koCount;
 	t_uint			idx;
-
+	
 	std::cerr << "\033[38;2;0;173;255m";
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                      MAP                      ##" << '\n';
