@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 10:42:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 17:07:12 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,8 @@ public:
 	};
 
 private:
-	// Member types
-	typedef rb_tree<value_type, value_compare, allocator_type>	tree_type;
-
 	// Attributes
-	tree_type	_tree;
+	rb_tree<value_type, value_compare, allocator_type>	_tree;
 
 public:
 // ****************************************************************************************************************** //
@@ -222,7 +219,7 @@ public:
 	 */
 	void	erase(iterator const &pos)
 	{
-		this->_tree.erase(pos.base());
+		this->_tree.erase(pos.getCurr());
 	}
 
 	/**
@@ -246,8 +243,8 @@ public:
 	 */
 	void	erase(iterator first, iterator const &last)
 	{
-		for (; first != last; ++first)
-			this->_tree.erase(first.base());
+		while (first != last)
+			this->_tree.erase(first++.getCurr());
 	}
 
 	/**
@@ -259,7 +256,7 @@ public:
 	 */
 	iterator	find(key_type const &key)
 	{
-		return iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getRoot());
+		return iterator(this->_tree.find(value_type(key, mapped_type())), &this->_tree.getRoot());
 	}
 
 	/**
@@ -270,7 +267,7 @@ public:
 	 */
 	const_iterator	find(key_type const &key) const
 	{
-		return const_iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getRoot());
+		return const_iterator(this->_tree.find(value_type(key, mapped_type())), &this->_tree.getRoot());
 	}
 
 	/**
@@ -292,7 +289,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void		insert(InputIterator first, InputIterator const &last)
+	void		insert(InputIterator first, InputIterator const last)
 	{
 		for (; first != last ; ++first)
 			this->_tree.insert(*first);
@@ -344,7 +341,7 @@ public:
 		iterator	it;
 		key_compare	cmp;
 
-		for (it = this->begin() ; it != this->end() && cmp(it->val->first, key) ; ++it);
+		for (it = this->begin() ; it != this->end() && cmp(it->first, key) ; ++it);
 		return it;
 	}
 
@@ -360,7 +357,7 @@ public:
 		const_iterator	cit;
 		value_compare	cmp;
 
-		for (cit = this->begin() ; cit != this->end() && cmp(cit->val->first, key) ; ++cit);
+		for (cit = this->begin() ; cit != this->end() && cmp(cit->first, key) ; ++cit);
 		return cit;
 	}
 
@@ -434,7 +431,7 @@ public:
 		iterator	it;
 		key_compare	cmp;
 
-		for (it = this->begin() ; it != this->end() && !cmp(key, it->val->first) ; ++it);
+		for (it = this->begin() ; it != this->end() && !cmp(key, it->first) ; ++it);
 		return it;
 	}
 
@@ -450,7 +447,7 @@ public:
 		const_iterator	cit;
 		key_compare		cmp;
 
-		for (cit = this->begin() ; cit != this->end() && !cmp(key, cit->val->first) ; ++cit);
+		for (cit = this->begin() ; cit != this->end() && !cmp(key, cit->first) ; ++cit);
 		return cit;
 	}
 

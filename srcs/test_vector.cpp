@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 10:23:19 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 16:07:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,8 @@ inline static int	__test_constructor(void)
 			}
 			// Range of char const *
 			{
-				ft::vector<char> const	ft_vec(&g_char[0], &g_char[g_char_size]);
-				std::vector<char> const	std_vec(&g_char[0], &g_char[g_char_size]);
+				ft::vector<char> const	ft_vec(g_char, &g_char[g_char_size]);
+				std::vector<char> const	std_vec(g_char, &g_char[g_char_size]);
 
 				if (sizeof(ft_vec) != sizeof(std_vec))
 					ret = ISO_OK;
@@ -1020,8 +1020,8 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < g_float_size ; ++idx)
 			{
-				ft_vec.insert(ft_vec.begin() + ft_vec.size() / 2, &g_float[0], &g_float[idx]);
-				std_vec.insert(std_vec.begin() + std_vec.size() / 2, &g_float[0], &g_float[idx]);
+				ft_vec.insert(ft_vec.begin() + ft_vec.size() / 2, g_float, &g_float[idx]);
+				std_vec.insert(std_vec.begin() + std_vec.size() / 2, g_float, &g_float[idx]);
 
 				if (ft_vec.capacity() != std_vec.capacity())
 					ret = ISO_OK;
@@ -1061,8 +1061,8 @@ inline static int	__test_function_insert(void)
 
 			for (idx = 0U ; idx < g_string_size ; ++idx)
 			{
-				ft_vec.insert(ft_vec.begin() + ft_vec.size() / 2, &g_string[0], &g_string[idx]);
-				std_vec.insert(std_vec.begin() + std_vec.size() / 2, &g_string[0], &g_string[idx]);
+				ft_vec.insert(ft_vec.begin() + ft_vec.size() / 2, g_string, &g_string[idx]);
+				std_vec.insert(std_vec.begin() + std_vec.size() / 2, g_string, &g_string[idx]);
 
 				if (ft_vec.capacity() != std_vec.capacity())
 					ret = ISO_OK;

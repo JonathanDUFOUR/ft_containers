@@ -6,12 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 11:46:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 17:09:08 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fstream>
+#include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <map>
 #include <vector>
@@ -985,8 +986,8 @@ inline static int	__test_function_insert(void)
 
 		// Range insertion
 		{
-			ft::map<std::string, t_luint>	ft_map;
-			std::map<std::string, t_luint>	std_map;
+			ft::map<std::string, t_luint>								ft_map;
+			std::map<std::string, t_luint>								std_map;
 
 			for (idx = 1U ; idx < g_string_size && idx < g_luint_size ; ++idx)
 			{
@@ -1000,15 +1001,20 @@ inline static int	__test_function_insert(void)
 		}
 		// Single insertion
 		{
-			ft::map<std::string, t_luint>	ft_map;
-			std::map<std::string, t_luint>	std_map;
+			ft::map<std::string, t_luint>								ft_map;
+			std::map<std::string, t_luint>								std_map;
+			ft::pair<ft::map<std::string, t_luint>::iterator, bool>		ft_ret;
+			std::pair<std::map<std::string, t_luint>::iterator, bool>	std_ret;
 
-			for (idx = 1U ; idx < g_string_size && idx < g_luint_size ; ++idx)
+			for (idx = 0U ; idx < g_string_size && idx < g_luint_size ; ++idx)
 			{
-				ft_map.insert(&ft_vec[idx - 1], &ft_vec[idx + 1]);
-				std_map.insert(&std_vec[idx - 1], &std_vec[idx + 1]);
+				ft_ret = ft_map.insert(ft_vec[idx]);
+				std_ret = std_map.insert(std_vec[idx]);
 
-				if (ft_map.size() != std_map.size() ||
+				if (ft_ret.first->first != std_ret.first->first ||
+					ft_ret.first->second != std_ret.first->second ||
+					ft_ret.second != std_ret.second ||
+					ft_map.size() != std_map.size() ||
 					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
 					return KO;
 			}
@@ -1029,7 +1035,9 @@ inline static int	__test_function_insert(void)
 				ft_it = ft_map.insert(ft_it, ft_vec[idx]);
 				std_it = std_map.insert(std_it, std_vec[idx]);
 
-				if (ft_map.size() != std_map.size() ||
+				if (ft_it->first != std_it->first ||
+					ft_it->second != std_it->second ||
+					ft_map.size() != std_map.size() ||
 					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
 					return KO;
 			}
@@ -1043,6 +1051,366 @@ inline static int	__test_function_insert(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_erase(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<char, t_lint> >	ft_vec;
+		std::vector<std::pair<char, t_lint> >	std_vec;
+
+		for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<char, t_lint>(g_char[idx], g_lint[idx]));
+			std_vec.push_back(std::pair<char, t_lint>(g_char[idx], g_lint[idx]));
+		}
+
+		// Single erase (position)
+		{
+			ft::map<char, t_lint>	ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<char, t_lint>	std_map(std_vec.begin(), std_vec.end());
+
+			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; ++idx)
+			{
+				ft_map.erase(ft_map.begin());
+				std_map.erase(std_map.begin());
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<char, t_lint>))
+					return KO;
+			}
+		}
+		// Single erase (key)
+		{
+			ft::map<char, t_lint>	ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<char, t_lint>	std_map(std_vec.begin(), std_vec.end());
+			size_t					ft_ret;
+			size_t					std_ret;
+
+			for (idx = 0U ; idx < g_char_size * 2 && idx < g_lint_size * 2 ; ++idx)
+			{
+				ft_ret = ft_map.erase(g_char[idx / 2]);
+				std_ret = std_map.erase(g_char[idx / 2]);
+
+				if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<char, t_lint>))
+					return KO;
+			}
+		}
+		// Range erase
+		{
+			ft::map<char, t_lint>				ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<char, t_lint>				std_map(std_vec.begin(), std_vec.end());
+			ft::map<char, t_lint>::iterator		ft_it0;
+			ft::map<char, t_lint>::iterator		ft_it1;
+			std::map<char, t_lint>::iterator	std_it0;
+			std::map<char, t_lint>::iterator	std_it1;
+			
+			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; idx += 2)
+			{
+				ft_it0 = ft_map.begin();
+				std_it0 = std_map.begin();
+				std::advance(ft_it0, ft_map.size() / 2 - 1);
+				std::advance(std_it0, std_map.size() / 2 - 1);
+				ft_it1 = ft_it0;
+				std_it1 = std_it0;
+				std::advance(ft_it1, 2U);
+				std::advance(std_it1, 2U);
+				ft_map.erase(ft_it0, ft_it1);
+				std_map.erase(std_it0, std_it1);
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<char, t_lint>))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_clear(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<int, t_hhuint> >	ft_vec;
+		std::vector<std::pair<int, t_hhuint> >	std_vec;
+
+		for (idx = 0U ; idx < g_int_size && idx < g_hhuint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<int, t_hhuint>(g_int[idx], g_hhuint[idx]));
+			std_vec.push_back(std::pair<int, t_hhuint>(g_int[idx], g_hhuint[idx]));
+		}
+
+		for (idx = 0U ; idx < g_int_size && idx < g_hhuint_size ; ++idx)
+		{
+			ft::map<int, t_hhuint>	ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<int, t_hhuint>	std_map(std_vec.begin(), std_vec.end());
+
+			ft_map.clear();
+			std_map.clear();
+
+			if (ft_map.size() != std_map.size() ||
+				!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, t_hhuint>))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_find(void)
+{
+	t_uint	idx;
+	float	nb;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<float, std::string> >	ft_vec;
+		std::vector<std::pair<float, std::string> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_string_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, std::string>(g_float[idx], g_string[idx]));
+			std_vec.push_back(std::pair<float, std::string>(g_float[idx], g_string[idx]));
+		}
+
+		// Mutable access
+		{
+			ft::map<float, std::string>				ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<float, std::string>			std_map(std_vec.begin(), std_vec.end());
+			ft::map<float, std::string>::iterator	ft_it;
+			std::map<float, std::string>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_float_size * 2 && idx < g_string_size * 2 ; ++idx)
+			{
+				if (idx % 2)
+				{
+					nb = static_cast<float>(rand());
+					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+						nb = static_cast<float>(rand());
+				}
+				else
+					nb = g_float[idx / 2];
+
+				ft_it = ft_map.find(nb);
+				std_it = std_map.find(nb);
+
+				if ((ft_it == ft_map.end()) != (std_it == std_map.end()) ||
+					(ft_it != ft_map.end() && (ft_it->first != std_it->first ||
+					ft_it->second.append("42") != std_it->second.append("42"))))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::map<float, std::string> const				ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<float, std::string> const				std_map(std_vec.begin(), std_vec.end());
+			ft::map<float, std::string>::const_iterator		ft_cit;
+			std::map<float, std::string>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_float_size * 2 && idx < g_string_size * 2 ; ++idx)
+			{
+				if (idx % 2)
+				{
+					nb = static_cast<float>(rand());
+					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+						nb = static_cast<float>(rand());
+				}
+				else
+					nb = g_float[idx / 2];
+
+				ft_cit = ft_map.find(nb);
+				std_cit = std_map.find(nb);
+
+				if ((ft_cit == ft_map.end()) != (std_cit == std_map.end()) ||
+					(ft_cit != ft_map.end() && (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_count(void)
+{
+	t_uint	idx;
+	float	nb;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<float, std::string> >	ft_vec;
+		std::vector<std::pair<float, std::string> >	std_vec;
+
+		for (idx = 0U ; idx < g_float_size && idx < g_string_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<float, std::string>(g_float[idx], g_string[idx]));
+			std_vec.push_back(std::pair<float, std::string>(g_float[idx], g_string[idx]));
+		}
+
+		ft::map<float, std::string> const		ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, std::string> const		std_map(std_vec.begin(), std_vec.end());
+
+		for (idx = 0U ; idx < g_float_size * 2 && idx < g_string_size * 2 ; ++idx)
+		{
+			if (idx % 2)
+			{
+				nb = static_cast<float>(rand());
+				while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+					nb = static_cast<float>(rand());
+			}
+			else
+				nb = g_float[idx / 2];
+
+			if (ft_map.count(nb) != std_map.count(nb))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_lower_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<t_lint, long double> >		ft_vec;
+		std::vector<std::pair<t_lint, long double> >	std_vec;
+
+		for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_lint, long double>(g_lint[idx], g_long_double[idx]));
+			std_vec.push_back(std::pair<t_lint, long double>(g_lint[idx], g_long_double[idx]));
+		}
+
+		// Mutable access
+		{
+			ft::map<t_lint, long double>			ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_lint, long double>			std_map(std_vec.begin(), std_vec.end());
+			ft::map<t_lint, long double>::iterator	ft_it;
+			std::map<t_lint, long double>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+			{
+				ft_it = ft_map.lower_bound(g_lint[idx]);
+				std_it = std_map.lower_bound(g_lint[idx]);
+
+				if ((ft_it == ft_map.end()) != (std_it == std_map.end()) ||
+					(ft_it != ft_map.end() && (ft_it->first != std_it->first || --ft_it->second != --std_it->second)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::map<t_lint, long double> const				ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_lint, long double> const				std_map(std_vec.begin(), std_vec.end());
+			ft::map<t_lint, long double>::const_iterator	ft_cit;
+			std::map<t_lint, long double>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+			{
+				ft_cit = ft_map.lower_bound(g_lint[idx]);
+				std_cit = std_map.lower_bound(g_lint[idx]);
+
+				if ((ft_cit == ft_map.end()) != (std_cit == std_map.end()) ||
+					(ft_cit != ft_map.end() && (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_upper_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<t_lint, long double> >		ft_vec;
+		std::vector<std::pair<t_lint, long double> >	std_vec;
+
+		for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_lint, long double>(g_lint[idx], g_long_double[idx]));
+			std_vec.push_back(std::pair<t_lint, long double>(g_lint[idx], g_long_double[idx]));
+		}
+
+		// Mutable access
+		{
+			ft::map<t_lint, long double>			ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_lint, long double>			std_map(std_vec.begin(), std_vec.end());
+			ft::map<t_lint, long double>::iterator	ft_it;
+			std::map<t_lint, long double>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+			{
+				ft_it = ft_map.upper_bound(g_lint[idx]);
+				std_it = std_map.upper_bound(g_lint[idx]);
+
+				if ((ft_it == ft_map.end()) != (std_it == std_map.end()) ||
+					(ft_it != ft_map.end() && (ft_it->first != std_it->first || --ft_it->second != --std_it->second)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::map<t_lint, long double> const				ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_lint, long double> const				std_map(std_vec.begin(), std_vec.end());
+			ft::map<t_lint, long double>::const_iterator	ft_cit;
+			std::map<t_lint, long double>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size && idx < g_long_double_size ; ++idx)
+			{
+				ft_cit = ft_map.upper_bound(g_lint[idx]);
+				std_cit = std_map.upper_bound(g_lint[idx]);
+
+				if ((ft_cit == ft_map.end()) != (std_cit == std_map.end()) ||
+					(ft_cit != ft_map.end() && (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
 int	test_map(void)
 {
 	t_test const	tests[] = {
@@ -1062,6 +1430,12 @@ int	test_map(void)
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
 		__test_function_insert,
+		__test_function_erase,
+		__test_function_clear,
+		__test_function_find,
+		__test_function_count,
+		__test_function_lower_bound,
+		__test_function_upper_bound,
 		NULL
 	};
 	t_uint			koCount;

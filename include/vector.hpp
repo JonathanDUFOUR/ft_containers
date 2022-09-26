@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/18 18:18:37 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 16:01:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ private:
 	 * @param	param2 The element value to fill the vector with.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(iterator const &pos, U const &param1, U const &param2, true_type const)
+	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, true_type const)
 	{
 		this->_insertFill(pos, param1, param2);
 	}
@@ -80,7 +80,7 @@ private:
 	 * @param	param2 The last element of the range to insert.
 	 */
 	template<typename U>
-	inline void	_insertDispatch(iterator const &pos, U const &param1, U const &param2, false_type const)
+	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, false_type const)
 	{
 		this->_insertRange(pos, param1, param2);
 	}
@@ -92,7 +92,7 @@ private:
 	 * @param	n The number of elements to insert.
 	 * @param	val The element value to fill the vector with.
 	 */
-	inline void	_insertFill(iterator const &pos, size_type const n, value_type const &val)
+	inline void	_insertFill(iterator const pos, size_type const n, value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
 		size_type		newCapacity;
@@ -140,7 +140,7 @@ private:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	_insertRange(iterator const &pos, InputIterator first, InputIterator const &last)
+	void	_insertRange(iterator const &pos, InputIterator first, InputIterator const last)
 	{
 		size_type const	offset = this->end() - pos;
 		size_type		newCapacity;
@@ -245,7 +245,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	vector(InputIterator const &first, InputIterator const &last, allocator_type const & = allocator_type()) :
+	vector(InputIterator first, InputIterator last, allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
 		_endOfStorage(NULL)
@@ -307,7 +307,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	assign(InputIterator const &first, InputIterator const &last)
+	void	assign(InputIterator first, InputIterator last)
 	{
 		this->clear();
 		this->_insertDispatch(this->begin(), first, last, is_integral<InputIterator>());
@@ -502,7 +502,7 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	insert(iterator const pos, InputIterator const &first, InputIterator const &last)
+	void	insert(iterator const pos, InputIterator first, InputIterator last)
 	{
 		this->_insertDispatch(pos, first, last, is_integral<InputIterator>());
 	}

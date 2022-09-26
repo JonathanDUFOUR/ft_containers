@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 11:43:41 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 16:29:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,9 +306,9 @@ private:
 	pointer	_rotate(pointer const root, uint8_t const dir)
 		__attribute__((nonnull))
 	{
-		_node_type	*parent;
-		_node_type	*oppositeChild;
-		_node_type	*grandChild;
+		pointer	parent;
+		pointer	oppositeChild;
+		pointer	grandChild;
 
 		parent = root->parent;
 		oppositeChild = root->child[!dir];
@@ -486,7 +486,7 @@ public:
 	/**
 	 * @return	The node with the greatest value of the tree.
 	 */
-	const_pointer const	&getMax(void) const
+	pointer const	&getMax(void) const
 	{
 		return this->_max;
 	}
@@ -494,7 +494,7 @@ public:
 	/**
 	 * @return	The node with the lowest value of the tree.
 	 */
-	const_pointer const	&getMin(void) const
+	pointer const	&getMin(void) const
 	{
 		return this->_min;
 	}
@@ -502,7 +502,7 @@ public:
 	/**
 	 * @return	The root node of the tree.
 	 */
-	const_pointer const	&getRoot(void) const
+	pointer const	&getRoot(void) const
 	{
 		return this->_root;
 	}
@@ -605,51 +605,50 @@ public:
 			// So we just swap the node with its successor
 			successor = rb_node<value_type>::leftMost(pos->child[RIGHT]);
 			rb_tree::_valueSwap(pos, successor);
-			if (pos == this->_root)
+			if (this->_root == pos)
 				this->_root = successor;
 		}
 
 		// At this point, the node has at most one child.
 		if (pos->child[LEFT])
 		{
-			// At this point, the node is black, and has only one red left child.
+			// At this point, the node is black-deducted, and has only one red-deducted left child.
 			if (pos->parent)
 				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[LEFT];
 			pos->child[LEFT]->parent = pos->parent;
 			pos->child[LEFT]->color = BLACK;
-			if (pos == this->_root)
+			if (this->_root == pos)
 				this->_root = pos->child[LEFT];
-			if (pos == this->_max)
+			if (this->_max == pos)
 				this->_max = pos->child[LEFT];
 		}
 		else if (pos->child[RIGHT])
 		{
-			// At this point, the node is black, and has only one red right child.
+			// At this point, the node is black-deducted, and has only one red-deducted right child.
 			if (pos->parent)
 				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[RIGHT];
 			pos->child[RIGHT]->parent = pos->parent;
 			pos->child[RIGHT]->color = BLACK;
-			if (pos == this->_root)
+			if (this->_root == pos)
 				this->_root = pos->child[RIGHT];
-			if (pos == this->_min)
+			if (this->_min == pos)
 				this->_min = pos->child[RIGHT];
 		}
 		else if (pos->color == RED)
 		{
-			// At this point, the node is red, and has no any child.
-			if (pos->parent)
-				pos->parent->child[rb_tree::_childDirection(pos)] = NULL;
-			if (pos == this->_min)
+			// At this point, the node is red, has a parent, and has no any child.
+			pos->parent->child[rb_tree::_childDirection(pos)] = NULL;
+			if (this->_min == pos)
 				this->_min = pos->parent;
-			if (pos == this->_max)
+			if (this->_max == pos)
 				this->_max = pos->parent;
 		}
 		else
 		{
 			// At this point, the node is black, has a parent, and has no any child.
-			if (pos == this->_min)
+			if (this->_min == pos)
 				this->_min = pos->parent;
-			if (pos == this->_max)
+			if (this->_max == pos)
 				this->_max = pos->parent;
 			dir = rb_tree::_childDirection(pos);
 			pos->parent->child[dir] = NULL;
@@ -673,11 +672,13 @@ public:
 		compare_type	cmp;
 
 		node = this->_root;
-		while (node && node->val != val)
+		while (node)
 			if (cmp(val, node->val))
 				node = node->child[LEFT];
-			else
+			else if (cmp(node->val, val))
 				node = node->child[RIGHT];
+			else
+				break ;
 		return node;
 	}
 

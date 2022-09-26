@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 17:50:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 16:33:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::istream_iterator<char> > >	ft_rit;
-			std::reverse_iterator<ft::random_access_iterator_restrictor<std::istream_iterator<char> > >	std_rit;
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> >	ft_rit;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> >	std_rit;
 
-			if (sizeof(ft_rit) != sizeof(std_rit) || memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
+			if (sizeof(ft_rit) != sizeof(std_rit) ||
+				memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 				return EXIT_FAILURE;
 		}
 		// Iterator constructor
