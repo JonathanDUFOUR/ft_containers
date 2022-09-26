@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 16:33:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 19:05:20 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include <iostream>
 #include <limits>
 #include "arrays.hpp"
-#include "iterator/base/reverse_iterator.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
+#include "iterator/spec/reverse_iterator.tpp"
 #include "tester.hpp"
 
 inline static int	__test_constructor(void)

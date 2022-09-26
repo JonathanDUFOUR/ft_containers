@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 16:29:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 19:05:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <functional>
 # include <memory>
 # include "algorithm.hpp"
-# include "iterator/base/reverse_iterator.tpp"
 # include "iterator/spec/rb_tree_iterator.tpp"
+# include "iterator/spec/reverse_iterator.tpp"
 # include "utility.hpp"
 # include "rb_node.tpp"
 # include "e_rb_color.hpp"

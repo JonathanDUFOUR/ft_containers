@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/21 10:26:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 18:57:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,20 @@ public:
 	inline pointer	operator->(void) const
 	{
 		return this->_ptr;
+	}
+
+	/**
+	 * @brief	Assign a new content to the vector_iterator from another one's. (copy assignation)
+	 * 
+	 * @param	rhs The right hand side vector_iterator to copy the content from.
+	 * 
+	 * @return	The assigned vector_iterator.
+	 */
+	inline _self_type	&operator=(_self_type const &rhs)
+	{
+		if (this != &rhs)
+			this->_ptr = rhs._ptr;
+		return *this;
 	}
 
 	/**

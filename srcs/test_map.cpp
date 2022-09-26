@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 17:09:08 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 18:37:04 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1411,6 +1411,78 @@ inline static int	__test_function_upper_bound(void)
 	}
 	return IMP_OK;
 }
+
+inline static int	__test_function_equal_range(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<t_hint, t_uint> >	ft_vec;
+		std::vector<std::pair<t_hint, t_uint> >	std_vec;
+
+		for (idx = 0U ; idx < g_hint_size && idx < g_uint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hint, t_uint>(g_hint[idx], g_uint[idx]));
+			std_vec.push_back(std::pair<t_hint, t_uint>(g_hint[idx], g_uint[idx]));
+		}
+
+		// Mutable access
+		{
+			ft::map<t_hint, t_uint>					ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_hint, t_uint>				std_map(std_vec.begin(), std_vec.end());
+			ft::pair<
+				ft::map<t_hint, t_uint>::iterator,
+				ft::map<t_hint, t_uint>::iterator>	ft_ret;
+			std::pair<
+				std::map<t_hint, t_uint>::iterator,
+				std::map<t_hint, t_uint>::iterator>	std_ret;
+
+			for (idx = 0U ; idx < g_hint_size && idx < g_uint_size ; ++idx)
+			{
+				ft_ret = ft_map.equal_range(g_hint[idx]);
+				std_ret = std_map.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == ft_map.end()) != (std_ret.first == std_map.end()) ||
+					(ft_ret.first != ft_map.end() && (
+						--ft_ret.first->second != --std_ret.first->second ||
+						!std::equal(ft_ret.first, ft_ret.second, std_ret.first, __cmp<t_hint, t_uint>))))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::map<t_hint, t_uint> const					ft_map(ft_vec.begin(), ft_vec.end());
+			std::map<t_hint, t_uint> const					std_map(std_vec.begin(), std_vec.end());
+			ft::pair<
+				ft::map<t_hint, t_uint>::const_iterator,
+				ft::map<t_hint, t_uint>::const_iterator>	ft_ret;
+			std::pair<
+				std::map<t_hint, t_uint>::const_iterator,
+				std::map<t_hint, t_uint>::const_iterator>	std_ret;
+
+			for (idx = 0U ; idx < g_hint_size && idx < g_uint_size ; ++idx)
+			{
+				ft_ret = ft_map.equal_range(g_hint[idx]);
+				std_ret = std_map.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == ft_map.end()) != (std_ret.first == std_map.end()) ||
+					(ft_ret.first != ft_map.end() && (
+						!std::equal(ft_ret.first, ft_ret.second, std_ret.first, __cmp<t_hint, t_uint>))))
+					return KO;
+			}
+			
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_map(void)
 {
 	t_test const	tests[] = {
@@ -1436,6 +1508,7 @@ int	test_map(void)
 		__test_function_count,
 		__test_function_lower_bound,
 		__test_function_upper_bound,
+		__test_function_equal_range,
 		NULL
 	};
 	t_uint			koCount;

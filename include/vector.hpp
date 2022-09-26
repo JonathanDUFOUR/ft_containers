@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 16:01:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/26 19:05:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <cstring>
 # include <memory>
 # include "algorithm.hpp"
+# include "iterator/spec/reverse_iterator.tpp"
 # include "iterator/spec/vector_iterator.tpp"
-# include "iterator/base/reverse_iterator.tpp"
 # include "type_traits.hpp"
 
 namespace ft
@@ -650,13 +650,13 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Replace the current content of the vector by an other vector one's. (copy assignation)
+	 * @brief	Assign a new content to the vector from another one's. (copy assignation)
 	 * 
 	 * @param	rhs The right hand side vector to copy the content from.
 	 * 
 	 * @return	The assigned vector.
 	 */
-	vector			&operator=(vector const &rhs)
+	vector	&operator=(vector const &rhs)
 	{
 		if (this != &rhs)
 			this->assign(rhs.begin(), rhs.end());
@@ -668,7 +668,7 @@ public:
 	 * 
 	 * @return	The element at the given index.
 	 */
-	reference		operator[](size_type const idx)
+	reference	operator[](size_type const idx)
 	{
 		return this->_head[idx];
 	}
