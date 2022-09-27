@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 19:05:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 09:08:09 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,20 +260,22 @@ private:
 	 * @brief	Duplicate every node from a tree to another, using deep copy.
 	 * 
 	 * @param	src The source root.
+	 * @param	parent The parent node of the new one to create.
 	 * 
 	 * @return	The root of the new tree.
 	 */
-	static pointer	_dup(const_pointer const src)
+	static pointer	_dup(const_pointer const src, pointer const parent = NULL)
 	{
 		pointer			dst;
 		allocator_type	alloc;
 
 		if (!src)
 			return NULL;
-		dst = alloc.allocate(1);
+		dst = alloc.allocate(1LU);
 		alloc.construct(dst, *src);
-		dst->child[LEFT] = rb_tree::_dup(src->child[LEFT]);
-		dst->child[RIGHT] = rb_tree::_dup(src->child[RIGHT]);
+		dst->parent = parent;
+		dst->child[LEFT] = rb_tree::_dup(src->child[LEFT], dst);
+		dst->child[RIGHT] = rb_tree::_dup(src->child[RIGHT], dst);
 		return dst;
 	}
 
@@ -901,6 +903,23 @@ public:
 		ft::swap<pointer>(this->_min, other._min);
 		ft::swap<pointer>(this->_max, other._max);
 		ft::swap<size_type>(this->_size, other._size);
+	}
+
+// ***************************************************************************************************************** //
+//                                                     Operators                                                     //
+// ***************************************************************************************************************** //
+
+	rb_tree	&operator=(rb_tree const &rhs)
+	{
+		if (this != &rhs)
+		{
+			rb_tree::_clear(this->_root);
+			this->_root = rb_tree::_dup(rhs._root);
+			this->_min = _node_type::leftMost(this->_root);
+			this->_max = _node_type::rightMost(this->_root);
+			this->_size = rhs._size;
+		}
+		return *this;
 	}
 };
 }

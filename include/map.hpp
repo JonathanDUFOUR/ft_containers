@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 19:04:18 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 12:02:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	map(InputIterator const &first,
-		InputIterator const &last,
+	map(InputIterator const first,
+		InputIterator const last,
 		key_compare const & = key_compare(),
 		allocator_type const & = allocator_type()) :
 		_tree(first, last) {}
@@ -217,7 +217,7 @@ public:
 	 * 
 	 * @param	pos The position of the element to remove.
 	 */
-	void	erase(iterator const &pos)
+	void	erase(iterator pos)
 	{
 		this->_tree.erase(pos.getCurr());
 	}
@@ -241,7 +241,7 @@ public:
 	 * @param	first The first element of the range.
 	 * @param	last The last element of the range.
 	 */
-	void	erase(iterator first, iterator const &last)
+	void	erase(iterator first, iterator const last)
 	{
 		while (first != last)
 			this->_tree.erase(first++.getCurr());
@@ -316,7 +316,7 @@ public:
 	 * 
 	 * @return	An iterator to the element of the map with the given value.
 	 */
-	iterator	insert(iterator const &pos, value_type const &val)
+	iterator	insert(iterator const pos, value_type const &val)
 	{
 		return this->_tree.insert(pos.getCurr(), val);
 	}
@@ -473,21 +473,30 @@ public:
 	map	&operator=(map const &rhs)
 	{
 		if (this != &rhs)
-		{
-			this->_tree.clear();
-			this->_tree.insert(rhs.begin(), rhs.end());
-		}
+			this->_tree = rhs._tree;
 		return *this;
 	}
 
 	/**
+	 * @brief	Look for an element in the map, inserting it if not found.
+	 * 
 	 * @param	key The key of the element to get.
 	 * 
 	 * @return	The element matching the given key.
 	 */
 	mapped_type	&operator[](key_type const &key)
 	{
-		// TODO: implement
+		iterator	it;
+		key_compare	cmp;
+
+		if (!this->_tree.getSize())
+			return this->_tree.insert(value_type(key, mapped_type())).first->second;
+		it = this->lower_bound(key);
+		if (it == this->end())
+			return this->_tree.insert(this->_tree.getMax(), value_type(key, mapped_type()))->second;
+		if (cmp(it->first, key) || cmp(key, it->first))
+			return this->_tree.insert(it.getCurr(), value_type(key, mapped_type()))->second;
+		return it->second;
 	}
 };
 }

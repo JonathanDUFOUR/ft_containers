@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/25 13:02:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 09:20:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -674,6 +674,7 @@ inline static int	__test_function_swap(void)
 
 			tree0.swap(tree1);
 			ref0.swap(ref1);
+
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
@@ -691,6 +692,7 @@ inline static int	__test_function_swap(void)
 
 			tree0.swap(tree1);
 			ref0.swap(ref1);
+
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
@@ -708,6 +710,7 @@ inline static int	__test_function_swap(void)
 
 			tree0.swap(tree1);
 			ref0.swap(ref1);
+
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
@@ -725,12 +728,87 @@ inline static int	__test_function_swap(void)
 
 			tree0.swap(tree1);
 			ref0.swap(ref1);
+
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
 				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
 				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
 				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
 				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
+				return EXIT_FAILURE;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_operator_assign(void)
+{
+	title(__func__);
+	try
+	{
+		// Assigning empty -> empty
+		{
+			ft::rb_tree<std::string>		tree0;
+			ft::rb_tree<std::string> const	tree1;
+			std::set<std::string>			ref0;
+			std::set<std::string> const		ref1;
+
+			tree0 = tree1;
+			ref0 = ref1;
+
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+				return EXIT_FAILURE;
+		}
+		// Assigning empty -> non-empty
+		{
+			ft::rb_tree<std::string>		tree0(&g_string[0], &g_string[g_string_size / 2]);
+			ft::rb_tree<std::string> const	tree1;
+			std::set<std::string>			ref0(&g_string[0], &g_string[g_string_size / 2]);
+			std::set<std::string> const		ref1;
+
+			tree0 = tree1;
+			ref0 = ref1;
+
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+				return EXIT_FAILURE;
+		}
+		// Assigning non-empty -> empty
+		{
+			ft::rb_tree<std::string>		tree0;
+			ft::rb_tree<std::string> const	tree1(&g_string[g_string_size / 2], &g_string[g_string_size]);
+			std::set<std::string>			ref0;
+			std::set<std::string> const		ref1(&g_string[g_string_size / 2], &g_string[g_string_size]);
+
+			tree0 = tree1;
+			ref0 = ref1;
+
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+				return EXIT_FAILURE;
+		}
+		// Assigning non-empty -> non-empty
+		{
+			ft::rb_tree<std::string>		tree0(&g_string[0], &g_string[g_string_size / 2]);
+			ft::rb_tree<std::string> const	tree1(&g_string[g_string_size / 2], &g_string[g_string_size]);
+			std::set<std::string>			ref0(&g_string[0], &g_string[g_string_size / 2]);
+			std::set<std::string> const		ref1(&g_string[g_string_size / 2], &g_string[g_string_size]);
+
+			tree0 = tree1;
+			ref0 = ref1;
+
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
+				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
 				return EXIT_FAILURE;
 		}
 	}
@@ -763,6 +841,7 @@ int	test_rb_tree(void)
 		__test_function_clear,
 		__test_function_find,
 		__test_function_swap,
+		__test_operator_assign,
 		NULL
 	};
 	t_uint			koCount;

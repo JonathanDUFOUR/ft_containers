@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 18:37:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 11:51:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1483,6 +1483,235 @@ inline static int	__test_function_equal_range(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_swap(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<char, float> >		ft_vec;
+		std::vector<std::pair<char, float> >	std_vec;
+
+		for (idx = 0U ; idx < g_char_size && idx < g_float_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<char, float>(g_char[idx], g_float[idx]));
+			std_vec.push_back(std::pair<char, float>(g_char[idx], g_float[idx]));
+		}
+
+		// Swapping empty | empty
+		{
+			ft::map<char, float>	ft_map0;
+			ft::map<char, float>	ft_map1;
+			std::map<char, float>	std_map0;
+			std::map<char, float>	std_map1;
+
+			ft_map0.swap(ft_map1);
+			std_map0.swap(std_map1);
+
+			if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
+				!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+				return KO;
+		}
+		// Swapping empty | non-empty
+		{
+			ft::map<char, float>	ft_map0;
+			ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+			std::map<char, float>	std_map0;
+			std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+
+			ft_map0.swap(ft_map1);
+			std_map0.swap(std_map1);
+
+			if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
+				!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+				return KO;
+		}
+		// Swapping non-empty | empty
+		{
+			ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+			ft::map<char, float>	ft_map1;
+			std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+			std::map<char, float>	std_map1;
+
+			ft_map0.swap(ft_map1);
+			std_map0.swap(std_map1);
+
+			if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
+				!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+				return KO;
+		}
+		// Swapping non-empty | non-empty
+		{
+			ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+			ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+			std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+			std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+
+			ft_map0.swap(ft_map1);
+			std_map0.swap(std_map1);
+
+			if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
+				!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_assign(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<std::string, t_hhuint> >	ft_vec;
+		std::vector<std::pair<std::string, t_hhuint> >	std_vec;
+
+		for (idx = 0U ; idx < g_string_size && idx < g_hhuint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<std::string, t_hhuint>(g_string[idx], g_hhuint[idx]));
+			std_vec.push_back(std::pair<std::string, t_hhuint>(g_string[idx], g_hhuint[idx]));
+		}
+
+		// Assigning empty -> empty
+		{
+			ft::map<std::string, t_hhuint>			ft_map0;
+			ft::map<std::string, t_hhuint> const	ft_map1;
+			std::map<std::string, t_hhuint>			std_map0;
+			std::map<std::string, t_hhuint> const	std_map1;
+
+			ft_map0 = ft_map1;
+			std_map0 = std_map1;
+
+			if (ft_map0.size() != std_map0.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<std::string, t_hhuint>))
+				return KO;
+		}
+		// Assigning empty -> non-empty
+		{
+			ft::map<std::string, t_hhuint>			ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+			ft::map<std::string, t_hhuint> const	ft_map1;
+			std::map<std::string, t_hhuint>			std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+			std::map<std::string, t_hhuint> const	std_map1;
+
+			ft_map0 = ft_map1;
+			std_map0 = std_map1;
+
+			if (ft_map0.size() != std_map0.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<std::string, t_hhuint>))
+				return KO;
+		}
+		// Assigning non-empty -> empty
+		{
+			ft::map<std::string, t_hhuint>			ft_map0;
+			ft::map<std::string, t_hhuint> const	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+			std::map<std::string, t_hhuint>			std_map0;
+			std::map<std::string, t_hhuint> const	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+
+			ft_map0 = ft_map1;
+			std_map0 = std_map1;
+
+			if (ft_map0.size() != std_map0.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<std::string, t_hhuint>))
+				return KO;
+		}
+		// Assigning non-empty -> non-empty
+		{
+			ft::map<std::string, t_hhuint>			ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+			ft::map<std::string, t_hhuint> const	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+			std::map<std::string, t_hhuint>			std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+			std::map<std::string, t_hhuint> const	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+
+			ft_map0 = ft_map1;
+			std_map0 = std_map1;
+
+			if (ft_map0.size() != std_map0.size() ||
+				!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<std::string, t_hhuint>))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_access(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		std::vector<ft::pair<int, long double> >	ft_vec;
+		std::vector<std::pair<int, long double> >	std_vec;
+
+		for (idx = 0U ; idx < g_int_size && idx < g_long_double_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<int, long double>(g_int[idx], g_long_double[idx]));
+			std_vec.push_back(std::pair<int, long double>(g_int[idx], g_long_double[idx]));
+		}
+
+		ft::map<int, long double>	ft_map;
+		std::map<int, long double>	std_map;
+
+		for (idx = 0U ; idx < ft_vec.size() ; ++idx)
+		{
+			// Inserting
+			{
+				long double	&ft_ret = ft_map[ft_vec[idx].first];
+				long double	&std_ret = std_map[std_vec[idx].first];
+
+				if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+					return KO;
+
+				ft_ret = ft_vec[idx].second;
+				std_ret = std_vec[idx].second;
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+					return KO;
+			}
+			// Finding
+			{
+				long double	&ft_ret = ft_map[ft_vec[idx].first];
+				long double	&std_ret = std_map[std_vec[idx].first];
+
+				if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+					return KO;
+
+				ft_ret /= 3;
+				std_ret /= 3;
+
+				if (ft_map.size() != std_map.size() ||
+					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_map(void)
 {
 	t_test const	tests[] = {
@@ -1509,6 +1738,9 @@ int	test_map(void)
 		__test_function_lower_bound,
 		__test_function_upper_bound,
 		__test_function_equal_range,
+		__test_function_swap,
+		__test_operator_assign,
+		__test_operator_access,
 		NULL
 	};
 	t_uint			koCount;
