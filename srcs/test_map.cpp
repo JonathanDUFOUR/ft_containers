@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 16:06:06 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 17:59:24 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1785,7 +1785,69 @@ inline static int	__test_operator_equal(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator==(ft_map0, ft_map1) != std::operator==(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator==(ft_map0, ft_map1) != std::operator==(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator==(ft_map0, ft_map1) != std::operator==(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator==(ft_map0, ft_map1) != std::operator==(std_map0, std_map1))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1802,7 +1864,69 @@ inline static int	__test_operator_difference(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator!=(ft_map0, ft_map1) != std::operator!=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator!=(ft_map0, ft_map1) != std::operator!=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator!=(ft_map0, ft_map1) != std::operator!=(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator!=(ft_map0, ft_map1) != std::operator!=(std_map0, std_map1))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1819,7 +1943,81 @@ inline static int	__test_operator_lower(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
+				{
+					std::cout << '\n';
+					std::cout << "Key difference test failed with idx: " << idx << '\n';
+					return KO;
+				}
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
+				{
+					std::cout << '\n';
+					std::cout << "Mapped value difference test failed with idx: " << idx << '\n';
+					return KO;
+				}
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
+				{
+					std::cout << '\n';
+					std::cout << "Equivalence test failed with idx: " << idx << '\n';
+					return KO;
+				}
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1836,7 +2034,69 @@ inline static int	__test_operator_greater(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator>(ft_map0, ft_map1) != std::operator>(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator>(ft_map0, ft_map1) != std::operator>(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator>(ft_map0, ft_map1) != std::operator>(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator>(ft_map0, ft_map1) != std::operator>(std_map0, std_map1))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1853,7 +2113,69 @@ inline static int	__test_operator_lower_equal(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator<=(ft_map0, ft_map1) != std::operator<=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator<=(ft_map0, ft_map1) != std::operator<=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator<=(ft_map0, ft_map1) != std::operator<=(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator<=(ft_map0, ft_map1) != std::operator<=(std_map0, std_map1))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -1870,7 +2192,69 @@ inline static int	__test_operator_greater_equal(void)
 	title(__func__);
 	try
 	{
-		// TODO: Implement
+		std::vector<ft::pair<t_hhint, t_luint> >	ft_vec;
+		std::vector<std::pair<t_hhint, t_luint> >	std_vec;
+		ft::map<t_hhint, t_luint>					ft_map0;
+		ft::map<t_hhint, t_luint>					ft_map1;
+		std::map<t_hhint, t_luint>					std_map0;
+		std::map<t_hhint, t_luint>					std_map1;
+
+		for (idx = 0U ; idx < g_hhint_size && idx < g_luint_size ; ++idx)
+		{
+			ft_vec.push_back(ft::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+			std_vec.push_back(std::pair<t_hhint, t_luint>(g_hhint[idx], g_luint[idx]));
+		}
+
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
+		{
+			// Key difference
+			{
+				ft_map0[ft_vec[idx].first + 1] = ft_vec[idx].second;
+				ft_map1[ft_vec[idx].first - 1] = ft_vec[idx].second;
+				std_map0[std_vec[idx].first + 1] = std_vec[idx].second;
+				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
+
+				if (ft::operator>=(ft_map0, ft_map1) != std::operator>=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first + 1);
+				ft_map1.erase(ft_vec[idx].first - 1);
+				std_map0.erase(std_vec[idx].first + 1);
+				std_map1.erase(std_vec[idx].first - 1);
+				
+			}
+			// Mapped value difference
+			{
+				ft_map0[ft_vec[idx].first] = ft_vec[idx].second + 1;
+				ft_map1[ft_vec[idx].first] = ft_vec[idx].second - 1;
+				std_map0[std_vec[idx].first] = std_vec[idx].second + 1;
+				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
+
+				if (ft::operator>=(ft_map0, ft_map1) != std::operator>=(std_map0, std_map1))
+					return KO;
+
+				ft_map0.erase(ft_vec[idx].first);
+				ft_map1.erase(ft_vec[idx].first);
+				std_map0.erase(std_vec[idx].first);
+				std_map1.erase(std_vec[idx].first);
+			}
+			// Size difference
+			{
+				ft_map0.insert(ft_vec[idx]);
+				std_map0.insert(std_vec[idx]);
+
+				if (ft::operator>=(ft_map0, ft_map1) != std::operator>=(std_map0, std_map1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_map1.insert(ft_vec[idx]);
+				std_map1.insert(std_vec[idx]);
+
+				if (ft::operator>=(ft_map0, ft_map1) != std::operator>=(std_map0, std_map1))
+					return KO;
+			}
+		}
 	}
 	catch (std::exception const &e)
 	{

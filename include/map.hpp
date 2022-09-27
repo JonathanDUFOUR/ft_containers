@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:57:29 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 18:08:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -556,7 +556,7 @@ bool	operator!=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, All
 template <typename Key, typename T, typename Compare, typename Alloc>
 bool	operator<(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
 {
-	return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 /**
