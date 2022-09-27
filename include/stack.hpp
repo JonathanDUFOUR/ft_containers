@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:59 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 10:06:58 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:52:58 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,8 @@ public:
 	friend bool	operator<=(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
 	template <typename _T, typename _Container>
 	friend bool	operator>=(stack<_T, _Container> const &lhs, stack<_T, _Container> const &rhs);
-};
+
+}; // class stack
 
 /**
  * @brief	Check if two stacks are equivalent.
@@ -231,6 +232,7 @@ bool	operator>=(stack<T, Container> const &lhs, stack<T, Container> const &rhs)
 {
 	return lhs._ctnr >= rhs._ctnr;
 }
-}
+
+} // namespace ft
 
 #endif

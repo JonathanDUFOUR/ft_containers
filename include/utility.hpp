@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 12:30:10 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 10:49:23 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:56:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ struct pair
 		}
 		return *this;
 	}
-};
+
+}; // struct pair
 
 /**
  * @brief	Create a new pair object.
@@ -217,5 +218,7 @@ inline bool	operator>=(pair<T0, T1> const &lhs, pair<U0, U1> const &rhs)
 {
 	return (lhs.first >= rhs.first) || (lhs.second >= rhs.second);
 }
-}
+
+} // namespace ft
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 12:20:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:50:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ struct rb_node
 			node = node->child[RIGHT];
 		return node;
 	}
-};
+}; // struct rb_node
 
 /**
  * @brief	Check if two rb_node are equivalent.
@@ -152,6 +152,7 @@ bool	operator!=(rb_node<T0> const &lhs, rb_node<T1> const &rhs)
 {
 	return lhs.val != rhs.val;
 }
-}
+
+} // namespace ft
 
 #endif

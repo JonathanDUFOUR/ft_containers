@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 09:20:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:44:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -433,7 +433,7 @@ inline static int	__test_type_iterator(void)
 		it = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::iterator>(it);
 
-		if (it.getCurr() != tree.getMin())
+		if (it.getCurr() != tree.getMin() || *it != tree.getMin()->val)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -455,7 +455,7 @@ inline static int	__test_type_const_iterator(void)
 		cit = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::const_iterator>(cit);
 
-		if (cit.getCurr() != tree.getMin())
+		if (cit.getCurr() != tree.getMin() || *cit != tree.getMin()->val)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)

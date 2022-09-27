@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/08/30 22:40:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:51:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,5 +157,7 @@ inline void	swap(T &a, T &b)
 	a = b;
 	b = tmp;
 }
-}
+
+} // namespace ft
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 19:05:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:56:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ private:
 	// Attributes
 	pointer	_head;
 	pointer	_tail;
-	pointer	_endOfStorage;
+	pointer	_end_of_storage;
 
 // ****************************************************************************************************************** //
 //                                              Private Member Functions                                              //
@@ -122,7 +122,7 @@ private:
 			}
 			this->_head = newHead;
 			this->_tail = newTail;
-			this->_endOfStorage = this->_head + newCapacity;
+			this->_end_of_storage = this->_head + newCapacity;
 		}
 		for (newHead = this->_head + offset, newTail = newHead + n ; newHead != newTail ; ++newHead)
 			alloc.construct(newHead, val);
@@ -168,7 +168,7 @@ private:
 				}
 				this->_head = newHead;
 				this->_tail = newTail;
-				this->_endOfStorage = this->_head + newCapacity;
+				this->_end_of_storage = this->_head + newCapacity;
 				++newCapacity;
 			}
 			alloc.construct(this->_tail - offset, *first);
@@ -217,7 +217,7 @@ public:
 	explicit vector(allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
-		_endOfStorage(NULL) {}
+		_end_of_storage(NULL) {}
 
 	/**
 	 * @brief	Construct a new vector object with specific size and content. (fill constructor)
@@ -228,7 +228,7 @@ public:
 	explicit vector(size_type const n, value_type const &val = value_type(), allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
-		_endOfStorage(NULL)
+		_end_of_storage(NULL)
 	{
 		this->_insertFill(iterator(), n, val);
 	}
@@ -248,7 +248,7 @@ public:
 	vector(InputIterator first, InputIterator last, allocator_type const & = allocator_type()) :
 		_head(NULL),
 		_tail(NULL),
-		_endOfStorage(NULL)
+		_end_of_storage(NULL)
 	{
 		this->_insertDispatch(iterator(), first, last, is_integral<InputIterator>());
 	}
@@ -261,7 +261,7 @@ public:
 	vector(vector const &src) :
 		_head(NULL),
 		_tail(NULL),
-		_endOfStorage(NULL)
+		_end_of_storage(NULL)
 	{
 		this->_insertRange(iterator(), src.begin(), src.end());
 	}
@@ -374,7 +374,7 @@ public:
 	 */
 	size_type	capacity(void) const
 	{
-		return this->_endOfStorage - this->_head;
+		return this->_end_of_storage - this->_head;
 	}
 
 	/**
@@ -605,7 +605,7 @@ public:
 		alloc.deallocate(this->_head, this->capacity());
 		this->_head = newHead;
 		this->_tail = newTail;
-		this->_endOfStorage = this->_head + n;
+		this->_end_of_storage = this->_head + n;
 	}
 
 	/**
@@ -642,7 +642,7 @@ public:
 	{
 		ft::swap<pointer>(this->_head, other._head);
 		ft::swap<pointer>(this->_tail, other._tail);
-		ft::swap<pointer>(this->_endOfStorage, other._endOfStorage);
+		ft::swap<pointer>(this->_end_of_storage, other._end_of_storage);
 	}
 
 // ***************************************************************************************************************** //
@@ -682,7 +682,8 @@ public:
 	{
 		return this->_head[idx];
 	}
-};
+
+}; // class vector
 
 /**
  * @brief	Check if two vector are equivalent.
@@ -786,6 +787,10 @@ bool	operator>=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
 	return !(lhs < rhs);
 }
 
+// ***************************************************************************************************************** //
+//                                               Specialized Functions                                               //
+// ***************************************************************************************************************** //
+
 /**
  * @brief	Swap the contents of two given vector.
  * 
@@ -800,6 +805,7 @@ void	swap(vector<T, Alloc> &a, vector<T, Alloc> &b)
 {
 	a.swap(b);
 }
-}
+
+} // namespace ft
 
 #endif

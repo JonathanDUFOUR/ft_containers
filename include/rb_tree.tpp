@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 09:08:09 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:52:48 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -909,6 +909,13 @@ public:
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
 
+	/**
+	 * @brief	Assign a new content to the rb_tree from another one's. (copy assignation)
+	 * 
+	 * @param	rhs The right hand side rb_tree to copy the content from.
+	 * 
+	 * @return	The assigned rb_tree.
+	 */
 	rb_tree	&operator=(rb_tree const &rhs)
 	{
 		if (this != &rhs)
@@ -921,6 +928,9 @@ public:
 		}
 		return *this;
 	}
-};
-}
+
+}; // class rb_tree
+
+} // namespace ft
+
 #endif

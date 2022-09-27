@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 18:19:53 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:56:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ template <typename T>
 struct enable_if<true, T>
 {
 	typedef T	type;
-};
+
+}; // struct enable_if
 
 template <typename T, T v>
 struct integral_constant
@@ -40,7 +41,8 @@ struct integral_constant
 	{
 		return value;
 	}
-};
+
+}; // struct integral_constant
 
 typedef integral_constant<bool, true>	true_type;
 typedef integral_constant<bool, false>	false_type;
@@ -77,6 +79,6 @@ template <> class is_trivially_copyable<float> : public true_type {};
 template <> class is_trivially_copyable<double> : public true_type {};
 template <> class is_trivially_copyable<long double> : public true_type {};
 
-}
+} // namespace ft
 
 #endif

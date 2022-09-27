@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 12:02:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/27 15:57:29 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ public:
 		{
 			return this->_cmp(lhs.first, rhs.first);
 		}
-	};
+
+	}; // class value_compare
 
 private:
 	// Attributes
@@ -498,7 +499,144 @@ public:
 			return this->_tree.insert(it.getCurr(), value_type(key, mapped_type()))->second;
 		return it->second;
 	}
-};
+
+}; // class map
+
+/**
+ * @brief	Check if two map are equivalent.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are equivalent, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator==(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return &lhs == &rhs || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
+
+/**
+ * @brief	Check if two map are different.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are different, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator!=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return !(lhs == rhs);
+}
+
+/**
+ * @brief	Check if two map are strictly lexiographicaly ordered.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are strictly lexiographicaly ordered, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator<(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+/**
+ * @brief	Check if two map are strictly lexiographicaly reverse-ordered.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are strictly lexiographicaly reverse-ordered, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator>(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return rhs < lhs;
+}
+
+/**
+ * @brief	Check if two map are lexiographicaly ordered or equivalent.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are lexiographicaly ordered or equivalent, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator<=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return !(rhs < lhs);
+}
+
+/**
+ * @brief	Check if two map are lexiographicaly reverse-ordered or equivalent.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	lhs The left hand side map to compare.
+ * @param	rhs The right hand side map to compare.
+ * 
+ * @return	Either true if the two map are lexiographicaly reverse-ordered or equivalent, or false if not.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+bool	operator>=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+{
+	return !(lhs < rhs);
+}
+
+// ***************************************************************************************************************** //
+//                                               Specialized Functions                                               //
+// ***************************************************************************************************************** //
+
+/**
+ * @brief	Swap the contents of two given map.
+ * 
+ * @tparam	Key The key type of both of the map.
+ * @tparam	T The mapped type of both of the map.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the map.
+ * 
+ * @param	a The first map to swap.
+ * @param	b The second map to swap.
+ */
+template <typename Key, typename T, typename Compare, typename Alloc>
+void	swap(map<Key, T, Compare, Alloc> &a, map<Key, T, Compare, Alloc> &b)
+{
+	a.swap(b);
+}
+
+} // namespace ft
 
 #endif
