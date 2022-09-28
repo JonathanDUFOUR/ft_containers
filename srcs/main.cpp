@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 18:09:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/28 19:34:43 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static void	__init(void)
 int	main(void)
 {
 	t_test const	tests[] = {
+		test_pair,
 		test_reverse_iterator,
 		test_is_integral,
 		test_algorithm,

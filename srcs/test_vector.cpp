@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/26 16:07:19 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/28 18:40:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1759,7 +1759,7 @@ inline static int	__test_operator_access(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_equal(void)
+inline static int	__test_operator_equivalent(void)
 {
 	t_uint	idx;
 
@@ -1791,7 +1791,7 @@ inline static int	__test_operator_equal(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_difference(void)
+inline static int	__test_operator_different(void)
 {
 	t_uint	idx;
 
@@ -1888,7 +1888,7 @@ inline static int	__test_operator_greater(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_lower_equal(void)
+inline static int	__test_operator_lower_or_equivalent(void)
 {
 	t_uint	idx;
 
@@ -1920,7 +1920,7 @@ inline static int	__test_operator_lower_equal(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_greater_equal(void)
+inline static int	__test_operator_greater_or_equivalent(void)
 {
 	t_uint	idx;
 
@@ -1983,12 +1983,12 @@ int	test_vector(void)
 		__test_function_resize,
 		__test_operator_assign,
 		__test_operator_access,
-		__test_operator_equal,
-		__test_operator_difference,
+		__test_operator_equivalent,
+		__test_operator_different,
 		__test_operator_lower,
 		__test_operator_greater,
-		__test_operator_lower_equal,
-		__test_operator_greater_equal,
+		__test_operator_lower_or_equivalent,
+		__test_operator_greater_or_equivalent,
 		NULL
 	};
 	t_uint			koCount;

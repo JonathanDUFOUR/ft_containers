@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 18:08:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/28 19:38:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -356,7 +356,7 @@ public:
 	const_iterator	lower_bound(key_type const &key) const
 	{
 		const_iterator	cit;
-		value_compare	cmp;
+		key_compare		cmp;
 
 		for (cit = this->begin() ; cit != this->end() && cmp(cit->first, key) ; ++cit);
 		return cit;

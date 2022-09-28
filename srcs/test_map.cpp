@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 17:59:24 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/28 19:35:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1778,7 +1778,7 @@ inline static int	__test_operator_access(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_equal(void)
+inline static int	__test_operator_equivalent(void)
 {
 	t_uint	idx;
 
@@ -1857,7 +1857,7 @@ inline static int	__test_operator_equal(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_difference(void)
+inline static int	__test_operator_different(void)
 {
 	t_uint	idx;
 
@@ -1966,11 +1966,7 @@ inline static int	__test_operator_lower(void)
 				std_map1[std_vec[idx].first - 1] = std_vec[idx].second;
 
 				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
-				{
-					std::cout << '\n';
-					std::cout << "Key difference test failed with idx: " << idx << '\n';
 					return KO;
-				}
 
 				ft_map0.erase(ft_vec[idx].first + 1);
 				ft_map1.erase(ft_vec[idx].first - 1);
@@ -1986,11 +1982,7 @@ inline static int	__test_operator_lower(void)
 				std_map1[std_vec[idx].first] = std_vec[idx].second - 1;
 
 				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
-				{
-					std::cout << '\n';
-					std::cout << "Mapped value difference test failed with idx: " << idx << '\n';
 					return KO;
-				}
 
 				ft_map0.erase(ft_vec[idx].first);
 				ft_map1.erase(ft_vec[idx].first);
@@ -2011,11 +2003,7 @@ inline static int	__test_operator_lower(void)
 				std_map1.insert(std_vec[idx]);
 
 				if (ft::operator<(ft_map0, ft_map1) != std::operator<(std_map0, std_map1))
-				{
-					std::cout << '\n';
-					std::cout << "Equivalence test failed with idx: " << idx << '\n';
 					return KO;
-				}
 			}
 		}
 	}
@@ -2106,7 +2094,7 @@ inline static int	__test_operator_greater(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_lower_equal(void)
+inline static int	__test_operator_lower_or_equivalent(void)
 {
 	t_uint	idx;
 
@@ -2185,7 +2173,7 @@ inline static int	__test_operator_lower_equal(void)
 	return IMP_OK;
 }
 
-inline static int	__test_operator_greater_equal(void)
+inline static int	__test_operator_greater_or_equivalent(void)
 {
 	t_uint	idx;
 
@@ -2293,12 +2281,12 @@ int	test_map(void)
 		__test_function_swap,
 		__test_operator_assign,
 		__test_operator_access,
-		__test_operator_equal,
-		__test_operator_difference,
+		__test_operator_equivalent,
+		__test_operator_different,
 		__test_operator_lower,
 		__test_operator_greater,
-		__test_operator_lower_equal,
-		__test_operator_greater_equal,
+		__test_operator_lower_or_equivalent,
+		__test_operator_greater_or_equivalent,
 		NULL
 	};
 	t_uint			koCount;
