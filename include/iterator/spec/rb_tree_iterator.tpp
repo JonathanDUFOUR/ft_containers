@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/25 14:40:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 13:10:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ public:
 	 */
 	inline bool	operator!=(_self_type const &rhs) const
 	{
-		return this->_ptr != rhs.getPtr() || this->_curr != rhs.getCurr() || this->_root != rhs.getRoot();
+		return !(*this == rhs);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public:
 	template <typename _T, typename _Node>
 	inline bool	operator!=(rb_tree_iterator<_T, _Node> const &rhs) const
 	{
-		return this->_ptr != rhs.getPtr() || this->_curr != rhs.getCurr() || this->_root != rhs.getRoot();
+		return !(*this == rhs);
 	}
 
 	/**

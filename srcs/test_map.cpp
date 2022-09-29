@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 19:35:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 13:34:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1503,62 +1503,98 @@ inline static int	__test_function_swap(void)
 		{
 			// Swapping empty | empty
 			{
-				ft::map<char, float>	ft_map0;
-				ft::map<char, float>	ft_map1;
-				std::map<char, float>	std_map0;
-				std::map<char, float>	std_map1;
+				ft::map<char, float>					ft_map0;
+				ft::map<char, float>					ft_map1;
+				std::map<char, float>					std_map0;
+				std::map<char, float>					std_map1;
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft_map0.swap(ft_map1);
 				std_map0.swap(std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping empty | non-empty
 			{
-				ft::map<char, float>	ft_map0;
-				ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
-				std::map<char, float>	std_map0;
-				std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>					ft_map0;
+				ft::map<char, float>					ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+				std::map<char, float>					std_map0;
+				std::map<char, float>					std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft_map0.swap(ft_map1);
 				std_map0.swap(std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping non-empty | empty
 			{
-				ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
-				ft::map<char, float>	ft_map1;
-				std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
-				std::map<char, float>	std_map1;
+				ft::map<char, float>					ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+				ft::map<char, float>					ft_map1;
+				std::map<char, float>					std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+				std::map<char, float>					std_map1;
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft_map0.swap(ft_map1);
 				std_map0.swap(std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping non-empty | non-empty
 			{
-				ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
-				ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
-				std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
-				std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>					ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+				ft::map<char, float>					ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+				std::map<char, float>					std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+				std::map<char, float>					std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft_map0.swap(ft_map1);
 				std_map0.swap(std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 		}
@@ -1566,62 +1602,98 @@ inline static int	__test_function_swap(void)
 		{
 			// Swapping empty | empty
 			{
-				ft::map<char, float>	ft_map0;
-				ft::map<char, float>	ft_map1;
-				std::map<char, float>	std_map0;
-				std::map<char, float>	std_map1;
+				ft::map<char, float>					ft_map0;
+				ft::map<char, float>					ft_map1;
+				std::map<char, float>					std_map0;
+				std::map<char, float>					std_map1;
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft::swap(ft_map0, ft_map1);
 				std::swap(std_map0, std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping empty | non-empty
 			{
-				ft::map<char, float>	ft_map0;
-				ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
-				std::map<char, float>	std_map0;
-				std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>					ft_map0;
+				ft::map<char, float>					ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+				std::map<char, float>					std_map0;
+				std::map<char, float>					std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft::swap(ft_map0, ft_map1);
 				std::swap(std_map0, std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping non-empty | empty
 			{
-				ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
-				ft::map<char, float>	ft_map1;
-				std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
-				std::map<char, float>	std_map1;
+				ft::map<char, float>					ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+				ft::map<char, float>					ft_map1;
+				std::map<char, float>					std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+				std::map<char, float>					std_map1;
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft::swap(ft_map0, ft_map1);
 				std::swap(std_map0, std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 			// Swapping non-empty | non-empty
 			{
-				ft::map<char, float>	ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
-				ft::map<char, float>	ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
-				std::map<char, float>	std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
-				std::map<char, float>	std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>					ft_map0(&ft_vec[0], &ft_vec[ft_vec.size() / 2]);
+				ft::map<char, float>					ft_map1(&ft_vec[ft_vec.size() / 2], &ft_vec[ft_vec.size()]);
+				std::map<char, float>					std_map0(&std_vec[0], &std_vec[std_vec.size() / 2]);
+				std::map<char, float>					std_map1(&std_vec[std_vec.size() / 2], &std_vec[std_vec.size()]);
+				ft::map<char, float>::const_iterator	ft_cit0(ft_map0.begin());
+				ft::map<char, float>::const_iterator	ft_cit1(ft_map1.begin());
+				std::map<char, float>::const_iterator	std_cit0(std_map0.begin());
+				std::map<char, float>::const_iterator	std_cit1(std_map1.begin());
+				ft::map<char, float>::const_iterator	ft_cend0;
+				ft::map<char, float>::const_iterator	ft_cend1;
 
 				ft::swap(ft_map0, ft_map1);
 				std::swap(std_map0, std_map1);
 
+				ft_cend0 = ft_map0.end();
+				ft_cend1 = ft_map1.end();
+
 				if (ft_map0.size() != std_map0.size() || ft_map1.size() != std_map1.size() ||
-					!std::equal(ft_map0.begin(), ft_map0.end(), std_map0.begin(), __cmp<char, float>) ||
-					!std::equal(ft_map1.begin(), ft_map1.end(), std_map1.begin(), __cmp<char, float>))
+					!std::equal(ft_cit0, ft_cend1, std_cit0, __cmp<char, float>) ||
+					!std::equal(ft_cit1, ft_cend0, std_cit1, __cmp<char, float>))
 					return KO;
 			}
 		}
