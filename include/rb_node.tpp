@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:50:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 19:02:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,34 @@ struct rb_node
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new rb_node object. (default constructor)
+	 * @brief	Construct a new rb_node object. (parameter constructor)
 	 * 
 	 * @param	val The value to store in the node.
+	 * @param	color The color of the node.
+	 * @param	parent The parent of the node.
+	 * @param	child The two children of the node.
 	 */
-	rb_node(T const &val = T()) :
+	rb_node(T const &val, uint8_t const color, rb_node *const parent, rb_node *const left, rb_node *const right) :
 		val(val),
-		color(RED),
-		parent(NULL)
+		color(color),
+		parent(parent)
 	{
-		child[LEFT] = NULL;
-		child[RIGHT] = NULL;
+		child[LEFT] = left;
+		child[RIGHT] = right;
+	}
+
+	/**
+	 * @brief	Construct a new rb_node object. (copy constructor)
+	 * 
+	 * @param	src The rb_node to copy.
+	 */
+	rb_node(rb_node const &src) :
+		val(src.val),
+		color(src.color),
+		parent(src.parent)
+	{
+		child[LEFT] = src.child[LEFT];
+		child[RIGHT] = src.child[RIGHT];
 	}
 
 // ***************************************************************************************************************** //

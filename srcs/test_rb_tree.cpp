@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:44:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 20:27:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,33 @@
 #include "utility.hpp"
 
 template <typename T>
-inline static void	__blackSteps(ft::rb_node<T> const *const node, std::list<t_uint> &lst, t_uint const steps)
+inline static void	__blackSteps(
+	ft::rb_node<T> const *const node,
+	ft::rb_node<T> const *const nil,
+	std::list<t_uint> &lst,
+	t_uint const steps)
 {
-	if (!node)
+	if (node != nil)
 		return lst.push_back(steps);
-	__blackSteps(node->child[ft::LEFT], lst, steps + (node->color == ft::BLACK));
-	__blackSteps(node->child[ft::RIGHT], lst, steps + (node->color == ft::BLACK));
+	__blackSteps(node->child[ft::LEFT], nil, lst, steps + (node->color == ft::BLACK));
+	__blackSteps(node->child[ft::RIGHT], nil, lst, steps + (node->color == ft::BLACK));
 }
 
 template <typename T, typename Compare>
-inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare const cmp)
+inline static int	__propertiesCheck(
+	ft::rb_node<T> const *const node,
+	ft::rb_node<T> const *const nil,
+	Compare const cmp)
 {
 	std::list<t_uint>					lst;
 	std::list<t_uint>::const_iterator	it;
 
-	if (!node)
+	if (node == nil)
+	{
+		if (node->color != ft::BLACK)
+			return EXIT_FAILURE;
 		return EXIT_SUCCESS;
+	}
 	// Color check
 	{
 		if (node->color != ft::RED && node->color != ft::BLACK)
@@ -47,37 +58,37 @@ inline static int	__propertiesCheck(ft::rb_node<T> const *const node, Compare co
 	}
 	// Order check
 	{
-		if ((node->child[ft::LEFT] && !cmp(node->child[ft::LEFT]->val, node->val)) ||
-			(node->child[ft::RIGHT] && !cmp(node->val, node->child[ft::RIGHT]->val)))
+		if ((node->child[ft::LEFT] != nil && !cmp(node->child[ft::LEFT]->val, node->val)) ||
+			(node->child[ft::RIGHT] != nil && !cmp(node->val, node->child[ft::RIGHT]->val)))
 			return EXIT_FAILURE;
 	}
 	// Red violation check
 	{
 		if (node->color == ft::RED &&
-			((node->child[ft::LEFT] && node->child[ft::LEFT]->color == ft::RED) ||
-			(node->child[ft::RIGHT] && node->child[ft::RIGHT]->color == ft::RED)))
+			((node->child[ft::LEFT] != nil && node->child[ft::LEFT]->color == ft::RED) ||
+			(node->child[ft::RIGHT] != nil && node->child[ft::RIGHT]->color == ft::RED)))
 			return EXIT_FAILURE;
 	}
 	// Black violation check
 	{
-		__blackSteps(node, lst, 0U);
+		__blackSteps(node, nil, lst, 0U);
 		for (it = lst.begin() ; it != lst.end() ; ++it)
 			if (*it != *lst.begin())
 				return EXIT_FAILURE;
 	}
-	return __propertiesCheck(node->child[ft::LEFT], cmp) || __propertiesCheck(node->child[ft::RIGHT], cmp);
+	return __propertiesCheck(node->child[ft::LEFT], nil, cmp) || __propertiesCheck(node->child[ft::RIGHT], nil, cmp);
 }
 
 template <typename T>
-inline static int	__integrityCheck(ft::rb_node<T> const *const node)
+inline static int	__integrityCheck(ft::rb_node<T> const *const node, ft::rb_node<T> const *const nil)
 {
-	if (!node)
+	if (node == nil)
 		return EXIT_SUCCESS;
-	if (node->child[ft::LEFT] && node->child[ft::LEFT]->parent != node)
+	if (node->child[ft::LEFT] != nil && node->child[ft::LEFT]->parent != node)
 		return EXIT_FAILURE;
-	if (node->child[ft::RIGHT] && node->child[ft::RIGHT]->parent != node)
+	if (node->child[ft::RIGHT] != nil && node->child[ft::RIGHT]->parent != node)
 		return EXIT_FAILURE;
-	return __integrityCheck(node->child[ft::LEFT]) || __integrityCheck(node->child[ft::RIGHT]);
+	return __integrityCheck(node->child[ft::LEFT], nil) || __integrityCheck(node->child[ft::RIGHT], nil);
 }
 
 template <typename T>
@@ -133,7 +144,7 @@ inline static int	__test_constructor(void)
 	return EXIT_SUCCESS;
 }
 
-inline static int	__test_accessor_getMax(void)
+inline static int	__test_accessor_getNil(void)
 {
 	t_uint	idx;
 
@@ -142,51 +153,20 @@ inline static int	__test_accessor_getMax(void)
 	{
 		// Empty tree
 		{
-			ft::rb_tree<long double>	tree;
+			ft::rb_tree<long double> const			tree;
+			ft::rb_node<long double> const *const	nil = tree.getNil();
 
-			if (tree.getMax())
+			if (!nil || nil->color != ft::BLACK || nil->parent || nil->child[ft::MIN] || nil->child[ft::MAX])
 				return EXIT_FAILURE;
 		}
 		// Non-empty tree
 		{
 			for (idx = 1U ; idx <= g_long_double_size ; ++idx)
 			{
-				ft::rb_tree<long double>	tree(&g_long_double[0], &g_long_double[idx]);
+				ft::rb_tree<long double> const			tree(&g_long_double[0], &g_long_double[idx]);
+				ft::rb_node<long double> const *const	nil = tree.getNil();
 
-				if (!tree.getMax() || tree.getMax()->val != *std::max_element(&g_long_double[0], &g_long_double[idx]))
-					return EXIT_FAILURE;
-			}
-		}
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
-inline static int	__test_accessor_getMin(void)
-{
-	t_uint	idx;
-
-	title(__func__);
-	try
-	{
-		// Empty tree
-		{
-			ft::rb_tree<t_uint>	tree;
-
-			if (tree.getMin())
-				return EXIT_FAILURE;
-		}
-		// Non-empty tree
-		{
-			for (idx = 1U ; idx <= g_uint_size ; ++idx)
-			{
-				ft::rb_tree<t_uint>	tree(&g_uint[0], &g_uint[idx]);
-
-				if (!tree.getMin() || tree.getMin()->val != *std::min_element(&g_uint[0], &g_uint[idx]))
+				if (!nil || nil->color != ft::BLACK || nil->parent || !nil->child[ft::MIN] || !nil->child[ft::MAX])
 					return EXIT_FAILURE;
 			}
 		}
@@ -266,6 +246,72 @@ inline static int	__test_accessor_getSize(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_max(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Empty tree
+		{
+			ft::rb_tree<char> const	tree;
+
+			if (tree.min() != tree.getNil())
+				return EXIT_FAILURE;
+		}
+		// Non-empty tree
+		{
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::rb_tree<char> const	tree(&g_char[0], &g_char[idx]);
+
+				if (tree.max() == tree.getNil() || tree.max()->val != *std::max_element(&g_char[0], &g_char[idx]))
+					return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_min(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Empty tree
+		{
+			ft::rb_tree<char> const	tree;
+
+			if (tree.min() != tree.getNil())
+				return EXIT_FAILURE;
+		}
+		// Non-empty tree
+		{
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::rb_tree<char> const	tree(&g_char[0], &g_char[idx]);
+
+				if (tree.min() == tree.getNil() || tree.min()->val != *std::min_element(&g_char[0], &g_char[idx]))
+					return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
 inline static int	__test_function_begin(void)
 {
 	t_uint	idx;
@@ -282,7 +328,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint>	tree(&g_luint[0], &g_luint[idx]);
 
 				it = tree.begin();
-				if (it.getCurr() != tree.getMin())
+				if (it.getCurr() != tree.min())
 					return EXIT_FAILURE;
 			}
 		}
@@ -295,7 +341,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint> const	tree(&g_luint[0], &g_luint[idx]);
 
 				cit = tree.begin();
-				if (cit.getCurr() != tree.getMin())
+				if (cit.getCurr() != tree.min())
 					return EXIT_FAILURE;
 			}
 		}
@@ -322,7 +368,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint>					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::iterator const	it(--tree.end());
 
-				if (it.getCurr() != tree.getMax())
+				if (it.getCurr() != tree.max())
 					return EXIT_FAILURE;
 			}
 		}
@@ -333,7 +379,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint> const					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::const_iterator const	cit(--tree.end());
 
-				if (cit.getCurr() != tree.getMax())
+				if (cit.getCurr() != tree.max())
 					return EXIT_FAILURE;
 			}
 		}
@@ -433,7 +479,7 @@ inline static int	__test_type_iterator(void)
 		it = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::iterator>(it);
 
-		if (it.getCurr() != tree.getMin() || *it != tree.getMin()->val)
+		if (it.getCurr() != tree.min() || *it != tree.min()->val)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -455,7 +501,7 @@ inline static int	__test_type_const_iterator(void)
 		cit = tree.begin();
 		BidirectionalIteratorCheck<ft::rb_tree<float>::const_iterator>(cit);
 
-		if (cit.getCurr() != tree.getMin() || *cit != tree.getMin()->val)
+		if (cit.getCurr() != tree.min() || *cit != tree.min()->val)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -529,9 +575,9 @@ inline static int	__test_function_insert(void)
 
 			if (tree.getSize() != ref.size() ||
 				*ft_ret.first != *std_ret.first || ft_ret.second != std_ret.second ||
-				__integrityCheck(tree.getRoot()) ||
-				__propertiesCheck(tree.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<std::string>))
+				__integrityCheck(tree.getRoot(), tree.getNil()) ||
+				__propertiesCheck(tree.getRoot(), tree.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree.begin(), tree.end(), ref.begin()))
 				return EXIT_FAILURE;
 		}
 	}
@@ -569,9 +615,9 @@ inline static int	__test_function_erase(void)
 				}
 
 				if (tree.getSize() != ref.size() ||
-					__integrityCheck(tree.getRoot()) ||
-					__propertiesCheck(tree.getRoot(), ft::rb_tree<long double>::compare_type()) ||
-					!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<long double>))
+					__integrityCheck(tree.getRoot(), tree.getNil()) ||
+					__propertiesCheck(tree.getRoot(), tree.getNil(), ft::rb_tree<long double>::compare_type()) ||
+					!std::equal(tree.begin(), tree.end(), ref.begin()))
 					return EXIT_FAILURE;
 			}
 		}
@@ -588,9 +634,9 @@ inline static int	__test_function_erase(void)
 				std_ret = ref.erase(g_char[idx / 2]);
 
 				if (tree.getSize() != ref.size() || ft_ret != std_ret ||
-					__integrityCheck(tree.getRoot()) ||
-					__propertiesCheck(tree.getRoot(), ft::rb_tree<char>::compare_type()) ||
-					!std::equal(tree.begin(), tree.end(), ref.begin(), __cmp<char>))
+					__integrityCheck(tree.getRoot(), tree.getNil()) ||
+					__propertiesCheck(tree.getRoot(), tree.getNil(), ft::rb_tree<char>::compare_type()) ||
+					!std::equal(tree.begin(), tree.end(), ref.begin()))
 					return EXIT_FAILURE;
 			}
 		}
@@ -615,7 +661,7 @@ inline static int	__test_function_clear(void)
 			ft::rb_tree<char>	tree(&g_char[0], &g_char[idx]);
 
 			tree.clear();
-			if (tree.getMax() || tree.getMin() || tree.getRoot() || tree.getSize())
+			if (tree.max() || tree.min() || tree.getRoot() || tree.getSize())
 				return EXIT_FAILURE;
 		}
 	}
@@ -676,11 +722,12 @@ inline static int	__test_function_swap(void)
 			ref0.swap(ref1);
 
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
-				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
-				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__integrityCheck(tree1.getRoot(), tree1.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), tree1.getNil(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin()))
 				return EXIT_FAILURE;
 		}
 		// Swapping empty | non-empty
@@ -694,11 +741,12 @@ inline static int	__test_function_swap(void)
 			ref0.swap(ref1);
 
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
-				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
-				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__integrityCheck(tree1.getRoot(), tree1.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), tree1.getNil(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin()))
 				return EXIT_FAILURE;
 		}
 		// Swapping non-empty | empty
@@ -712,11 +760,12 @@ inline static int	__test_function_swap(void)
 			ref0.swap(ref1);
 
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
-				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
-				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__integrityCheck(tree1.getRoot(), tree1.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), tree1.getNil(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin()))
 				return EXIT_FAILURE;
 		}
 		// Swapping non-empty | non-empty
@@ -730,11 +779,12 @@ inline static int	__test_function_swap(void)
 			ref0.swap(ref1);
 
 			if (tree0.getSize() != ref0.size() || tree1.getSize() != ref1.size() ||
-				__integrityCheck(tree0.getRoot()) || __integrityCheck(tree1.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				__propertiesCheck(tree1.getRoot(), ft::rb_tree<float>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<float>) ||
-				!std::equal(tree1.begin(), tree1.end(), ref1.begin(), __cmp<float>))
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__integrityCheck(tree1.getRoot(), tree1.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<float>::compare_type()) ||
+				__propertiesCheck(tree1.getRoot(), tree1.getNil(), ft::rb_tree<float>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()) ||
+				!std::equal(tree1.begin(), tree1.end(), ref1.begin()))
 				return EXIT_FAILURE;
 		}
 	}
@@ -761,9 +811,9 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
 		}
 		// Assigning empty -> non-empty
@@ -776,9 +826,9 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
 		}
 		// Assigning non-empty -> empty
@@ -791,9 +841,9 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
 		}
 		// Assigning non-empty -> non-empty
@@ -806,9 +856,9 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot()) ||
-				__propertiesCheck(tree0.getRoot(), ft::rb_tree<std::string>::compare_type()) ||
-				!std::equal(tree0.begin(), tree0.end(), ref0.begin(), __cmp<std::string>))
+			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
 		}
 	}
@@ -824,10 +874,11 @@ int	test_rb_tree(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
-		__test_accessor_getMax,
-		__test_accessor_getMin,
+		__test_accessor_getNil,
 		__test_accessor_getRoot,
 		__test_accessor_getSize,
+		__test_function_min,
+		__test_function_max,
 		__test_function_begin,
 		__test_function_end,
 		__test_function_rbegin,

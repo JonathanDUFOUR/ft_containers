@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 19:38:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 19:39:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,7 +257,7 @@ public:
 	 */
 	iterator	find(key_type const &key)
 	{
-		return iterator(this->_tree.find(value_type(key, mapped_type())), &this->_tree.getRoot());
+		return iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getNil());
 	}
 
 	/**
@@ -268,7 +268,7 @@ public:
 	 */
 	const_iterator	find(key_type const &key) const
 	{
-		return const_iterator(this->_tree.find(value_type(key, mapped_type())), &this->_tree.getRoot());
+		return const_iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getNil());
 	}
 
 	/**
@@ -494,7 +494,7 @@ public:
 			return this->_tree.insert(value_type(key, mapped_type())).first->second;
 		it = this->lower_bound(key);
 		if (it == this->end())
-			return this->_tree.insert(this->_tree.getMax(), value_type(key, mapped_type()))->second;
+			return this->_tree.insert(this->_tree.getNil()->child[MAX], value_type(key, mapped_type()))->second;
 		if (cmp(it->first, key) || cmp(key, it->first))
 			return this->_tree.insert(it.getCurr(), value_type(key, mapped_type()))->second;
 		return it->second;

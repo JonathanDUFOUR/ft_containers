@@ -6,13 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:52:48 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 19:47:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_TPP
 # define RB_TREE_TPP
 
+# include <cassert>
 # include <cstring>
 # include <functional>
 # include <memory>
@@ -23,6 +24,7 @@
 # include "rb_node.tpp"
 # include "e_rb_color.hpp"
 # include "e_rb_direction.hpp"
+# include "e_rb_min_max.hpp"
 
 namespace ft
 {
@@ -76,11 +78,10 @@ public:
 
 private:
 	// Attributes
-	pointer		_root;
-	pointer		_min;
-	pointer		_max;
+	pointer			_nil;
+	pointer			_root;
 
-	size_type	_size;
+	size_type		_size;
 
 // ****************************************************************************************************************** //
 //                                              Private Member Functions                                              //
@@ -114,7 +115,7 @@ private:
 
 		// At this point, the node has a parent, and has a black sibling.
 		closeNephew = sibling->child[dir];
-		if (closeNephew && closeNephew->color == RED)
+		if (closeNephew->color == RED)
 		{
 			// At this point, the node has a parent, has a black sibling, and has a red close nephew.
 			// (D5)
@@ -123,7 +124,7 @@ private:
 			sibling->child[!dir]->color = RED;
 		}
 		distantNephew = sibling->child[!dir];
-		if (distantNephew && distantNephew->color == RED)
+		if (distantNephew->color == RED)
 		{
 			// At this point, the node has a parent, has a black sibling, and has a red distant nephew.
 			// (D6)
@@ -153,7 +154,7 @@ private:
 		// and has either no distant nephew or a black distant nephew.
 		// (D1)
 		sibling->color = RED;
-		if (parent->parent)
+		if (parent->parent != this->_nil)
 			return this->_balanceErase(parent, rb_tree::_childDirection(parent));
 
 		// At this point, the node has a black parent, has a black sibling,
@@ -178,13 +179,13 @@ private:
 
 		// At this point, the node is red.
 		parent = node->parent;
-		if (!parent || parent->color == BLACK)
+		if (parent->color == BLACK)
 			// At this point, the node has a black parent. (I1 + I3)
 			return ;
 
 		// At this point, the node is red, and has red parent. (red violation)
 		grandParent = parent->parent;
-		if (!grandParent)
+		if (grandParent == this->_nil)
 		{
 			// At this point, the node is red, has red parent, and has no grandparent. (red violation) (I4)
 			node->parent->color = BLACK;
@@ -194,7 +195,7 @@ private:
 		// At this point, the node is red, has a red parent, and has a black grand-parent. (red violation)
 		dir = rb_tree::_childDirection(parent);
 		uncle = grandParent->child[!dir];
-		if (!uncle || uncle->color == BLACK)
+		if (uncle->color == BLACK)
 		{
 			// At this point, the node is red, has a red parent, has a black grand-parent, and has a black uncle.
 			// (red violation)
@@ -240,42 +241,43 @@ private:
 	}
 
 	/**
-	 * @brief	Remove every nodes of a tree.
+	 * @brief	Remove every nodes of the tree.
 	 * 
 	 * @param	root The root of the tree to clear.
 	 */
-	static void	_clear(pointer const root)
+	void	_clear(pointer const root) const
 	{
 		allocator_type	alloc;
 
-		if (!root)
+		if (root == this->_nil)
 			return ;
-		rb_tree::_clear(root->child[LEFT]);
-		rb_tree::_clear(root->child[RIGHT]);
+		this->_clear(root->child[LEFT]);
+		this->_clear(root->child[RIGHT]);
 		alloc.destroy(root);
 		alloc.deallocate(root, 1LU);
 	}
 
 	/**
-	 * @brief	Duplicate every node from a tree to another, using deep copy.
+	 * @brief	Duplicate every node from a tree, using deep copy.
 	 * 
-	 * @param	src The source root.
+	 * @param	srcRoot The source root node.
+	 * @param	srcNil The source nil node.
 	 * @param	parent The parent node of the new one to create.
 	 * 
 	 * @return	The root of the new tree.
 	 */
-	static pointer	_dup(const_pointer const src, pointer const parent = NULL)
+	pointer	_dup(const_pointer const srcRoot, pointer const srcNil, pointer const parent) const
 	{
 		pointer			dst;
 		allocator_type	alloc;
 
-		if (!src)
-			return NULL;
+		if (srcRoot == srcNil)
+			return this->_nil;
 		dst = alloc.allocate(1LU);
-		alloc.construct(dst, *src);
+		alloc.construct(dst, *srcRoot);
 		dst->parent = parent;
-		dst->child[LEFT] = rb_tree::_dup(src->child[LEFT], dst);
-		dst->child[RIGHT] = rb_tree::_dup(src->child[RIGHT], dst);
+		dst->child[LEFT] = this->_dup(srcRoot->child[LEFT], srcNil, dst);
+		dst->child[RIGHT] = this->_dup(srcRoot->child[RIGHT], srcNil, dst);
 		return dst;
 	}
 
@@ -286,14 +288,14 @@ private:
 	 * @param	dst The destination node.
 	 * @param	src The source node.
 	 */
-	inline static void	_relinkGoingTo(pointer const dst, pointer const src)
+	inline void	_relinkGoingTo(pointer const dst, pointer const src) const
 		__attribute__((nonnull))
 	{
-		if (src->parent)
+		if (src->parent != this->_nil)
 			src->parent->child[rb_tree::_childDirection(src)] = dst;
-		if (src->child[LEFT])
+		if (src->child[LEFT] != this->_nil)
 			src->child[LEFT]->parent = dst;
-		if (src->child[RIGHT])
+		if (src->child[RIGHT] != this->_nil)
 			src->child[RIGHT]->parent = dst;
 	}
 
@@ -314,19 +316,18 @@ private:
 
 		parent = root->parent;
 		oppositeChild = root->child[!dir];
-		if (!oppositeChild)
-			return NULL;
+		assert(oppositeChild != this->_nil);
 		grandChild = oppositeChild->child[dir];
 
 		root->child[!dir] = grandChild;
-		if (grandChild)
+		if (grandChild != this->_nil)
 			grandChild->parent = root;
 
 		oppositeChild->child[dir] = root;
 		root->parent = oppositeChild;
 
 		oppositeChild->parent = parent;
-		if (parent)
+		if (parent != this->_nil)
 		{
 			if (root == parent->child[LEFT])
 				parent->child[LEFT] = oppositeChild;
@@ -347,12 +348,12 @@ private:
 	 * @param	node0 The first node to be swapped.
 	 * @param	node1 The second node to be swapped.
 	 */
-	inline static void	_valueSwapFarNodes(pointer const node0, pointer const node1)
+	inline void	_valueSwapFarNodes(pointer const node0, pointer const node1) const
 	{
 		// Step 0:
 		// Swap pointers going to node0 and node1.
-		rb_tree::_relinkGoingTo(node1, node0);
-		rb_tree::_relinkGoingTo(node0, node1);
+		this->_relinkGoingTo(node1, node0);
+		this->_relinkGoingTo(node0, node1);
 
 		// Step 1:
 		// Swap pointers leaving from node0 and node1.
@@ -373,19 +374,20 @@ private:
 	 * @param	father The father node.
 	 * @param	son The son node.
 	 */
-	inline static void	_valueSwapFatherSon(pointer const father, pointer const son)
+	inline void	_valueSwapFatherSon(pointer const father, pointer const son) const
+		__attribute__((nonnull))
 	{
 		uint8_t const	dir = rb_tree::_childDirection(son);
 
 		// Step 0:
 		// Swap pointers going to father and son.
-		if (father->parent)
+		if (father->parent != this->_nil)
 			father->parent->child[rb_tree::_childDirection(father)] = son;
-		if (father->child[!dir])
+		if (father->child[!dir] != this->_nil)
 			father->child[!dir]->parent = son;
-		if (son->child[LEFT])
+		if (son->child[LEFT] != this->_nil)
 			son->child[LEFT]->parent = father;
-		if (son->child[RIGHT])
+		if (son->child[RIGHT] != this->_nil)
 			son->child[RIGHT]->parent = father;
 
 		// Step 1:
@@ -409,15 +411,15 @@ private:
 	 * @param	node0 The first node to be swapped.
 	 * @param	node1 The second node to be swapped.
 	 */
-	inline static void	_valueSwap(pointer const node0, pointer const node1)
+	inline void	_valueSwap(pointer const node0, pointer const node1) const
 		__attribute__((nonnull))
 	{
 		if (node0->parent == node1)
-			rb_tree::_valueSwapFatherSon(node1, node0);
+			this->_valueSwapFatherSon(node1, node0);
 		else if (node1->parent == node0)
-			rb_tree::_valueSwapFatherSon(node0, node1);
+			this->_valueSwapFatherSon(node0, node1);
 		else
-			rb_tree::_valueSwapFarNodes(node0, node1);
+			this->_valueSwapFarNodes(node0, node1);
 	}
 
 public:
@@ -429,10 +431,12 @@ public:
 	 * @brief	Construct a new empty rb_tree object. (default constructor)
 	 */
 	rb_tree(void) :
-		_root(NULL),
-		_min(NULL),
-		_max(NULL),
-		_size(0LU) {}
+		_nil(allocator_type().allocate(1LU)),
+		_root(this->_nil),
+		_size(0LU)
+	{
+		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, NULL, NULL));
+	}
 
 	/**
 	 * @brief	Construct a new rb_tree object using a range of iterators.
@@ -447,15 +451,13 @@ public:
 	 */
 	template <typename InputIterator>
 	rb_tree(InputIterator first, InputIterator const &last) :
-		_root(NULL),
-		_min(NULL),
-		_max(NULL),
+		_nil(allocator_type().allocate(1LU)),
+		_root(this->_nil),
 		_size(0LU)
 	{
+		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, NULL, NULL));
 		for (; first != last ; ++first)
-		{
 			this->insert(*first);
-		}
 	}
 
 	/**
@@ -464,10 +466,19 @@ public:
 	 * @param	src The rb_tree to copy
 	 */
 	rb_tree(rb_tree const &src) :
-		_root(rb_tree::_dup(src._root)),
-		_min(rb_node<value_type>::leftMost(this->_root)),
-		_max(rb_node<value_type>::rightMost(this->_root)),
-		_size(src._size) {}
+		_nil(allocator_type().allocate(1LU)),
+		_root(this->_dup(src._root, src._nil, this->_nil)),
+		_size(src._size)
+	{
+		allocator_type().construct(
+			this->_nil,
+			_node_type(
+				value_type(),
+				BLACK,
+				NULL,
+				_node_type::leftMost(this->_root),
+				_node_type::rightMost(this->_root)));
+	}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //
@@ -478,7 +489,11 @@ public:
 	 */
 	~rb_tree(void)
 	{
+		allocator_type	alloc;
+
 		this->clear();
+		alloc.destroy(this->_nil);
+		alloc.deallocate(this->_nil, 1LU);
 	}
 
 // ***************************************************************************************************************** //
@@ -486,25 +501,17 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @return	The node with the greatest value of the tree.
+	 * @return	The nil node of the tree.
 	 */
-	pointer const	&getMax(void) const
+	inline pointer const	&getNil(void) const
 	{
-		return this->_max;
-	}
-
-	/**
-	 * @return	The node with the lowest value of the tree.
-	 */
-	pointer const	&getMin(void) const
-	{
-		return this->_min;
+		return this->_nil;
 	}
 
 	/**
 	 * @return	The root node of the tree.
 	 */
-	pointer const	&getRoot(void) const
+	inline pointer const	&getRoot(void) const
 	{
 		return this->_root;
 	}
@@ -512,7 +519,7 @@ public:
 	/**
 	 * @return	The size of the tree.
 	 */
-	size_type const	&getSize(void) const
+	inline size_type const	&getSize(void) const
 	{
 		return this->_size;
 	}
@@ -526,7 +533,7 @@ public:
 	 */
 	iterator	begin(void)
 	{
-		return iterator(this->_min, &this->_root);
+		return iterator(this->_nil->child[MIN], this->_nil);
 	}
 
 	/**
@@ -534,7 +541,7 @@ public:
 	 */
 	const_iterator	begin(void) const
 	{
-		return const_iterator(this->_min, &this->_root);
+		return const_iterator(this->_nil->child[MIN], this->_nil);
 	}
 
 	/**
@@ -542,8 +549,13 @@ public:
 	 */
 	void	clear(void)
 	{
-		rb_tree::_clear(this->_root);
-		bzero(this, sizeof(*this));
+		allocator_type	alloc;
+
+		this->_clear(this->_root);
+		this->_nil->child[MIN] = this->_nil;
+		this->_nil->child[MAX] = this->_nil;
+		this->_root = this->_nil;
+		this->_size = 0LU;
 	}
 
 	/**
@@ -551,7 +563,7 @@ public:
 	 */
 	iterator	end(void)
 	{
-		return iterator(NULL, &this->_root);
+		return iterator(this->_nil, this->_nil);
 	}
 
 	/**
@@ -559,7 +571,7 @@ public:
 	 */
 	const_iterator	end(void) const
 	{
-		return const_iterator(NULL, &this->_root);
+		return const_iterator(this->_nil, this->_nil);
 	}
 
 	/**
@@ -573,7 +585,7 @@ public:
 	{
 		pointer const	pos = this->find(val);
 
-		if (!pos)
+		if (pos == this->_nil)
 			return 0LU;
 		this->erase(pos);
 		return 1LU;
@@ -590,68 +602,73 @@ public:
 		uint8_t			dir;
 		allocator_type	alloc;
 
+		assert(pos && pos != this->_nil);
+
 		// At this point, the node exists.
 		if (this->_size == 1LU)
 		{
 			// At this point, the node is the only one in the tree.
-			bzero(this, sizeof(*this));
+			this->_nil->child[MIN] = this->_nil;
+			this->_nil->child[MAX] = this->_nil;
+			this->_root = this->_nil;
+			this->_size = 0LU;
 			alloc.destroy(pos);
 			alloc.deallocate(pos, 1LU);
 			return ;
 		}
 
 		// At this point, the node is not the only one of the tree.
-		if (pos->child[LEFT] && pos->child[RIGHT])
+		if (pos->child[LEFT] != this->_nil && pos->child[RIGHT] != this->_nil)
 		{
 			// At this point, the node has a left child, and has a right child.
-			// So we just swap the node with its successor
-			successor = rb_node<value_type>::leftMost(pos->child[RIGHT]);
-			rb_tree::_valueSwap(pos, successor);
+			// So we just swap the node with its successor.
+			successor = _node_type::leftMost(pos->child[RIGHT]);
+			this->_valueSwap(pos, successor);
 			if (this->_root == pos)
 				this->_root = successor;
 		}
 
 		// At this point, the node has at most one child.
-		if (pos->child[LEFT])
+		if (pos->child[LEFT] != this->_nil)
 		{
 			// At this point, the node is black-deducted, and has only one red-deducted left child.
-			if (pos->parent)
+			if (pos->parent != this->_nil)
 				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[LEFT];
 			pos->child[LEFT]->parent = pos->parent;
 			pos->child[LEFT]->color = BLACK;
 			if (this->_root == pos)
 				this->_root = pos->child[LEFT];
-			if (this->_max == pos)
-				this->_max = pos->child[LEFT];
+			if (this->_nil->child[MAX] == pos)
+				this->_nil->child[MAX] = pos->child[LEFT];
 		}
-		else if (pos->child[RIGHT])
+		else if (pos->child[RIGHT] != this->_nil)
 		{
 			// At this point, the node is black-deducted, and has only one red-deducted right child.
-			if (pos->parent)
+			if (pos->parent != this->_nil)
 				pos->parent->child[rb_tree::_childDirection(pos)] = pos->child[RIGHT];
 			pos->child[RIGHT]->parent = pos->parent;
 			pos->child[RIGHT]->color = BLACK;
 			if (this->_root == pos)
 				this->_root = pos->child[RIGHT];
-			if (this->_min == pos)
-				this->_min = pos->child[RIGHT];
+			if (this->_nil->child[MIN] == pos)
+				this->_nil->child[MIN] = pos->child[RIGHT];
 		}
 		else if (pos->color == RED)
 		{
 			// At this point, the node is red, has a parent, and has no any child.
 			pos->parent->child[rb_tree::_childDirection(pos)] = NULL;
-			if (this->_min == pos)
-				this->_min = pos->parent;
-			if (this->_max == pos)
-				this->_max = pos->parent;
+			if (this->_nil->child[MIN] == pos)
+				this->_nil->child[MIN] = pos->parent;
+			if (this->_nil->child[MAX] == pos)
+				this->_nil->child[MAX] = pos->parent;
 		}
 		else
 		{
 			// At this point, the node is black, has a parent, and has no any child.
-			if (this->_min == pos)
-				this->_min = pos->parent;
-			if (this->_max == pos)
-				this->_max = pos->parent;
+			if (this->_nil->child[MIN] == pos)
+				this->_nil->child[MIN] = pos->parent;
+			if (this->_nil->child[MAX] == pos)
+				this->_nil->child[MAX] = pos->parent;
 			dir = rb_tree::_childDirection(pos);
 			pos->parent->child[dir] = NULL;
 			this->_balanceErase(pos, dir);
@@ -666,7 +683,7 @@ public:
 	 * 
 	 * @param	val The value of the node to search for.
 	 * 
-	 * @return	A pointer to the node if found, or NULL if not.
+	 * @return	A pointer to the node if found, or nil node if not.
 	 */
 	pointer	find(value_type const &val) const
 	{
@@ -674,7 +691,7 @@ public:
 		compare_type	cmp;
 
 		node = this->_root;
-		while (node)
+		while (node != this->_nil)
 			if (cmp(val, node->val))
 				node = node->child[LEFT];
 			else if (cmp(node->val, val))
@@ -700,18 +717,27 @@ public:
 		compare_type	cmp;
 		allocator_type	alloc;
 
-		if (!this->_root)
+		// Checking if the tree is empty.
+		if (!this->_size)
 		{
 			this->_root = alloc.allocate(1LU);
-			this->_min = this->_root;
-			this->_max = this->_root;
+			this->_nil->child[MIN] = this->_root;
+			this->_nil->child[MAX] = this->_root;
 			this->_size = 1LU;
-			alloc.construct(this->_root, _node_type(val));
-			return pair<iterator, bool>(iterator(this->_root, &this->_root), true);
+			alloc.construct(
+				this->_root,
+				_node_type(
+					val,
+					RED,
+					this->_nil,
+					this->_nil,
+					this->_nil));
+			return pair<iterator, bool>(iterator(this->_root, this->_nil), true);
 		}
 
+		// Looking for the insertion position.
 		pos = this->_root;
-		while (pos)
+		while (pos != this->_nil)
 			if (cmp(val, pos->val))
 			{
 				parent = pos;
@@ -723,27 +749,33 @@ public:
 				pos = pos->child[RIGHT];
 			}
 			else
-				return pair<iterator, bool>(iterator(pos, &this->_root), false);
+				return pair<iterator, bool>(iterator(pos, this->_nil), false);
 
 		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
-		alloc.construct(node, _node_type(val));
-		node->parent = parent;
+		alloc.construct(
+			node,
+			_node_type(
+				val,
+				RED,
+				parent,
+				this->_nil,
+				this->_nil));
 		if (cmp(val, parent->val))
 		{
 			parent->child[LEFT] = node;
-			if (parent == this->_min)
-				this->_min = node;
+			if (this->_nil->child[MIN] == parent)
+				this->_nil->child[MIN] = node;
 		}
 		else
 		{
 			parent->child[RIGHT] = node;
-			if (parent == this->_max)
-				this->_max = node;
+			if (this->_nil->child[MAX] == parent)
+				this->_nil->child[MAX] = node;
 		}
 		++this->_size;
 		this->_balanceInsert(node);
-		return pair<iterator, bool>(iterator(node, &this->_root), true);
+		return pair<iterator, bool>(iterator(node, this->_nil), true);
 	}
 
 	/**
@@ -769,23 +801,23 @@ public:
 			// At this point, the node to insert will be placed on the left of the hint node.
 
 			// Check for highly wrong position.
-			while (parent && node == parent->child[LEFT])
+			while (parent != this->_nil && node == parent->child[LEFT])
 			{
 				node = parent;
 				parent = node->parent;
 			}
-			if (parent && cmp(val, parent->val))
+			if (parent != this->_nil && cmp(val, parent->val))
 				return this->insert(val).first;
 
 			// At this point, the node to insert will be placed on the left of the hint node,
 			// and the position is on a correct branch.
 			parent = pos;
-			if (pos->child[LEFT])
+			if (pos->child[LEFT] != this->_nil)
 			{
 				// At this point, the node to insert will be placed on the left of the hint node,
 				// the position is on a correct branch, and is a non-leaf.
 				pos = pos->child[LEFT];
-				while (pos)
+				while (pos != this->_nil)
 					if (cmp(val, pos->val))
 					{
 						parent = pos;
@@ -797,7 +829,7 @@ public:
 						pos = pos->child[RIGHT];
 					}
 					else
-						return iterator(pos, &this->_root);
+						return iterator(pos, this->_nil);
 			}
 		}
 		else if (cmp(pos->val, val))
@@ -805,23 +837,23 @@ public:
 			// At this point, the node to insert will be placed on the right of the hint node.
 
 			// Check for highly wrong position.
-			while (parent && node == parent->child[RIGHT])
+			while (parent != this->_nil && node == parent->child[RIGHT])
 			{
 				node = parent;
 				parent = node->parent;
 			}
-			if (parent && cmp(parent->val, val))
+			if (parent != this->_nil && cmp(parent->val, val))
 				return this->insert(val).first;
 
 			// At this point, the node to insert will be placed on the right of the hint node,
 			// and the position is on a correct branch.
 			parent = pos;
-			if (pos->child[RIGHT])
+			if (pos->child[RIGHT] != this->_nil)
 			{
 				// At this point, the node to insert will be placed on the right of the hint node,
 				// and the position is on a correct branch, and is a non-leaf.
 				pos = pos->child[RIGHT];
-				while (pos)
+				while (pos != this->_nil)
 					if (cmp(val, pos->val))
 					{
 						parent = pos;
@@ -833,31 +865,46 @@ public:
 						pos = pos->child[RIGHT];
 					}
 					else
-						return iterator(pos, &this->_root);
+						return iterator(pos, this->_nil);
 			}
 		}
 		else
-			return iterator(pos, &this->_root);
+			return iterator(pos, this->_nil);
 
 		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
-		alloc.construct(node, _node_type(val));
-		node->parent = parent;
+		alloc.construct(node, _node_type(val, RED, parent, this->_nil, this->_nil));
 		if (cmp(val, parent->val))
 		{
 			parent->child[LEFT] = node;
-			if (parent == this->_min)
-				this->_min = node;
+			if (this->_nil->child[MIN] == parent)
+				this->_nil->child[MIN] = node;
 		}
 		else
 		{
 			parent->child[RIGHT] = node;
-			if (parent == this->_max)
-				this->_max = node;
+			if (this->_nil->child[MAX] == parent)
+				this->_nil->child[MAX] = node;
 		}
 		++this->_size;
 		this->_balanceInsert(node);
-		return iterator(node, &this->_root);
+		return iterator(node, this->_nil);
+	}
+
+	/**
+	 * @return	The node corresponding to the maximum value in the rb_tree.
+	 */
+	inline pointer	max(void) const
+	{
+		return this->_nil->child[MAX];
+	}
+
+	/**
+	 * @return	The node corresponding to the minimum value in the rb_tree.
+	 */
+	inline pointer	min(void) const
+	{
+		return this->_nil->child[MIN];
 	}
 
 	/**
@@ -899,9 +946,8 @@ public:
 	 */
 	void	swap(rb_tree &other)
 	{
+		ft::swap<pointer>(this->_nil, other._nil);
 		ft::swap<pointer>(this->_root, other._root);
-		ft::swap<pointer>(this->_min, other._min);
-		ft::swap<pointer>(this->_max, other._max);
 		ft::swap<size_type>(this->_size, other._size);
 	}
 
@@ -920,10 +966,10 @@ public:
 	{
 		if (this != &rhs)
 		{
-			rb_tree::_clear(this->_root);
-			this->_root = rb_tree::_dup(rhs._root);
-			this->_min = _node_type::leftMost(this->_root);
-			this->_max = _node_type::rightMost(this->_root);
+			this->_clear(this->_root);
+			this->_root = this->_dup(rhs._root, rhs._nil, this->_nil);
+			this->_nil->child[MIN] = _node_type::leftMost(this->_root);
+			this->_nil->child[MAX] = _node_type::rightMost(this->_root);
 			this->_size = rhs._size;
 		}
 		return *this;

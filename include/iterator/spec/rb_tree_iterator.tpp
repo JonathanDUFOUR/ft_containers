@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 13:10:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/29 20:29:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "iterator/base/A_bidirectional_iterator.tpp"
 # include "iterator.hpp"
 # include "rb_node.tpp"
+# include "e_rb_min_max.hpp"
 
 namespace ft
 {
@@ -38,8 +39,8 @@ public:
 
 private:
 	// Attributes
-	_node_type			*_curr;
-	_node_type *const	*_root;
+	_node_type	*_curr;
+	_node_type	*_nil;
 
 public:
 // ****************************************************************************************************************** //
@@ -52,10 +53,10 @@ public:
 	 * @param	curr	The current rb_node pointer to wrap.
 	 * @param	root	The address of the root of the tree which the iterator is in.
 	 */
-	rb_tree_iterator(_node_type *const curr = NULL, _node_type *const *const root = NULL) :
+	rb_tree_iterator(_node_type *const curr = NULL, _node_type *const nil = NULL) :
 		_base_type(curr ? &curr->val : NULL),
 		_curr(curr),
-		_root(root) {}
+		_nil(nil) {}
 
 	/**
 	 * @brief	Construct a new rb_tree_iterator object from another one.
@@ -70,7 +71,7 @@ public:
 	rb_tree_iterator(rb_tree_iterator<_T, _Node> const &src) :
 		_base_type(src.getPtr()),
 		_curr(src.getCurr()),
-		_root(src.getRoot()) {}
+		_nil(src.getNil()) {}
 
 // ***************************************************************************************************************** //
 //                                                     Accessors                                                     //
@@ -95,9 +96,9 @@ public:
 	/**
 	 * @return	The inner root address in the rb_tree_iterator.
 	 */
-	inline _node_type *const *const	&getRoot(void) const
+	inline _node_type *const	&getNil(void) const
 	{
-		return this->_root;
+		return this->_nil;
 	}
 
 // ***************************************************************************************************************** //
@@ -117,7 +118,7 @@ public:
 		{
 			this->_ptr = rhs.getPtr();
 			this->_curr = rhs.getCurr();
-			this->_root = rhs.getRoot();
+			this->_nil = rhs.getNil();
 		}
 		return *this;
 	}
@@ -131,7 +132,7 @@ public:
 	 */
 	inline bool	operator==(_self_type const &rhs) const
 	{
-		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_root == rhs.getRoot();
+		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_nil == rhs.getNil();
 	}
 
 	/**
@@ -148,7 +149,7 @@ public:
 	template <typename _T, typename _Node>
 	inline bool	operator==(rb_tree_iterator<_T, _Node> const &rhs) const
 	{
-		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_root == rhs.getRoot();
+		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_nil == rhs.getNil();
 	}
 
 	/**
@@ -203,8 +204,8 @@ public:
 	 */
 	inline _self_type	&operator++(void)
 	{
-		if (!this->_curr)
-			this->_curr = _node_type::leftMost(*this->_root);
+		if (this->_curr == this->_nil)
+			this->_curr = this->_nil->child[MIN];
 		else
 		{
 			if (this->_curr->child[RIGHT])
@@ -247,8 +248,8 @@ public:
 	 */
 	inline _self_type	&operator--(void)
 	{
-		if (!this->_curr)
-			this->_curr = _node_type::rightMost(*this->_root);
+		if (this->_curr == this->_nil)
+			this->_curr = this->_nil->child[MAX];
 		else
 		{
 			if (this->_curr->child[LEFT])
