@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 20:27:44 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:41:43 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 11:28:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ static float				g_float[] = {
 	4.4f,
 	1.1f,
 	2.2f,
-	0.0f,
+	-1.0f,
 };
 
 static double				g_double[] = {

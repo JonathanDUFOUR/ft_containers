@@ -6,12 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 11:10:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/23 11:28:05 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 12:15:58 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /**
  * @brief	Apply several assignation and move tests to an input iterator.
+ * 			Leave the given iterator in the same state as it was before the test.
  * 
  * @tparam	InputIterator The type of the input iterator to test.
  * 			(it must conform to the standard input iterator requirements)
@@ -39,6 +40,7 @@ void	InputIteratorCheck(InputIterator &it)
 
 /**
  * @brief	Apply several assignation and move tests to an output iterator.
+ * 			Leave the given iterator in the same state as it was before the test.
  * 
  * @tparam	OutputIterator The type of the output iterator to test.
  * 			(it must conform to the standard output iterator requirements)
@@ -62,6 +64,7 @@ void	OutputIteratorCheck(OutputIterator &it)
 
 /**
  * @brief	Apply several assignation and move tests to a forward iterator.
+ * 			Leave the given iterator in the same state as it was before the test.
  * 
  * @tparam	ForwardIterator The type of the forward iterator to test.
  * 			(it must conform to the standard forward iterator requirements)
@@ -73,13 +76,14 @@ void	ForwardIteratorCheck(ForwardIterator &it)
 {
 	ForwardIterator const	it0;
 
-	InputIteratorCheck<ForwardIterator>(it);
+	InputIteratorCheck(it);
 
 	(void)it0;
 }
 
 /**
  * @brief	Apply several assignation and move tests to a bidirectional iterator.
+ * 			Leave the given iterator in the same state as it was before the test.
  * 
  * @tparam	BidirectionalIterator The type of the bidirectional iterator to test.
  * 			(it must conform to the standard bidirectional iterator requirements)
@@ -93,7 +97,7 @@ void	BidirectionalIteratorCheck(BidirectionalIterator &it)
 	BidirectionalIterator const	it1(it--++);
 	BidirectionalIterator const	it2(--it++);
 
-	ForwardIteratorCheck<BidirectionalIterator>(it);
+	ForwardIteratorCheck(it);
 
 	(void)it0;
 	(void)it1;
@@ -102,6 +106,7 @@ void	BidirectionalIteratorCheck(BidirectionalIterator &it)
 
 /**
  * @brief	Apply several assignation and move tests to a random access iterator.
+ * 			Leave the given iterator in the same state as it was before the test.
  * 
  * @tparam	RandomAccessIterator The type of the random access iterator to test.
  * 			(it must conform to the standard random access iterator requirements)
@@ -126,7 +131,8 @@ void	RandomAccessIteratorCheck(RandomAccessIterator &it)
 	cmp = (it0 <= it1);
 	cmp = (it0 >= it1);
 	cmp = (it[0] == it0[0]);
-	BidirectionalIteratorCheck<RandomAccessIterator>(it);
+
+	BidirectionalIteratorCheck(it);
 
 	(void)it0;
 	(void)it1;

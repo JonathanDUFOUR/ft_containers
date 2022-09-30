@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 19:02:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 09:16:43 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,74 +63,6 @@ struct rb_node
 	{
 		child[LEFT] = src.child[LEFT];
 		child[RIGHT] = src.child[RIGHT];
-	}
-
-// ***************************************************************************************************************** //
-//                                              Public Member Functions                                              //
-// ***************************************************************************************************************** //
-
-	/**
-	 * @brief	Get the node placed the most on the left of another one.
-	 * 
-	 * @param	node The node to start from.
-	 * 
-	 * @return	The node placed the most on the left of the given one.
-	 */
-	static rb_node	*leftMost(rb_node *node)
-	{
-		if (!node)
-			return NULL;
-		while (node->child[LEFT])
-			node = node->child[LEFT];
-		return node;
-	}
-
-	/**
-	 * @brief	Get the node placed the most on the left of another one.
-	 * 
-	 * @param	node The node to start from.
-	 * 
-	 * @return	The node placed the most on the left of the given one.
-	 */
-	static rb_node const	*leftMost(rb_node const *node)
-	{
-		if (!node)
-			return NULL;
-		while (node->child[LEFT])
-			node = node->child[LEFT];
-		return node;
-	}
-
-	/**
-	 * @brief	Get the node placed the most on the right of another one.
-	 * 
-	 * @param	node The node to start from.
-	 * 
-	 * @return	The node placed the most on the right of the given one.
-	 */
-	static rb_node	*rightMost(rb_node *node)
-	{
-		if (!node)
-			return NULL;
-		while (node->child[RIGHT])
-			node = node->child[RIGHT];
-		return node;
-	}
-
-	/**
-	 * @brief	Get the node placed the most on the right of another one.
-	 * 
-	 * @param	node The node to start from.
-	 * 
-	 * @return	The node placed the most on the right of the given one.
-	 */
-	static rb_node const	*rightMost(rb_node const *node)
-	{
-		if (!node)
-			return NULL;
-		while (node->child[RIGHT])
-			node = node->child[RIGHT];
-		return node;
 	}
 }; // struct rb_node
 

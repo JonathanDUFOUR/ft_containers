@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 20:27:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 13:30:05 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,9 @@ inline static int	__test_accessor_getNil(void)
 			ft::rb_tree<long double> const			tree;
 			ft::rb_node<long double> const *const	nil = tree.getNil();
 
-			if (!nil || nil->color != ft::BLACK || nil->parent || nil->child[ft::MIN] || nil->child[ft::MAX])
+			if (!nil || nil->color != ft::BLACK || nil->parent ||
+				nil->child[ft::MIN] != nil ||
+				nil->child[ft::MAX] != nil)
 				return EXIT_FAILURE;
 		}
 		// Non-empty tree
@@ -190,17 +192,19 @@ inline static int	__test_accessor_getRoot(void)
 		{
 			ft::rb_tree<int>	tree;
 
-			if (tree.getRoot())
+			if (tree.getRoot() != tree.getNil())
 				return EXIT_FAILURE;
 		}
 		// Non-empty tree
 		{
 			for (idx = 1U ; idx <= g_int_size ; ++idx)
 			{
-				ft::rb_tree<int>	tree(&g_int[0], &g_int[idx]);
+				ft::rb_tree<int>				tree(&g_int[0], &g_int[idx]);
+				ft::rb_node<int> const *const	root = tree.getRoot();
+				ft::rb_node<int> const *const	nil = tree.getNil();
 
-				if (!tree.getRoot() || tree.getRoot()->parent ||
-					std::find(&g_int[0], &g_int[idx], tree.getRoot()->val) == &g_int[idx])
+				if (!root || root == nil || root->parent != nil ||
+					std::find(&g_int[0], &g_int[idx], root->val) == &g_int[idx])
 					return EXIT_FAILURE;
 			}
 		}
@@ -266,7 +270,8 @@ inline static int	__test_function_max(void)
 			{
 				ft::rb_tree<char> const	tree(&g_char[0], &g_char[idx]);
 
-				if (tree.max() == tree.getNil() || tree.max()->val != *std::max_element(&g_char[0], &g_char[idx]))
+				if (!tree.max() || tree.max() == tree.getNil() ||
+					tree.max()->val != *std::max_element(&g_char[0], &g_char[idx]))
 					return EXIT_FAILURE;
 			}
 		}
@@ -299,7 +304,8 @@ inline static int	__test_function_min(void)
 			{
 				ft::rb_tree<char> const	tree(&g_char[0], &g_char[idx]);
 
-				if (tree.min() == tree.getNil() || tree.min()->val != *std::min_element(&g_char[0], &g_char[idx]))
+				if (!tree.min() || tree.min() == tree.getNil() ||
+					tree.min()->val != *std::min_element(&g_char[0], &g_char[idx]))
 					return EXIT_FAILURE;
 			}
 		}
@@ -477,9 +483,26 @@ inline static int	__test_type_iterator(void)
 		ft::rb_tree<float>::iterator	it;
 
 		it = tree.begin();
-		BidirectionalIteratorCheck<ft::rb_tree<float>::iterator>(it);
+		BidirectionalIteratorCheck(it);
+		*it /= 7;
 
-		if (it.getCurr() != tree.min() || *it != tree.min()->val)
+		if (it != tree.begin() || it.getCurr() != tree.min() || *it != tree.min()->val)
+			return EXIT_FAILURE;
+
+		it = --tree.end();
+		BidirectionalIteratorCheck(it);
+		*it /= 7;
+
+		if (it != --tree.end() || it.getCurr() != tree.max() || *it != tree.max()->val)
+			return EXIT_FAILURE;
+
+		it = tree.end();
+		++it;
+		--it;
+		it--;
+		it++;
+
+		if (it != tree.end() || it.getCurr() != tree.getNil())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -499,9 +522,24 @@ inline static int	__test_type_const_iterator(void)
 		ft::rb_tree<float>::const_iterator	cit;
 
 		cit = tree.begin();
-		BidirectionalIteratorCheck<ft::rb_tree<float>::const_iterator>(cit);
+		BidirectionalIteratorCheck(cit);
 
-		if (cit.getCurr() != tree.min() || *cit != tree.min()->val)
+		if (cit != tree.begin() || cit.getCurr() != tree.min() || *cit != tree.min()->val)
+			return EXIT_FAILURE;
+
+		cit = --tree.end();
+		BidirectionalIteratorCheck(cit);
+
+		if (cit != --tree.end() || cit.getCurr() != tree.max() || *cit != tree.max()->val)
+			return EXIT_FAILURE;
+
+		cit = tree.end();
+		++cit;
+		--cit;
+		cit--;
+		cit++;
+
+		if (cit != tree.end() || cit.getCurr() != tree.getNil())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -521,7 +559,7 @@ inline static int	__test_type_reverse_iterator(void)
 		ft::rb_tree<float>::reverse_iterator	rit;
 
 		rit = tree.rbegin();
-		BidirectionalIteratorCheck<ft::rb_tree<float>::reverse_iterator>(rit);
+		BidirectionalIteratorCheck(rit);
 
 		if (rit.base() != tree.end())
 			return EXIT_FAILURE;
@@ -543,7 +581,7 @@ inline static int	__test_type_const_reverse_iterator(void)
 		ft::rb_tree<float>::const_reverse_iterator	crit;
 
 		crit = tree.rbegin();
-		BidirectionalIteratorCheck<ft::rb_tree<float>::const_reverse_iterator>(crit);
+		BidirectionalIteratorCheck(crit);
 
 		if (crit.base() != tree.end())
 			return EXIT_FAILURE;
@@ -661,7 +699,10 @@ inline static int	__test_function_clear(void)
 			ft::rb_tree<char>	tree(&g_char[0], &g_char[idx]);
 
 			tree.clear();
-			if (tree.max() || tree.min() || tree.getRoot() || tree.getSize())
+			if (tree.getSize() ||
+				tree.max() != tree.getNil() ||
+				tree.min() != tree.getNil() ||
+				tree.getRoot() != tree.getNil())
 				return EXIT_FAILURE;
 		}
 	}
@@ -691,7 +732,7 @@ inline static int	__test_function_find(void)
 				nb = rand();
 				while (std::find(&g_lint[0], &g_lint[g_lint_size], nb) != &g_lint[g_lint_size])
 					nb = rand();
-				if (tree.find(nb))
+				if (tree.find(nb) != tree.getNil())
 					return EXIT_FAILURE;
 			}
 			else if (tree.find(g_lint[idx / 2])->val != *ref.find(g_lint[idx / 2]))
@@ -811,7 +852,8 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+			if (tree0.getSize() != ref0.size() ||
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
 				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
@@ -826,7 +868,8 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+			if (tree0.getSize() != ref0.size() ||
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
 				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
@@ -841,7 +884,8 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+			if (tree0.getSize() != ref0.size() ||
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
 				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
@@ -856,7 +900,8 @@ inline static int	__test_operator_assign(void)
 			tree0 = tree1;
 			ref0 = ref1;
 
-			if (tree0.getSize() != ref0.size() || __integrityCheck(tree0.getRoot(), tree0.getNil()) ||
+			if (tree0.getSize() != ref0.size() ||
+				__integrityCheck(tree0.getRoot(), tree0.getNil()) ||
 				__propertiesCheck(tree0.getRoot(), tree0.getNil(), ft::rb_tree<std::string>::compare_type()) ||
 				!std::equal(tree0.begin(), tree0.end(), ref0.begin()))
 				return EXIT_FAILURE;
@@ -877,8 +922,8 @@ int	test_rb_tree(void)
 		__test_accessor_getNil,
 		__test_accessor_getRoot,
 		__test_accessor_getSize,
-		__test_function_min,
 		__test_function_max,
+		__test_function_min,
 		__test_function_begin,
 		__test_function_end,
 		__test_function_rbegin,

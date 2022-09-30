@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 20:29:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 13:36:10 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ public:
 	 * @param	root	The address of the root of the tree which the iterator is in.
 	 */
 	rb_tree_iterator(_node_type *const curr = NULL, _node_type *const nil = NULL) :
-		_base_type(curr ? &curr->val : NULL),
+		_base_type(curr != nil ? &curr->val : NULL),
 		_curr(curr),
 		_nil(nil) {}
 
@@ -208,20 +208,22 @@ public:
 			this->_curr = this->_nil->child[MIN];
 		else
 		{
-			if (this->_curr->child[RIGHT])
+			if (this->_curr->child[RIGHT] != this->_nil)
 			{
 				this->_curr = this->_curr->child[RIGHT];
-				while (this->_curr->child[LEFT])
+				while (this->_curr->child[LEFT] != this->_nil)
 					this->_curr = this->_curr->child[LEFT];
 			}
+			else if (this->_curr == this->_nil->child[MAX])
+				this->_curr = this->_nil;
 			else
 			{
-				while (this->_curr->parent && this->_curr == this->_curr->parent->child[RIGHT])
+				while (this->_curr->parent != this->_nil && this->_curr == this->_curr->parent->child[RIGHT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}
 		}
-		if (this->_curr)
+		if (this->_curr != this->_nil)
 			this->_ptr = &this->_curr->val;
 		else
 			this->_ptr = NULL;
@@ -252,20 +254,22 @@ public:
 			this->_curr = this->_nil->child[MAX];
 		else
 		{
-			if (this->_curr->child[LEFT])
+			if (this->_curr->child[LEFT] != this->_nil)
 			{
 				this->_curr = this->_curr->child[LEFT];
-				while (this->_curr->child[RIGHT])
+				while (this->_curr->child[RIGHT] != this->_nil)
 					this->_curr = this->_curr->child[RIGHT];
 			}
+			else if (this->_curr == this->_nil->child[MIN])
+				this->_curr = this->_nil;
 			else
 			{
-				while (this->_curr->parent && this->_curr == this->_curr->parent->child[LEFT])
+				while (this->_curr->parent != this->_nil && this->_curr == this->_curr->parent->child[LEFT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}
 		}
-		if (this->_curr)
+		if (this->_curr != this->_nil)
 			this->_ptr = &this->_curr->val;
 		else
 			this->_ptr = NULL;
@@ -285,6 +289,17 @@ public:
 		return original;
 	}
 };
-}
 
+// DBG
+template <typename _T, typename _Node>
+std::ostream	&operator<<(std::ostream &os, rb_tree_iterator<_T, _Node> const &it)
+{
+	os
+	<< "rb_tree_iterator:" << '\n'
+	<< '\t' << " _ptr: " << it.getPtr() << '\n'
+	<< '\t' << "_curr: " << it.getCurr() << '\n'
+	<< '\t' << " _nil: " << it.getNil() << '\n';
+	return os;
+}
+} // namespace ft
 #endif

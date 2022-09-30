@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 19:47:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 13:44:12 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,7 +241,7 @@ private:
 	}
 
 	/**
-	 * @brief	Remove every nodes of the tree.
+	 * @brief	Remove every nodes of the tree except the nil node.
 	 * 
 	 * @param	root The root of the tree to clear.
 	 */
@@ -282,6 +282,34 @@ private:
 	}
 
 	/**
+	 * @brief	Get the node placed the most on the left of another one.
+	 * 
+	 * @param	node The node to start from.
+	 * 
+	 * @return	The node placed the most on the left of the given one.
+	 */
+	pointer	_leftMost(pointer node) const
+	{
+		while (node->child[LEFT] != this->_nil)
+			node = node->child[LEFT];
+		return node;
+	}
+
+	/**
+	 * @brief	Get the node placed the most on the left of another one.
+	 * 
+	 * @param	node The node to start from.
+	 * 
+	 * @return	The node placed the most on the left of the given one.
+	 */
+	const_pointer	_leftMost(const_pointer node) const
+	{
+		while (node->child[LEFT] != this->_nil)
+			node = node->child[LEFT];
+		return node;
+	}
+
+	/**
 	 * @brief	Relink the children and the parent of a given node to another one,
 	 * 			assuming that the nodes are not father and son.
 	 * 
@@ -297,6 +325,34 @@ private:
 			src->child[LEFT]->parent = dst;
 		if (src->child[RIGHT] != this->_nil)
 			src->child[RIGHT]->parent = dst;
+	}
+
+	/**
+	 * @brief	Get the node placed the most on the right of another one.
+	 * 
+	 * @param	node The node to start from.
+	 * 
+	 * @return	The node placed the most on the right of the given one.
+	 */
+	pointer	_rightMost(pointer node) const
+	{
+		while (node->child[RIGHT] != this->_nil)
+			node = node->child[RIGHT];
+		return node;
+	}
+
+	/**
+	 * @brief	Get the node placed the most on the right of another one.
+	 * 
+	 * @param	node The node to start from.
+	 * 
+	 * @return	The node placed the most on the right of the given one.
+	 */
+	const_pointer	_rightMost(const_pointer node) const
+	{
+		while (node->child[RIGHT] != this->_nil)
+			node = node->child[RIGHT];
+		return node;
 	}
 
 	/**
@@ -435,7 +491,7 @@ public:
 		_root(this->_nil),
 		_size(0LU)
 	{
-		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, NULL, NULL));
+		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, this->_nil, this->_nil));
 	}
 
 	/**
@@ -455,7 +511,7 @@ public:
 		_root(this->_nil),
 		_size(0LU)
 	{
-		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, NULL, NULL));
+		allocator_type().construct(this->_nil, _node_type(value_type(), BLACK, NULL, this->_nil, this->_nil));
 		for (; first != last ; ++first)
 			this->insert(*first);
 	}
@@ -476,8 +532,8 @@ public:
 				value_type(),
 				BLACK,
 				NULL,
-				_node_type::leftMost(this->_root),
-				_node_type::rightMost(this->_root)));
+				this->_leftMost(this->_root),
+				this->_rightMost(this->_root)));
 	}
 
 // ***************************************************************************************************************** //
@@ -622,7 +678,7 @@ public:
 		{
 			// At this point, the node has a left child, and has a right child.
 			// So we just swap the node with its successor.
-			successor = _node_type::leftMost(pos->child[RIGHT]);
+			successor = this->_leftMost(pos->child[RIGHT]);
 			this->_valueSwap(pos, successor);
 			if (this->_root == pos)
 				this->_root = successor;
@@ -656,7 +712,7 @@ public:
 		else if (pos->color == RED)
 		{
 			// At this point, the node is red, has a parent, and has no any child.
-			pos->parent->child[rb_tree::_childDirection(pos)] = NULL;
+			pos->parent->child[rb_tree::_childDirection(pos)] = this->_nil;
 			if (this->_nil->child[MIN] == pos)
 				this->_nil->child[MIN] = pos->parent;
 			if (this->_nil->child[MAX] == pos)
@@ -670,7 +726,7 @@ public:
 			if (this->_nil->child[MAX] == pos)
 				this->_nil->child[MAX] = pos->parent;
 			dir = rb_tree::_childDirection(pos);
-			pos->parent->child[dir] = NULL;
+			pos->parent->child[dir] = this->_nil;
 			this->_balanceErase(pos, dir);
 		}
 		alloc.destroy(pos);
@@ -717,25 +773,18 @@ public:
 		compare_type	cmp;
 		allocator_type	alloc;
 
-		// Checking if the tree is empty.
 		if (!this->_size)
 		{
+			// At this point, the tree is empty.
 			this->_root = alloc.allocate(1LU);
 			this->_nil->child[MIN] = this->_root;
 			this->_nil->child[MAX] = this->_root;
 			this->_size = 1LU;
-			alloc.construct(
-				this->_root,
-				_node_type(
-					val,
-					RED,
-					this->_nil,
-					this->_nil,
-					this->_nil));
+			alloc.construct(this->_root, _node_type(val, RED, this->_nil, this->_nil, this->_nil));
 			return pair<iterator, bool>(iterator(this->_root, this->_nil), true);
 		}
 
-		// Looking for the insertion position.
+		// At this point, the tree is not empty.
 		pos = this->_root;
 		while (pos != this->_nil)
 			if (cmp(val, pos->val))
@@ -753,14 +802,7 @@ public:
 
 		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
-		alloc.construct(
-			node,
-			_node_type(
-				val,
-				RED,
-				parent,
-				this->_nil,
-				this->_nil));
+		alloc.construct(node, _node_type(val, RED, parent, this->_nil, this->_nil));
 		if (cmp(val, parent->val))
 		{
 			parent->child[LEFT] = node;
@@ -968,8 +1010,16 @@ public:
 		{
 			this->_clear(this->_root);
 			this->_root = this->_dup(rhs._root, rhs._nil, this->_nil);
-			this->_nil->child[MIN] = _node_type::leftMost(this->_root);
-			this->_nil->child[MAX] = _node_type::rightMost(this->_root);
+			if (this->_root != this->_nil)
+			{
+				this->_nil->child[MIN] = this->_leftMost(this->_root);
+				this->_nil->child[MAX] = this->_rightMost(this->_root);
+			}
+			else
+			{
+				this->_nil->child[MIN] = this->_nil;
+				this->_nil->child[MAX] = this->_nil;
+			}
 			this->_size = rhs._size;
 		}
 		return *this;

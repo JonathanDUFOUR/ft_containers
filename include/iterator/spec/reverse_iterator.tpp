@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 19:05:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 10:29:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class reverse_iterator
 {
 private:
 	// Member types
-	typedef reverse_iterator<BidirectionalIterator>	_self_type;
+	typedef reverse_iterator<BidirectionalIterator>						_self_type;
 
 public:
 	// Member types
