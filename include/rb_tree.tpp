@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 13:44:12 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 20:00:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -605,8 +605,6 @@ public:
 	 */
 	void	clear(void)
 	{
-		allocator_type	alloc;
-
 		this->_clear(this->_root);
 		this->_nil->child[MIN] = this->_nil;
 		this->_nil->child[MAX] = this->_nil;
@@ -836,6 +834,8 @@ public:
 		compare_type	cmp;
 		allocator_type	alloc;
 
+		if (pos == this->_nil)
+			pos = this->_nil->child[MAX];
 		node = pos;
 		parent = node->parent;
 		if (cmp(val, pos->val))
@@ -848,8 +848,13 @@ public:
 				node = parent;
 				parent = node->parent;
 			}
-			if (parent != this->_nil && cmp(val, parent->val))
-				return this->insert(val).first;
+			if (parent != this->_nil)
+			{
+				if (cmp(val, parent->val))
+					return this->insert(val).first;
+				else if (!cmp(parent->val, val))
+					return iterator(parent, this->_nil);
+			}
 
 			// At this point, the node to insert will be placed on the left of the hint node,
 			// and the position is on a correct branch.
@@ -884,8 +889,13 @@ public:
 				node = parent;
 				parent = node->parent;
 			}
-			if (parent != this->_nil && cmp(parent->val, val))
-				return this->insert(val).first;
+			if (parent != this->_nil)
+			{
+				if (cmp(parent->val, val))
+					return this->insert(val).first;
+				else if (!cmp(val, parent->val))
+					return iterator(parent, this->_nil);
+			}
 
 			// At this point, the node to insert will be placed on the right of the hint node,
 			// and the position is on a correct branch.

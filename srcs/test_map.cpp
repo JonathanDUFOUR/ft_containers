@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 13:34:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 19:53:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -986,8 +986,8 @@ inline static int	__test_function_insert(void)
 
 		// Range insertion
 		{
-			ft::map<std::string, t_luint>								ft_map;
-			std::map<std::string, t_luint>								std_map;
+			ft::map<std::string, t_luint>	ft_map;
+			std::map<std::string, t_luint>	std_map;
 
 			for (idx = 1U ; idx < g_string_size && idx < g_luint_size ; ++idx)
 			{
@@ -1006,7 +1006,7 @@ inline static int	__test_function_insert(void)
 			ft::pair<ft::map<std::string, t_luint>::iterator, bool>		ft_ret;
 			std::pair<std::map<std::string, t_luint>::iterator, bool>	std_ret;
 
-			for (idx = 0U ; idx < g_string_size && idx < g_luint_size ; ++idx)
+			for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft_ret = ft_map.insert(ft_vec[idx]);
 				std_ret = std_map.insert(std_vec[idx]);
@@ -1026,14 +1026,29 @@ inline static int	__test_function_insert(void)
 			ft::map<std::string, t_luint>::iterator		ft_it;
 			std::map<std::string, t_luint>::iterator	std_it;
 
-			ft_map.insert(ft_vec[0]);
-			std_map.insert(std_vec[0]);
-			for (ft_it = ft_map.begin(), std_it = std_map.begin(), idx = 1U ;
-				idx < g_string_size && idx < g_luint_size ;
-				++idx)
+			ft_map.insert(ft::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
+			std_map.insert(std::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
+			ft_it = ft_map.begin();
+			std_it = std_map.begin();
+			for (idx = 0U ; idx < ft_vec.size() * 3 && idx < std_vec.size() * 3 ; ++idx)
 			{
-				ft_it = ft_map.insert(ft_it, ft_vec[idx]);
-				std_it = std_map.insert(std_it, std_vec[idx]);
+				switch (idx % 3)
+				{
+					case 0:
+						ft_it = ft_map.insert(ft_it, ft_vec[idx / 3]);
+						std_it = std_map.insert(std_it, std_vec[idx / 3]);
+						break;
+				
+					case 1:
+						ft_it = ft_map.insert(ft_map.begin(), *++ft_map.begin());
+						std_it = std_map.insert(std_map.begin(), *++std_map.begin());
+						break;
+
+					case 2:
+						ft_it = ft_map.insert(ft_map.end(), *++ft_map.rbegin());
+						std_it = std_map.insert(std_map.end(), *++std_map.rbegin());
+						break;
+				}
 
 				if (ft_it->first != std_it->first ||
 					ft_it->second != std_it->second ||
@@ -1041,6 +1056,14 @@ inline static int	__test_function_insert(void)
 					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
 					return KO;
 			}
+			ft_it = ft_map.insert(ft_map.end(), ft::make_pair(std::string("What else ?"), 11223344556677889900LU));
+			std_it = std_map.insert(std_map.end(), std::make_pair(std::string("What else ?"), 11223344556677889900LU));
+
+			if (ft_it->first != std_it->first ||
+				ft_it->second != std_it->second ||
+				ft_map.size() != std_map.size() ||
+				!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)

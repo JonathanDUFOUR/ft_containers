@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 13:30:05 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/09/30 19:57:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,6 @@ inline static int	__integrityCheck(ft::rb_node<T> const *const node, ft::rb_node
 	if (node->child[ft::RIGHT] != nil && node->child[ft::RIGHT]->parent != node)
 		return EXIT_FAILURE;
 	return __integrityCheck(node->child[ft::LEFT], nil) || __integrityCheck(node->child[ft::RIGHT], nil);
-}
-
-template <typename T>
-inline static bool	__cmp(ft::rb_node<T> const &lhs, T const &rhs)
-{
-	return lhs.val == rhs;
 }
 
 inline static int	__test_constructor(void)
@@ -601,20 +595,67 @@ inline static int	__test_function_insert(void)
 	title(__func__);
 	try
 	{
-		ft::rb_tree<std::string>							tree;
-		std::set<std::string>								ref;
-		ft::pair<ft::rb_tree<std::string>::iterator, bool>	ft_ret;
-		std::pair<std::set<std::string>::iterator, bool>	std_ret;
-
-		for (idx = 0U ; idx < g_string_size * 2 ; ++idx)
+		// Single insertion
 		{
-			ft_ret = tree.insert(g_string[idx / 2]);
-			std_ret = ref.insert(g_string[idx / 2]);
+			ft::rb_tree<std::string>							tree;
+			std::set<std::string>								ref;
+			ft::pair<ft::rb_tree<std::string>::iterator, bool>	ft_ret;
+			std::pair<std::set<std::string>::iterator, bool>	std_ret;
 
-			if (tree.getSize() != ref.size() ||
-				*ft_ret.first != *std_ret.first || ft_ret.second != std_ret.second ||
-				__integrityCheck(tree.getRoot(), tree.getNil()) ||
-				__propertiesCheck(tree.getRoot(), tree.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+			for (idx = 0U ; idx < g_string_size * 2 ; ++idx)
+			{
+				ft_ret = tree.insert(g_string[idx / 2]);
+				std_ret = ref.insert(g_string[idx / 2]);
+
+				if (tree.getSize() != ref.size() ||
+					*ft_ret.first != *std_ret.first || ft_ret.second != std_ret.second ||
+					__integrityCheck(tree.getRoot(), tree.getNil()) ||
+					__propertiesCheck(tree.getRoot(), tree.getNil(), ft::rb_tree<std::string>::compare_type()) ||
+					!std::equal(tree.begin(), tree.end(), ref.begin()))
+					return EXIT_FAILURE;
+			}
+		}
+		// Single insertion with hint
+		{
+			ft::rb_tree<std::string>			tree;
+			std::set<std::string>				ref;
+			ft::rb_tree<std::string>::iterator	ft_it;
+			std::set<std::string>::iterator		std_it;
+
+			tree.insert(std::string("dedicated to lmartin"));
+			ref.insert(std::string("dedicated to lmartin"));
+			ft_it = tree.begin();
+			std_it = ref.begin();
+			for (idx = 0U ; idx < g_string_size * 3 ; ++idx)
+			{
+				switch (idx % 3)
+				{
+					case 0:
+						ft_it = tree.insert(ft_it.getCurr(), g_string[idx / 3]);
+						std_it = ref.insert(std_it, g_string[idx / 3]);
+						break;
+				
+					case 1:
+						ft_it = tree.insert(tree.begin().getCurr(), *++tree.begin());
+						std_it = ref.insert(ref.begin(), *++ref.begin());
+						break;
+
+					case 2:
+						ft_it = tree.insert(tree.end().getCurr(), *++tree.rbegin());
+						std_it = ref.insert(ref.end(), *++ref.rbegin());
+						break;
+				}
+
+				if (*ft_it != *std_it ||
+					tree.getSize() != ref.size() ||
+					!std::equal(tree.begin(), tree.end(), ref.begin()))
+					return EXIT_FAILURE;
+			}
+			ft_it = tree.insert(tree.getNil(), std::string("What else ?"));
+			std_it = ref.insert(ref.end(), std::string("What else ?"));
+
+			if (*ft_it != *std_it ||
+				tree.getSize() != ref.size() ||
 				!std::equal(tree.begin(), tree.end(), ref.begin()))
 				return EXIT_FAILURE;
 		}
