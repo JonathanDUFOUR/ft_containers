@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 15:49:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 18:49:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -622,8 +622,8 @@ inline static int	__test_function_insert(void)
 			ft::rb_tree<std::string>::iterator	ft_it;
 			std::set<std::string>::iterator		std_it;
 
-			tree.insert(std::string("dedicated to lmartin"));
-			ref.insert(std::string("dedicated to lmartin"));
+			tree.insert(tree.begin().getCurr(), std::string("dedicated to lmartin"));
+			ref.insert(ref.begin(), std::string("dedicated to lmartin"));
 			ft_it = tree.begin();
 			std_it = ref.begin();
 			for (idx = 0U ; idx < g_string_size * 3 ; ++idx)

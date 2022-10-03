@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 17:46:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 18:56:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -935,6 +935,18 @@ public:
 		compare_type	cmp;
 		allocator_type	alloc;
 
+		if (!this->_size)
+		{
+			// At this point, the tree is empty.
+			this->_root = alloc.allocate(1LU);
+			this->_nil->child[MIN] = this->_root;
+			this->_nil->child[MAX] = this->_root;
+			this->_size = 1LU;
+			alloc.construct(this->_root, _node_type(val, RED, this->_nil, this->_nil, this->_nil));
+			return iterator(this->_root, this->_nil);
+		}
+
+		// At this point, the tree is not empty.
 		if (pos == this->_nil)
 			pos = this->_nil->child[MAX];
 		node = pos;

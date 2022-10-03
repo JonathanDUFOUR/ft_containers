@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 14:14:54 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 18:52:33 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1026,8 +1026,8 @@ inline static int	__test_function_insert(void)
 			ft::map<std::string, t_luint>::iterator		ft_it;
 			std::map<std::string, t_luint>::iterator	std_it;
 
-			ft_map.insert(ft::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
-			std_map.insert(std::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
+			ft_map.insert(ft_map.begin(), ft::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
+			std_map.insert(std_map.begin(), std::pair<std::string, t_luint>(std::string("dedicated to lmartin"), 42LU));
 			ft_it = ft_map.begin();
 			std_it = std_map.begin();
 			for (idx = 0U ; idx < ft_vec.size() * 3 && idx < std_vec.size() * 3 ; ++idx)
