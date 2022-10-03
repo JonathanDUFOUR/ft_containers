@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 19:57:56 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:49:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -788,6 +788,184 @@ inline static int	__test_function_find(void)
 	return EXIT_SUCCESS;
 }
 
+inline static int	__test_function_lower_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::rb_tree<t_lint>				tree(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint>				ref(&g_lint[0], &g_lint[g_lint_size]);
+			ft::rb_tree<t_lint>::iterator	ft_it;
+			std::set<t_lint>::iterator		std_it;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_it = tree.lower_bound(g_lint[idx]);
+				std_it = ref.lower_bound(g_lint[idx]);
+
+				if ((ft_it == tree.end()) != (std_it == ref.end()) ||
+					(ft_it != tree.end() && (*ft_it != *std_it)))
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			ft::rb_tree<t_lint> const			tree(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint> const				ref(&g_lint[0], &g_lint[g_lint_size]);
+			ft::rb_tree<t_lint>::const_iterator	ft_cit;
+			std::set<t_lint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_cit = tree.lower_bound(g_lint[idx]);
+				std_cit = ref.lower_bound(g_lint[idx]);
+
+				if ((ft_cit == tree.end()) != (std_cit == ref.end()) ||
+					(ft_cit != tree.end() && (*ft_cit != *std_cit)))
+					return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_upper_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::rb_tree<t_lint>				tree(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint>				ref(&g_lint[0], &g_lint[g_lint_size]);
+			ft::rb_tree<t_lint>::iterator	ft_it;
+			std::set<t_lint>::iterator		std_it;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_it = tree.upper_bound(g_lint[idx]);
+				std_it = ref.upper_bound(g_lint[idx]);
+
+
+				if ((ft_it == tree.end()) != (std_it == ref.end()) ||
+					(ft_it != tree.end() && (*ft_it != *std_it)))
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			ft::rb_tree<t_lint> const			tree(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint> const				ref(&g_lint[0], &g_lint[g_lint_size]);
+			ft::rb_tree<t_lint>::const_iterator	ft_cit;
+			std::set<t_lint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_cit = tree.upper_bound(g_lint[idx]);
+				std_cit = ref.upper_bound(g_lint[idx]);
+
+				if ((ft_cit == tree.end()) != (std_cit == ref.end()) ||
+					(ft_cit != tree.end() && (*ft_cit != *std_cit)))
+				{
+					std::cout << '\n';
+					std::cout << "         idx: " << idx << '\n';
+					std::cout << " looking for: " << g_lint[idx] << '\n';
+					std::cout << "      ft_cit: ";
+					if (ft_cit == tree.end())
+						std::cout << "end" << '\n';
+					else
+						std::cout << *ft_cit << '\n';
+					std::cout << "     std_cit: ";
+					if (std_cit == ref.end())
+						std::cout << "end" << '\n';
+					else
+						std::cout << *std_cit << '\n';
+					return EXIT_FAILURE;
+				}
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_equal_range(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::rb_tree<t_hint>					tree(&g_hint[0], &g_hint[g_hint_size]);
+			std::set<t_hint>					ref(&g_hint[0], &g_hint[g_hint_size]);
+			ft::pair<
+				ft::rb_tree<t_hint>::iterator,
+				ft::rb_tree<t_hint>::iterator>	ft_ret;
+			std::pair<
+				std::set<t_hint>::iterator,
+				std::set<t_hint>::iterator>		std_ret;
+
+			for (idx = 0U ; idx < g_hint_size && idx < g_uint_size ; ++idx)
+			{
+				ft_ret = tree.equal_range(g_hint[idx]);
+				std_ret = ref.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == tree.end()) != (std_ret.first == ref.end()) ||
+					(ft_ret.first != tree.end() && (
+						*ft_ret.first != *std_ret.first ||
+						!std::equal(ft_ret.first, ft_ret.second, std_ret.first))))
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			ft::rb_tree<t_hint> const					tree(&g_hint[0], &g_hint[g_hint_size]);
+			std::set<t_hint> const						ref(&g_hint[0], &g_hint[g_hint_size]);
+			ft::pair<
+				ft::rb_tree<t_hint>::const_iterator,
+				ft::rb_tree<t_hint>::const_iterator>	ft_ret;
+			std::pair<
+				std::set<t_hint>::const_iterator,
+				std::set<t_hint>::const_iterator>		std_ret;
+
+			for (idx = 0U ; idx < g_hint_size && idx < g_uint_size ; ++idx)
+			{
+				ft_ret = tree.equal_range(g_hint[idx]);
+				std_ret = ref.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == tree.end()) != (std_ret.first == ref.end()) ||
+					(ft_ret.first != tree.end() && (
+						*ft_ret.first != *std_ret.first ||
+						!std::equal(ft_ret.first, ft_ret.second, std_ret.first))))
+					return EXIT_FAILURE;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
 inline static int	__test_function_swap(void)
 {
 	title(__func__);
@@ -977,6 +1155,9 @@ int	test_rb_tree(void)
 		__test_function_erase,
 		__test_function_clear,
 		__test_function_find,
+		__test_function_lower_bound,
+		__test_function_upper_bound,
+		__test_function_equal_range,
 		__test_function_swap,
 		__test_operator_assign,
 		NULL

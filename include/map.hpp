@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 13:48:36 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 15:50:46 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ public:
 	 */
 	pair<iterator, iterator>	equal_range(key_type const &key)
 	{
-		return pair<iterator, iterator>(this->lower_bound(key), this->upper_bound(key));
+		return this->_tree.equal_range(value_type(key, mapped_type()));
 	}
 
 	/**
@@ -210,7 +210,7 @@ public:
 	 */
 	pair<const_iterator, const_iterator>	equal_range(key_type const &key) const
 	{
-		return pair<const_iterator, const_iterator>(this->lower_bound(key), this->upper_bound(key));
+		return this->_tree.equal_range(value_type(key, mapped_type()));
 	}
 
 	/**
@@ -339,11 +339,7 @@ public:
 	 */
 	iterator	lower_bound(key_type const &key)
 	{
-		iterator	it;
-		key_compare	cmp;
-
-		for (it = this->begin() ; it != this->end() && cmp(it->first, key) ; ++it);
-		return it;
+		return this->_tree.lower_bound(value_type(key, mapped_type()));
 	}
 
 	/**
@@ -355,11 +351,7 @@ public:
 	 */
 	const_iterator	lower_bound(key_type const &key) const
 	{
-		const_iterator	cit;
-		key_compare		cmp;
-
-		for (cit = this->begin() ; cit != this->end() && cmp(cit->first, key) ; ++cit);
-		return cit;
+		return this->_tree.lower_bound(value_type(key, mapped_type()));
 	}
 
 	/**
@@ -429,11 +421,7 @@ public:
 	 */
 	iterator	upper_bound(key_type const &key)
 	{
-		iterator	it;
-		key_compare	cmp;
-
-		for (it = this->begin() ; it != this->end() && !cmp(key, it->first) ; ++it);
-		return it;
+		return this->_tree.upper_bound(value_type(key, mapped_type()));
 	}
 
 	/**
@@ -445,11 +433,7 @@ public:
 	 */
 	const_iterator	upper_bound(key_type const &key) const
 	{
-		const_iterator	cit;
-		key_compare		cmp;
-
-		for (cit = this->begin() ; cit != this->end() && !cmp(key, cit->first) ; ++cit);
-		return cit;
+		return this->_tree.upper_bound(value_type(key, mapped_type()));
 	}
 
 	/**

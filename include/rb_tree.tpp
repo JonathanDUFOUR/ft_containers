@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 20:00:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/03 17:46:47 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,6 +310,44 @@ private:
 	}
 
 	/**
+	 * @brief	Search recursively for the first element in the tree
+	 * 			that should be after or at the position of the one with the given value,
+	 * 			assuming the searched elemement is lower or equal to the max one.
+	 * 
+	 * @param	pos The current position to consider.
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * @param	cmp The comparison functor to use.
+	 * 
+	 * @return	A pointer to the found element.
+	 */
+	pointer	_lower_bound(pointer const pos, value_type const &val, compare_type const &cmp) const
+	{
+		pointer	deeper;
+
+		if (cmp(pos->val, val))
+		{
+			if (pos->child[RIGHT] == this->_nil)
+				return pos;
+			return this->_lower_bound(pos->child[RIGHT], val, cmp);
+		}
+		else if (cmp(val, pos->val))
+		{
+			if (pos->child[LEFT] == this->_nil)
+				return pos;
+			deeper = this->_lower_bound(pos->child[LEFT], val, cmp);
+			if (!cmp(val, deeper->val))
+			{
+				if (!cmp(deeper->val, val))
+					return deeper;
+				return pos;
+			}
+			return deeper;
+		}
+		else
+			return pos;
+	}
+
+	/**
 	 * @brief	Relink the children and the parent of a given node to another one,
 	 * 			assuming that the nodes are not father and son.
 	 * 
@@ -394,6 +432,38 @@ private:
 			this->_root = oppositeChild;
 
 		return oppositeChild;
+	}
+
+	/**
+	 * @brief	Search recursively for the first element in the tree
+	 * 			that should be strictly after the position of the one with the given value,
+	 * 			assuming the searched elemement is lower or equal to the max one.
+	 * 
+	 * @param	pos The current position to consider.
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * @param	cmp The comparison functor to use.
+	 * 
+	 * @return	A pointer to the found element.
+	 */
+	pointer	_upper_bound(pointer const pos, value_type const &val, compare_type const &cmp) const
+	{
+		pointer	deeper;
+
+		if (cmp(pos->val, val) || !cmp(val, pos->val))
+		{
+			if (pos->child[RIGHT] == this->_nil)
+				return pos;
+			return this->_upper_bound(pos->child[RIGHT], val, cmp);
+		}
+		else
+		{
+			if (pos->child[LEFT] == this->_nil)
+				return pos;
+			deeper = this->_upper_bound(pos->child[LEFT], val, cmp);
+			if (!cmp(val, deeper->val))
+				return pos;
+			return deeper;
+		}
 	}
 
 	/**
@@ -587,7 +657,7 @@ public:
 	/**
 	 * @return	An iterator to the first element of the tree.
 	 */
-	iterator	begin(void)
+	inline iterator	begin(void)
 	{
 		return iterator(this->_nil->child[MIN], this->_nil);
 	}
@@ -595,7 +665,7 @@ public:
 	/**
 	 * @return	A const_iterator to the first element of the tree.
 	 */
-	const_iterator	begin(void) const
+	inline const_iterator	begin(void) const
 	{
 		return const_iterator(this->_nil->child[MIN], this->_nil);
 	}
@@ -615,7 +685,7 @@ public:
 	/**
 	 * @return	An iterator to the last element of the tree.
 	 */
-	iterator	end(void)
+	inline iterator	end(void)
 	{
 		return iterator(this->_nil, this->_nil);
 	}
@@ -623,9 +693,40 @@ public:
 	/**
 	 * @return	A const_iterator to the last element of the tree.
 	 */
-	const_iterator	end(void) const
+	inline const_iterator	end(void) const
 	{
 		return const_iterator(this->_nil, this->_nil);
+	}
+
+
+	/**
+	 * @brief	Search for elements matching a given value in the tree.
+	 * 			The resulting match is returned as a range of iterator,
+	 * 			from the first element included to the last element excluded.
+	 * 
+	 * @param	val The value to search for.
+	 * 
+	 * @return	A pair containing an iterator to the first element of the matching range as `first` member,
+	 * 			and an iterator to the last element of the matching range as `second` member.
+	 */
+	pair<iterator, iterator>	equal_range(value_type const &val)
+	{
+		return pair<iterator, iterator>(this->lower_bound(val), this->upper_bound(val));
+	}
+
+	/**
+	 * @brief	Search for constant elements matching a given value in the tree.
+	 * 			The resulting match is returned as a range of const_iterator,
+	 * 			from the first constant element included to the last constant element excluded.
+	 * 
+	 * @param	val The value to search for.
+	 * 
+	 * @return	A pair containing an iterator to the first constant element of the matching range as `first` member,
+	 * 			and an iterator to the last constant element of the matching range as `second` member.
+	 */
+	pair<const_iterator, const_iterator>	equal_range(value_type const &val) const
+	{
+		return pair<const_iterator, const_iterator>(this->lower_bound(val), this->upper_bound(val));
 	}
 
 	/**
@@ -944,6 +1045,40 @@ public:
 	}
 
 	/**
+	 * @brief	Search for the first element in the tree
+	 * 			that should be after or at the position of the one with the given value.
+	 * 
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * 
+	 * @return	An iterator to the element if found, or end() if not.
+	 */
+	iterator	lower_bound(value_type const &val)
+	{
+		compare_type const	cmp;
+
+		if (!this->_size || cmp(this->_nil->child[MAX]->val, val))
+			return this->end();
+		return iterator(this->_lower_bound(this->_root, val, cmp), this->_nil);
+	}
+
+	/**
+	 * @brief	Search for the first constant element in the tree
+	 * 			that should be after or at the position of the one with the given value.
+	 * 
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * 
+	 * @return	An const_iterator to the element if found, or end() if not.
+	 */
+	const_iterator	lower_bound(value_type const &val) const
+	{
+		compare_type const	cmp;
+
+		if (!this->_size || cmp(this->_nil->child[MAX]->val, val))
+			return this->end();
+		return const_iterator(this->_lower_bound(this->_root, val, cmp), this->_nil);
+	}
+
+	/**
 	 * @return	The node corresponding to the maximum value in the rb_tree.
 	 */
 	inline pointer	max(void) const
@@ -1001,6 +1136,40 @@ public:
 		ft::swap<pointer>(this->_nil, other._nil);
 		ft::swap<pointer>(this->_root, other._root);
 		ft::swap<size_type>(this->_size, other._size);
+	}
+
+	/**
+	 * @brief	Search for the first element in the tree
+	 * 			that should be strictly after the position of the one with the given value.
+	 * 
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * 
+	 * @return	An const_iterator to the element if found, or end() if not.
+	 */
+	iterator	upper_bound(value_type const &val)
+	{
+		compare_type const	cmp;
+
+		if (!this->_size || !cmp(val, this->_nil->child[MAX]->val))
+			return this->end();
+		return iterator(this->_upper_bound(this->_root, val, cmp), this->_nil);
+	}
+
+	/**
+	 * @brief	Search for the first constant element in the tree
+	 * 			that should be after strictly after the position of the one with the given value.
+	 * 
+	 * @param	val The value of the virtual element preceding the searched one.
+	 * 
+	 * @return	An const_iterator to the element if found, or end() if not.
+	 */
+	const_iterator	upper_bound(value_type const &val) const
+	{
+		compare_type	cmp;
+
+		if (!this->_size || !cmp(val, this->_nil->child[MAX]->val))
+			return this->end();
+		return const_iterator(this->_upper_bound(this->_root, val, cmp), this->_nil);
 	}
 
 // ***************************************************************************************************************** //
