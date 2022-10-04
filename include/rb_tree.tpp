@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 18:56:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 09:41:51 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -596,14 +596,17 @@ public:
 		_root(this->_dup(src._root, src._nil, this->_nil)),
 		_size(src._size)
 	{
-		allocator_type().construct(
-			this->_nil,
-			_node_type(
+		allocator_type	alloc;
+
+		if (this->_size)
+			alloc.construct(this->_nil, _node_type(
 				value_type(),
 				BLACK,
 				NULL,
 				this->_leftMost(this->_root),
 				this->_rightMost(this->_root)));
+		else
+			alloc.construct(this->_nil, _node_type(value_type(), BLACK, NULL, this->_nil, this->_nil));
 	}
 
 // ***************************************************************************************************************** //
@@ -659,7 +662,7 @@ public:
 	 */
 	inline iterator	begin(void)
 	{
-		return iterator(this->_nil->child[MIN], this->_nil);
+		return iterator(this->_nil->child[MIN]);
 	}
 
 	/**
@@ -667,7 +670,7 @@ public:
 	 */
 	inline const_iterator	begin(void) const
 	{
-		return const_iterator(this->_nil->child[MIN], this->_nil);
+		return const_iterator(this->_nil->child[MIN]);
 	}
 
 	/**
@@ -687,7 +690,7 @@ public:
 	 */
 	inline iterator	end(void)
 	{
-		return iterator(this->_nil, this->_nil);
+		return iterator(this->_nil);
 	}
 
 	/**
@@ -695,7 +698,7 @@ public:
 	 */
 	inline const_iterator	end(void) const
 	{
-		return const_iterator(this->_nil, this->_nil);
+		return const_iterator(this->_nil);
 	}
 
 
@@ -880,7 +883,7 @@ public:
 			this->_nil->child[MAX] = this->_root;
 			this->_size = 1LU;
 			alloc.construct(this->_root, _node_type(val, RED, this->_nil, this->_nil, this->_nil));
-			return pair<iterator, bool>(iterator(this->_root, this->_nil), true);
+			return pair<iterator, bool>(iterator(this->_root), true);
 		}
 
 		// At this point, the tree is not empty.
@@ -897,7 +900,7 @@ public:
 				pos = pos->child[RIGHT];
 			}
 			else
-				return pair<iterator, bool>(iterator(pos, this->_nil), false);
+				return pair<iterator, bool>(iterator(pos), false);
 
 		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
@@ -916,7 +919,7 @@ public:
 		}
 		++this->_size;
 		this->_balanceInsert(node);
-		return pair<iterator, bool>(iterator(node, this->_nil), true);
+		return pair<iterator, bool>(iterator(node), true);
 	}
 
 	/**
@@ -943,7 +946,7 @@ public:
 			this->_nil->child[MAX] = this->_root;
 			this->_size = 1LU;
 			alloc.construct(this->_root, _node_type(val, RED, this->_nil, this->_nil, this->_nil));
-			return iterator(this->_root, this->_nil);
+			return iterator(this->_root);
 		}
 
 		// At this point, the tree is not empty.
@@ -966,7 +969,7 @@ public:
 				if (cmp(val, parent->val))
 					return this->insert(val).first;
 				else if (!cmp(parent->val, val))
-					return iterator(parent, this->_nil);
+					return iterator(parent);
 			}
 
 			// At this point, the node to insert will be placed on the left of the hint node,
@@ -989,7 +992,7 @@ public:
 						pos = pos->child[RIGHT];
 					}
 					else
-						return iterator(pos, this->_nil);
+						return iterator(pos);
 			}
 		}
 		else if (cmp(pos->val, val))
@@ -1007,7 +1010,7 @@ public:
 				if (cmp(parent->val, val))
 					return this->insert(val).first;
 				else if (!cmp(val, parent->val))
-					return iterator(parent, this->_nil);
+					return iterator(parent);
 			}
 
 			// At this point, the node to insert will be placed on the right of the hint node,
@@ -1030,11 +1033,11 @@ public:
 						pos = pos->child[RIGHT];
 					}
 					else
-						return iterator(pos, this->_nil);
+						return iterator(pos);
 			}
 		}
 		else
-			return iterator(pos, this->_nil);
+			return iterator(pos);
 
 		// At this point, `parent` is the leaf node where the new node will be inserted.
 		node = alloc.allocate(1LU);
@@ -1053,7 +1056,7 @@ public:
 		}
 		++this->_size;
 		this->_balanceInsert(node);
-		return iterator(node, this->_nil);
+		return iterator(node);
 	}
 
 	/**
@@ -1070,7 +1073,7 @@ public:
 
 		if (!this->_size || cmp(this->_nil->child[MAX]->val, val))
 			return this->end();
-		return iterator(this->_lower_bound(this->_root, val, cmp), this->_nil);
+		return iterator(this->_lower_bound(this->_root, val, cmp));
 	}
 
 	/**
@@ -1087,7 +1090,7 @@ public:
 
 		if (!this->_size || cmp(this->_nil->child[MAX]->val, val))
 			return this->end();
-		return const_iterator(this->_lower_bound(this->_root, val, cmp), this->_nil);
+		return const_iterator(this->_lower_bound(this->_root, val, cmp));
 	}
 
 	/**
@@ -1164,7 +1167,7 @@ public:
 
 		if (!this->_size || !cmp(val, this->_nil->child[MAX]->val))
 			return this->end();
-		return iterator(this->_upper_bound(this->_root, val, cmp), this->_nil);
+		return iterator(this->_upper_bound(this->_root, val, cmp));
 	}
 
 	/**
@@ -1181,7 +1184,7 @@ public:
 
 		if (!this->_size || !cmp(val, this->_nil->child[MAX]->val))
 			return this->end();
-		return const_iterator(this->_upper_bound(this->_root, val, cmp), this->_nil);
+		return const_iterator(this->_upper_bound(this->_root, val, cmp));
 	}
 
 // ***************************************************************************************************************** //

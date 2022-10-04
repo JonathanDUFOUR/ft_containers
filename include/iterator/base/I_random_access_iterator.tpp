@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A_random_access_iterator.tpp                       :+:      :+:    :+:   */
+/*   I_random_access_iterator.tpp                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 21:22:55 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/20 18:55:11 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:40:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ARANDOM_ACCESS_ITERATOR_TPP
-# define ARANDOM_ACCESS_ITERATOR_TPP
+#ifndef I_RANDOM_ACCESS_ITERATOR_TPP
+# define I_RANDOM_ACCESS_ITERATOR_TPP
 
-# include "A_bidirectional_iterator.tpp"
+# include "I_bidirectional_iterator.tpp"
 
 namespace ft
 {
 /**
- * @brief	Abstract class designed to be a base class for any Random Access Iterator.
+ * @brief	Interface designed to be a base class for any Random Access Iterator.
  * 
  * @par		According to the C++98 standard, a Random Access Iterator must conform to the following requirements:
  * 			- conform to the Bidirectional Iterator requirements
@@ -47,12 +47,12 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class A_random_access_iterator : public A_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>
+class I_random_access_iterator : public I_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>
 {
 private:
 	// Member types
-	typedef A_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>	_base_type;
-	typedef A_random_access_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
+	typedef I_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>	_base_type;
+	typedef I_random_access_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
 
 protected:
 	// Member types
@@ -71,23 +71,22 @@ public:
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new A_random_access_iterator object. (default constructor)
-	 * 
-	 * @param	ptr	The pointer to wrap.
+	 * @brief	Construct a new I_random_access_iterator object. (default constructor)
 	 */
-	A_random_access_iterator(pointer const ptr = NULL) :
-		_base_type(ptr) {}
+	I_random_access_iterator(void) :
+		_base_type() {}
 
 	/**
-	 * @brief	Construct a new A_random_access_iterator object.
-	 * 			Allow mutable to constant A_random_access_iterator conversion. (copy constructor)
+	 * @brief	Construct a new I_random_access_iterator object.
+	 * 			Allow mutable to constant I_random_access_iterator conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the A_random_access_iterator to copy.
+	 * @tparam	_Derived The type of the concrete derived class of the I_random_access_iterator to copy.
+	 * @tparam	_T The type of the value pointed by the I_random_access_iterator to copy.
 	 * 
-	 * @param	src The A_random_access_iterator to copy.
+	 * @param	src The I_random_access_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_random_access_iterator(A_random_access_iterator<_Derived, _T> const &src) :
+	I_random_access_iterator(I_random_access_iterator<_Derived, _T> const &src) :
 		_base_type(src) {}
 
 // ***************************************************************************************************************** //
@@ -95,9 +94,9 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy the A_random_access_iterator object.
+	 * @brief	Destroy the I_random_access_iterator object.
 	 */
-	virtual ~A_random_access_iterator(void) {}
+	virtual ~I_random_access_iterator(void) {}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //

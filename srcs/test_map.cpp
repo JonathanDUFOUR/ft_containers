@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 18:52:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:52:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,22 +120,35 @@ inline static int	__test_constructor(void)
 		}
 		// Copy constructor
 		{
-			std::vector<ft::pair<float, std::string> >	ft_vec;
-			std::vector<std::pair<float, std::string> >	std_vec;
-
-			for (idx = 0U ; idx < g_float_size && idx < g_string_size ; ++idx)
+			// Default map
 			{
-				ft_vec.push_back(ft::pair<float, std::string>(g_float[idx], g_string[idx]));
-				std_vec.push_back(std::pair<float, std::string>(g_float[idx], g_string[idx]));
+				ft::map<float, std::string> const	ft_map0;
+				ft::map<float, std::string>			ft_map1(ft_map0);
+				std::map<float, std::string> const	std_map0;
+				std::map<float, std::string>		std_map1(std_map0);
+
+				if (sizeof(ft_map1) != sizeof(std_map1))
+					ret = ISO_OK;
 			}
+			// Filled map
+			{
+				std::vector<ft::pair<float, std::string> >	ft_vec;
+				std::vector<std::pair<float, std::string> >	std_vec;
 
-			ft::map<float, std::string>		ft_map0(ft_vec.begin(), ft_vec.end());
-			ft::map<float, std::string>		ft_map1(ft_map0);
-			std::map<float, std::string>	std_map0(std_vec.begin(), std_vec.end());
-			std::map<float, std::string>	std_map1(std_map0);
+				for (idx = 0U ; idx < g_float_size && idx < g_string_size ; ++idx)
+				{
+					ft_vec.push_back(ft::pair<float, std::string>(g_float[idx], g_string[idx]));
+					std_vec.push_back(std::pair<float, std::string>(g_float[idx], g_string[idx]));
+				}
 
-			if (sizeof(ft_map1) != sizeof(std_map1))
-				ret = ISO_OK;
+				ft::map<float, std::string> const	ft_map0(ft_vec.begin(), ft_vec.end());
+				ft::map<float, std::string> const	ft_map1(ft_map0);
+				std::map<float, std::string> const	std_map0(std_vec.begin(), std_vec.end());
+				std::map<float, std::string> const	std_map1(std_map0);
+
+				if (sizeof(ft_map1) != sizeof(std_map1))
+					ret = ISO_OK;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -144,25 +157,6 @@ inline static int	__test_constructor(void)
 		return KO;
 	}
 	return ret;
-}
-
-inline static int	__test_function_get_allocator(void)
-{
-	title(__func__);
-	try
-	{
-		ft::map<char, float> const	ft_map;
-		std::map<char, float> const	std_map;
-
-		if (ft_map.get_allocator() != std_map.get_allocator())
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
-		return KO;
-	}
-	return IMP_OK;
 }
 
 inline static int	__test_function_max_size(void)
@@ -455,7 +449,7 @@ inline static int	__test_function_begin(void)
 				ft_it = ft_map.begin();
 				std_it = std_map.begin();
 
-				if (!!ft_it.getCurr() != !!std_it._M_node)
+				if (!!ft_it.base() != !!std_it._M_node)
 					ret = ISO_OK;
 				if (ft_it->first != std_it->first || ft_it->second != std_it->second)
 					return KO;
@@ -467,7 +461,7 @@ inline static int	__test_function_begin(void)
 			ft_it = ft_map.begin();
 			std_it = std_map.begin();
 
-			if (!!ft_it.getCurr() != !!std_it._M_node)
+			if (!!ft_it.base() != !!std_it._M_node)
 				ret = ISO_OK;
 		}
 		// Constant access
@@ -483,7 +477,7 @@ inline static int	__test_function_begin(void)
 				ft_cit = ft_map.begin();
 				std_cit = std_map.begin();
 
-				if (!!ft_cit.getCurr() != !!std_cit._M_node)
+				if (!!ft_cit.base() != !!std_cit._M_node)
 					ret = ISO_OK;
 				if (ft_cit->first != std_cit->first || ft_cit->second != std_cit->second)
 					return KO;
@@ -495,7 +489,7 @@ inline static int	__test_function_begin(void)
 			ft_cit = ft_map.begin();
 			std_cit = std_map.begin();
 
-			if (!!ft_cit.getCurr() != !!std_cit._M_node)
+			if (!!ft_cit.base() != !!std_cit._M_node)
 				ret = ISO_OK;
 		}
 	}
@@ -538,7 +532,7 @@ inline static int	__test_function_end(void)
 				ft_it = ft_map.end();
 				std_it = std_map.end();
 
-				if (!!ft_it.getCurr() != !!std_it._M_node)
+				if (!!ft_it.base() != !!std_it._M_node)
 					ret =  ISO_OK;
 
 				--ft_it;
@@ -554,7 +548,7 @@ inline static int	__test_function_end(void)
 			ft_it = ft_map.end();
 			std_it = std_map.end();
 
-			if (!!ft_it.getCurr() != !!std_it._M_node)
+			if (!!ft_it.base() != !!std_it._M_node)
 				ret = ISO_OK;
 		}
 		// Constant access
@@ -570,7 +564,7 @@ inline static int	__test_function_end(void)
 				ft_cit = ft_map.end();
 				std_cit = std_map.end();
 
-				if (!!ft_cit.getCurr() != !!std_cit._M_node)
+				if (!!ft_cit.base() != !!std_cit._M_node)
 					ret = ISO_OK;
 
 				--ft_cit;
@@ -586,7 +580,7 @@ inline static int	__test_function_end(void)
 			ft_cit = ft_map.end();
 			std_cit = std_map.end();
 
-			if (!!ft_cit.getCurr() != !!std_cit._M_node)
+			if (!!ft_cit.base() != !!std_cit._M_node)
 				ret = ISO_OK;
 		}
 	}
@@ -629,7 +623,7 @@ inline static int	__test_function_rbegin(void)
 				ft_rit = ft_map.rbegin();
 				std_rit = std_map.rbegin();
 
-				if (!!ft_rit.base().getCurr() != !!std_rit.base()._M_node)
+				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
 					ret = ISO_OK;
 				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
 					return KO;
@@ -641,7 +635,7 @@ inline static int	__test_function_rbegin(void)
 			ft_rit = ft_map.rbegin();
 			std_rit = std_map.rbegin();
 
-			if (!!ft_rit.base().getCurr() != !!std_rit.base()._M_node)
+			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
 				ret = ISO_OK;
 		}
 		// Constant access
@@ -657,7 +651,7 @@ inline static int	__test_function_rbegin(void)
 				ft_crit = ft_map.rbegin();
 				std_crit = std_map.rbegin();
 
-				if (!!ft_crit.base().getCurr() != !!std_crit.base()._M_node)
+				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
 					ret = ISO_OK;
 				if (ft_crit->first != std_crit->first || ft_crit->second != std_crit->second)
 					return KO;
@@ -669,7 +663,7 @@ inline static int	__test_function_rbegin(void)
 			ft_crit = ft_map.rbegin();
 			std_crit = std_map.rbegin();
 
-			if (!!ft_crit.base().getCurr() != !!std_crit.base()._M_node)
+			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
 				ret = ISO_OK;
 		}
 	}
@@ -712,7 +706,7 @@ inline static int	__test_function_rend(void)
 				ft_rit = ft_map.rend();
 				std_rit = std_map.rend();
 
-				if (!!ft_rit.base().getCurr() != !!std_rit.base()._M_node)
+				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
 					ret = ISO_OK;
 
 				--ft_rit;
@@ -728,7 +722,7 @@ inline static int	__test_function_rend(void)
 			ft_rit = ft_map.rend();
 			std_rit = std_map.rend();
 
-			if (!!ft_rit.base().getCurr() != !!std_rit.base()._M_node)
+			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
 				ret = ISO_OK;
 		}
 		// Constant access
@@ -744,7 +738,7 @@ inline static int	__test_function_rend(void)
 				ft_crit = ft_map.rend();
 				std_crit = std_map.rend();
 
-				if (!!ft_crit.base().getCurr() != !!std_crit.base()._M_node)
+				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
 					ret = ISO_OK;
 
 				--ft_crit;
@@ -760,7 +754,7 @@ inline static int	__test_function_rend(void)
 			ft_crit = ft_map.rend();
 			std_crit = std_map.rend();
 
-			if (!!ft_crit.base().getCurr() != !!std_crit.base()._M_node)
+			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
 				ret = ISO_OK;
 		}
 	}
@@ -2351,7 +2345,6 @@ int	test_map(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
-		__test_function_get_allocator,
 		__test_function_max_size,
 		__test_function_key_comp,
 		__test_function_value_comp,

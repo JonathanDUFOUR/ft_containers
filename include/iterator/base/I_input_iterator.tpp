@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A_output_iterator.tpp                              :+:      :+:    :+:   */
+/*   I_input_iterator.tpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 21:05:45 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
+/*   Updated: 2022/10/04 12:40:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef A_OUTPUT_ITERATOR_TPP
-# define A_OUTPUT_ITERATOR_TPP
+#ifndef I_INPUT_ITERATOR_TPP
+# define I_INPUT_ITERATOR_TPP
 
 # include <iterator>
 
 namespace ft
 {
 /**
- * @brief	Abstract class designed to be a base class for any Output Iterator.
+ * @brief	Interface designed to be a base class for any Input Iterator.
  * 
- * @par		According to the C++98 standard, an Output Iterator must conform to the following requirements:
+ * @par		According to the C++98 standard, an Input Iterator must conform to the following requirements:
  * 			- copy constructible (it0(it1))
  * 			- copy assignable (it0 = it1)
- * 			- dereferenceable in write mode (*it = value)
+ * 			- equivalent comparable with another iterator of the same type (it0 == it1)
+ * 			- different comparable with another iterator of the same type (it0 != it1)
+ * 			- dereferenceable in read mode, and in write mode if the value type is mutable (*it)
+ * 			- if `(*it).m` is a valid expression, then so is `it->m` (it->m)
  * 			- prefix incrementable (++it)
  * 			- postfix incrementable (it++)
  * 
@@ -37,15 +40,15 @@ namespace ft
 template <
 	typename Derived,
 	typename T,
-	typename Category = std::output_iterator_tag,
+	typename Category = std::input_iterator_tag,
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class A_output_iterator
+class I_input_iterator
 {
 private:
 	// Member types
-	typedef A_output_iterator<T, Category, Diff, Ptr, Ref>	_self_type;
+	typedef I_input_iterator<T, Category, Diff, Ptr, Ref>	_self_type;
 
 protected:
 	// Member types
@@ -60,52 +63,52 @@ public:
 	typedef Ref												reference;
 
 protected:
-	// Attributes
-	pointer	_ptr;
-
-public:
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new A_output_iterator object from a pointer. (wrap constructor)
-	 * 
-	 * @param	ptr The pointer to wrap.
+	 * @brief	Construct a new I_input_iterator object. (default constructor)
 	 */
-	A_output_iterator(pointer const ptr) : _ptr(ptr) {}
+	I_input_iterator(void) {}
+
+public:
 
 	/**
-	 * @brief	Construct a new A_output_iterator object.
-	 * 			Allow mutable to constant A_output_iterator conversion. (copy constructor)
+	 * @brief	Construct a new I_input_iterator object from another one.
+	 * 			Allow mutable to constant I_input_iterator conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the A_output_iterator to copy.
+	 * @tparam	_Derived The type of the concrete derived class of the I_input_iterator to copy.
+	 * @tparam	_T The type of the value pointed by the I_input_iterator to copy.
 	 * 
-	 * @param	src The A_output_iterator to copy.
+	 * @param	src The I_input_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_output_iterator(A_output_iterator<_Derived, _T> const &src) : _ptr(src.base()) {}
+	I_input_iterator(I_input_iterator<_Derived, _T> const &) {}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy the A_output_iterator object.
+	 * @brief	Destroy the I_input_iterator object.
 	 */
-	virtual ~A_output_iterator(void) {}
+	virtual ~I_input_iterator(void) {}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
 
-	template <typename U>
+	inline virtual bool				operator==(_derived_type const &rhs) const = 0;
+	inline virtual bool				operator!=(_derived_type const &rhs) const = 0;
 
-	inline virtual reference		operator*(void) = 0;
+	inline virtual reference		operator*(void) const = 0;
+
+	inline virtual pointer			operator->(void) const = 0;
 
 	inline virtual _derived_type	&operator=(_derived_type const &rhs) = 0;
 	inline virtual _derived_type	&operator++(void) = 0;
-	inline virtual _derived_type	&operator++(int) = 0;
+	inline virtual _derived_type	operator++(int) = 0;
 };
 }
 

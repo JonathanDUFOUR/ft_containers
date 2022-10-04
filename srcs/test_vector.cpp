@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 18:40:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 09:32:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,28 +227,54 @@ inline static int	__test_constructor(void)
 		// Copy constructor
 		// Trivially copyable
 		{
-			ft::forward_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
-			ft::forward_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
-			ft::vector<t_huint> const								ft_vec0(it0, it1);
-			ft::vector<t_huint> const								ft_vec1(ft_vec0);
-			std::vector<t_huint> const								std_vec0(it0, it1);
-			std::vector<t_huint> const								std_vec1(std_vec0);
+			// Default vector
+			{
+				ft::vector<t_huint> const	ft_vec0;
+				ft::vector<t_huint> const	ft_vec1(ft_vec0);
+				std::vector<t_huint> const	std_vec0;
+				std::vector<t_huint> const	std_vec1(std_vec0);
 
-			if (sizeof(ft_vec1) != sizeof(std_vec1))
-				ret = ISO_OK;
+				if (sizeof(ft_vec1) != sizeof(std_vec1))
+					ret = ISO_OK;
+			}
+			// Filled vector
+			{
+				ft::forward_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+				ft::forward_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
+				ft::vector<t_huint> const								ft_vec0(it0, it1);
+				ft::vector<t_huint> const								ft_vec1(ft_vec0);
+				std::vector<t_huint> const								std_vec0(it0, it1);
+				std::vector<t_huint> const								std_vec1(std_vec0);
+
+				if (sizeof(ft_vec1) != sizeof(std_vec1))
+					ret = ISO_OK;
+			}
 		}
 		// Copy constructor
 		// Non-trivial copy required
 		{
-			ft::forward_iterator_restrictor<std::string const *> const	it0(&g_string[0]);
-			ft::forward_iterator_restrictor<std::string const *> const	it1(&g_string[g_string_size]);
-			ft::vector<std::string> const								ft_vec0(it0, it1);
-			ft::vector<std::string> const								ft_vec1(ft_vec0);
-			std::vector<std::string> const								std_vec0(it0, it1);
-			std::vector<std::string> const								std_vec1(std_vec0);
+			// Default vector
+			{
+				ft::vector<std::string> const	ft_vec0;
+				ft::vector<std::string> const	ft_vec1(ft_vec0);
+				std::vector<std::string> const	std_vec0;
+				std::vector<std::string> const	std_vec1(std_vec0);
 
-			if (sizeof(ft_vec1) != sizeof(std_vec1))
-				ret = ISO_OK;
+				if (sizeof(ft_vec1) != sizeof(std_vec1))
+					ret = ISO_OK;
+			}
+			// Filled vector
+			{
+				ft::forward_iterator_restrictor<std::string const *> const	it0(&g_string[0]);
+				ft::forward_iterator_restrictor<std::string const *> const	it1(&g_string[g_string_size]);
+				ft::vector<std::string> const								ft_vec0(it0, it1);
+				ft::vector<std::string> const								ft_vec1(ft_vec0);
+				std::vector<std::string> const								std_vec0(it0, it1);
+				std::vector<std::string> const								std_vec1(std_vec0);
+
+				if (sizeof(ft_vec1) != sizeof(std_vec1))
+					ret = ISO_OK;
+			}
 		}
 	}
 	catch (std::exception const &e)

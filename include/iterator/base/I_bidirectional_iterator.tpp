@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A_input_iterator.tpp                               :+:      :+:    :+:   */
+/*   I_bidirectional_iterator.tpp                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/23 20:49:20 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/22 17:32:57 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
+/*   Updated: 2022/10/04 12:40:58 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef A_INPUT_ITERATOR_TPP
-# define A_INPUT_ITERATOR_TPP
+#ifndef I_BIDIRECTIONAL_ITERATOR_TPP
+# define I_BIDIRECTIONAL_ITERATOR_TPP
 
-# include <iterator>
+# include "I_forward_iterator.tpp"
 
 namespace ft
 {
 /**
- * @brief	Abstract class designed to be a base class for any Input Iterator.
+ * @brief	Interface designed to be a base class for any Bidirectional Iterator.
  * 
- * @par		According to the C++98 standard, an Input Iterator must conform to the following requirements:
- * 			- copy constructible (it0(it1))
- * 			- copy assignable (it0 = it1)
- * 			- equivalent comparable with another iterator of the same type (it0 == it1)
- * 			- different comparable with another iterator of the same type (it0 != it1)
- * 			- dereferenceable in read mode, and in write mode if the value type is mutable (*it)
- * 			- if `(*it).m` is a valid expression, then so is `it->m` (it->m)
- * 			- prefix incrementable (++it)
- * 			- postfix incrementable (it++)
+ * @par		According to the C++98 standard, a Bidirectional Iterator must conform to the following requirements:
+ * 			- conform to the Forward Iterator requirements
+ * 			- prefix decrementable (--it)
+ * 			- postfix decrementable (it--)
  * 
  * @tparam	Derived The type of the derived iterator.
  * @tparam	T The type of the value pointed by the iterator.
@@ -40,80 +35,67 @@ namespace ft
 template <
 	typename Derived,
 	typename T,
-	typename Category = std::input_iterator_tag,
+	typename Category = std::bidirectional_iterator_tag,
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class A_input_iterator
+class I_bidirectional_iterator : public I_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>
 {
 private:
 	// Member types
-	typedef A_input_iterator<T, Category, Diff, Ptr, Ref>	_self_type;
+	typedef I_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>		_base_type;
+	typedef I_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
 
 protected:
 	// Member types
-	typedef Derived											_derived_type;
+	using typename _base_type::												_derived_type;
 
 public:
 	// Member types
-	typedef T												value_type;
-	typedef Category										iterator_category;
-	typedef Diff											difference_type;
-	typedef Ptr												pointer;
-	typedef Ref												reference;
+	using typename _base_type::												value_type;
+	using typename _base_type::												iterator_category;
+	using typename _base_type::												difference_type;
+	using typename _base_type::												pointer;
+	using typename _base_type::												reference;
 
-protected:
-	// Attributes
-	pointer	_ptr;
-
-public:
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new A_input_iterator object from a pointer. (wrap constructor)
-	 * 
-	 * @param	ptr The pointer to wrap.
+	 * @brief	Construct a new I_bidirectional_iterator object. (default constructor)
 	 */
-	A_input_iterator(pointer const ptr) :
-		_ptr(ptr) {}
+	I_bidirectional_iterator(void) :
+		_base_type() {}
 
 	/**
-	 * @brief	Construct a new A_input_iterator object from another one.
-	 * 			Allow mutable to constant A_input_iterator conversion. (copy constructor)
+	 * @brief	Construct a new I_bidirectional_iterator object.
+	 * 			Allow mutable to constant I_bidirectional_iterator conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the A_input_iterator to copy.
+	 * @tparam	_Derived The type of the concrete derived class of the I_bidirectional_iterator to copy.
+	 * @tparam	_T The type of the value pointed by the I_bidirectional_iterator to copy.
 	 * 
-	 * @param	src The A_input_iterator to copy.
+	 * @param	src The I_bidirectional_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_input_iterator(A_input_iterator<_Derived, _T> const &src) :
-		_ptr(src.base()) {}
+	I_bidirectional_iterator(I_bidirectional_iterator<_Derived, _T> const &src) :
+		_base_type(src) {}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy the A_input_iterator object.
+	 * @brief	Destroy the I_bidirectional_iterator object.
 	 */
-	virtual ~A_input_iterator(void) {}
+	virtual ~I_bidirectional_iterator(void) {}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
 
-	inline virtual bool				operator==(_derived_type const &rhs) const = 0;
-	inline virtual bool				operator!=(_derived_type const &rhs) const = 0;
-
-	inline virtual reference		operator*(void) const = 0;
-
-	inline virtual pointer			operator->(void) const = 0;
-
-	inline virtual _derived_type	&operator=(_derived_type const &rhs) = 0;
-	inline virtual _derived_type	&operator++(void) = 0;
-	inline virtual _derived_type	operator++(int) = 0;
+	inline virtual _derived_type	&operator--(void) = 0;
+	inline virtual _derived_type	operator--(int) = 0;
 };
 }
 

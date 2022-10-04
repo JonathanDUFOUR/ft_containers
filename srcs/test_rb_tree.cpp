@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 18:49:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:03:31 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,16 @@ inline static int	__test_constructor(void)
 		}
 		// Copy constructor
 		{
-			ft::rb_tree<int>	tree0(&g_int[0], &g_int[g_int_size]);
-			ft::rb_tree<int>	tree1(tree0);
+			// Default tree
+			{
+				ft::rb_tree<int> const	tree0;
+				ft::rb_tree<int> const	tree1(tree0);
+			}
+			// Filled tree
+			{
+				ft::rb_tree<int> const	tree0(&g_int[0], &g_int[g_int_size]);
+				ft::rb_tree<int> const	tree1(tree0);
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -328,7 +336,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint>	tree(&g_luint[0], &g_luint[idx]);
 
 				it = tree.begin();
-				if (it.getCurr() != tree.min())
+				if (it.base() != tree.min())
 					return EXIT_FAILURE;
 			}
 		}
@@ -341,7 +349,7 @@ inline static int	__test_function_begin(void)
 				ft::rb_tree<t_luint> const	tree(&g_luint[0], &g_luint[idx]);
 
 				cit = tree.begin();
-				if (cit.getCurr() != tree.min())
+				if (cit.base() != tree.min())
 					return EXIT_FAILURE;
 			}
 		}
@@ -368,7 +376,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint>					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::iterator const	it(--tree.end());
 
-				if (it.getCurr() != tree.max())
+				if (it.base() != tree.max())
 					return EXIT_FAILURE;
 			}
 		}
@@ -379,7 +387,7 @@ inline static int	__test_function_end(void)
 				ft::rb_tree<t_luint> const					tree(&g_luint[0], &g_luint[idx]);
 				ft::rb_tree<t_luint>::const_iterator const	cit(--tree.end());
 
-				if (cit.getCurr() != tree.max())
+				if (cit.base() != tree.max())
 					return EXIT_FAILURE;
 			}
 		}
@@ -480,14 +488,14 @@ inline static int	__test_type_iterator(void)
 		BidirectionalIteratorCheck(it);
 		*it /= 7;
 
-		if (it != tree.begin() || it.getCurr() != tree.min() || *it != tree.min()->val)
+		if (it != tree.begin() || it.base() != tree.min() || *it != tree.min()->val)
 			return EXIT_FAILURE;
 
 		it = --tree.end();
 		BidirectionalIteratorCheck(it);
 		*it /= 7;
 
-		if (it != --tree.end() || it.getCurr() != tree.max() || *it != tree.max()->val)
+		if (it != --tree.end() || it.base() != tree.max() || *it != tree.max()->val)
 			return EXIT_FAILURE;
 
 		it = tree.end();
@@ -496,7 +504,7 @@ inline static int	__test_type_iterator(void)
 		it--;
 		it++;
 
-		if (it != tree.end() || it.getCurr() != tree.getNil())
+		if (it != tree.end() || it.base() != tree.getNil())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -518,13 +526,13 @@ inline static int	__test_type_const_iterator(void)
 		cit = tree.begin();
 		BidirectionalIteratorCheck(cit);
 
-		if (cit != tree.begin() || cit.getCurr() != tree.min() || *cit != tree.min()->val)
+		if (cit != tree.begin() || cit.base() != tree.min() || *cit != tree.min()->val)
 			return EXIT_FAILURE;
 
 		cit = --tree.end();
 		BidirectionalIteratorCheck(cit);
 
-		if (cit != --tree.end() || cit.getCurr() != tree.max() || *cit != tree.max()->val)
+		if (cit != --tree.end() || cit.base() != tree.max() || *cit != tree.max()->val)
 			return EXIT_FAILURE;
 
 		cit = tree.end();
@@ -533,7 +541,7 @@ inline static int	__test_type_const_iterator(void)
 		cit--;
 		cit++;
 
-		if (cit != tree.end() || cit.getCurr() != tree.getNil())
+		if (cit != tree.end() || cit.base() != tree.getNil())
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -622,7 +630,7 @@ inline static int	__test_function_insert(void)
 			ft::rb_tree<std::string>::iterator	ft_it;
 			std::set<std::string>::iterator		std_it;
 
-			tree.insert(tree.begin().getCurr(), std::string("dedicated to lmartin"));
+			tree.insert(tree.begin().base(), std::string("dedicated to lmartin"));
 			ref.insert(ref.begin(), std::string("dedicated to lmartin"));
 			ft_it = tree.begin();
 			std_it = ref.begin();
@@ -631,17 +639,17 @@ inline static int	__test_function_insert(void)
 				switch (idx % 3)
 				{
 					case 0:
-						ft_it = tree.insert(ft_it.getCurr(), g_string[idx / 3]);
+						ft_it = tree.insert(ft_it.base(), g_string[idx / 3]);
 						std_it = ref.insert(std_it, g_string[idx / 3]);
 						break;
 				
 					case 1:
-						ft_it = tree.insert(tree.begin().getCurr(), *++tree.begin());
+						ft_it = tree.insert(tree.begin().base(), *++tree.begin());
 						std_it = ref.insert(ref.begin(), *++ref.begin());
 						break;
 
 					case 2:
-						ft_it = tree.insert(tree.end().getCurr(), *++tree.rbegin());
+						ft_it = tree.insert(tree.end().base(), *++tree.rbegin());
 						std_it = ref.insert(ref.end(), *++ref.rbegin());
 						break;
 				}
@@ -684,12 +692,12 @@ inline static int	__test_function_erase(void)
 			{
 				if (idx % 2)
 				{
-					tree.erase(tree.begin().getCurr());
+					tree.erase(tree.begin().base());
 					ref.erase(ref.begin());
 				}
 				else
 				{
-					tree.erase((--tree.end()).getCurr());
+					tree.erase((--tree.end()).base());
 					ref.erase(--ref.end());
 				}
 
@@ -877,22 +885,7 @@ inline static int	__test_function_upper_bound(void)
 
 				if ((ft_cit == tree.end()) != (std_cit == ref.end()) ||
 					(ft_cit != tree.end() && (*ft_cit != *std_cit)))
-				{
-					std::cout << '\n';
-					std::cout << "         idx: " << idx << '\n';
-					std::cout << " looking for: " << g_lint[idx] << '\n';
-					std::cout << "      ft_cit: ";
-					if (ft_cit == tree.end())
-						std::cout << "end" << '\n';
-					else
-						std::cout << *ft_cit << '\n';
-					std::cout << "     std_cit: ";
-					if (std_cit == ref.end())
-						std::cout << "end" << '\n';
-					else
-						std::cout << *std_cit << '\n';
 					return EXIT_FAILURE;
-				}
 			}
 		}
 	}

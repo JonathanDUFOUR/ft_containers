@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 10:56:47 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 19:34:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 09:29:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,30 @@ inline static int	__test_constructor(void)
 		}
 		// Copy constructor
 		{
-			ft::pair<char const, char const> const	ft_pair0('!', '?');
-			ft::pair<char, char> const				ft_pair1(ft_pair0);
-			std::pair<char const, char const> const	std_pair0('!', '?');
-			std::pair<char, char> const				std_pair1(std_pair0);
+			// Default pair
+			{
+				ft::pair<char const, char const> const	ft_pair0;
+				ft::pair<char const, char const> const	ft_pair1(ft_pair0);
+				std::pair<char const, char const> const	std_pair0;
+				std::pair<char const, char const> const	std_pair1(std_pair0);
 
-			if (sizeof(ft_pair1) != sizeof(std_pair1) || memcmp(&ft_pair1, &std_pair1, sizeof(ft_pair1)))
-				ret = ISO_OK;
-			if (ft_pair1.first != std_pair1.first || ft_pair1.second != std_pair1.second)
-				return KO;
+				if (sizeof(ft_pair1) != sizeof(std_pair1) || memcmp(&ft_pair1, &std_pair1, sizeof(ft_pair1)))
+					ret = ISO_OK;
+				if (ft_pair1.first != std_pair1.first || ft_pair1.second != std_pair1.second)
+					return KO;
+			}
+			// Filled pair
+			{
+				ft::pair<char const, char const> const	ft_pair0('!', '?');
+				ft::pair<char, char> const				ft_pair1(ft_pair0);
+				std::pair<char const, char const> const	std_pair0('!', '?');
+				std::pair<char, char> const				std_pair1(std_pair0);
+
+				if (sizeof(ft_pair1) != sizeof(std_pair1) || memcmp(&ft_pair1, &std_pair1, sizeof(ft_pair1)))
+					ret = ISO_OK;
+				if (ft_pair1.first != std_pair1.first || ft_pair1.second != std_pair1.second)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 18:40:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 09:31:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ inline static int	__test_constructor(void)
 				memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 				return EXIT_FAILURE;
 		}
-		// Iterator constructor
+		// Wrap constructor
 		{
 			for (idx = 0U ; idx < g_int_size ; ++idx)
 			{
@@ -50,20 +50,34 @@ inline static int	__test_constructor(void)
 		}
 		// Copy constructor
 		{
-			for (idx = 0U ; idx < g_int_size ; ++idx)
+			// Default position
 			{
-				ft::random_access_iterator_restrictor<int const *>								it(&g_int[idx]);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit0(it);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit1(ft_rit0);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	ft_rit2(ft_rit1);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit0(it);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit1(std_rit0);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	std_rit2(std_rit1);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit0;
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit1(ft_rit0);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit0;
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit1(std_rit0);
 
-				if ((sizeof (ft_rit1) != sizeof (std_rit1)) || sizeof(ft_rit2) != sizeof(std_rit2) ||
-					(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))) ||
-					(memcmp(&ft_rit1, &ft_rit2, sizeof(ft_rit1)) != memcmp(&std_rit1, &std_rit2, sizeof(std_rit1))))
+				if (sizeof(ft_rit1) != sizeof(std_rit1) ||
+					memcmp(&ft_rit1, &std_rit1, sizeof(ft_rit1)))
 					return EXIT_FAILURE;
+			}
+			// Defined position
+			{
+				for (idx = 0U ; idx < g_int_size ; ++idx)
+				{
+					ft::random_access_iterator_restrictor<int const *>								it(&g_int[idx]);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit0(it);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit1(ft_rit0);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	ft_rit2(ft_rit1);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit0(it);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit1(std_rit0);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	std_rit2(std_rit1);
+
+					if ((sizeof (ft_rit1) != sizeof (std_rit1)) || sizeof(ft_rit2) != sizeof(std_rit2) ||
+						(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))) ||
+						(memcmp(&ft_rit1, &ft_rit2, sizeof(ft_rit1)) != memcmp(&std_rit1, &std_rit2, sizeof(std_rit1))))
+						return EXIT_FAILURE;
+				}
 			}
 		}
 	}

@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A_bidirectional_iterator.tpp                       :+:      :+:    :+:   */
+/*   I_output_iterator.tpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/23 21:18:24 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 21:34:23 by jodufour         ###   ########.fr       */
+/*   Created: 2022/05/23 20:50:41 by jodufour          #+#    #+#             */
+/*   Updated: 2022/10/04 12:40:52 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef A_BIDIRECTIONAL_ITERATOR_TPP
-# define A_BIDIRECTIONAL_ITERATOR_TPP
+#ifndef I_OUTPUT_ITERATOR_TPP
+# define I_OUTPUT_ITERATOR_TPP
 
-# include "A_forward_iterator.tpp"
+# include <iterator>
 
 namespace ft
 {
 /**
- * @brief	Abstract class designed to be a base class for any Bidirectional Iterator.
+ * @brief	Interface designed to be a base class for any Output Iterator.
  * 
- * @par		According to the C++98 standard, a Bidirectional Iterator must conform to the following requirements:
- * 			- conform to the Forward Iterator requirements
- * 			- prefix decrementable (--it)
- * 			- postfix decrementable (it--)
+ * @par		According to the C++98 standard, an Output Iterator must conform to the following requirements:
+ * 			- copy constructible (it0(it1))
+ * 			- copy assignable (it0 = it1)
+ * 			- dereferenceable in write mode (*it = value)
+ * 			- prefix incrementable (++it)
+ * 			- postfix incrementable (it++)
  * 
  * @tparam	Derived The type of the derived iterator.
  * @tparam	T The type of the value pointed by the iterator.
@@ -35,68 +37,70 @@ namespace ft
 template <
 	typename Derived,
 	typename T,
-	typename Category = std::bidirectional_iterator_tag,
+	typename Category = std::output_iterator_tag,
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class A_bidirectional_iterator : public A_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>
+class I_output_iterator
 {
 private:
 	// Member types
-	typedef A_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>		_base_type;
-	typedef A_bidirectional_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
+	typedef I_output_iterator<T, Category, Diff, Ptr, Ref>	_self_type;
 
 protected:
 	// Member types
-	using typename _base_type::												_derived_type;
+	typedef Derived											_derived_type;
 
 public:
 	// Member types
-	using typename _base_type::												value_type;
-	using typename _base_type::												iterator_category;
-	using typename _base_type::												difference_type;
-	using typename _base_type::												pointer;
-	using typename _base_type::												reference;
+	typedef T												value_type;
+	typedef Category										iterator_category;
+	typedef Diff											difference_type;
+	typedef Ptr												pointer;
+	typedef Ref												reference;
 
+protected:
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new A_bidirectional_iterator object. (default constructor)
-	 * 
-	 * @param	ptr The pointer to wrap.
+	 * @brief	Construct a new I_output_iterator object. (default constructor)
 	 */
-	A_bidirectional_iterator(pointer const ptr = NULL) :
-		_base_type(ptr) {}
+	I_output_iterator(void) {}
+
+public:
 
 	/**
-	 * @brief	Construct a new A_bidirectional_iterator object.
-	 * 			Allow mutable to constant A_bidirectional_iterator conversion. (copy constructor)
+	 * @brief	Construct a new I_output_iterator object.
+	 * 			Allow mutable to constant I_output_iterator conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the A_bidirectional_iterator to copy.
+	 * @tparam	_Derived The type of the concrete derived class of the I_output_iterator to copy.
+	 * @tparam	_T The type of the value pointed by the I_output_iterator to copy.
 	 * 
-	 * @param	src The A_bidirectional_iterator to copy.
+	 * @param	src The I_output_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_bidirectional_iterator(A_bidirectional_iterator<_Derived, _T> const &src) :
-		_base_type(src) {}
+	I_output_iterator(I_output_iterator<_Derived, _T> const &src) {}
 
 // ***************************************************************************************************************** //
 //                                                    Destructors                                                    //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy the A_bidirectional_iterator object.
+	 * @brief	Destroy the I_output_iterator object.
 	 */
-	virtual ~A_bidirectional_iterator(void) {}
+	virtual ~I_output_iterator(void) {}
 
 // ***************************************************************************************************************** //
 //                                                     Operators                                                     //
 // ***************************************************************************************************************** //
 
-	inline virtual _derived_type	&operator--(void) = 0;
-	inline virtual _derived_type	operator--(int) = 0;
+	inline virtual reference		operator*(void) = 0;
+
+	inline virtual _derived_type	&operator=(_derived_type const &rhs) = 0;
+	inline virtual _derived_type	&operator++(void) = 0;
+	inline virtual _derived_type	&operator++(int) = 0;
 };
 }
 

@@ -6,14 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 13:36:10 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:50:57 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_ITERATOR_TPP
 # define RB_TREE_ITERATOR_TPP
 
-# include "iterator/base/A_bidirectional_iterator.tpp"
+# include "iterator/base/I_bidirectional_iterator.tpp"
 # include "iterator.hpp"
 # include "rb_node.tpp"
 # include "e_rb_min_max.hpp"
@@ -21,12 +21,12 @@
 namespace ft
 {
 template <typename T, typename Node>
-class rb_tree_iterator : public A_bidirectional_iterator<rb_tree_iterator<T, Node>, T>
+class rb_tree_iterator : public I_bidirectional_iterator<rb_tree_iterator<T, Node>, T>
 {
 private:
 	// Member types
 	typedef rb_tree_iterator<T, Node>				_self_type;
-	typedef A_bidirectional_iterator<_self_type, T>	_base_type;
+	typedef I_bidirectional_iterator<_self_type, T>	_base_type;
 	typedef Node									_node_type;
 
 public:
@@ -40,7 +40,6 @@ public:
 private:
 	// Attributes
 	_node_type	*_curr;
-	_node_type	*_nil;
 
 public:
 // ****************************************************************************************************************** //
@@ -50,13 +49,11 @@ public:
 	/**
 	 * @brief	Construct a new rb_tree_iterator object. (wrap constructor)
 	 * 
-	 * @param	curr	The current rb_node pointer to wrap.
-	 * @param	root	The address of the root of the tree which the iterator is in.
+	 * @param	curr The current rb_node pointer to wrap.
 	 */
-	rb_tree_iterator(_node_type *const curr = NULL, _node_type *const nil = NULL) :
-		_base_type(curr != nil ? &curr->val : NULL),
-		_curr(curr),
-		_nil(nil) {}
+	rb_tree_iterator(_node_type *const curr = NULL) :
+		_base_type(),
+		_curr(curr) {}
 
 	/**
 	 * @brief	Construct a new rb_tree_iterator object from another one.
@@ -69,36 +66,19 @@ public:
 	 */
 	template <typename _T, typename _Node>
 	rb_tree_iterator(rb_tree_iterator<_T, _Node> const &src) :
-		_base_type(src.getPtr()),
-		_curr(src.getCurr()),
-		_nil(src.getNil()) {}
+		_base_type(),
+		_curr(src.base()) {}
 
 // ***************************************************************************************************************** //
-//                                                     Accessors                                                     //
+//                                              Public Member Functions                                              //
 // ***************************************************************************************************************** //
 
 	/**
-	 * @return	The inner pointer to the value in the rb_tree_iterator.
+	 * @return	A copy of the wrapped pointer.
 	 */
-	inline pointer const &getPtr(void) const
-	{
-		return this->_ptr;
-	}
-
-	/**
-	 * @return	The inner pointer to the current rb_node in the rb_tree_iterator.
-	 */
-	inline _node_type *const	&getCurr(void) const
+	inline _node_type	*base(void) const
 	{
 		return this->_curr;
-	}
-
-	/**
-	 * @return	The inner root address in the rb_tree_iterator.
-	 */
-	inline _node_type *const	&getNil(void) const
-	{
-		return this->_nil;
 	}
 
 // ***************************************************************************************************************** //
@@ -115,11 +95,7 @@ public:
 	inline _self_type	&operator=(_self_type const &rhs)
 	{
 		if (this != &rhs)
-		{
-			this->_ptr = rhs.getPtr();
-			this->_curr = rhs.getCurr();
-			this->_nil = rhs.getNil();
-		}
+			this->_curr = rhs._curr;
 		return *this;
 	}
 
@@ -132,7 +108,7 @@ public:
 	 */
 	inline bool	operator==(_self_type const &rhs) const
 	{
-		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_nil == rhs.getNil();
+		return this->_curr == rhs._curr;
 	}
 
 	/**
@@ -149,7 +125,7 @@ public:
 	template <typename _T, typename _Node>
 	inline bool	operator==(rb_tree_iterator<_T, _Node> const &rhs) const
 	{
-		return this->_ptr == rhs.getPtr() && this->_curr == rhs.getCurr() && this->_nil == rhs.getNil();
+		return this->_curr == rhs.base();
 	}
 
 	/**
@@ -186,7 +162,7 @@ public:
 	 */
 	inline reference	operator*(void) const
 	{
-		return *this->_ptr;
+		return this->_curr->val;
 	}
 
 	/**
@@ -194,7 +170,7 @@ public:
 	 */
 	inline pointer	operator->(void) const
 	{
-		return this->_ptr;
+		return &this->_curr->val;
 	}
 
 	/**
@@ -204,29 +180,23 @@ public:
 	 */
 	inline _self_type	&operator++(void)
 	{
-		if (this->_curr == this->_nil)
-			this->_curr = this->_nil->child[MIN];
+		if (!this->_curr->parent)
+			this->_curr = this->_curr->child[MIN];
 		else
 		{
-			if (this->_curr->child[RIGHT] != this->_nil)
+			if (this->_curr->child[RIGHT]->parent)
 			{
 				this->_curr = this->_curr->child[RIGHT];
-				while (this->_curr->child[LEFT] != this->_nil)
+				while (this->_curr->child[LEFT]->parent)
 					this->_curr = this->_curr->child[LEFT];
 			}
-			else if (this->_curr == this->_nil->child[MAX])
-				this->_curr = this->_nil;
 			else
 			{
-				while (this->_curr->parent != this->_nil && this->_curr == this->_curr->parent->child[RIGHT])
+				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[RIGHT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}
 		}
-		if (this->_curr != this->_nil)
-			this->_ptr = &this->_curr->val;
-		else
-			this->_ptr = NULL;
 		return *this;
 	}
 
@@ -250,29 +220,23 @@ public:
 	 */
 	inline _self_type	&operator--(void)
 	{
-		if (this->_curr == this->_nil)
-			this->_curr = this->_nil->child[MAX];
+		if (!this->_curr->parent)
+			this->_curr = this->_curr->child[MAX];
 		else
 		{
-			if (this->_curr->child[LEFT] != this->_nil)
+			if (this->_curr->child[LEFT]->parent)
 			{
 				this->_curr = this->_curr->child[LEFT];
-				while (this->_curr->child[RIGHT] != this->_nil)
+				while (this->_curr->child[RIGHT]->parent)
 					this->_curr = this->_curr->child[RIGHT];
 			}
-			else if (this->_curr == this->_nil->child[MIN])
-				this->_curr = this->_nil;
 			else
 			{
-				while (this->_curr->parent != this->_nil && this->_curr == this->_curr->parent->child[LEFT])
+				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[LEFT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}
 		}
-		if (this->_curr != this->_nil)
-			this->_ptr = &this->_curr->val;
-		else
-			this->_ptr = NULL;
 		return *this;
 	}
 
@@ -289,17 +253,5 @@ public:
 		return original;
 	}
 };
-
-// DBG
-template <typename _T, typename _Node>
-std::ostream	&operator<<(std::ostream &os, rb_tree_iterator<_T, _Node> const &it)
-{
-	os
-	<< "rb_tree_iterator:" << '\n'
-	<< '\t' << " _ptr: " << it.getPtr() << '\n'
-	<< '\t' << "_curr: " << it.getCurr() << '\n'
-	<< '\t' << " _nil: " << it.getNil() << '\n';
-	return os;
-}
 } // namespace ft
 #endif

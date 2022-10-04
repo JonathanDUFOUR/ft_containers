@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   A_forward_iterator.tpp                             :+:      :+:    :+:   */
+/*   I_forward_iterator.tpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 20:53:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/19 21:32:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:41:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef A_FORWARD_ITERATOR_TPP
-# define A_FORWARD_ITERATOR_TPP
+#ifndef I_FORWARD_ITERATOR_TPP
+# define I_FORWARD_ITERATOR_TPP
 
-# include "A_input_iterator.tpp"
+# include "I_input_iterator.tpp"
 
 namespace ft
 {
 /**
- * @brief	Abstract class designed to be a base class for any Forward Iterator.
+ * @brief	Interface designed to be a base class for any Forward Iterator.
  * 
  * @par		According to the C++98 standard, a Forward Iterator must conform to the following requirements:
  * 			- conform to the Input Iterator requirements
@@ -38,12 +38,12 @@ template <
 	typename Diff = std::ptrdiff_t,
 	typename Ptr = T *,
 	typename Ref = T &>
-class A_forward_iterator : public A_input_iterator<Derived, T, Category, Diff, Ptr, Ref>
+class I_forward_iterator : public I_input_iterator<Derived, T, Category, Diff, Ptr, Ref>
 {
 private:
 	// Member types
-	typedef A_input_iterator<Derived, T, Category, Diff, Ptr, Ref>		_base_type;
-	typedef A_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
+	typedef I_input_iterator<Derived, T, Category, Diff, Ptr, Ref>		_base_type;
+	typedef I_forward_iterator<Derived, T, Category, Diff, Ptr, Ref>	_self_type;
 
 protected:
 	// Member types
@@ -62,23 +62,24 @@ public:
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new A_forward_iterator object. (default constructor)
+	 * @brief	Construct a new I_forward_iterator object. (default constructor)
 	 * 
 	 * @param	ptr The pointer to wrap.
 	 */
-	A_forward_iterator(pointer const ptr = NULL) :
-		_base_type(ptr) {}
+	I_forward_iterator(void) :
+		_base_type() {}
 
 	/**
 	 * @brief	Construct a new forward iterator object from another one.
-	 * 			Allow mutable to constant A_forward_iterator conversion. (copy constructor)
+	 * 			Allow mutable to constant I_forward_iterator conversion. (copy constructor)
 	 * 
-	 * @tparam	U The type of the A_forward_iterator to copy.
+	 * @tparam	_Derived The type of the concrete derived class of the I_forward_iterator to copy.
+	 * @tparam	_T The type of the value pointed by the I_forward_iterator to copy.
 	 * 
-	 * @param	src The A_forward_iterator to copy.
+	 * @param	src The I_forward_iterator to copy.
 	 */
 	template <typename _Derived, typename _T>
-	A_forward_iterator(A_forward_iterator<_Derived, _T> const &src) :
+	I_forward_iterator(I_forward_iterator<_Derived, _T> const &src) :
 		_base_type(src) {}
 
 // ***************************************************************************************************************** //
@@ -86,9 +87,9 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @brief	Destroy the A_forward_iterator object.
+	 * @brief	Destroy the I_forward_iterator object.
 	 */
-	virtual ~A_forward_iterator(void) {}
+	virtual ~I_forward_iterator(void) {}
 };
 }
 

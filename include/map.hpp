@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/03 15:50:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 12:21:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,7 @@ public:
 	 */
 	void	erase(iterator pos)
 	{
-		this->_tree.erase(pos.getCurr());
+		this->_tree.erase(pos.base());
 	}
 
 	/**
@@ -245,7 +245,7 @@ public:
 	void	erase(iterator first, iterator const last)
 	{
 		while (first != last)
-			this->_tree.erase(first++.getCurr());
+			this->_tree.erase(first++.base());
 	}
 
 	/**
@@ -257,7 +257,7 @@ public:
 	 */
 	iterator	find(key_type const &key)
 	{
-		return iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getNil());
+		return iterator(this->_tree.find(value_type(key, mapped_type())));
 	}
 
 	/**
@@ -268,15 +268,7 @@ public:
 	 */
 	const_iterator	find(key_type const &key) const
 	{
-		return const_iterator(this->_tree.find(value_type(key, mapped_type())), this->_tree.getNil());
-	}
-
-	/**
-	 * @return	An allocator_type default object.
-	 */
-	allocator_type	get_allocator(void) const
-	{
-		return allocator_type();
+		return const_iterator(this->_tree.find(value_type(key, mapped_type())));
 	}
 
 	/**
@@ -319,7 +311,7 @@ public:
 	 */
 	iterator	insert(iterator const pos, value_type const &val)
 	{
-		return this->_tree.insert(pos.getCurr(), val);
+		return this->_tree.insert(pos.base(), val);
 	}
 
 	/**
@@ -480,7 +472,7 @@ public:
 		if (it == this->end())
 			return this->_tree.insert(this->_tree.getNil()->child[MAX], value_type(key, mapped_type()))->second;
 		if (cmp(it->first, key) || cmp(key, it->first))
-			return this->_tree.insert(it.getCurr(), value_type(key, mapped_type()))->second;
+			return this->_tree.insert(it.base(), value_type(key, mapped_type()))->second;
 		return it->second;
 	}
 
