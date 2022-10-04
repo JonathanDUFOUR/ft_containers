@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 12:21:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:26:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	map(InputIterator const first,
+	map(
+		InputIterator const first,
 		InputIterator const last,
 		key_compare const & = key_compare(),
 		allocator_type const & = allocator_type()) :

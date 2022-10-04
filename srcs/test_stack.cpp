@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 18:40:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 17:43:28 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,63 @@ inline static int	__test_constructor(void)
 		return KO;
 	}
 	return ret;
+}
+
+inline static int	__test_type_value_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::stack<t_lint, std::vector<t_lint> >		ft_sta_type;
+		typedef std::stack<t_lint, std::vector<t_lint> >	std_sta_type;
+
+		if (!ft::is_same<ft_sta_type::value_type, std_sta_type::value_type>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_size_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::stack<t_lint, std::vector<t_lint> >		ft_sta_type;
+		typedef std::stack<t_lint, std::vector<t_lint> >	std_sta_type;
+
+		if (!ft::is_same<ft_sta_type::size_type, std_sta_type::size_type>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_container_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::stack<t_lint, std::vector<t_lint> >		ft_sta_type;
+		typedef std::stack<t_lint, std::vector<t_lint> >	std_sta_type;
+
+		if (!ft::is_same<ft_sta_type::container_type, std_sta_type::container_type>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
 }
 
 inline static int	__test_function_top(void)
@@ -429,6 +486,9 @@ int	test_stack(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_type_value_type,
+		__test_type_size_type,
+		__test_type_container_type,
 		__test_function_top,
 		__test_function_push,
 		__test_function_pop,

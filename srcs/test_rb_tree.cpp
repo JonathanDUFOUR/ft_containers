@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 12:03:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 16:01:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <list>
 #include <set>
 #include "arrays.hpp"
-#include "iteratorCheck.tpp"
+#include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "rb_tree.tpp"
 #include "tester.hpp"
@@ -121,7 +121,7 @@ inline static int	__test_constructor(void)
 			}
 			// Range of char const *
 			{
-				ft::rb_tree<char> const	ft_vec(&g_char[0], &g_char[g_char_size]);
+				ft::rb_tree<char> const	tree(&g_char[0], &g_char[g_char_size]);
 			}
 		}
 		// Copy constructor

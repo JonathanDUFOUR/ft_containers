@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/09/28 16:13:41 by jodufour         ###   ########.fr        #
+#    Updated: 2022/10/04 15:49:25 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC			=	\
 				test_pair.cpp					\
 				test_rb_tree.cpp				\
 				test_reverse_iterator.cpp		\
+				test_set.cpp					\
 				test_stack.cpp					\
 				test_vector.cpp					\
 				title.cpp

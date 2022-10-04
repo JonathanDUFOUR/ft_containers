@@ -1,14 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iteratorCheck.tpp                                  :+:      :+:    :+:   */
+/*   requirements_check.tpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/06 11:10:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 12:15:58 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:47:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef REQUIREMENTS_CHECK_TPP
+# define REQUIREMENTS_CHECK_TPP
 
 /**
  * @brief	Apply several assignation and move tests to an input iterator.
@@ -143,3 +146,5 @@ void	RandomAccessIteratorCheck(RandomAccessIterator &it)
 	(void)dist;
 	(void)cmp;
 }
+
+#endif

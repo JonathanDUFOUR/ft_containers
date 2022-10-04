@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 12:15:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 11:43:24 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 13:15:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	test_map(void);
 int	test_pair(void);
 int	test_rb_tree(void);
 int	test_reverse_iterator(void);
+int	test_set(void);
 int	test_stack(void);
 int	test_vector(void);
 

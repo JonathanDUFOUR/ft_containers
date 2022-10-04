@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 10:58:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 12:37:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:31:44 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -414,10 +414,7 @@ public:
 	 */
 	inline _self_type	operator+(difference_type const rhs) const
 	{
-		_self_type	it(*this);
-
-		it += rhs;
-		return it;
+		return _self_type(*this) += rhs;
 	}
 
 	/**
@@ -429,10 +426,7 @@ public:
 	 */
 	inline _self_type	operator-(difference_type const rhs) const
 	{
-		_self_type	it(*this);
-
-		it -= rhs;
-		return it;
+		return _self_type(*this) -= rhs;
 	}
 
 	/**
@@ -471,10 +465,10 @@ public:
  * 
  * @return	A vector_iterator pointing to the new position.
  */
-template <typename Iterator>
-inline vector_iterator<Iterator>	operator+(
-	typename vector_iterator<Iterator>::difference_type const lhs,
-	vector_iterator<Iterator> const &rhs)
+template <typename RandomAccessIterator>
+inline vector_iterator<RandomAccessIterator>	operator+(
+	typename vector_iterator<RandomAccessIterator>::difference_type const lhs,
+	vector_iterator<RandomAccessIterator> const &rhs)
 {
 	return rhs + lhs;
 }

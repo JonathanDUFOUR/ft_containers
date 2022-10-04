@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 10:29:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 15:35:17 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,34 +223,48 @@ public:
 		return this->_it[-idx - 1];
 	}
 
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator==(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator!=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator<(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator>(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator<=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
-	template <typename Iterator0, typename Iterator1>
-	friend inline bool	operator>=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator==(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator!=(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator<(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator>(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator<=(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
+	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+	friend inline bool	operator>=(
+		reverse_iterator<BidirectionalIterator0> const &lhs,
+		reverse_iterator<BidirectionalIterator1> const &rhs);
 };
 
 /**
  * @brief	Check if two reverse_iterator are equivalent.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are equivalent, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator==(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator==(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() == rhs.base();
 }
@@ -259,16 +273,18 @@ inline bool	operator==(reverse_iterator<Iterator0> const &lhs, reverse_iterator<
  * @brief	Check if two reverse_iterator are different.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are different, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator!=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator!=(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() != rhs.base();
 }
@@ -277,16 +293,18 @@ inline bool	operator!=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<
  * @brief	Check if two reverse_iterator are strictly ordered.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are strictly ordered, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator<(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator<(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() > rhs.base();
 }
@@ -295,16 +313,18 @@ inline bool	operator<(reverse_iterator<Iterator0> const &lhs, reverse_iterator<I
  * @brief	Check if two reverse_iterator are strictly reverse ordered.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are strictly reverse ordered, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator>(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator>(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() < rhs.base();
 }
@@ -313,16 +333,18 @@ inline bool	operator>(reverse_iterator<Iterator0> const &lhs, reverse_iterator<I
  * @brief	Check if two reverse_iterator are ordered or equivalent.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are ordered or equivalent, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator<=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator<=(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() >= rhs.base();
 }
@@ -331,16 +353,18 @@ inline bool	operator<=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<
  * @brief	Check if two reverse_iterator are reverse ordered or equivalent.
  * 			Allow comparison between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator to compare with.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator to compare with.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator to compare with.
  * 
  * @param	lhs The left hand side reverse_iterator to compare.
  * @param	rhs The right hand side reverse_iterator to compare.
  * 
  * @return	Either true if the two reverse_iterator are reverse ordered or equivalent, or false if not.
  */
-template <typename Iterator0, typename Iterator1>
-inline bool	operator>=(reverse_iterator<Iterator0> const &lhs, reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline bool	operator>=(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return lhs.base() <= rhs.base();
 }
@@ -367,18 +391,18 @@ inline reverse_iterator<Iterator>	operator+(
  * @brief	Calculate the distance between two reverse_iterator.
  * 			Allow calculation between mutable and constant reverse_iterator.
  * 
- * @tparam	Iterator0 The type of the left hand side reverse_iterator.
- * @tparam	Iterator1 The type of the right hand side reverse_iterator.
+ * @tparam	BidirectionalIterator0 The type of the left hand side reverse_iterator.
+ * @tparam	BidirectionalIterator1 The type of the right hand side reverse_iterator.
  * 
  * @param	lhs The left hand side reverse_iterator to calculate the distance from.
  * @param	rhs The right hand side reverse_iterator to calculate the distance to.
  * 
  * @return	The distance between the two reverse_iterator.
  */
-template <typename Iterator0, typename Iterator1>
-inline typename reverse_iterator<Iterator0>::difference_type	operator-(
-	reverse_iterator<Iterator0> const &lhs,
-	reverse_iterator<Iterator1> const &rhs)
+template <typename BidirectionalIterator0, typename BidirectionalIterator1>
+inline typename reverse_iterator<BidirectionalIterator0>::difference_type	operator-(
+	reverse_iterator<BidirectionalIterator0> const &lhs,
+	reverse_iterator<BidirectionalIterator1> const &rhs)
 {
 	return rhs.base() - lhs.base();
 }

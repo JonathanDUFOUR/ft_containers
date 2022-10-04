@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 12:52:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 17:26:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <map>
 #include <vector>
 #include "arrays.hpp"
-#include "iteratorCheck.tpp"
+#include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "map.hpp"
 #include "tester.hpp"
@@ -199,52 +199,44 @@ inline static int	__test_function_key_comp(void)
 	{
 		// std::less
 		{
-			ft::map<char, t_lint, std::less<char> > const	ft_map;
-			std::map<char, t_lint, std::less<char> > const	std_map;
-			std::less<char> const							ft_key_cmp = ft_map.key_comp();
-			std::less<char> const							std_key_cmp = std_map.key_comp();
+			ft::map<char, t_lint, std::less<char> > const				ft_map;
+			std::map<char, t_lint, std::less<char> > const				std_map;
+			ft::map<char, t_lint, std::less<char> >::key_compare const	ft_key_cmp = ft_map.key_comp();
+			std::map<char, t_lint, std::less<char> >::key_compare const	std_key_cmp = std_map.key_comp();
 
-			if (sizeof(ft_key_cmp) != sizeof(std_key_cmp))
-				return KO;
 			for (idx = 1U ; idx < g_char_size ; ++idx)
 				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::less_equal
 		{
-			ft::map<char, t_lint, std::less_equal<char> > const		ft_map;
-			std::map<char, t_lint, std::less_equal<char> > const	std_map;
-			std::less_equal<char> const								ft_key_cmp = ft_map.key_comp();
-			std::less_equal<char> const								std_key_cmp = std_map.key_comp();
+			ft::map<char, t_lint, std::less_equal<char> > const					ft_map;
+			std::map<char, t_lint, std::less_equal<char> > const				std_map;
+			ft::map<char, t_lint, std::less_equal<char> >::key_compare const	ft_key_cmp = ft_map.key_comp();
+			std::map<char, t_lint, std::less_equal<char> >::key_compare const	std_key_cmp = std_map.key_comp();
 
-			if (sizeof(ft_key_cmp) != sizeof(std_key_cmp))
-				return KO;
 			for (idx = 1U ; idx < g_char_size ; ++idx)
 				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater
 		{
-			ft::map<char, t_lint, std::greater<char> > const	ft_map;
-			std::map<char, t_lint, std::greater<char> > const	std_map;
-			std::greater<char> const							ft_key_cmp = ft_map.key_comp();
-			std::greater<char> const							std_key_cmp = std_map.key_comp();
+			ft::map<char, t_lint, std::greater<char> > const				ft_map;
+			std::map<char, t_lint, std::greater<char> > const				std_map;
+			ft::map<char, t_lint, std::greater<char> >::key_compare const	ft_key_cmp = ft_map.key_comp();
+			std::map<char, t_lint, std::greater<char> >::key_compare const	std_key_cmp = std_map.key_comp();
 
-			if (sizeof(ft_key_cmp) != sizeof(std_key_cmp))
-				return KO;
 			for (idx = 1U ; idx < g_char_size ; ++idx)
 				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater_equal
 		{
-			ft::map<char, t_lint, std::greater_equal<char> > const	ft_map;
-			std::map<char, t_lint, std::greater_equal<char> > const	std_map;
-			std::greater_equal<char> const							ft_key_cmp = ft_map.key_comp();
-			std::greater_equal<char> const							std_key_cmp = std_map.key_comp();
+			ft::map<char, t_lint, std::greater_equal<char> > const					ft_map;
+			std::map<char, t_lint, std::greater_equal<char> > const					std_map;
+			ft::map<char, t_lint, std::greater_equal<char> >::key_compare const		ft_key_cmp = ft_map.key_comp();
+			std::map<char, t_lint, std::greater_equal<char> >::key_compare const	std_key_cmp = std_map.key_comp();
 
-			if (sizeof(ft_key_cmp) != sizeof(std_key_cmp))
-				return KO;
 			for (idx = 1U ; idx < g_char_size ; ++idx)
 				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
 					return KO;
@@ -261,10 +253,8 @@ inline static int	__test_function_key_comp(void)
 inline static int	__test_function_value_comp(void)
 {
 	t_uint	idx;
-	int		ret;
 
 	title(__func__);
-	ret = IMP_OK;
 	try
 	{
 		// std::less
@@ -274,8 +264,6 @@ inline static int	__test_function_value_comp(void)
 			ft::map<char, t_lint, std::less<char> >::value_compare const	ft_val_cmp = ft_map.value_comp();
 			std::map<char, t_lint, std::less<char> >::value_compare const	std_val_cmp = std_map.value_comp();
 
-			if (sizeof(ft_val_cmp) != sizeof(std_val_cmp))
-				return ret = ISO_OK;
 			for (idx = 1U ; idx < g_char_size && idx < g_lint_size ; ++idx)
 			{
 				ft::map<char, t_lint, std::less<char> >::value_type const	ft_val0(g_char[idx - 1], g_lint[idx - 1]);
@@ -294,8 +282,6 @@ inline static int	__test_function_value_comp(void)
 			ft::map<char, t_lint, std::less_equal<char> >::value_compare const	ft_val_cmp = ft_map.value_comp();
 			std::map<char, t_lint, std::less_equal<char> >::value_compare const	std_val_cmp = std_map.value_comp();
 
-			if (sizeof(ft_val_cmp) != sizeof(std_val_cmp))
-				return ret = ISO_OK;
 			for (idx = 1U ; idx < g_char_size && idx < g_lint_size ; ++idx)
 			{
 				ft::map<char, t_lint, std::less_equal<char> >::value_type const		ft_val0(g_char[idx - 1], g_lint[idx - 1]);
@@ -314,8 +300,6 @@ inline static int	__test_function_value_comp(void)
 			ft::map<char, t_lint, std::greater<char> >::value_compare const		ft_val_cmp = ft_map.value_comp();
 			std::map<char, t_lint, std::greater<char> >::value_compare const	std_val_cmp = std_map.value_comp();
 
-			if (sizeof(ft_val_cmp) != sizeof(std_val_cmp))
-				return ret = ISO_OK;
 			for (idx = 1U ; idx < g_char_size && idx < g_lint_size ; ++idx)
 			{
 				ft::map<char, t_lint, std::greater<char> >::value_type const	ft_val0(g_char[idx - 1], g_lint[idx - 1]);
@@ -334,8 +318,6 @@ inline static int	__test_function_value_comp(void)
 			ft::map<char, t_lint, std::greater_equal<char> >::value_compare const	ft_val_cmp = ft_map.value_comp();
 			std::map<char, t_lint, std::greater_equal<char> >::value_compare const	std_val_cmp = std_map.value_comp();
 
-			if (sizeof(ft_val_cmp) != sizeof(std_val_cmp))
-				return ret = ISO_OK;
 			for (idx = 1U ; idx < g_char_size && idx < g_lint_size ; ++idx)
 			{
 				ft::map<char, t_lint, std::greater_equal<char> >::value_type const	ft_val0(g_char[idx - 1], g_lint[idx - 1]);

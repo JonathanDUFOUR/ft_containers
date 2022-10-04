@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 09:32:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/04 17:37:04 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <iostream>
 #include <vector>
 #include "arrays.hpp"
-#include "iteratorCheck.tpp"
+#include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "tester.hpp"
 #include "utility.hpp"
@@ -283,6 +283,120 @@ inline static int	__test_constructor(void)
 		return KO;
 	}
 	return ret;
+}
+
+inline static int	__test_type_value_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::value_type, std_vec_type::value_type>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_allocator_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::allocator_type, std_vec_type::allocator_type>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::reference, std_vec_type::reference>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::const_reference, std_vec_type::const_reference>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::pointer, std_vec_type::pointer>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
+		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+
+		if (!ft::is_same<ft_vec_type::const_pointer, std_vec_type::const_pointer>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
 }
 
 inline static int	__test_function_get_allocator(void)
@@ -1982,6 +2096,12 @@ int	test_vector(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_type_value_type,
+		__test_type_allocator_type,
+		__test_type_reference,
+		__test_type_const_reference,
+		__test_type_pointer,
+		__test_type_const_pointer,
 		__test_function_get_allocator,
 		__test_function_max_size,
 		__test_function_capacity,
