@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 17:19:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 12:59:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "e_ret.hpp"
 
-static inline int	__test_constructor(void)
+inline static int	__test_constructor(void)
 {
 	int	ret;
 
@@ -104,6 +104,168 @@ static inline int	__test_constructor(void)
 		return KO;
 	}
 	return ret;
+}
+
+inline static int	__test_type_key_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint>	set_type;
+
+		if (!ft::is_same<set_type::key_type, t_lint>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_value_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint>	set_type;
+
+		if (!ft::is_same<set_type::value_type, t_lint>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_key_compare(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int> >	set_type;
+
+		if (!ft::is_same<set_type::key_compare, std::less<int> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_value_compare(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int> >	set_type;
+
+		if (!ft::is_same<set_type::value_compare, std::less<int> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_allocator_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
+
+		if (!ft::is_same<set_type::allocator_type, std::allocator<char> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
+
+		if (!ft::is_same<set_type::reference, std::allocator<char>::reference >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
+
+		if (!ft::is_same<set_type::const_reference, std::allocator<char>::const_reference >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
+
+		if (!ft::is_same<set_type::pointer, std::allocator<char>::pointer >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
+
+		if (!ft::is_same<set_type::const_pointer, std::allocator<char>::const_pointer >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
 }
 
 inline static int	__test_function_max_size(void)
@@ -261,6 +423,15 @@ int	test_set(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_type_key_type,
+		__test_type_value_type,
+		__test_type_key_compare,
+		__test_type_value_compare,
+		__test_type_allocator_type,
+		__test_type_reference,
+		__test_type_const_reference,
+		__test_type_pointer,
+		__test_type_const_pointer,
 		__test_function_max_size,
 		__test_function_key_comp,
 		__test_function_value_comp,
