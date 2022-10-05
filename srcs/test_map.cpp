@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 10:37:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:06:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::map<int, int>	ft_map;
-			std::map<int, int>	std_map;
+			ft::map<int, int> const		ft_map;
+			std::map<int, int> const	std_map;
 
 			if (sizeof(ft_map) != sizeof(std_map) || memcmp(&ft_map, &std_map, sizeof(ft_map)))
 				ret = ISO_OK;
@@ -59,22 +59,22 @@ inline static int	__test_constructor(void)
 					std_vec.push_back(std::pair<int, t_hhuint>(g_int[idx], g_hhuint[idx]));
 				}
 
-				ft::input_iterator_restrictor<std::vector<ft::pair<int, t_hhuint> >::iterator>	ft_it0(ft_vec.begin());
-				ft::input_iterator_restrictor<std::vector<ft::pair<int, t_hhuint> >::iterator>	ft_it1(ft_vec.end());
-				ft::input_iterator_restrictor<std::vector<std::pair<int, t_hhuint> >::iterator>	std_it0(std_vec.begin());
-				ft::input_iterator_restrictor<std::vector<std::pair<int, t_hhuint> >::iterator>	std_it1(std_vec.end());
-				std::map<int, t_hhuint>															std_map(std_it0, std_it1);
-				ft::map<int, t_hhuint>															ft_map(ft_it0, ft_it1);
+				ft::input_iterator_restrictor<std::vector<ft::pair<int, t_hhuint> >::iterator> const	ft_it0(ft_vec.begin());
+				ft::input_iterator_restrictor<std::vector<ft::pair<int, t_hhuint> >::iterator> const	ft_it1(ft_vec.end());
+				ft::input_iterator_restrictor<std::vector<std::pair<int, t_hhuint> >::iterator> const	std_it0(std_vec.begin());
+				ft::input_iterator_restrictor<std::vector<std::pair<int, t_hhuint> >::iterator> const	std_it1(std_vec.end());
+				std::map<int, t_hhuint> const															std_map(std_it0, std_it1);
+				ft::map<int, t_hhuint> const															ft_map(ft_it0, ft_it1);
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
 			}
 			// Range of forward_iterator_restrictor
 			{
-				ft::forward_iterator_restrictor<ft::pair<int, void *> const *>	ft_it;
-				ft::forward_iterator_restrictor<std::pair<int, void *> const *>	std_it;
-				ft::map<int, void *>											ft_map(ft_it, ft_it);
-				std::map<int, void *>											std_map(std_it, std_it);
+				ft::forward_iterator_restrictor<ft::pair<int, void *> const *> const	ft_it;
+				ft::forward_iterator_restrictor<std::pair<int, void *> const *> const	std_it;
+				ft::map<int, void *> const												ft_map(ft_it, ft_it);
+				std::map<int, void *> const												std_map(std_it, std_it);
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
@@ -90,12 +90,12 @@ inline static int	__test_constructor(void)
 					std_vec.push_back(std::pair<t_uint, t_lint>(g_uint[idx], g_lint[idx]));
 				}
 
-				ft::random_access_iterator_restrictor<std::vector<ft::pair<t_uint, t_lint> >::iterator>		ft_it0(ft_vec.begin());
-				ft::random_access_iterator_restrictor<std::vector<ft::pair<t_uint, t_lint> >::iterator>		ft_it1(ft_vec.end());
-				ft::random_access_iterator_restrictor<std::vector<std::pair<t_uint, t_lint> >::iterator>	std_it0(std_vec.begin());
-				ft::random_access_iterator_restrictor<std::vector<std::pair<t_uint, t_lint> >::iterator>	std_it1(std_vec.end());
-				ft::map<t_uint, t_lint>																		ft_map(ft_it0, ft_it1);
-				std::map<t_uint, t_lint>																	std_map(std_it0, std_it1);
+				ft::random_access_iterator_restrictor<std::vector<ft::pair<t_uint, t_lint> >::iterator> const	ft_it0(ft_vec.begin());
+				ft::random_access_iterator_restrictor<std::vector<ft::pair<t_uint, t_lint> >::iterator> const	ft_it1(ft_vec.end());
+				ft::random_access_iterator_restrictor<std::vector<std::pair<t_uint, t_lint> >::iterator> const	std_it0(std_vec.begin());
+				ft::random_access_iterator_restrictor<std::vector<std::pair<t_uint, t_lint> >::iterator> const	std_it1(std_vec.end());
+				ft::map<t_uint, t_lint> const																	ft_map(ft_it0, ft_it1);
+				std::map<t_uint, t_lint> const																	std_map(std_it0, std_it1);
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
@@ -111,8 +111,8 @@ inline static int	__test_constructor(void)
 					std_vec.push_back(std::pair<char, int>(g_char[idx], g_int[idx]));
 				}
 
-				ft::map<int, char>	ft_map(ft_vec.begin().base(), &*ft_vec.end().base());
-				std::map<int, char>	std_map(std_vec.begin().base(), &*std_vec.end().base());
+				ft::map<int, char> const	ft_map(ft_vec.begin().base(), &*ft_vec.end().base());
+				std::map<int, char> const	std_map(std_vec.begin().base(), &*std_vec.end().base());
 
 				if (sizeof(ft_map) != sizeof(std_map))
 					ret = ISO_OK;
@@ -123,9 +123,9 @@ inline static int	__test_constructor(void)
 			// Default map
 			{
 				ft::map<float, std::string> const	ft_map0;
-				ft::map<float, std::string>			ft_map1(ft_map0);
+				ft::map<float, std::string> const	ft_map1(ft_map0);
 				std::map<float, std::string> const	std_map0;
-				std::map<float, std::string>		std_map1(std_map0);
+				std::map<float, std::string> const	std_map1(std_map0);
 
 				if (sizeof(ft_map1) != sizeof(std_map1))
 					ret = ISO_OK;
@@ -512,8 +512,8 @@ inline static int	__test_function_size(void)
 
 		for (idx = 0U ; idx < g_huint_size && idx < g_double_size ; ++idx)
 		{
-			ft::map<t_huint, double>	ft_map(ft_lst.begin(), ft_lst.end());
-			std::map<t_huint, double>	std_map(std_lst.begin(), std_lst.end());
+			ft::map<t_huint, double> const	ft_map(ft_lst.begin(), ft_lst.end());
+			std::map<t_huint, double> const	std_map(std_lst.begin(), std_lst.end());
 
 			if (ft_map.size() != std_map.size())
 				return KO;
@@ -547,8 +547,8 @@ inline static int	__test_function_empty(void)
 		}
 		for (idx = 0U ; idx < g_uint_size && idx < g_string_size ; ++idx)
 		{
-			ft::map<t_uint, std::string>	ft_map(&ft_vec[idx * (idx % 2)], &ft_vec[idx]);
-			std::map<t_uint, std::string>	std_map(&std_vec[idx * (idx % 2)], &std_vec[idx]);
+			ft::map<t_uint, std::string> const	ft_map(&ft_vec[idx * (idx % 2)], &ft_vec[idx]);
+			std::map<t_uint, std::string> const	std_map(&std_vec[idx * (idx % 2)], &std_vec[idx]);
 
 			if (ft_map.empty() != std_map.empty())
 				return KO;
@@ -585,7 +585,7 @@ inline static int	__test_function_begin(void)
 			ft::map<char, int>::iterator	ft_it;
 			std::map<char, int>::iterator	std_it;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int>	ft_map(&ft_vec[idx - 1], &*ft_vec.end());
 				std::map<char, int>	std_map(&std_vec[idx - 1], &*std_vec.end());
@@ -595,7 +595,7 @@ inline static int	__test_function_begin(void)
 
 				if (!!ft_it.base() != !!std_it._M_node)
 					ret = ISO_OK;
-				if (ft_it->first != std_it->first || ft_it->second != std_it->second)
+				if (ft_it->first != std_it->first || ++ft_it->second != ++std_it->second)
 					return KO;
 			}
 
@@ -613,7 +613,7 @@ inline static int	__test_function_begin(void)
 			ft::map<char, int>::const_iterator	ft_cit;
 			std::map<char, int>::const_iterator	std_cit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int> const	ft_map(&ft_vec[idx - 1], &*ft_vec.end());
 				std::map<char, int> const	std_map(&std_vec[idx - 1], &*std_vec.end());
@@ -668,7 +668,7 @@ inline static int	__test_function_end(void)
 			ft::map<char, int>::iterator	ft_it;
 			std::map<char, int>::iterator	std_it;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int>	ft_map(&ft_vec[0], &ft_vec[idx]);
 				std::map<char, int>	std_map(&std_vec[0], &std_vec[idx]);
@@ -682,7 +682,7 @@ inline static int	__test_function_end(void)
 				--ft_it;
 				--std_it;
 
-				if (ft_it->first != std_it->first || ft_it->second != std_it->second)
+				if (ft_it->first != std_it->first || ++ft_it->second != ++std_it->second)
 					return KO;
 			}
 
@@ -700,7 +700,7 @@ inline static int	__test_function_end(void)
 			ft::map<char, int>::const_iterator	ft_cit;
 			std::map<char, int>::const_iterator	std_cit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int> const	ft_map(&ft_vec[0], &ft_vec[idx]);
 				std::map<char, int> const	std_map(&std_vec[0], &std_vec[idx]);
@@ -759,7 +759,7 @@ inline static int	__test_function_rbegin(void)
 			ft::map<char, int>::reverse_iterator	ft_rit;
 			std::map<char, int>::reverse_iterator	std_rit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int>	ft_map(&ft_vec[idx - 1], &*ft_vec.end());
 				std::map<char, int>	std_map(&std_vec[idx - 1], &*std_vec.end());
@@ -769,7 +769,7 @@ inline static int	__test_function_rbegin(void)
 
 				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
 					ret = ISO_OK;
-				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+				if (ft_rit->first != std_rit->first || ++ft_rit->second != ++std_rit->second)
 					return KO;
 			}
 
@@ -787,7 +787,7 @@ inline static int	__test_function_rbegin(void)
 			ft::map<char, int>::const_reverse_iterator	ft_crit;
 			std::map<char, int>::const_reverse_iterator	std_crit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int> const	ft_map(&ft_vec[idx - 1], &*ft_vec.end());
 				std::map<char, int> const	std_map(&std_vec[idx - 1], &*std_vec.end());
@@ -842,7 +842,7 @@ inline static int	__test_function_rend(void)
 			ft::map<char, int>::reverse_iterator	ft_rit;
 			std::map<char, int>::reverse_iterator	std_rit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int>	ft_map(&ft_vec[0], &ft_vec[idx]);
 				std::map<char, int>	std_map(&std_vec[0], &std_vec[idx]);
@@ -856,7 +856,7 @@ inline static int	__test_function_rend(void)
 				--ft_rit;
 				--std_rit;
 
-				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+				if (ft_rit->first != std_rit->first || ++ft_rit->second != ++std_rit->second)
 					return KO;
 			}
 
@@ -874,7 +874,7 @@ inline static int	__test_function_rend(void)
 			ft::map<char, int>::const_reverse_iterator	ft_crit;
 			std::map<char, int>::const_reverse_iterator	std_crit;
 
-			for (idx = 1U ; idx < g_char_size && idx < g_int_size ; ++idx)
+			for (idx = 1U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 			{
 				ft::map<char, int> const	ft_map(&ft_vec[0], &ft_vec[idx]);
 				std::map<char, int> const	std_map(&std_vec[0], &std_vec[idx]);
@@ -1429,10 +1429,10 @@ inline static int	__test_function_count(void)
 			std_vec.push_back(std::pair<float, std::string>(g_float[idx], g_string[idx]));
 		}
 
-		ft::map<float, std::string> const		ft_map(ft_vec.begin(), ft_vec.end());
-		std::map<float, std::string> const		std_map(std_vec.begin(), std_vec.end());
+		ft::map<float, std::string> const	ft_map(ft_vec.begin(), ft_vec.end());
+		std::map<float, std::string> const	std_map(std_vec.begin(), std_vec.end());
 
-		for (idx = 0U ; idx < g_float_size * 2 && idx < g_string_size * 2 ; ++idx)
+		for (idx = 0U ; idx < ft_vec.size() * 2 && idx < std_vec.size() * 2 ; ++idx)
 		{
 			if (idx % 2)
 			{
@@ -1987,19 +1987,32 @@ inline static int	__test_operator_access(void)
 			}
 			// Finding
 			{
-				long double	&ft_ret = ft_map[ft_vec[idx].first];
-				long double	&std_ret = std_map[std_vec[idx].first];
+				// Mutable access
+				{
+					long double	&ft_ret = ft_map[ft_vec[idx].first];
+					long double	&std_ret = std_map[std_vec[idx].first];
 
-				if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
-					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
-					return KO;
+					if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
+						!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+						return KO;
 
-				ft_ret /= 3;
-				std_ret /= 3;
+					ft_ret /= 3;
+					std_ret /= 3;
 
-				if (ft_map.size() != std_map.size() ||
-					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
-					return KO;
+					if (!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+						return KO;
+				}
+				// Constant access
+				{
+					ft::map<int, long double> const		ft_cmap(ft_map);
+					std::map<int, long double> const	std_cmap(std_map);
+					long double const					&ft_ret = ft_map[ft_vec[idx].first];
+					long double const					&std_ret = std_map[std_vec[idx].first];
+
+					if (ft_ret != std_ret || ft_map.size() != std_map.size() ||
+						!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<int, long double>))
+						return KO;
+				}
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 12:59:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:13:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::set<int>	ft_set;
-			std::set<int>	std_set;
+			ft::set<int> const	ft_set;
+			std::set<int> const	std_set;
 
 			if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
 				ret = ISO_OK;
@@ -419,6 +419,55 @@ inline static int	__test_function_value_comp(void)
 	return IMP_OK;
 }
 
+
+inline static int	__test_function_size(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		for (idx = 0U ; idx < g_huint_size ; ++idx)
+		{
+			ft::set<t_huint> const	ft_set(&g_huint[idx], &g_huint[g_huint_size]);
+			std::set<t_huint> const	std_set(&g_huint[idx], &g_huint[g_huint_size]);
+
+			if (ft_set.size() != std_set.size())
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_empty(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		for (idx = 0U ; idx < g_uint_size ; ++idx)
+		{
+			ft::set<t_uint>		ft_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
+			std::set<t_uint>	std_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
+
+			if (ft_set.empty() != std_set.empty())
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -435,6 +484,8 @@ int	test_set(void)
 		__test_function_max_size,
 		__test_function_key_comp,
 		__test_function_value_comp,
+		__test_function_size,
+		__test_function_empty,
 		NULL
 	};
 	t_uint			koCount;

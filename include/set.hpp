@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 16:59:42 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:14:10 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,14 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
+	 * @return	Either true if the map is empty, or false if not.
+	 */
+	bool	empty(void) const
+	{
+		return !this->_tree.getSize();
+	}
+
+	/**
 	 * @return	A key_compare default object.
 	 */
 	key_compare	key_comp(void) const
@@ -104,6 +112,14 @@ public:
 	size_type	max_size(void) const
 	{
 		return allocator_type().max_size();
+	}
+
+	/**
+	 * @return	The number of stored elements in the set.
+	 */
+	size_type	size(void) const
+	{
+		return this->_tree.getSize();
 	}
 
 	/**
