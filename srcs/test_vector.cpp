@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 17:37:04 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 10:26:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,10 +290,9 @@ inline static int	__test_type_value_type(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::value_type, std_vec_type::value_type>::value)
+		if (!ft::is_same<vec_type::value_type, t_lint>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -309,10 +308,9 @@ inline static int	__test_type_allocator_type(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::allocator_type, std_vec_type::allocator_type>::value)
+		if (!ft::is_same<vec_type::allocator_type, std::allocator<t_lint> >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -328,10 +326,9 @@ inline static int	__test_type_reference(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::reference, std_vec_type::reference>::value)
+		if (!ft::is_same<vec_type::reference, std::allocator<t_lint>::reference>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -347,10 +344,9 @@ inline static int	__test_type_const_reference(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::const_reference, std_vec_type::const_reference>::value)
+		if (!ft::is_same<vec_type::const_reference, std::allocator<t_lint>::const_reference>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -366,10 +362,9 @@ inline static int	__test_type_pointer(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::pointer, std_vec_type::pointer>::value)
+		if (!ft::is_same<vec_type::pointer, std::allocator<t_lint>::pointer>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -385,10 +380,9 @@ inline static int	__test_type_const_pointer(void)
 	title(__func__);
 	try
 	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >		ft_vec_type;
-		typedef std::vector<t_lint, std::allocator<t_lint> >	std_vec_type;
+		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<ft_vec_type::const_pointer, std_vec_type::const_pointer>::value)
+		if (!ft::is_same<vec_type::const_pointer, std::allocator<t_lint>::const_pointer>::value)
 			return KO;
 	}
 	catch (std::exception const &e)

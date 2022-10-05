@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 15:26:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 10:51:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ public:
 
 	class value_compare : public std::binary_function<value_type, value_type, bool>
 	{
-	private:
+		friend class map;
+
+	protected:
 		// Attributes
 		key_compare	_cmp;
-
-		friend class map<Key, T, Compare, Alloc>;
 
 	public:
 		// Operators

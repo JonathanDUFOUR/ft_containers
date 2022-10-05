@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 17:26:19 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 10:37:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,168 @@ inline static int	__test_constructor(void)
 		return KO;
 	}
 	return ret;
+}
+
+inline static int	__test_type_key_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double>	map_type;
+
+		if (!ft::is_same<map_type::key_type, t_lint>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_mapped_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double>	map_type;
+
+		if (!ft::is_same<map_type::mapped_type, long double>::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_value_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double>	map_type;
+
+		if (!ft::is_same<map_type::value_type, ft::pair<t_lint const, long double> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_key_compare(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int> >	map_type;
+
+		if (!ft::is_same<map_type::key_compare, std::less<int> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_allocator_type(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int>, std::allocator<char> >	map_type;
+
+		if (!ft::is_same<map_type::allocator_type, std::allocator<char> >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int>, std::allocator<char> >	map_type;
+
+		if (!ft::is_same<map_type::reference, std::allocator<char>::reference >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_reference(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int>, std::allocator<char> >	map_type;
+
+		if (!ft::is_same<map_type::const_reference, std::allocator<char>::const_reference >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int>, std::allocator<char> >	map_type;
+
+		if (!ft::is_same<map_type::pointer, std::allocator<char>::pointer >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_type_const_pointer(void)
+{
+	title(__func__);
+	try
+	{
+		typedef ft::map<t_lint, long double, std::less<int>, std::allocator<char> >	map_type;
+
+		if (!ft::is_same<map_type::const_pointer, std::allocator<char>::const_pointer >::value)
+			return KO;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
 }
 
 inline static int	__test_function_max_size(void)
@@ -2327,6 +2489,15 @@ int	test_map(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_type_key_type,
+		__test_type_mapped_type,
+		__test_type_value_type,
+		__test_type_key_compare,
+		__test_type_allocator_type,
+		__test_type_reference,
+		__test_type_const_reference,
+		__test_type_pointer,
+		__test_type_const_pointer,
 		__test_function_max_size,
 		__test_function_key_comp,
 		__test_function_value_comp,
