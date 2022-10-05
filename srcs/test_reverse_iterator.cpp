@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 09:31:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 16:34:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> >	ft_rit;
-			std::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> >	std_rit;
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	ft_rit;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	std_rit;
 
 			if (sizeof(ft_rit) != sizeof(std_rit) ||
 				memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
@@ -40,9 +40,9 @@ inline static int	__test_constructor(void)
 		{
 			for (idx = 0U ; idx < g_int_size ; ++idx)
 			{
-				ft::random_access_iterator_restrictor<int const *>							it(&g_int[idx]);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit(it);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit(it);
+				ft::random_access_iterator_restrictor<int const *> const							it(&g_int[idx]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit(it);
 
 				if (sizeof(ft_rit) != sizeof(std_rit) || memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 					return EXIT_FAILURE;
@@ -52,10 +52,10 @@ inline static int	__test_constructor(void)
 		{
 			// Default position
 			{
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit0;
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit1(ft_rit0);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit0;
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit1(std_rit0);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0;
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit1(ft_rit0);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0;
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit1(std_rit0);
 
 				if (sizeof(ft_rit1) != sizeof(std_rit1) ||
 					memcmp(&ft_rit1, &std_rit1, sizeof(ft_rit1)))
@@ -65,13 +65,13 @@ inline static int	__test_constructor(void)
 			{
 				for (idx = 0U ; idx < g_int_size ; ++idx)
 				{
-					ft::random_access_iterator_restrictor<int const *>								it(&g_int[idx]);
-					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit0(it);
-					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		ft_rit1(ft_rit0);
-					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	ft_rit2(ft_rit1);
-					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit0(it);
-					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >		std_rit1(std_rit0);
-					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	std_rit2(std_rit1);
+					ft::random_access_iterator_restrictor<int const *> const								it(&g_int[idx]);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit0(it);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit1(ft_rit0);
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit2(ft_rit1);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit0(it);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit1(std_rit0);
+					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit2(std_rit1);
 
 					if ((sizeof (ft_rit1) != sizeof (std_rit1)) || sizeof(ft_rit2) != sizeof(std_rit2) ||
 						(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))) ||
@@ -98,9 +98,9 @@ inline static int	__test_function_base(void)
 	{
 		for (idx = 0U ; idx < g_double_size ; ++idx)
 		{
-			ft::random_access_iterator_restrictor<double const *>							it(&g_double[idx]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<double const *> >	ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<double const *> >	std_rit(it);
+			ft::random_access_iterator_restrictor<double const *> const							it(&g_double[idx]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<double const *> > const	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<double const *> > const	std_rit(it);
 
 			if (ft_rit.base() != std_rit.base())
 				return EXIT_FAILURE;
@@ -155,16 +155,32 @@ inline static int	__test_operator_dereference(void)
 	title(__func__);
 	try
 	{
-		for (idx = 1U ; idx <= g_hint_size ; ++idx)
+		// Mutable access
 		{
-			ft::random_access_iterator_restrictor<t_hint *>							it(&g_hint[idx]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> >	ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> >	std_rit(it);
+			for (idx = 1U ; idx <= g_hint_size ; ++idx)
+			{
+				ft::random_access_iterator_restrictor<t_hint *> const							it(&g_hint[idx]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> > const	ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> > const	std_rit(it);
 
-			*ft_rit += 42;
-			*std_rit += 42;
-			if (*ft_rit != *std_rit)
-				return EXIT_FAILURE;
+				*ft_rit += 42;
+				*std_rit += 42;
+
+				if (*ft_rit != *std_rit)
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			for (idx = 1U ; idx <= g_hint_size ; ++idx)
+			{
+				ft::random_access_iterator_restrictor<t_hint const *> const							it(&g_hint[idx]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hint const *> > const	ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<t_hint const *> > const	std_rit(it);
+
+				if (*ft_rit != *std_rit)
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -182,14 +198,34 @@ inline static int	__test_operator_maddress(void)
 	title(__func__);
 	try
 	{
-		for (idx = 1U ; idx <= g_pair_size ; ++idx)
+		// Mutable access
 		{
-			ft::random_access_iterator_restrictor<std::pair<int, char> const *>							it(&g_pair[idx]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> >	ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> >	std_rit(it);
+			for (idx = 1U ; idx <= g_pair_size ; ++idx)
+			{
+				ft::random_access_iterator_restrictor<std::pair<int, char> *> const							it(&g_pair[idx]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> *> > const	ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> *> > const	std_rit(it);
 
-			if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
-				return EXIT_FAILURE;
+				++ft_rit->first;
+				++std_rit->first;
+				--ft_rit->second;
+				--std_rit->second;
+
+				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			for (idx = 1U ; idx <= g_pair_size ; ++idx)
+			{
+				ft::random_access_iterator_restrictor<std::pair<int, char> const *> const							it(&g_pair[idx]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> > const	ft_rit(it);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> > const	std_rit(it);
+
+				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -335,9 +371,9 @@ inline static int	__test_operator_add(void)
 	{
 		// Member operator
 		{
-			ft::random_access_iterator_restrictor<float const *>							it(&g_float[g_float_size - 1]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >	std_rit(it);
+			ft::random_access_iterator_restrictor<float const *> const							it(&g_float[g_float_size - 1]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
 
 			for (idx = 0U ; idx < g_float_size ; ++idx)
 			{
@@ -347,9 +383,9 @@ inline static int	__test_operator_add(void)
 		}
 		// Non-member operator
 		{
-			ft::random_access_iterator_restrictor<float const *>							it(&g_float[g_float_size - 1]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		ft_rit(it);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >	std_rit(it);
+			ft::random_access_iterator_restrictor<float const *> const							it(&g_float[g_float_size - 1]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
 
 			for (idx = 0U ; idx < g_float_size ; ++idx)
 				if ((idx + ft_rit).base() != (idx + std_rit).base())
@@ -371,9 +407,9 @@ inline static int	__test_operator_sub(void)
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator_restrictor<float const *>							it(&g_float[0]);
-		ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >	std_rit(it);
+		ft::random_access_iterator_restrictor<float const *> const							it(&g_float[0]);
+		ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
+		std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
 
 		for (idx = 0U ; idx < 10U ; ++idx)
 			if ((ft_rit - idx).base() != (std_rit - idx).base())
@@ -394,13 +430,31 @@ inline static int	__test_operator_access(void)
 	title(__func__);
 	try
 	{
-		ft::random_access_iterator_restrictor<t_hhuint const *>							it(&g_hhuint[g_hhuint_size]);
-		ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint const *> >	ft_rit(it);
-		std::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint const *> >	std_rit(it);
+		// Mutable access
+		{
+			ft::random_access_iterator_restrictor<t_hhuint *> const							it(&g_hhuint[g_hhuint_size]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint *> > const	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint *> > const	std_rit(it);
 
-		for (idx = 0U ; idx < g_hhuint_size ; ++idx)
-			if (ft_rit[idx] != std_rit[idx])
-				return EXIT_FAILURE;
+			for (idx = 0U ; idx < g_hhuint_size ; ++idx)
+			{
+				++ft_rit[idx];
+				++std_rit[idx];
+
+				if (ft_rit[idx] != std_rit[idx])
+					return EXIT_FAILURE;
+			}
+		}
+		// Constant access
+		{
+			ft::random_access_iterator_restrictor<t_hhuint const *> const							it(&g_hhuint[g_hhuint_size]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint const *> > const	ft_rit(it);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint const *> > const	std_rit(it);
+
+			for (idx = 0U ; idx < g_hhuint_size ; ++idx)
+				if (ft_rit[idx] != std_rit[idx])
+					return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -420,15 +474,15 @@ inline static int	__test_operator_distance(void)
 	{
 		for (idx0 = 0U ; idx0 < g_string_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<std::string const *>							it0(&g_string[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >	std_rit0(it0);
+			ft::random_access_iterator_restrictor<std::string const *> const							it0(&g_string[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const		ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_string_size ; ++idx1)
 			{
-				ft::random_access_iterator_restrictor<std::string const *>								it1(&g_string[idx1]);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const>	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const>	std_rit1(it1);
+				ft::random_access_iterator_restrictor<std::string const *> const								it1(&g_string[idx1]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const> const	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const> const	std_rit1(it1);
 
 				if (ft::operator-(ft_rit0, ft_rit1) != std::operator-(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -453,15 +507,15 @@ inline static int	__test_operator_equivalent(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *>							it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{
-				ft::random_access_iterator_restrictor<int const *> const						it1(&g_int[idx1]);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	std_rit1(it1);
+				ft::random_access_iterator_restrictor<int const *> const								it1(&g_int[idx1]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
 				if (ft::operator==(ft_rit0, ft_rit1) != std::operator==(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -486,15 +540,15 @@ inline static int	__test_operator_different(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *> const					it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> >	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{
-				ft::random_access_iterator_restrictor<int const *> const						it1(&g_int[idx1]);
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	ft_rit1(it1);
-				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const>	std_rit1(it1);
+				ft::random_access_iterator_restrictor<int const *> const								it1(&g_int[idx1]);
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
+				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
 				if (ft::operator!=(ft_rit0, ft_rit1) != std::operator!=(std_rit0, std_rit1))
 					return EXIT_FAILURE;
@@ -519,9 +573,9 @@ inline static int	__test_operator_lower(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *>									it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{
@@ -552,9 +606,9 @@ inline static int	__test_operator_greater(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *>									it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{
@@ -585,9 +639,9 @@ inline static int	__test_operator_lower_or_equivalent(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *>									it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{
@@ -618,9 +672,9 @@ inline static int	__test_operator_greater_or_equivalent(void)
 	{
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<int const *>									it0(&g_int[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0(it0);
+			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<int *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_int_size ; ++idx1)
 			{

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 10:56:47 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 09:29:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:55:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,7 @@ inline static int	__test_constructor(void)
 			ft::pair<int, t_uint> const		ft_pair;
 			std::pair<int, t_uint> const	std_pair;
 
-			if (sizeof(ft_pair) != sizeof(std_pair) ||
-				memcmp(&ft_pair, &std_pair, sizeof(ft_pair)))
+			if (sizeof(ft_pair) != sizeof(std_pair) || memcmp(&ft_pair, &std_pair, sizeof(ft_pair)))
 				ret = ISO_OK;
 			if (ft_pair.first != std_pair.first || ft_pair.second != std_pair.second)
 				return KO;
@@ -88,7 +87,9 @@ inline static int	__test_type_first_type(void)
 	title(__func__);
 	try
 	{
-		if (!ft::is_same<ft::pair<long double, char>::first_type, std::pair<long double, char>::first_type>::value)
+		typedef ft::pair<long double, char>	pair_type;
+
+		if (!ft::is_same<pair_type::first_type, long double>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -104,7 +105,9 @@ inline static int	__test_type_second_type(void)
 	title(__func__);
 	try
 	{
-		if (!ft::is_same<ft::pair<long double, char>::second_type, std::pair<long double, char>::second_type>::value)
+		typedef ft::pair<long double, char>	pair_type;
+
+		if (!ft::is_same<pair_type::second_type, char>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -114,7 +117,6 @@ inline static int	__test_type_second_type(void)
 	}
 	return IMP_OK;
 }
-
 
 inline static int	__test_function_make_pair(void)
 {

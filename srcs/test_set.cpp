@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:13:15 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:18:07 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -419,7 +419,6 @@ inline static int	__test_function_value_comp(void)
 	return IMP_OK;
 }
 
-
 inline static int	__test_function_size(void)
 {
 	t_uint	idx;
@@ -453,8 +452,8 @@ inline static int	__test_function_empty(void)
 	{
 		for (idx = 0U ; idx < g_uint_size ; ++idx)
 		{
-			ft::set<t_uint>		ft_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
-			std::set<t_uint>	std_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
+			ft::set<t_uint> const	ft_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
+			std::set<t_uint> const	std_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
 
 			if (ft_set.empty() != std_set.empty())
 				return KO;

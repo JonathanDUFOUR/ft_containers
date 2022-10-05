@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 09:44:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 16:06:33 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::rb_tree<int>	tree;
+			ft::rb_tree<int> const	tree;
 		}
 		// Range constructor
 		{
@@ -170,7 +170,9 @@ inline static int	__test_accessor_getNil(void)
 				ft::rb_tree<long double> const			tree(&g_long_double[0], &g_long_double[idx]);
 				ft::rb_node<long double> const *const	nil = tree.getNil();
 
-				if (!nil || nil->color != ft::BLACK || nil->parent || !nil->child[ft::MIN] || !nil->child[ft::MAX])
+				if (!nil || nil->color != ft::BLACK || nil->parent ||
+					!nil->child[ft::MIN] || nil->child[ft::MIN] == nil ||
+					!nil->child[ft::MAX] || nil->child[ft::MAX] == nil)
 					return EXIT_FAILURE;
 			}
 		}
@@ -192,7 +194,7 @@ inline static int	__test_accessor_getRoot(void)
 	{
 		// Empty tree
 		{
-			ft::rb_tree<int>	tree;
+			ft::rb_tree<int> const	tree;
 
 			if (tree.getRoot() != tree.getNil())
 				return EXIT_FAILURE;
@@ -201,7 +203,7 @@ inline static int	__test_accessor_getRoot(void)
 		{
 			for (idx = 1U ; idx <= g_int_size ; ++idx)
 			{
-				ft::rb_tree<int>				tree(&g_int[0], &g_int[idx]);
+				ft::rb_tree<int> const			tree(&g_int[0], &g_int[idx]);
 				ft::rb_node<int> const *const	root = tree.getRoot();
 				ft::rb_node<int> const *const	nil = tree.getNil();
 
@@ -228,7 +230,7 @@ inline static int	__test_accessor_getSize(void)
 	{
 		// Empty tree
 		{
-			ft::rb_tree<std::string>	tree;
+			ft::rb_tree<std::string> const	tree;
 
 			if (tree.getSize())
 				return EXIT_FAILURE;
@@ -237,7 +239,7 @@ inline static int	__test_accessor_getSize(void)
 		{
 			for (idx = 1U ; idx <= g_string_size ; ++idx)
 			{
-				ft::rb_tree<std::string>	tree(&g_string[0], &g_string[idx]);
+				ft::rb_tree<std::string> const	tree(&g_string[0], &g_string[idx]);
 
 				if (tree.getSize() != idx)
 					return EXIT_FAILURE;

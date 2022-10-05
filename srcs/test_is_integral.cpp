@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/25 12:26:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 15:41:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ inline static int	__test_bool(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<bool>	ie;
+		ft::is_integral<bool> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -40,9 +40,9 @@ inline static int	__test_char(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<char>	ie;
+		ft::is_integral<char> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -58,9 +58,9 @@ inline static int	__test_wchar_t(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<wchar_t>	ie;
+		ft::is_integral<wchar_t> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -76,9 +76,9 @@ inline static int	__test_signed_char(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<signed char>	ie;
+		ft::is_integral<signed char> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -94,9 +94,9 @@ inline static int	__test_signed_short(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<signed short>	ie;
+		ft::is_integral<signed short> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -112,9 +112,9 @@ inline static int	__test_signed_int(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<signed int>	ie;
+		ft::is_integral<signed int> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -130,9 +130,9 @@ inline static int	__test_signed_long(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<signed long>	ie;
+		ft::is_integral<signed long> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -148,9 +148,9 @@ inline static int	__test_unsigned_char(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<unsigned char>	ie;
+		ft::is_integral<unsigned char> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -166,9 +166,9 @@ inline static int	__test_unsigned_short(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<unsigned short>	ie;
+		ft::is_integral<unsigned short> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -184,9 +184,9 @@ inline static int	__test_unsigned_int(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<unsigned int>	ie;
+		ft::is_integral<unsigned int> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -202,9 +202,9 @@ inline static int	__test_unsigned_long(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<unsigned long>	ie;
+		ft::is_integral<unsigned long> const	ie;
 
-		if (!dynamic_cast<ft::true_type *>(&ie) || ie.value != true)
+		if (!dynamic_cast<ft::true_type const *>(&ie) || ie.value != true)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -220,9 +220,9 @@ inline static int	__test_void(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<void>	ie;
+		ft::is_integral<void> const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -238,9 +238,9 @@ inline static int	__test_pointer(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<void *>	ie;
+		ft::is_integral<void *> const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -256,9 +256,9 @@ inline static int	__test_float(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<float>	ie;
+		ft::is_integral<float> const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -274,9 +274,9 @@ inline static int	__test_double(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<double>	ie;
+		ft::is_integral<double> const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -292,9 +292,9 @@ inline static int	__test_std_string(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<std::string>	ie;
+		ft::is_integral<std::string> const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
@@ -310,9 +310,9 @@ inline static int	__test_ft_input_iterator_restrictor(void)
 	title(__func__);
 	try
 	{
-		ft::is_integral<ft::input_iterator_restrictor<t_huint const *> >	ie;
+		ft::is_integral<ft::input_iterator_restrictor<t_huint const *> > const	ie;
 
-		if (!dynamic_cast<ft::false_type *>(&ie) || ie.value != false)
+		if (!dynamic_cast<ft::false_type const *>(&ie) || ie.value != false)
 			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
