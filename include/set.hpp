@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 14:04:39 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 15:07:34 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ public:
 	}
 
 	/**
-	 * @brief	Remove every elements of the map.
+	 * @brief	Remove every elements of the set.
 	 */
 	void	clear(void)
 	{
@@ -119,7 +119,7 @@ public:
 	}
 
 	/**
-	 * @return	The number of matching elements with a given key in the map.
+	 * @return	The number of matching elements with a given key in the set.
 	 */
 	size_type	count(key_type const &key) const
 	{
@@ -324,7 +324,7 @@ public:
 	}
 
 	/**
-	 * @return	A reverse_iterator to the last element of the map.
+	 * @return	A reverse_iterator to the last element of the set.
 	 */
 	reverse_iterator	rbegin(void)
 	{
@@ -332,7 +332,7 @@ public:
 	}
 
 	/**
-	 * @return	A const_reverse_iterator to the last element of the map.
+	 * @return	A const_reverse_iterator to the last element of the set.
 	 */
 	const_reverse_iterator	rbegin(void) const
 	{
@@ -340,7 +340,7 @@ public:
 	}
 
 	/**
-	 * @return	A reverse_iterator to the pre-first element of the map.
+	 * @return	A reverse_iterator to the pre-first element of the set.
 	 */
 	reverse_iterator	rend(void)
 	{
@@ -348,7 +348,7 @@ public:
 	}
 
 	/**
-	 * @return	A const_reverse_iterator to the pre-first element of the map.
+	 * @return	A const_reverse_iterator to the pre-first element of the set.
 	 */
 	const_reverse_iterator	rend(void) const
 	{
@@ -364,7 +364,17 @@ public:
 	}
 
 	/**
-	 * @brief	Search for the first element in the map that should be strictly after the given key.
+	 * @brief	Swap the content of the given set with the content of the current set.
+	 * 
+	 * @param	other The set to swap with.
+	 */
+	void	swap(set &other)
+	{
+		this->_tree.swap(other._tree);
+	}
+
+	/**
+	 * @brief	Search for the first element in the set that should be strictly after the given key.
 	 * 
 	 * @param	key The key of the virtual element preceding the searched one.
 	 * 
@@ -376,7 +386,7 @@ public:
 	}
 
 	/**
-	 * @brief	Search for the first constant element in the map that should be strictly after the given key.
+	 * @brief	Search for the first constant element in the set that should be strictly after the given key.
 	 * 
 	 * @param	key The key of the virtual element preceding the searched one.
 	 * 
@@ -394,7 +404,28 @@ public:
 	{
 		return value_compare();
 	}
-};
+}; // class set
+
+// ***************************************************************************************************************** //
+//                                               Specialized Functions                                               //
+// ***************************************************************************************************************** //
+
+/**
+ * @brief	Swap the contents of two given set.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	a The first set to swap.
+ * @param	b The second set to swap.
+ */
+template <typename Key, typename Compare, typename Alloc>
+void	swap(set<Key, Compare, Alloc> &a, set<Key, Compare, Alloc> &b)
+{
+	a.swap(b);
+}
+
 } // namespace ft
 
 

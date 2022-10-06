@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 14:13:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 15:08:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1413,6 +1413,210 @@ inline static int	__test_function_equal_range(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_swap(void)
+{
+	title(__func__);
+	try
+	{
+		// Member function
+		{
+			// Swapping empty | empty
+			{
+				ft::set<char>					ft_set0;
+				ft::set<char>					ft_set1;
+				std::set<char>					std_set0;
+				std::set<char>					std_set1;
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft_set0.swap(ft_set1);
+				std_set0.swap(std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping empty | non-empty
+			{
+				ft::set<char>					ft_set0;
+				ft::set<char>					ft_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				std::set<char>					std_set0;
+				std::set<char>					std_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft_set0.swap(ft_set1);
+				std_set0.swap(std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping non-empty | empty
+			{
+				ft::set<char>					ft_set0(&g_char[0], &g_char[g_char_size / 2]);
+				ft::set<char>					ft_set1;
+				std::set<char>					std_set0(&g_char[0], &g_char[g_char_size / 2]);
+				std::set<char>					std_set1;
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft_set0.swap(ft_set1);
+				std_set0.swap(std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping non-empty | non-empty
+			{
+				ft::set<char>					ft_set0(&g_char[0], &g_char[g_char_size / 2]);
+				ft::set<char>					ft_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				std::set<char>					std_set0(&g_char[0], &g_char[g_char_size / 2]);
+				std::set<char>					std_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft_set0.swap(ft_set1);
+				std_set0.swap(std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+		}
+		// Non-member function
+		{
+			// Swapping empty | empty
+			{
+				ft::set<char>					ft_set0;
+				ft::set<char>					ft_set1;
+				std::set<char>					std_set0;
+				std::set<char>					std_set1;
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft::swap(ft_set0, ft_set1);
+				std::swap(std_set0, std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping empty | non-empty
+			{
+				ft::set<char>					ft_set0;
+				ft::set<char>					ft_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				std::set<char>					std_set0;
+				std::set<char>					std_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft::swap(ft_set0, ft_set1);
+				std::swap(std_set0, std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping non-empty | empty
+			{
+				ft::set<char>					ft_set0(&g_char[0], &g_char[g_char_size / 2]);
+				ft::set<char>					ft_set1;
+				std::set<char>					std_set0(&g_char[0], &g_char[g_char_size / 2]);
+				std::set<char>					std_set1;
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft::swap(ft_set0, ft_set1);
+				std::swap(std_set0, std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+			// Swapping non-empty | non-empty
+			{
+				ft::set<char>					ft_set0(&g_char[0], &g_char[g_char_size / 2]);
+				ft::set<char>					ft_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				std::set<char>					std_set0(&g_char[0], &g_char[g_char_size / 2]);
+				std::set<char>					std_set1(&g_char[g_char_size / 2], &g_char[g_char_size]);
+				ft::set<char>::const_iterator	ft_cit0(ft_set0.begin());
+				ft::set<char>::const_iterator	ft_cit1(ft_set1.begin());
+				std::set<char>::const_iterator	std_cit0(std_set0.begin());
+				std::set<char>::const_iterator	std_cit1(std_set1.begin());
+				ft::set<char>::const_iterator	ft_cend0;
+				ft::set<char>::const_iterator	ft_cend1;
+
+				ft::swap(ft_set0, ft_set1);
+				std::swap(std_set0, std_set1);
+
+				ft_cend0 = ft_set0.end();
+				ft_cend1 = ft_set1.end();
+
+				if (ft_set0.size() != std_set0.size() || ft_set1.size() != std_set1.size() ||
+					!std::equal(ft_cit0, ft_cend1, std_cit0) || !std::equal(ft_cit1, ft_cend0, std_cit1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -1449,6 +1653,7 @@ int	test_set(void)
 		__test_function_lower_bound,
 		__test_function_upper_bound,
 		__test_function_equal_range,
+		__test_function_swap,
 		NULL
 	};
 	t_uint			koCount;
