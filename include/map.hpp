@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 14:47:01 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:48:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,7 +473,7 @@ public:
 			return this->_tree.insert(value_type(key, mapped_type())).first->second;
 		it = this->lower_bound(key);
 		if (it == this->end())
-			return this->_tree.insert(this->_tree.getNil()->child[MAX], value_type(key, mapped_type()))->second;
+			return this->_tree.insert(this->_tree.getNil()->child[RB_MAX], value_type(key, mapped_type()))->second;
 		if (cmp(it->first, key) || cmp(key, it->first))
 			return this->_tree.insert(it.base(), value_type(key, mapped_type()))->second;
 		return it->second;

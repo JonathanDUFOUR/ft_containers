@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   e_rb_color.hpp                                     :+:      :+:    :+:   */
+/*   benchmark.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/02 12:59:06 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 17:34:10 by jodufour         ###   ########.fr       */
+/*   Created: 2022/10/06 17:15:35 by jodufour          #+#    #+#             */
+/*   Updated: 2022/10/06 19:20:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef E_RB_COLOR_HPP
-# define E_RB_COLOR_HPP
+#ifndef BENCHMARK_HPP
+# define BENCHMARK_HPP
 
-namespace ft
-{
-enum e_rb_color
-{
-	RB_RED,
-	RB_BLACK
-};
+# include <ctime>
+# include <set>
 
-} // namespace ft
+extern clock_t				g_ft_start;
+extern clock_t				g_std_start;
+extern time_t				g_ft_duration;
+extern time_t				g_std_duration;
+extern std::set<float>		g_ratio;
+
+void	benchmark_best_case(void);
+void	benchmark_worst_case(void);
+void	benchmark_average_case(void);
 
 #endif

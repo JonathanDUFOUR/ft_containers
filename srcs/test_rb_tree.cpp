@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 13:38:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <list>
 #include <set>
 #include "arrays.hpp"
+#include "colors.hpp"
 #include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "rb_tree.tpp"
@@ -32,8 +33,8 @@ inline static void	__blackSteps(
 {
 	if (node != nil)
 		return lst.push_back(steps);
-	__blackSteps(node->child[ft::LEFT], nil, lst, steps + (node->color == ft::BLACK));
-	__blackSteps(node->child[ft::RIGHT], nil, lst, steps + (node->color == ft::BLACK));
+	__blackSteps(node->child[ft::RB_LEFT], nil, lst, steps + (node->color == ft::RB_BLACK));
+	__blackSteps(node->child[ft::RB_RIGHT], nil, lst, steps + (node->color == ft::RB_BLACK));
 }
 
 template <typename T, typename Compare>
@@ -47,26 +48,26 @@ inline static int	__propertiesCheck(
 
 	if (node == nil)
 	{
-		if (node->color != ft::BLACK)
+		if (node->color != ft::RB_BLACK)
 			return EXIT_FAILURE;
 		return EXIT_SUCCESS;
 	}
 	// Color check
 	{
-		if (node->color != ft::RED && node->color != ft::BLACK)
+		if (node->color != ft::RB_RED && node->color != ft::RB_BLACK)
 			return EXIT_FAILURE;
 	}
 	// Order check
 	{
-		if ((node->child[ft::LEFT] != nil && !cmp(node->child[ft::LEFT]->val, node->val)) ||
-			(node->child[ft::RIGHT] != nil && !cmp(node->val, node->child[ft::RIGHT]->val)))
+		if ((node->child[ft::RB_LEFT] != nil && !cmp(node->child[ft::RB_LEFT]->val, node->val)) ||
+			(node->child[ft::RB_RIGHT] != nil && !cmp(node->val, node->child[ft::RB_RIGHT]->val)))
 			return EXIT_FAILURE;
 	}
 	// Red violation check
 	{
-		if (node->color == ft::RED &&
-			((node->child[ft::LEFT] != nil && node->child[ft::LEFT]->color == ft::RED) ||
-			(node->child[ft::RIGHT] != nil && node->child[ft::RIGHT]->color == ft::RED)))
+		if (node->color == ft::RB_RED &&
+			((node->child[ft::RB_LEFT] != nil && node->child[ft::RB_LEFT]->color == ft::RB_RED) ||
+			(node->child[ft::RB_RIGHT] != nil && node->child[ft::RB_RIGHT]->color == ft::RB_RED)))
 			return EXIT_FAILURE;
 	}
 	// Black violation check
@@ -76,7 +77,7 @@ inline static int	__propertiesCheck(
 			if (*it != *lst.begin())
 				return EXIT_FAILURE;
 	}
-	return __propertiesCheck(node->child[ft::LEFT], nil, cmp) || __propertiesCheck(node->child[ft::RIGHT], nil, cmp);
+	return __propertiesCheck(node->child[ft::RB_LEFT], nil, cmp) || __propertiesCheck(node->child[ft::RB_RIGHT], nil, cmp);
 }
 
 template <typename T>
@@ -84,11 +85,11 @@ inline static int	__integrityCheck(ft::rb_node<T> const *const node, ft::rb_node
 {
 	if (node == nil)
 		return EXIT_SUCCESS;
-	if (node->child[ft::LEFT] != nil && node->child[ft::LEFT]->parent != node)
+	if (node->child[ft::RB_LEFT] != nil && node->child[ft::RB_LEFT]->parent != node)
 		return EXIT_FAILURE;
-	if (node->child[ft::RIGHT] != nil && node->child[ft::RIGHT]->parent != node)
+	if (node->child[ft::RB_RIGHT] != nil && node->child[ft::RB_RIGHT]->parent != node)
 		return EXIT_FAILURE;
-	return __integrityCheck(node->child[ft::LEFT], nil) || __integrityCheck(node->child[ft::RIGHT], nil);
+	return __integrityCheck(node->child[ft::RB_LEFT], nil) || __integrityCheck(node->child[ft::RB_RIGHT], nil);
 }
 
 inline static int	__test_constructor(void)
@@ -158,9 +159,9 @@ inline static int	__test_accessor_getNil(void)
 			ft::rb_tree<long double> const			tree;
 			ft::rb_node<long double> const *const	nil = tree.getNil();
 
-			if (!nil || nil->color != ft::BLACK || nil->parent ||
-				nil->child[ft::MIN] != nil ||
-				nil->child[ft::MAX] != nil)
+			if (!nil || nil->color != ft::RB_BLACK || nil->parent ||
+				nil->child[ft::RB_MIN] != nil ||
+				nil->child[ft::RB_MAX] != nil)
 				return EXIT_FAILURE;
 		}
 		// Non-empty tree
@@ -170,9 +171,9 @@ inline static int	__test_accessor_getNil(void)
 				ft::rb_tree<long double> const			tree(&g_long_double[0], &g_long_double[idx]);
 				ft::rb_node<long double> const *const	nil = tree.getNil();
 
-				if (!nil || nil->color != ft::BLACK || nil->parent ||
-					!nil->child[ft::MIN] || nil->child[ft::MIN] == nil ||
-					!nil->child[ft::MAX] || nil->child[ft::MAX] == nil)
+				if (!nil || nil->color != ft::RB_BLACK || nil->parent ||
+					!nil->child[ft::RB_MIN] || nil->child[ft::RB_MIN] == nil ||
+					!nil->child[ft::RB_MAX] || nil->child[ft::RB_MAX] == nil)
 					return EXIT_FAILURE;
 			}
 		}
@@ -1179,28 +1180,31 @@ int	test_rb_tree(void)
 	t_uint			koCount;
 	t_uint			idx;
 
-	std::cerr << "\033[38;2;0;173;255m";
+	std::cerr << LIGHT_BLUE_FG;
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                    RB_TREE                    ##" << '\n';
 	std::cout << "###################################################" << '\n';
-	std::cerr << "\033[0m";
+	std::cerr << RESET;
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
+	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
-				std::cerr << "\033[38;2;0;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << GREEN_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case EXIT_FAILURE:
-				std::cerr << "\033[38;2;255;0;0m";
-				std::cout << "[KO]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << RED_FG;
+				std::cout << "[KO]";
+				std::cerr << RESET;
 				++koCount;
 				break;
 		}
+		std::cout << '\n';
+	}
 	std::cout << '\n';
 	return koCount;
 }

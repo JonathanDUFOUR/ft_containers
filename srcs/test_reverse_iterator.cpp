@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 16:34:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <limits>
 #include "arrays.hpp"
+#include "colors.hpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "iterator/spec/reverse_iterator.tpp"
 #include "tester.hpp"
@@ -722,28 +723,31 @@ int	test_reverse_iterator(void)
 	t_uint			koCount;
 	t_uint			idx;
 
-	std::cerr << "\033[38;2;0;173;255m";
+	std::cerr << LIGHT_BLUE_FG;
 	std::cout << "####################################################" << '\n';
 	std::cout << "##                REVERSE ITERATOR                ##" << '\n';
 	std::cout << "####################################################" << '\n';
-	std::cerr << "\033[0m";
+	std::cerr << RESET;
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
+	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
-				std::cerr << "\033[38;2;0;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << GREEN_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case EXIT_FAILURE:
-				std::cerr << "\033[38;2;255;0;0m";
-				std::cout << "[KO]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << RED_FG;
+				std::cout << "[KO]";
+				std::cerr << RESET;
 				++koCount;
 				break;
 		}
+		std::cout << '\n';
+	}
 	std::cout << '\n';
 	return koCount;
 }

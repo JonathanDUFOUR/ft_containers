@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 16:47:13 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <set>
 #include "arrays.hpp"
+#include "colors.hpp"
 #include "tester.hpp"
 #include "set.hpp"
 #include "iterator/requirements_check.tpp"
@@ -2068,34 +2069,37 @@ int	test_set(void)
 	t_uint			koCount;
 	t_uint			idx;
 
-	std::cerr << "\033[38;2;0;173;255m";
+	std::cerr << LIGHT_BLUE_FG;
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                      SET                      ##" << '\n';
 	std::cout << "###################################################" << '\n';
-	std::cerr << "\033[0m";
+	std::cerr << RESET;
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
+	{
 		switch (tests[idx]())
 		{
 			case IMP_OK:
-				std::cerr << "\033[38;2;0;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << GREEN_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case ISO_OK:
-				std::cerr << "\033[38;2;255;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << YELLOW_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case KO:
-				std::cerr << "\033[38;2;255;0;0m";
-				std::cout << "[KO]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << MAGENTA_FG;
+				std::cout << "[KO]";
+				std::cerr << RESET;
 				++koCount;
 				break;
 		}
+		std::cout << '\n';
+	}
 	std::cout << '\n';
 	return koCount;
 }

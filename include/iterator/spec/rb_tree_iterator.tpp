@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 22:37:54 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 12:50:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:47:16 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,18 +181,18 @@ public:
 	inline _self_type	&operator++(void)
 	{
 		if (!this->_curr->parent)
-			this->_curr = this->_curr->child[MIN];
+			this->_curr = this->_curr->child[RB_MIN];
 		else
 		{
-			if (this->_curr->child[RIGHT]->parent)
+			if (this->_curr->child[RB_RIGHT]->parent)
 			{
-				this->_curr = this->_curr->child[RIGHT];
-				while (this->_curr->child[LEFT]->parent)
-					this->_curr = this->_curr->child[LEFT];
+				this->_curr = this->_curr->child[RB_RIGHT];
+				while (this->_curr->child[RB_LEFT]->parent)
+					this->_curr = this->_curr->child[RB_LEFT];
 			}
 			else
 			{
-				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[RIGHT])
+				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[RB_RIGHT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}
@@ -221,18 +221,18 @@ public:
 	inline _self_type	&operator--(void)
 	{
 		if (!this->_curr->parent)
-			this->_curr = this->_curr->child[MAX];
+			this->_curr = this->_curr->child[RB_MAX];
 		else
 		{
-			if (this->_curr->child[LEFT]->parent)
+			if (this->_curr->child[RB_LEFT]->parent)
 			{
-				this->_curr = this->_curr->child[LEFT];
-				while (this->_curr->child[RIGHT]->parent)
-					this->_curr = this->_curr->child[RIGHT];
+				this->_curr = this->_curr->child[RB_LEFT];
+				while (this->_curr->child[RB_RIGHT]->parent)
+					this->_curr = this->_curr->child[RB_RIGHT];
 			}
 			else
 			{
-				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[LEFT])
+				while (this->_curr->parent->parent && this->_curr == this->_curr->parent->child[RB_LEFT])
 					this->_curr = this->_curr->parent;
 				this->_curr = this->_curr->parent;
 			}

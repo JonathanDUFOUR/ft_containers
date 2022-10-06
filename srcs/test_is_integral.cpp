@@ -6,12 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:41:00 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
 #include <iostream>
+#include "colors.hpp"
 #include "iterator/restrictor/input_iterator_restrictor.tpp"
 #include "type_traits.hpp"
 #include "tester.hpp"
@@ -348,28 +349,31 @@ int	test_is_integral(void)
 	t_uint			koCount;
 	t_uint			idx;
 
-	std::cerr << "\033[38;2;0;173;255m";
+	std::cerr << LIGHT_BLUE_FG;
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                  IS_INTEGRAL                  ##" << '\n';
 	std::cout << "###################################################" << '\n';
-	std::cerr << "\033[0m";
+	std::cerr << RESET;
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
+	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
-				std::cerr << "\033[38;2;0;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << GREEN_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case EXIT_FAILURE:
-				std::cerr << "\033[38;2;255;0;0m";
-				std::cout << "[KO]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << RED_FG;
+				std::cout << "[KO]";
+				std::cerr << RESET;
 				++koCount;
 				break;
 		}
+		std::cout << '\n';
+	}
 	std::cout << '\n';
 	return koCount;
 }

@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/10/04 15:49:25 by jodufour         ###   ########.fr        #
+#    Updated: 2022/10/06 18:00:40 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ PRV_DIR		=	private/
 #            SOURCE FILES            #
 ######################################
 SRC			=	\
+				benchmark.cpp					\
 				main.cpp						\
 				test_algorithm.cpp				\
 				test_is_integral.cpp			\

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 08:36:40 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:35:56 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ struct rb_node
 		color(color),
 		parent(parent)
 	{
-		child[LEFT] = left;
-		child[RIGHT] = right;
+		child[RB_LEFT] = left;
+		child[RB_RIGHT] = right;
 	}
 
 	/**
@@ -70,8 +70,8 @@ struct rb_node
 		color(src.color),
 		parent(src.parent)
 	{
-		child[LEFT] = src.child[LEFT];
-		child[RIGHT] = src.child[RIGHT];
+		child[RB_LEFT] = src.child[RB_LEFT];
+		child[RB_RIGHT] = src.child[RB_RIGHT];
 	}
 }; // struct rb_node
 

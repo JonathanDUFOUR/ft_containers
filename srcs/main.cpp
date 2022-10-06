@@ -6,14 +6,21 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 06:00:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 17:45:02 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 19:28:32 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstdlib>
 #include <ctime>
+#include <set>
 #include "tester.hpp"
 #include "t_int.hpp"
+
+clock_t			g_ft_start;
+clock_t			g_ft_duration;
+clock_t			g_std_start;
+clock_t			g_std_duration;
+std::set<float>	g_ratio;
 
 static void	__init(void) __attribute__((constructor));
 

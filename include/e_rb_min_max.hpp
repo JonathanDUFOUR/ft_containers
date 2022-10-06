@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 16:24:03 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/29 16:24:37 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:34:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ namespace ft
 {
 enum e_rb_min_max
 {
-	MIN,
-	MAX
+	RB_MIN,
+	RB_MAX
 };
 } // namespace ft
 

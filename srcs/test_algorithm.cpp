@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:33:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 19:50:34 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <iostream>
 #include <vector>
 #include "algorithm.hpp"
+#include "benchmark.hpp"
+#include "colors.hpp"
 #include "iterator/restrictor/input_iterator_restrictor.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
@@ -117,9 +119,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<int const *> const	first0(&g_int0[0]);
 				ft::input_iterator_restrictor<int const *> const	last0(&g_int0[g_int0_size]);
 				ft::input_iterator_restrictor<int const *> const	first1(&g_int1[0]);
+				bool												ft_ret;
+				bool												std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -128,9 +154,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<int const *> const	last0(&g_int0[g_int0_size]);
 				ft::input_iterator_restrictor<int const *> const	first1(&g_int1[0]);
 				std::less_equal<int const> const					cmp;
+				bool												ft_ret;
+				bool												std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -141,9 +191,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<t_huint const *> const	first0(&g_huint0[0]);
 				ft::input_iterator_restrictor<t_huint const *> const	last0(&g_huint0[g_huint0_size]);
 				ft::input_iterator_restrictor<t_huint const *> const	first1(&g_huint1[0]);
+				bool													ft_ret;
+				bool													std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -152,9 +226,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<t_huint const *> const	last0(&g_huint0[g_huint0_size]);
 				ft::input_iterator_restrictor<t_huint const *> const	first1(&g_huint1[0]);
 				std::less_equal<t_huint const> const					cmp;
+				bool													ft_ret;
+				bool													std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -165,9 +263,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<std::string const *> const	first0(&g_string0[0]);
 				ft::input_iterator_restrictor<std::string const *> const	last0(&g_string0[g_string0_size]);
 				ft::input_iterator_restrictor<std::string const *> const	first1(&g_string1[0]);
+				bool														ft_ret;
+				bool														std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -176,9 +298,33 @@ inline static int	__test_equal(void)
 				ft::input_iterator_restrictor<std::string const *> const	last0(&g_string0[g_string0_size]);
 				ft::input_iterator_restrictor<std::string const *> const	first1(&g_string1[0]);
 				std::less_equal<std::string const> const					cmp;
+				bool														ft_ret;
+				bool														std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -192,9 +338,33 @@ inline static int	__test_equal(void)
 				std::vector<int>::const_iterator const	first0(vec0.begin());
 				std::vector<int>::const_iterator const	last0(vec0.end());
 				std::vector<int>::const_iterator const	first1(vec1.begin());
+				bool									ft_ret;
+				bool									std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -203,9 +373,33 @@ inline static int	__test_equal(void)
 				std::vector<int>::const_iterator const	last0(vec0.end());
 				std::vector<int>::const_iterator const	first1(vec1.begin());
 				std::less_equal<int const> const		cmp;
+				bool									ft_ret;
+				bool									std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -219,9 +413,33 @@ inline static int	__test_equal(void)
 				std::vector<t_huint>::const_iterator const	first0(vec0.begin());
 				std::vector<t_huint>::const_iterator const	last0(vec0.end());
 				std::vector<t_huint>::const_iterator const	first1(vec1.begin());
+				bool										ft_ret;
+				bool										std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -230,9 +448,33 @@ inline static int	__test_equal(void)
 				std::vector<t_huint>::const_iterator const	last0(vec0.end());
 				std::vector<t_huint>::const_iterator const	first1(vec1.begin());
 				std::less_equal<t_huint const> const		cmp;
+				bool										ft_ret;
+				bool										std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -246,9 +488,33 @@ inline static int	__test_equal(void)
 				std::vector<std::string>::const_iterator const	first0(vec0.begin());
 				std::vector<std::string>::const_iterator const	last0(vec0.end());
 				std::vector<std::string>::const_iterator const	first1(vec1.begin());
+				bool											ft_ret;
+				bool											std_ret;
 
-				if (ft::equal(first0, last0, first0) != std::equal(first0, last0, first0) ||
-					ft::equal(first0, last0, first1) != std::equal(first0, last0, first1))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -257,9 +523,33 @@ inline static int	__test_equal(void)
 				std::vector<std::string>::const_iterator const	last0(vec0.end());
 				std::vector<std::string>::const_iterator const	first1(vec1.begin());
 				std::less_equal<std::string const> const		cmp;
+				bool											ft_ret;
+				bool											std_ret;
 
-				if (ft::equal(first0, last0, first0, cmp) != std::equal(first0, last0, first0, cmp) ||
-					ft::equal(first0, last0, first1, cmp) != std::equal(first0, last0, first1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::equal(first0, last0, first1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::equal(first0, last0, first1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -285,11 +575,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<int const *> const	last0(&g_int0[g_int0_size]);
 				ft::input_iterator_restrictor<int const *> const	first1(&g_int1[0]);
 				ft::input_iterator_restrictor<int const *> const	last1(&g_int1[g_int1_size]);
+				bool												ft_ret;
+				bool												std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -299,11 +611,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<int const *> const	first1(&g_int1[0]);
 				ft::input_iterator_restrictor<int const *> const	last1(&g_int1[g_int1_size]);
 				std::greater<int const> const						cmp;
+				bool												ft_ret;
+				bool												std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -315,11 +649,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<t_huint const *> const	last0(&g_huint0[g_huint0_size]);
 				ft::input_iterator_restrictor<t_huint const *> const	first1(&g_huint1[0]);
 				ft::input_iterator_restrictor<t_huint const *> const	last1(&g_huint1[g_huint1_size]);
+				bool													ft_ret;
+				bool													std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -329,11 +685,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<t_huint const *> const	first1(&g_huint1[0]);
 				ft::input_iterator_restrictor<t_huint const *> const	last1(&g_huint1[g_huint1_size]);
 				std::greater<t_huint const> const						cmp;
+				bool													ft_ret;
+				bool													std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -345,11 +723,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<std::string const *> const	last0(&g_string0[g_string0_size]);
 				ft::input_iterator_restrictor<std::string const *> const	first1(&g_string1[0]);
 				ft::input_iterator_restrictor<std::string const *> const	last1(&g_string1[g_string1_size]);
+				bool														ft_ret;
+				bool														std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -359,11 +759,33 @@ inline static int	__test_lexicographical_compare(void)
 				ft::input_iterator_restrictor<std::string const *> const	first1(&g_string1[0]);
 				ft::input_iterator_restrictor<std::string const *> const	last1(&g_string1[g_string1_size]);
 				std::greater<std::string const> const						cmp;
+				bool														ft_ret;
+				bool														std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+				
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			
@@ -379,11 +801,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<int>::const_iterator const	last0(vec0.end());
 				std::vector<int>::const_iterator const	first1(vec1.begin());
 				std::vector<int>::const_iterator const	last1(vec1.end());
+				bool									ft_ret;
+				bool									std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -393,11 +837,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<int>::const_iterator const	first1(vec1.begin());
 				std::vector<int>::const_iterator const	last1(vec1.end());
 				std::greater<int const> const			cmp;
+				bool									ft_ret;
+				bool									std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -412,11 +878,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<t_huint>::const_iterator const	last0(vec0.end());
 				std::vector<t_huint>::const_iterator const	first1(vec1.begin());
 				std::vector<t_huint>::const_iterator const	last1(vec1.end());
+				bool										ft_ret;
+				bool										std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -426,11 +914,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<t_huint>::const_iterator const	first1(vec1.begin());
 				std::vector<t_huint>::const_iterator const	last1(vec1.end());
 				std::greater<t_huint const> const			cmp;
+				bool										ft_ret;
+				bool										std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -445,11 +955,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<std::string>::const_iterator const	last0(vec0.end());
 				std::vector<std::string>::const_iterator const	first1(vec1.begin());
 				std::vector<std::string>::const_iterator const	last1(vec1.end());
+				bool											ft_ret;
+				bool											std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0) !=
-					std::lexicographical_compare(first0, last0, first0, last0) ||
-					ft::lexicographical_compare(first0, last0, first1, last1) !=
-					std::lexicographical_compare(first0, last0, first1, last1))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 			// Custom comparison
@@ -459,11 +991,33 @@ inline static int	__test_lexicographical_compare(void)
 				std::vector<std::string>::const_iterator const	first1(vec1.begin());
 				std::vector<std::string>::const_iterator const	last1(vec1.end());
 				std::greater<std::string const>					cmp;
+				bool											ft_ret;
+				bool											std_ret;
 
-				if (ft::lexicographical_compare(first0, last0, first0, last0, cmp) !=
-					std::lexicographical_compare(first0, last0, first0, last0, cmp) ||
-					ft::lexicographical_compare(first0, last0, first1, last1, cmp) !=
-					std::lexicographical_compare(first0, last0, first1, last1, cmp))
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return EXIT_FAILURE;
+
+				g_ft_start = clock();
+				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_ft_duration = clock() - g_ft_start;
+
+				g_std_start = clock();
+				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
+				g_std_duration = clock() - g_std_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -491,8 +1045,15 @@ inline static int	__test_swap(void)
 		std_a = ft_a;
 		std_b = ft_b;
 
+		g_ft_start = clock();
 		ft::swap(ft_a, ft_b);
+		g_ft_duration = clock() - g_ft_start;
+
+		g_std_start = clock();
 		std::swap(std_a, std_b);
+		g_std_duration = clock() - g_std_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 		if (ft_a != std_a || ft_b != std_b)
 			return EXIT_FAILURE;
@@ -509,8 +1070,15 @@ inline static int	__test_swap(void)
 		std_a = ft_a;
 		std_b = ft_b;
 
+		g_ft_start = clock();
 		ft::swap(ft_a, ft_b);
+		g_ft_duration = clock() - g_ft_start;
+
+		g_std_start = clock();
 		std::swap(std_a, std_b);
+		g_std_duration = clock() - g_std_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 		if (ft_a != std_a || ft_b != std_b)
 			return EXIT_FAILURE;
@@ -530,8 +1098,15 @@ inline static int	__test_swap(void)
 		std_a = ft_a;
 		std_b = ft_b;
 
+		g_ft_start = clock();
 		ft::swap(ft_a, ft_b);
+		g_ft_duration = clock() - g_ft_start;
+
+		g_std_start = clock();
 		std::swap(std_a, std_b);
+		g_std_duration = clock() - g_std_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 		if (ft_a != std_a || ft_b != std_b)
 			return EXIT_FAILURE;
@@ -550,28 +1125,38 @@ int	test_algorithm(void)
 	t_uint			koCount;
 	t_uint			idx;
 
-	std::cerr << "\033[38;2;0;173;255m";
+	std::cerr << LIGHT_BLUE_FG;
 	std::cout << "###################################################" << '\n';
 	std::cout << "##                   ALGORITHM                   ##" << '\n';
 	std::cout << "###################################################" << '\n';
-	std::cerr << "\033[0m";
+	std::cerr << RESET;
 
 	for (koCount = 0U, idx = 0U ; tests[idx] ; ++idx)
+	{
 		switch (tests[idx]())
 		{
 			case EXIT_SUCCESS:
-				std::cerr << "\033[38;2;0;255;0m";
-				std::cout << "[OK]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << GREEN_FG;
+				std::cout << "[OK]";
+				std::cerr << RESET;
 				break;
 
 			case EXIT_FAILURE:
-				std::cerr << "\033[38;2;255;0;0m";
-				std::cout << "[KO]" << '\n';
-				std::cerr << "\033[0m";
+				std::cerr << RED_FG;
+				std::cout << "[KO]";
+				std::cerr << RESET;
 				++koCount;
 				break;
 		}
+		std::cout << ' ';
+		benchmark_best_case();
+		std::cout << ' ';
+		benchmark_worst_case();
+		std::cout << ' ';
+		benchmark_average_case();
+		g_ratio.clear();
+		std::cout << '\n';
+	}
 	std::cout << '\n';
 	return koCount;
 }

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:00:11 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:51:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 17:34:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ namespace ft
 {
 enum e_rb_direction
 {
-	LEFT,
-	RIGHT
+	RB_LEFT,
+	RB_RIGHT
 };
 
 } // namespace ft
