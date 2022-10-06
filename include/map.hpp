@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 13:33:32 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 14:47:01 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,8 +287,8 @@ public:
 	template <typename InputIterator>
 	void	insert(InputIterator first, InputIterator const last)
 	{
-		while (first != last)
-			this->insert(*first++);
+		for (; first != last ; ++first)
+			this->insert(*first);
 	}
 
 	/**
