@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 15:55:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 16:16:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1683,6 +1683,342 @@ inline static int	__test_operator_assign(void)
 	return IMP_OK;
 }
 
+inline static int	__test_operator_equivalent(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_different(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_lower(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_greater(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_lower_or_equivalent(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_operator_greater_or_equivalent(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hhint>	ft_set0;
+		ft::set<t_hhint>	ft_set1;
+		std::set<t_hhint>	std_set0;
+		std::set<t_hhint>	std_set1;
+
+		for (idx = 0U ; idx < g_hhint_size ; ++idx)
+		{
+			// Key difference
+			{
+				ft_set0.insert(g_hhint[idx] + 1);
+				ft_set1.insert(g_hhint[idx] - 1);
+				std_set0.insert(g_hhint[idx] + 1);
+				std_set1.insert(g_hhint[idx] - 1);
+
+				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+					return KO;
+
+				ft_set0.erase(g_hhint[idx] + 1);
+				ft_set1.erase(g_hhint[idx] - 1);
+				std_set0.erase(g_hhint[idx] + 1);
+				std_set1.erase(g_hhint[idx] - 1);
+				
+			}
+			// Size difference
+			{
+				ft_set0.insert(g_hhint[idx]);
+				std_set0.insert(g_hhint[idx]);
+
+				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+					return KO;
+			}
+			// Equivalence
+			{
+				ft_set1.insert(g_hhint[idx]);
+				std_set1.insert(g_hhint[idx]);
+
+				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -1721,6 +2057,12 @@ int	test_set(void)
 		__test_function_equal_range,
 		__test_function_swap,
 		__test_operator_assign,
+		__test_operator_equivalent,
+		__test_operator_different,
+		__test_operator_lower,
+		__test_operator_greater,
+		__test_operator_lower_or_equivalent,
+		__test_operator_greater_or_equivalent,
 		NULL
 	};
 	t_uint			koCount;

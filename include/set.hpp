@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 15:54:51 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 16:04:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,6 +424,114 @@ public:
 	}
 
 }; // class set
+
+/**
+ * @brief	Check if two set are equivalent.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are equivalent, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator==(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return &lhs == &rhs || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+/**
+ * @brief	Check if two set are different.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are different, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator!=(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return !(lhs == rhs);
+}
+
+/**
+ * @brief	Check if two set are strictly lexiographicaly ordered.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are strictly lexiographicaly ordered, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator<(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+/**
+ * @brief	Check if two set are strictly lexiographicaly reverse-ordered.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are strictly lexiographicaly reverse-ordered, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator>(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return rhs < lhs;
+}
+
+/**
+ * @brief	Check if two set are lexiographicaly ordered or equivalent.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are lexiographicaly ordered or equivalent, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator<=(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return !(rhs < lhs);
+}
+
+/**
+ * @brief	Check if two set are lexiographicaly reverse-ordered or equivalent.
+ * 
+ * @tparam	Key The key type of both of the set.
+ * @tparam	Compare The functor to use to compare the keys.
+ * @tparam	Alloc The allocator type used in both of the set.
+ * 
+ * @param	lhs The left hand side set to compare.
+ * @param	rhs The right hand side set to compare.
+ * 
+ * @return	Either true if the two set are lexiographicaly reverse-ordered or equivalent, or false if not.
+ */
+template <typename Key, typename Compare, typename Alloc>
+bool	operator>=(set<Key, Compare, Alloc> const &lhs, set<Key, Compare, Alloc> const &rhs)
+{
+	return !(lhs < rhs);
+}
 
 // ***************************************************************************************************************** //
 //                                               Specialized Functions                                               //
