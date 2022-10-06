@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:41:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 13:38:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,31 @@ inline static int	__test_accessor_getSize(void)
 					return EXIT_FAILURE;
 			}
 		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
+}
+
+inline static int	__test_function_max_size(void)
+{
+	title(__func__);
+	try
+	{
+		ft::rb_tree<t_hhuint> const		tree0;
+		ft::rb_tree<std::string> const	tree1;
+		ft::rb_tree<long double> const	tree2;
+		std::set<t_hhuint> const		ref0;
+		std::set<std::string> const		ref1;
+		std::set<long double> const		ref2;
+
+		if ((tree0.max_size() < tree1.max_size()) != (ref0.max_size() < ref1.max_size()) ||
+			(tree0.max_size() < tree2.max_size()) != (ref0.max_size() < ref2.max_size()) ||
+			(tree1.max_size() < tree2.max_size()) != (ref1.max_size() < ref2.max_size()))
+			return EXIT_FAILURE;
 	}
 	catch (std::exception const &e)
 	{
@@ -1129,6 +1154,7 @@ int	test_rb_tree(void)
 		__test_accessor_getNil,
 		__test_accessor_getRoot,
 		__test_accessor_getSize,
+		__test_function_max_size,
 		__test_function_max,
 		__test_function_min,
 		__test_function_begin,

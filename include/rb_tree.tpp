@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:54:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 13:35:47 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1099,6 +1099,11 @@ public:
 	inline pointer	max(void) const
 	{
 		return this->_nil->child[MAX];
+	}
+
+	inline size_type	max_size(void) const
+	{
+		return allocator_type().max_size();
 	}
 
 	/**

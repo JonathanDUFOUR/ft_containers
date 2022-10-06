@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 13:18:45 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 14:13:00 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1354,6 +1354,65 @@ inline static int	__test_function_upper_bound(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_equal_range(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::set<t_hint>					ft_set(&g_hint[0], &g_hint[g_hint_size]);
+			std::set<t_hint>				std_set(&g_hint[0], &g_hint[g_hint_size]);
+			ft::pair<
+				ft::set<t_hint>::iterator,
+				ft::set<t_hint>::iterator>	ft_ret;
+			std::pair<
+				std::set<t_hint>::iterator,
+				std::set<t_hint>::iterator>	std_ret;
+
+			for (idx = 0U ; idx < g_hint_size ; ++idx)
+			{
+				ft_ret = ft_set.equal_range(g_hint[idx]);
+				std_ret = std_set.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
+					(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::set<t_hint> const					ft_set(&g_hint[0], &g_hint[g_hint_size]);
+			std::set<t_hint> const					std_set(&g_hint[0], &g_hint[g_hint_size]);
+			ft::pair<
+				ft::set<t_hint>::const_iterator,
+				ft::set<t_hint>::const_iterator>	ft_ret;
+			std::pair<
+				std::set<t_hint>::const_iterator,
+				std::set<t_hint>::const_iterator>	std_ret;
+
+			for (idx = 0U ; idx < g_hint_size ; ++idx)
+			{
+				ft_ret = ft_set.equal_range(g_hint[idx]);
+				std_ret = std_set.equal_range(g_hint[idx]);
+
+				if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
+					(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
+					return KO;
+			}
+			
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -1389,6 +1448,7 @@ int	test_set(void)
 		__test_function_count,
 		__test_function_lower_bound,
 		__test_function_upper_bound,
+		__test_function_equal_range,
 		NULL
 	};
 	t_uint			koCount;

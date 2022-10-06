@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 13:19:26 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 14:04:39 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,37 @@ public:
 			this->erase(first++);
 	}
 
+
+	/**
+	 * @brief	Search for elements matching a given key in the set.
+	 * 			The resulting match is returned as a range of iterator,
+	 * 			from the first element included to the last element excluded.
+	 * 
+	 * @param	key The key to search for.
+	 * 
+	 * @return	A pair containing an iterator to the first element of the matching range as `first` member,
+	 * 			and an iterator to the last element of the matching range as `second` member.
+	 */
+	pair<iterator, iterator>	equal_range(key_type const &key)
+	{
+		return this->_tree.equal_range(key);
+	}
+
+	/**
+	 * @brief	Search for constant elements matching a given key in the set.
+	 * 			The resulting match is returned as a range of const_iterator,
+	 * 			from the first constant element included to the last constant element excluded.
+	 * 
+	 * @param	key The key to search for.
+	 * 
+	 * @return	A pair containing a const_iterator to the first element of the matching range as `first` member,
+	 * 			and a const_iterator to the last element of the matching range as `second` member.
+	 */
+	pair<const_iterator, const_iterator>	equal_range(key_type const &key) const
+	{
+		return this->_tree.equal_range(key);
+	}
+
 	/**
 	 * @brief	Search for an element in the set.
 	 * 
@@ -289,7 +320,7 @@ public:
 	 */
 	size_type	max_size(void) const
 	{
-		return allocator_type().max_size();
+		return this->_tree.max_size();
 	}
 
 	/**
