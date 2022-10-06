@@ -6,10 +6,11 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 12:50:34 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 13:18:45 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <algorithm>
 #include <iostream>
 #include <set>
 #include "arrays.hpp"
@@ -1150,6 +1151,209 @@ inline static int	__test_function_clear(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_find(void)
+{
+	t_uint	idx;
+	float	nb;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::set<float>				ft_set(&g_float[0], &g_float[g_float_size]);
+			std::set<float>				std_set(&g_float[0], &g_float[g_float_size]);
+			ft::set<float>::iterator	ft_it;
+			std::set<float>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
+			{
+				if (idx % 2)
+				{
+					nb = static_cast<float>(rand());
+					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+						nb = static_cast<float>(rand());
+				}
+				else
+					nb = g_float[idx / 2];
+
+				ft_it = ft_set.find(nb);
+				std_it = std_set.find(nb);
+
+				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
+					(ft_it != ft_set.end() && (*ft_it != *std_it)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::set<float> const			ft_set(&g_float[0], &g_float[g_float_size]);
+			std::set<float> const			std_set(&g_float[0], &g_float[g_float_size]);
+			ft::set<float>::const_iterator	ft_cit;
+			std::set<float>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
+			{
+				if (idx % 2)
+				{
+					nb = static_cast<float>(rand());
+					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+						nb = static_cast<float>(rand());
+				}
+				else
+					nb = g_float[idx / 2];
+
+				ft_cit = ft_set.find(nb);
+				std_cit = std_set.find(nb);
+
+				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
+					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_count(void)
+{
+	t_uint	idx;
+	float	nb;
+
+	title(__func__);
+	try
+	{
+		ft::set<float> const	ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const	std_set(&g_float[0], &g_float[g_float_size]);
+
+		for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
+		{
+			if (idx % 2)
+			{
+				nb = static_cast<float>(rand());
+				while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
+					nb = static_cast<float>(rand());
+			}
+			else
+				nb = g_float[idx / 2];
+
+			if (ft_set.count(nb) != std_set.count(nb))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_lower_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
+			ft::set<t_lint>::iterator	ft_it;
+			std::set<t_lint>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_it = ft_set.lower_bound(g_lint[idx]);
+				std_it = std_set.lower_bound(g_lint[idx]);
+
+				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
+					(ft_it != ft_set.end() && (*ft_it != *std_it)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
+			ft::set<t_lint>::const_iterator		ft_cit;
+			std::set<t_lint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_cit = ft_set.lower_bound(g_lint[idx]);
+				std_cit = std_set.lower_bound(g_lint[idx]);
+
+				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
+					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_upper_bound(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Mutable access
+		{
+			ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
+			ft::set<t_lint>::iterator	ft_it;
+			std::set<t_lint>::iterator	std_it;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_it = ft_set.upper_bound(g_lint[idx]);
+				std_it = std_set.upper_bound(g_lint[idx]);
+
+				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
+					(ft_it != ft_set.end() && (*ft_it != *std_it)))
+					return KO;
+			}
+		}
+		// Constant access
+		{
+			ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+			std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
+			ft::set<t_lint>::const_iterator		ft_cit;
+			std::set<t_lint>::const_iterator	std_cit;
+
+			for (idx = 0U ; idx < g_lint_size ; ++idx)
+			{
+				ft_cit = ft_set.upper_bound(g_lint[idx]);
+				std_cit = std_set.upper_bound(g_lint[idx]);
+
+				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
+					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -1181,6 +1385,10 @@ int	test_set(void)
 		__test_function_insert,
 		__test_function_erase,
 		__test_function_clear,
+		__test_function_find,
+		__test_function_count,
+		__test_function_lower_bound,
+		__test_function_upper_bound,
 		NULL
 	};
 	t_uint			koCount;

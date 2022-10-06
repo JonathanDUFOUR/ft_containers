@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 12:51:03 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 13:19:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,14 @@ public:
 	}
 
 	/**
+	 * @return	The number of matching elements with a given key in the map.
+	 */
+	size_type	count(key_type const &key) const
+	{
+		return this->_tree.find(key) != this->_tree.getNil();
+	}
+
+	/**
 	 * @return	Either true if the set is empty, or false if not.
 	 */
 	bool	empty(void) const
@@ -178,6 +186,30 @@ public:
 	}
 
 	/**
+	 * @brief	Search for an element in the set.
+	 * 
+	 * @param	key The key of the element to search.
+	 * 
+	 * @return	An iterator to the element if found, or end() if not.
+	 */
+	iterator	find(key_type const &key)
+	{
+		return iterator(this->_tree.find(key));
+	}
+
+	/**
+	 * @brief	Search for a constant element in the set.
+	 * 
+	 * @param	key The key of the constant element to search.
+	 * 
+	 * @return	A const_iterator to the constant element if found, or end() if not.
+	 */
+	const_iterator	find(key_type const &key) const
+	{
+		return const_iterator(this->_tree.find(key));
+	}
+
+	/**
 	 * @brief	Insert elements in the set using a range of iterators,
 	 * 			from `first` included to `last` excluded. (range insertion)
 	 * 
@@ -229,6 +261,30 @@ public:
 	}
 
 	/**
+	 * @brief	Search for the first element in the set that should be after or at the given key.
+	 * 
+	 * @param	key The key of the virtual element preceding the searched one.
+	 * 
+	 * @return	An iterator to the element if found, or end() if not.
+	 */
+	iterator	lower_bound(key_type const &key)
+	{
+		return this->_tree.lower_bound(key);
+	}
+
+	/**
+	 * @brief	Search for the first constant element in the set that should be after or at the given key.
+	 * 
+	 * @param	key The key of the virtual element preceding the searched one.
+	 * 
+	 * @return	A const_iterator to the element if found, or end() if not.
+	 */
+	const_iterator	lower_bound(key_type const &key) const
+	{
+		return this->_tree.lower_bound(key);
+	}
+
+	/**
 	 * @return	The maximum number of elements that can be stored in the set.
 	 */
 	size_type	max_size(void) const
@@ -274,6 +330,30 @@ public:
 	size_type	size(void) const
 	{
 		return this->_tree.getSize();
+	}
+
+	/**
+	 * @brief	Search for the first element in the map that should be strictly after the given key.
+	 * 
+	 * @param	key The key of the virtual element preceding the searched one.
+	 * 
+	 * @return	An iterator to the element if found, or end() if not.
+	 */
+	iterator	upper_bound(key_type const &key)
+	{
+		return this->_tree.upper_bound(key);
+	}
+
+	/**
+	 * @brief	Search for the first constant element in the map that should be strictly after the given key.
+	 * 
+	 * @param	key The key of the virtual element preceding the searched one.
+	 * 
+	 * @return	A const_iterator to the element if found, or end() if not.
+	 */
+	const_iterator	upper_bound(key_type const &key) const
+	{
+		return this->_tree.upper_bound(key);
 	}
 
 	/**

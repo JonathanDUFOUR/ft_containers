@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 11:28:54 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 13:15:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,7 @@ public:
 	 * @brief	Search for a constant element in the map.
 	 * 
 	 * @param	key The key of the constant element to search.
+	 * 
 	 * @return	A const_iterator to the constant element if found, or end() if not.
 	 */
 	const_iterator	find(key_type const &key) const
@@ -423,7 +424,7 @@ public:
 	 * 
 	 * @param	key The key of the virtual element preceding the searched one.
 	 * 
-	 * @return	An iterator to the constant element if found, or end() if not.
+	 * @return	A const_iterator to the element if found, or end() if not.
 	 */
 	const_iterator	upper_bound(key_type const &key) const
 	{
