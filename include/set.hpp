@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 16:04:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 16:56:23 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ public:
 	typedef typename allocator_type::pointer						pointer;
 
 	typedef rb_tree_iterator<value_type const, _node_type const>	const_iterator;
-	typedef rb_tree_iterator<value_type const, _node_type>			iterator;
+	typedef const_iterator											iterator;
 
 	typedef reverse_iterator<const_iterator>						const_reverse_iterator;
 	typedef reverse_iterator<iterator>								reverse_iterator;
@@ -157,7 +157,7 @@ public:
 	 */
 	void	erase(iterator pos)
 	{
-		this->_tree.erase(pos.base());
+		this->_tree.erase(const_cast<_node_type *>(pos.base()));
 	}
 
 	/**
@@ -280,7 +280,7 @@ public:
 	 */
 	iterator	insert(iterator const pos, value_type const &val)
 	{
-		return this->_tree.insert(pos.base(), val);
+		return this->_tree.insert(const_cast<_node_type *>(pos.base()), val);
 	}
 
 	/**
