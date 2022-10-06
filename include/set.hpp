@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 12:39:37 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 12:51:03 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,14 @@ public:
 	const_iterator	begin(void) const
 	{
 		return this->_tree.begin();
+	}
+
+	/**
+	 * @brief	Remove every elements of the map.
+	 */
+	void	clear(void)
+	{
+		this->_tree.clear();
 	}
 
 	/**

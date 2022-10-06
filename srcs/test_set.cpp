@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:50:21 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 12:50:34 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1123,6 +1123,33 @@ inline static int	__test_function_erase(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_clear(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		for (idx = 0U ; idx < g_int_size ; ++idx)
+		{
+			ft::set<int>	ft_set(&g_int[0], &g_int[idx]);
+			std::set<int>	std_set(&g_int[0], &g_int[idx]);
+
+			ft_set.clear();
+			std_set.clear();
+
+			if (ft_set.size() != std_set.size() || !std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -1153,6 +1180,7 @@ int	test_set(void)
 		__test_type_const_reverse_iterator,
 		__test_function_insert,
 		__test_function_erase,
+		__test_function_clear,
 		NULL
 	};
 	t_uint			koCount;

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:38:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 12:48:18 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1330,10 +1330,10 @@ inline static int	__test_function_clear(void)
 			std_vec.push_back(std::pair<int, t_hhuint>(g_int[idx], g_hhuint[idx]));
 		}
 
-		for (idx = 0U ; idx < g_int_size && idx < g_hhuint_size ; ++idx)
+		for (idx = 0U ; idx < ft_vec.size() && idx < std_vec.size() ; ++idx)
 		{
-			ft::map<int, t_hhuint>	ft_map(ft_vec.begin(), ft_vec.end());
-			std::map<int, t_hhuint>	std_map(std_vec.begin(), std_vec.end());
+			ft::map<int, t_hhuint>	ft_map(&ft_vec[0], &ft_vec[idx]);
+			std::map<int, t_hhuint>	std_map(&std_vec[0], &std_vec[idx]);
 
 			ft_map.clear();
 			std_map.clear();
