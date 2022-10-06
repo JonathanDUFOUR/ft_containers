@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 15:07:34 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 15:54:51 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,6 +404,25 @@ public:
 	{
 		return value_compare();
 	}
+
+	// ***************************************************************************************************************** //
+	//                                                     Operators                                                     //
+	// ***************************************************************************************************************** //
+
+	/**
+	 * @brief	Assign a new content to the set from another one's. (copy assignation)
+	 * 
+	 * @param	rhs The right hand side set to copy the content from.
+	 * 
+	 * @return	The assigned set.
+	 */
+	set	&operator=(set const &rhs)
+	{
+		if (this != &rhs)
+			this->_tree = rhs._tree;
+		return *this;
+	}
+
 }; // class set
 
 // ***************************************************************************************************************** //
