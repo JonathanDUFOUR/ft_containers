@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:18:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 12:33:42 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
-			ft::vector<int> const	ft_vec;
 			std::vector<int> const	std_vec;
+			ft::vector<int> const	ft_vec;
 
 			if (sizeof(ft_vec) != sizeof(std_vec) || memcmp(&ft_vec, &std_vec, sizeof(ft_vec)))
 				ret = ISO_OK;

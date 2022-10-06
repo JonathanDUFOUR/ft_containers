@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 16:06:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:41:26 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -661,13 +661,6 @@ inline static int	__test_function_insert(void)
 					!std::equal(tree.begin(), tree.end(), ref.begin()))
 					return EXIT_FAILURE;
 			}
-			ft_it = tree.insert(tree.getNil(), std::string("What else ?"));
-			std_it = ref.insert(ref.end(), std::string("What else ?"));
-
-			if (*ft_it != *std_it ||
-				tree.getSize() != ref.size() ||
-				!std::equal(tree.begin(), tree.end(), ref.begin()))
-				return EXIT_FAILURE;
 		}
 	}
 	catch (std::exception const &e)

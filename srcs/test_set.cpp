@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:19:44 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:50:21 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -962,6 +962,167 @@ inline static int	__test_type_const_reverse_iterator(void)
 	return ret;
 }
 
+inline static int	__test_function_insert(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Range insertion
+		{
+			ft::set<std::string>	ft_set;
+			std::set<std::string>	std_set;
+
+			for (idx = 1U ; idx < g_string_size ; ++idx)
+			{
+				ft_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
+				std_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
+
+				if (ft_set.size() != std_set.size() || !std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+		// Single insertion
+		{
+			ft::set<std::string>								ft_set;
+			std::set<std::string>								std_set;
+			ft::pair<ft::set<std::string>::iterator, bool>		ft_ret;
+			std::pair<std::set<std::string>::iterator, bool>	std_ret;
+
+			for (idx = 0U ; idx < g_string_size ; ++idx)
+			{
+				ft_ret = ft_set.insert(g_string[idx]);
+				std_ret = std_set.insert(g_string[idx]);
+
+				if (*ft_ret.first != *std_ret.first ||
+					ft_ret.second != std_ret.second ||
+					ft_set.size() != std_set.size() ||
+					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+		// Single insertion with hint
+		{
+			ft::set<std::string>			ft_set;
+			std::set<std::string>			std_set;
+			ft::set<std::string>::iterator	ft_it;
+			std::set<std::string>::iterator	std_it;
+
+			ft_set.insert(ft_set.begin(), std::string("dedicated to lmartin"));
+			std_set.insert(std_set.begin(), std::string("dedicated to lmartin"));
+			ft_it = ft_set.begin();
+			std_it = std_set.begin();
+			for (idx = 0U ; idx < g_string_size * 3 ; ++idx)
+			{
+				switch (idx % 3)
+				{
+					case 0:
+						ft_it = ft_set.insert(ft_it, g_string[idx / 3]);
+						std_it = std_set.insert(std_it, g_string[idx / 3]);
+						break;
+				
+					case 1:
+						ft_it = ft_set.insert(ft_set.begin(), *++ft_set.begin());
+						std_it = std_set.insert(std_set.begin(), *++std_set.begin());
+						break;
+
+					case 2:
+						ft_it = ft_set.insert(ft_set.end(), *++ft_set.rbegin());
+						std_it = std_set.insert(std_set.end(), *++std_set.rbegin());
+						break;
+				}
+
+				if (*ft_it != *std_it ||
+					ft_set.size() != std_set.size() ||
+					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_erase(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		// Single erase (position)
+		{
+			ft::set<char>	ft_set(&g_char[0], &g_char[g_char_size]);
+			std::set<char>	std_set(&g_char[0], &g_char[g_char_size]);
+
+			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; ++idx)
+			{
+				ft_set.erase(ft_set.begin());
+				std_set.erase(std_set.begin());
+
+				if (ft_set.size() != std_set.size() ||
+					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+		// Single erase (key)
+		{
+			ft::set<char>	ft_set(&g_char[0], &g_char[g_char_size]);
+			std::set<char>	std_set(&g_char[0], &g_char[g_char_size]);
+			size_t			ft_ret;
+			size_t			std_ret;
+
+			for (idx = 0U ; idx < g_char_size * 2 && idx < g_lint_size * 2 ; ++idx)
+			{
+				ft_ret = ft_set.erase(g_char[idx / 2]);
+				std_ret = std_set.erase(g_char[idx / 2]);
+
+				if (ft_ret != std_ret || ft_set.size() != std_set.size() ||
+					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+		// Range erase
+		{
+			ft::set<char>				ft_set(&g_char[0], &g_char[g_char_size]);
+			std::set<char>				std_set(&g_char[0], &g_char[g_char_size]);
+			ft::set<char>::iterator		ft_it0;
+			ft::set<char>::iterator		ft_it1;
+			std::set<char>::iterator	std_it0;
+			std::set<char>::iterator	std_it1;
+			
+			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; idx += 2)
+			{
+				ft_it0 = ft_set.begin();
+				std_it0 = std_set.begin();
+				std::advance(ft_it0, ft_set.size() / 2 - 1);
+				std::advance(std_it0, std_set.size() / 2 - 1);
+				ft_it1 = ft_it0;
+				std_it1 = std_it0;
+				std::advance(ft_it1, 2U);
+				std::advance(std_it1, 2U);
+				ft_set.erase(ft_it0, ft_it1);
+				std_set.erase(std_it0, std_it1);
+
+				if (ft_set.size() != std_set.size() ||
+					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+					return KO;
+			}
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -990,6 +1151,8 @@ int	test_set(void)
 		__test_type_const_iterator,
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
+		__test_function_insert,
+		__test_function_erase,
 		NULL
 	};
 	t_uint			koCount;

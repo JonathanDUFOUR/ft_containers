@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:21:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 12:39:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class set
 private:
 	// Member types
 	typedef rb_node<Key const>										_node_type;
+	typedef typename Alloc::template rebind<_node_type>::other		_node_allocator_type;
 
 public:
 	//Member types
@@ -39,7 +40,7 @@ public:
 	typedef typename allocator_type::pointer						pointer;
 
 	typedef rb_tree_iterator<value_type const, _node_type const>	const_iterator;
-	typedef const_iterator											iterator;
+	typedef rb_tree_iterator<value_type const, _node_type>			iterator;
 
 	typedef reverse_iterator<const_iterator>						const_reverse_iterator;
 	typedef reverse_iterator<iterator>								reverse_iterator;
@@ -49,7 +50,7 @@ public:
 
 private:
 	// Attributes
-	rb_tree<value_type const, value_compare>	_tree;
+	rb_tree<value_type const, value_compare, _node_allocator_type>	_tree;
 
 public:
 // ****************************************************************************************************************** //
@@ -94,15 +95,15 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
-	 * @return	An iterator to the first element of the map.
+	 * @return	An iterator to the first element of the set.
 	 */
-	// iterator	begin(void) const
-	// {
-	// 	return this->_tree.begin();
-	// }
+	iterator	begin(void)
+	{
+		return this->_tree.begin();
+	}
 
 	/**
-	 * @return	A const_iterator to the first element of the map.
+	 * @return	A const_iterator to the first element of the set.
 	 */
 	const_iterator	begin(void) const
 	{
@@ -110,7 +111,7 @@ public:
 	}
 
 	/**
-	 * @return	Either true if the map is empty, or false if not.
+	 * @return	Either true if the set is empty, or false if not.
 	 */
 	bool	empty(void) const
 	{
@@ -118,19 +119,97 @@ public:
 	}
 
 	/**
-	 * @return	An iterator to the post-last element of the map.
+	 * @return	An iterator to the post-last element of the set.
 	 */
-	// iterator	end(void)
-	// {
-	// 	return this->_tree.end();
-	// }
+	iterator	end(void)
+	{
+		return this->_tree.end();
+	}
 
 	/**
-	 * @return	A const_iterator to the post-last element of the map.
+	 * @return	A const_iterator to the post-last element of the set.
 	 */
 	const_iterator	end(void) const
 	{
 		return this->_tree.end();
+	}
+
+	/**
+	 * @brief	Remove an element from the set. (single erase (position))
+	 * 
+	 * @param	pos The position of the element to remove.
+	 */
+	void	erase(iterator pos)
+	{
+		this->_tree.erase(pos.base());
+	}
+
+	/**
+	 * @brief	Remove an element from the set. (single erase (key))
+	 * 
+	 * @param	key The key of the element to remove.
+	 * 
+	 * @return	The number of removed element(s).
+	 */
+	size_type	erase(key_type const &key)
+	{
+		return this->_tree.erase(key);
+	}
+
+	/**
+	 * @brief	Remove elements from the set, using a range of iterators,
+	 * 			from `first` included to `last` excluded. (range erase)
+	 * 
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	void	erase(iterator first, iterator const last)
+	{
+		while (first != last)
+			this->erase(first++);
+	}
+
+	/**
+	 * @brief	Insert elements in the set using a range of iterators,
+	 * 			from `first` included to `last` excluded. (range insertion)
+	 * 
+	 * @tparam	InputIterator The type of the iterators to use.
+	 * 			(it must conform to the standard input iterator requirements)
+	 * 
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename InputIterator>
+	void	insert(InputIterator first, InputIterator const last)
+	{
+		while (first != last)
+			this->insert(*first++);
+	}
+
+	/**
+	 * @brief	Insert an element in the set. (single insertion)
+	 * 
+	 * @param	val The value of the element to insert in the set.
+	 * 
+	 * @return	A pair containing an iterator to the element of the set with the given value as `first` member,
+	 * 			and a boolean indicating whether a new element has been inserted as `second` member.
+	 */
+	pair<iterator, bool>	insert(value_type const &val)
+	{
+		return this->_tree.insert(val);
+	}
+
+	/**
+	 * @brief	Insert an element in the set. (single insertion with hint)
+	 * 
+	 * @param	pos The position where to insert the element.
+	 * @param	val The value of the element to insert in the set.
+	 * 
+	 * @return	An iterator to the element of the set with the given value.
+	 */
+	iterator	insert(iterator const pos, value_type const &val)
+	{
+		return this->_tree.insert(pos.base(), val);
 	}
 
 	/**

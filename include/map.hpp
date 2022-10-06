@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:21:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 11:28:54 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class map
 private:
 	// Member types
 	typedef rb_node<pair<Key const, T> >							_node_type;
+	typedef typename Alloc::template rebind<_node_type>::other		_node_allocator_type;
 
 public:
 	// Member types
@@ -72,7 +73,7 @@ public:
 
 private:
 	// Attributes
-	rb_tree<value_type, value_compare>	_tree;
+	rb_tree<value_type, value_compare, _node_allocator_type>	_tree;
 
 public:
 // ****************************************************************************************************************** //
@@ -246,7 +247,7 @@ public:
 	void	erase(iterator first, iterator const last)
 	{
 		while (first != last)
-			this->_tree.erase(first++.base());
+			this->erase(first++);
 	}
 
 	/**
@@ -283,10 +284,10 @@ public:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void		insert(InputIterator first, InputIterator const last)
+	void	insert(InputIterator first, InputIterator const last)
 	{
-		for (; first != last ; ++first)
-			this->_tree.insert(*first);
+		while (first != last)
+			this->insert(*first++);
 	}
 
 	/**

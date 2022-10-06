@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 10:19:27 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:38:33 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1220,14 +1220,6 @@ inline static int	__test_function_insert(void)
 					!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
 					return KO;
 			}
-			ft_it = ft_map.insert(ft_map.end(), ft::make_pair(std::string("What else ?"), 11223344556677889900LU));
-			std_it = std_map.insert(std_map.end(), std::make_pair(std::string("What else ?"), 11223344556677889900LU));
-
-			if (ft_it->first != std_it->first ||
-				ft_it->second != std_it->second ||
-				ft_map.size() != std_map.size() ||
-				!std::equal(ft_map.begin(), ft_map.end(), std_map.begin(), __cmp<std::string, t_luint>))
-				return KO;
 		}
 	}
 	catch (std::exception const &e)
