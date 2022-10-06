@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:31:58 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:14:10 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 09:09:44 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 
 namespace ft
 {
-template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<rb_node<Key> > >
+template <typename Key, typename Compare = std::less<Key>, typename Alloc = std::allocator<Key> >
 class set
 {
 private:
 	// Member types
-	typedef rb_node<Key const>	_node_type;
+	typedef rb_node<Key const>										_node_type;
 
 public:
 	//Member types
@@ -39,14 +39,17 @@ public:
 	typedef typename allocator_type::pointer						pointer;
 
 	typedef rb_tree_iterator<value_type const, _node_type const>	const_iterator;
-	typedef rb_tree_iterator<value_type, _node_type>				iterator;
+	typedef const_iterator											iterator;
+
+	typedef reverse_iterator<const_iterator>						const_reverse_iterator;
+	typedef reverse_iterator<iterator>								reverse_iterator;
 
 	typedef typename iterator_traits<iterator>::difference_type		difference_type;
 	typedef size_t													size_type;
 
 private:
 	// Attributes
-	rb_tree<value_type, value_compare, allocator_type>	_tree;
+	rb_tree<value_type const, value_compare>	_tree;
 
 public:
 // ****************************************************************************************************************** //
@@ -91,11 +94,43 @@ public:
 // ***************************************************************************************************************** //
 
 	/**
+	 * @return	An iterator to the first element of the map.
+	 */
+	// iterator	begin(void) const
+	// {
+	// 	return this->_tree.begin();
+	// }
+
+	/**
+	 * @return	A const_iterator to the first element of the map.
+	 */
+	const_iterator	begin(void) const
+	{
+		return this->_tree.begin();
+	}
+
+	/**
 	 * @return	Either true if the map is empty, or false if not.
 	 */
 	bool	empty(void) const
 	{
 		return !this->_tree.getSize();
+	}
+
+	/**
+	 * @return	An iterator to the post-last element of the map.
+	 */
+	// iterator	end(void)
+	// {
+	// 	return this->_tree.end();
+	// }
+
+	/**
+	 * @return	A const_iterator to the post-last element of the map.
+	 */
+	const_iterator	end(void) const
+	{
+		return this->_tree.end();
 	}
 
 	/**
@@ -112,6 +147,38 @@ public:
 	size_type	max_size(void) const
 	{
 		return allocator_type().max_size();
+	}
+
+	/**
+	 * @return	A reverse_iterator to the last element of the map.
+	 */
+	reverse_iterator	rbegin(void)
+	{
+		return this->_tree.rbegin();
+	}
+
+	/**
+	 * @return	A const_reverse_iterator to the last element of the map.
+	 */
+	const_reverse_iterator	rbegin(void) const
+	{
+		return this->_tree.rbegin();
+	}
+
+	/**
+	 * @return	A reverse_iterator to the pre-first element of the map.
+	 */
+	reverse_iterator	rend(void)
+	{
+		return this->_tree.rend();
+	}
+
+	/**
+	 * @return	A const_reverse_iterator to the pre-first element of the map.
+	 */
+	const_reverse_iterator	rend(void) const
+	{
+		return this->_tree.rend();
 	}
 
 	/**

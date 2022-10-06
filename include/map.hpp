@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 10:51:15 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 09:20:37 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ template <
 	typename Key,
 	typename T,
 	typename Compare = std::less<Key>,
-	typename Alloc = std::allocator<rb_node<pair<Key const, T> > > >
+	typename Alloc = std::allocator<pair<Key const, T> > >
 class map
 {
 private:
@@ -72,7 +72,7 @@ public:
 
 private:
 	// Attributes
-	rb_tree<value_type, value_compare, allocator_type>	_tree;
+	rb_tree<value_type, value_compare>	_tree;
 
 public:
 // ****************************************************************************************************************** //

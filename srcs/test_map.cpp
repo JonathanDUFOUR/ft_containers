@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 00:13:27 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:06:16 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/05 17:13:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -677,7 +677,7 @@ inline static int	__test_function_end(void)
 				std_it = std_map.end();
 
 				if (!!ft_it.base() != !!std_it._M_node)
-					ret =  ISO_OK;
+					ret = ISO_OK;
 
 				--ft_it;
 				--std_it;

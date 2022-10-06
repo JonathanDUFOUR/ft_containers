@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:18:07 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 08:45:50 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "arrays.hpp"
 #include "tester.hpp"
 #include "set.hpp"
+#include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "e_ret.hpp"
 
@@ -467,6 +468,474 @@ inline static int	__test_function_empty(void)
 	return IMP_OK;
 }
 
+inline static int	__test_function_begin(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Mutable access
+		{
+			ft::set<char>::iterator		ft_it;
+			std::set<char>::iterator	std_it;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+				std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+
+				ft_it = ft_set.begin();
+				std_it = std_set.begin();
+
+				if (!!ft_it.base() != !!std_it._M_node)
+					ret = ISO_OK;
+				if (*ft_it != *std_it)
+					return KO;
+			}
+
+			ft::set<char>	ft_set;
+			std::set<char>	std_set;
+
+			ft_it = ft_set.begin();
+			std_it = std_set.begin();
+
+			if (!!ft_it.base() != !!std_it._M_node)
+				ret = ISO_OK;
+		}
+		// Constant access
+		{
+			ft::set<char>::const_iterator	ft_cit;
+			std::set<char>::const_iterator	std_cit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+				std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+
+				ft_cit = ft_set.begin();
+				std_cit = std_set.begin();
+
+				if (!!ft_cit.base() != !!std_cit._M_node)
+					ret = ISO_OK;
+				if (*ft_cit != *std_cit)
+					return KO;
+			}
+
+			ft::set<char> const		ft_set;
+			std::set<char> const	std_set;
+
+			ft_cit = ft_set.begin();
+			std_cit = std_set.begin();
+
+			if (!!ft_cit.base() != !!std_cit._M_node)
+				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_function_end(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Mutable access
+		{
+			ft::set<char>::iterator		ft_it;
+			std::set<char>::iterator	std_it;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
+				std::set<char>	std_set(&g_char[0], &g_char[idx]);
+
+				ft_it = ft_set.end();
+				std_it = std_set.end();
+
+				if (!!ft_it.base() != !!std_it._M_node)
+					ret = ISO_OK;
+
+				--ft_it;
+				--std_it;
+
+				if (*ft_it != *std_it)
+					return KO;
+			}
+
+			ft::set<char>	ft_set;
+			std::set<char>	std_set;
+
+			ft_it = ft_set.end();
+			std_it = std_set.end();
+
+			if (!!ft_it.base() != !!std_it._M_node)
+				ret = ISO_OK;
+		}
+		// Constant access
+		{
+			ft::set<char>::const_iterator	ft_cit;
+			std::set<char>::const_iterator	std_cit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
+				std::set<char> const	std_set(&g_char[0], &g_char[idx]);
+
+				ft_cit = ft_set.end();
+				std_cit = std_set.end();
+
+				if (!!ft_cit.base() != !!std_cit._M_node)
+					ret = ISO_OK;
+
+				--ft_cit;
+				--std_cit;
+
+				if (*ft_cit != *std_cit)
+					return KO;
+			}
+
+			ft::set<char> const		ft_set;
+			std::set<char> const	std_set;
+
+			ft_cit = ft_set.end();
+			std_cit = std_set.end();
+
+			if (!!ft_cit.base() != !!std_cit._M_node)
+				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_rbegin(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Mutable access
+		{
+			ft::set<char>::reverse_iterator		ft_rit;
+			std::set<char>::reverse_iterator	std_rit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+				std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+
+				ft_rit = ft_set.rbegin();
+				std_rit = std_set.rbegin();
+
+				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+					ret = ISO_OK;
+				if (*ft_rit != *std_rit)
+					return KO;
+			}
+
+			ft::set<char>	ft_set;
+			std::set<char>	std_set;
+
+			ft_rit = ft_set.rbegin();
+			std_rit = std_set.rbegin();
+
+			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+				ret = ISO_OK;
+		}
+		// Constant access
+		{
+			ft::set<char>::const_reverse_iterator	ft_crit;
+			std::set<char>::const_reverse_iterator	std_crit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+				std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+
+				ft_crit = ft_set.rbegin();
+				std_crit = std_set.rbegin();
+
+				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+					ret = ISO_OK;
+				if (*ft_crit != *std_crit)
+					return KO;
+			}
+
+			ft::set<char> const		ft_set;
+			std::set<char> const	std_set;
+
+			ft_crit = ft_set.rbegin();
+			std_crit = std_set.rbegin();
+
+			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_function_rend(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Mutable access
+		{
+			ft::set<char>::reverse_iterator		ft_rit;
+			std::set<char>::reverse_iterator	std_rit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
+				std::set<char>	std_set(&g_char[0], &g_char[idx]);
+
+				ft_rit = ft_set.rend();
+				std_rit = std_set.rend();
+
+				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+					ret = ISO_OK;
+
+				--ft_rit;
+				--std_rit;
+
+				if (*ft_rit != *std_rit)
+					return KO;
+			}
+
+			ft::set<char>	ft_set;
+			std::set<char>	std_set;
+
+			ft_rit = ft_set.rend();
+			std_rit = std_set.rend();
+
+			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+				ret = ISO_OK;
+		}
+		// Constant access
+		{
+			ft::set<char>::const_reverse_iterator	ft_crit;
+			std::set<char>::const_reverse_iterator	std_crit;
+
+			for (idx = 1U ; idx < g_char_size ; ++idx)
+			{
+				ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
+				std::set<char> const	std_set(&g_char[0], &g_char[idx]);
+
+				ft_crit = ft_set.rend();
+				std_crit = std_set.rend();
+
+				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+					ret = ISO_OK;
+
+				--ft_crit;
+				--std_crit;
+
+				if (*ft_crit != *std_crit)
+					return KO;
+			}
+
+			ft::set<char> const		ft_set;
+			std::set<char> const	std_set;
+
+			ft_crit = ft_set.rend();
+			std_crit = std_set.rend();
+
+			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<float>				ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float>				std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::iterator	ft_it;
+		std::set<float>::iterator	std_it;
+
+		if (sizeof(ft_it) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_it = ft_set.begin(), std_it = std_set.begin(), idx = 0U ;
+			ft_it != ft_set.end() && std_it != std_set.end() ;
+			++ft_it, ++std_it, ++idx)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_it);
+				BidirectionalIteratorCheck(std_it);
+			}
+
+			if (*ft_it != *std_it)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<float> const			ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const			std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::const_iterator	ft_cit;
+		std::set<float>::const_iterator	std_cit;
+
+		if (sizeof(ft_cit) != sizeof(std_cit))
+			ret = ISO_OK;
+
+		for (ft_cit = ft_set.begin(), std_cit = std_set.begin(), idx = 0U ;
+			ft_cit != ft_set.end() && std_cit != std_set.end() ;
+			++ft_cit, ++std_cit)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_cit);
+				BidirectionalIteratorCheck(std_cit);
+			}
+
+			if (*ft_cit != *std_cit)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_reverse_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<float>						ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float>						std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::reverse_iterator	ft_rit;
+		std::set<float>::reverse_iterator	std_it;
+
+		if (sizeof(ft_rit) != sizeof(std_it))
+			ret = ISO_OK;
+
+		for (ft_rit = ft_set.rbegin(), std_it = std_set.rbegin(), idx = 0U ;
+			ft_rit != ft_set.rend() && std_it != std_set.rend() ;
+			++ft_rit, ++std_it, ++idx)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_rit);
+				BidirectionalIteratorCheck(std_it);
+			}
+
+			if (*ft_rit != *std_it)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_type_const_reverse_iterator(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<float> const					ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const					std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::const_reverse_iterator	ft_crit;
+		std::set<float>::const_reverse_iterator	std_crit;
+
+		if (sizeof(ft_crit) != sizeof(std_crit))
+			ret = ISO_OK;
+
+		for (ft_crit = ft_set.rbegin(), std_crit = std_set.rbegin(), idx = 0U ;
+			ft_crit != ft_set.rend() && std_crit != std_set.rend() ;
+			++ft_crit, ++std_crit)
+		{
+			if (idx)
+			{
+				BidirectionalIteratorCheck(ft_crit);
+				BidirectionalIteratorCheck(std_crit);
+			}
+
+			if (*ft_crit != *std_crit)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
 int	test_set(void)
 {
 	t_test const	tests[] = {
@@ -485,6 +954,14 @@ int	test_set(void)
 		__test_function_value_comp,
 		__test_function_size,
 		__test_function_empty,
+		__test_function_begin,
+		__test_function_end,
+		__test_function_rbegin,
+		__test_function_rend,
+		__test_type_iterator,
+		__test_type_const_iterator,
+		__test_type_reverse_iterator,
+		__test_type_const_reverse_iterator,
 		NULL
 	};
 	t_uint			koCount;

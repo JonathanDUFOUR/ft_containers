@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 09:16:43 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 08:36:40 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,36 @@ namespace ft
 template <typename T>
 struct rb_node
 {
+	// Member types
+	typedef T	value_type;
+
 	// Attributes
-	T		val;
+	value_type	val;
 
-	uint8_t	color;
+	uint8_t		color;
 
-	rb_node	*parent;
-	rb_node	*child[2];
+	rb_node		*parent;
+	rb_node		*child[2];
 
 // ****************************************************************************************************************** //
 //                                                    Constructors                                                    //
 // ****************************************************************************************************************** //
 
 	/**
-	 * @brief	Construct a new rb_node object. (parameter constructor)
+	 * @brief	Construct a new rb_node object. (mutable parameter constructor)
 	 * 
 	 * @param	val The value to store in the node.
 	 * @param	color The color of the node.
 	 * @param	parent The parent of the node.
-	 * @param	child The two children of the node.
+	 * @param	left The left child of the node.
+	 * @param	right The right child of the node.
 	 */
-	rb_node(T const &val, uint8_t const color, rb_node *const parent, rb_node *const left, rb_node *const right) :
+	rb_node(
+		value_type const &val,
+		uint8_t const color,
+		rb_node *const parent,
+		rb_node *const left,
+		rb_node *const right) :
 		val(val),
 		color(color),
 		parent(parent)
