@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 16:16:14 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 16:47:13 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -816,8 +816,8 @@ inline static int	__test_type_iterator(void)
 	ret = IMP_OK;
 	try
 	{
-		ft::set<float>				ft_set(&g_float[0], &g_float[g_float_size]);
-		std::set<float>				std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float> const		ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const		std_set(&g_float[0], &g_float[g_float_size]);
 		ft::set<float>::iterator	ft_it;
 		std::set<float>::iterator	std_it;
 
