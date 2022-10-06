@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 10:26:38 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:18:33 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,111 +285,88 @@ inline static int	__test_constructor(void)
 	return ret;
 }
 
+inline static int	__test_default_template_type_Alloc(void)
+{
+	title(__func__);
+
+	typedef ft::vector<float>							vec_type_0;
+	typedef ft::vector<float, std::allocator<float> >	vec_type_1;
+
+	if (!is_same<vec_type_0, vec_type_1>::value)
+		return KO;
+
+	return IMP_OK;
+}
+
 inline static int	__test_type_value_type(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::value_type, t_lint>::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::value_type, t_lint>::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
 inline static int	__test_type_allocator_type(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::allocator_type, std::allocator<t_lint> >::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::allocator_type, std::allocator<t_lint> >::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
 inline static int	__test_type_reference(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::reference, std::allocator<t_lint>::reference>::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::reference, std::allocator<t_lint>::reference>::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
 inline static int	__test_type_const_reference(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::const_reference, std::allocator<t_lint>::const_reference>::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::const_reference, std::allocator<t_lint>::const_reference>::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
 inline static int	__test_type_pointer(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::pointer, std::allocator<t_lint>::pointer>::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::pointer, std::allocator<t_lint>::pointer>::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
 inline static int	__test_type_const_pointer(void)
 {
 	title(__func__);
-	try
-	{
-		typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
 
-		if (!ft::is_same<vec_type::const_pointer, std::allocator<t_lint>::const_pointer>::value)
-			return KO;
-	}
-	catch (std::exception const &e)
-	{
-		std::cerr << "Exception: " << e.what() << '\n';
+	typedef ft::vector<t_lint, std::allocator<t_lint> >	vec_type;
+
+	if (!is_same<vec_type::const_pointer, std::allocator<t_lint>::const_pointer>::value)
 		return KO;
-	}
+
 	return IMP_OK;
 }
 
@@ -2090,6 +2067,7 @@ int	test_vector(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_default_template_type_Alloc,
 		__test_type_value_type,
 		__test_type_allocator_type,
 		__test_type_reference,

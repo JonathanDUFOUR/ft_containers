@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 10:56:47 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 15:55:38 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:04:59 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ inline static int	__test_type_first_type(void)
 	{
 		typedef ft::pair<long double, char>	pair_type;
 
-		if (!ft::is_same<pair_type::first_type, long double>::value)
+		if (!is_same<pair_type::first_type, long double>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -107,7 +107,7 @@ inline static int	__test_type_second_type(void)
 	{
 		typedef ft::pair<long double, char>	pair_type;
 
-		if (!ft::is_same<pair_type::second_type, char>::value)
+		if (!is_same<pair_type::second_type, char>::value)
 			return KO;
 	}
 	catch (std::exception const &e)

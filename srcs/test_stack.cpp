@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/05 10:27:28 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:18:48 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,19 @@ inline static int	__test_constructor(void)
 	return ret;
 }
 
+inline static int	__test_default_template_type_Container(void)
+{
+	title(__func__);
+
+	typedef ft::stack<float>						sta_type_0;
+	typedef ft::stack<float, ft::vector<float> >	sta_type_1;
+
+	if (!is_same<sta_type_0, sta_type_1>::value)
+		return KO;
+
+	return IMP_OK;
+}
+
 inline static int	__test_type_value_type(void)
 {
 	title(__func__);
@@ -80,7 +93,7 @@ inline static int	__test_type_value_type(void)
 	{
 		typedef ft::stack<t_lint, std::vector<t_lint> >	sta_type;
 
-		if (!ft::is_same<sta_type::value_type, t_lint>::value)
+		if (!is_same<sta_type::value_type, t_lint>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -98,7 +111,7 @@ inline static int	__test_type_size_type(void)
 	{
 		typedef ft::stack<t_lint, std::vector<t_lint> >	sta_type;
 
-		if (!ft::is_same<sta_type::size_type, std::vector<t_lint>::size_type>::value)
+		if (!is_same<sta_type::size_type, std::vector<t_lint>::size_type>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -116,7 +129,7 @@ inline static int	__test_type_container_type(void)
 	{
 		typedef ft::stack<t_lint, std::vector<t_lint> >	sta_type;
 
-		if (!ft::is_same<sta_type::container_type, std::vector<t_lint> >::value)
+		if (!is_same<sta_type::container_type, std::vector<t_lint> >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -483,6 +496,7 @@ int	test_stack(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_default_template_type_Container,
 		__test_type_value_type,
 		__test_type_size_type,
 		__test_type_container_type,

@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 08:45:50 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/06 10:19:44 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,32 @@ inline static int	__test_constructor(void)
 	return ret;
 }
 
+inline static int	__test_default_template_type_Compare(void)
+{
+	title(__func__);
+
+	typedef ft::set<float>						set_type_0;
+	typedef ft::set<float, std::less<float> >	set_type_1;
+
+	if (!is_same<set_type_0, set_type_1>::value)
+		return KO;
+
+	return IMP_OK;
+}
+
+inline static int	__test_default_template_type_Alloc(void)
+{
+	title(__func__);
+
+	typedef ft::set<float>												set_type_0;
+	typedef ft::set<float, std::less<float>, std::allocator<float> >	set_type_1;
+
+	if (!is_same<set_type_0, set_type_1>::value)
+		return KO;
+
+	return IMP_OK;
+}
+
 inline static int	__test_type_key_type(void)
 {
 	title(__func__);
@@ -114,7 +140,7 @@ inline static int	__test_type_key_type(void)
 	{
 		typedef ft::set<t_lint>	set_type;
 
-		if (!ft::is_same<set_type::key_type, t_lint>::value)
+		if (!is_same<set_type::key_type, t_lint>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -132,7 +158,7 @@ inline static int	__test_type_value_type(void)
 	{
 		typedef ft::set<t_lint>	set_type;
 
-		if (!ft::is_same<set_type::value_type, t_lint>::value)
+		if (!is_same<set_type::value_type, t_lint>::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -150,7 +176,7 @@ inline static int	__test_type_key_compare(void)
 	{
 		typedef ft::set<t_lint, std::less<int> >	set_type;
 
-		if (!ft::is_same<set_type::key_compare, std::less<int> >::value)
+		if (!is_same<set_type::key_compare, std::less<int> >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -168,7 +194,7 @@ inline static int	__test_type_value_compare(void)
 	{
 		typedef ft::set<t_lint, std::less<int> >	set_type;
 
-		if (!ft::is_same<set_type::value_compare, std::less<int> >::value)
+		if (!is_same<set_type::value_compare, std::less<int> >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -186,7 +212,7 @@ inline static int	__test_type_allocator_type(void)
 	{
 		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
 
-		if (!ft::is_same<set_type::allocator_type, std::allocator<char> >::value)
+		if (!is_same<set_type::allocator_type, std::allocator<char> >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -204,7 +230,7 @@ inline static int	__test_type_reference(void)
 	{
 		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
 
-		if (!ft::is_same<set_type::reference, std::allocator<char>::reference >::value)
+		if (!is_same<set_type::reference, std::allocator<char>::reference >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -222,7 +248,7 @@ inline static int	__test_type_const_reference(void)
 	{
 		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
 
-		if (!ft::is_same<set_type::const_reference, std::allocator<char>::const_reference >::value)
+		if (!is_same<set_type::const_reference, std::allocator<char>::const_reference >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -240,7 +266,7 @@ inline static int	__test_type_pointer(void)
 	{
 		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
 
-		if (!ft::is_same<set_type::pointer, std::allocator<char>::pointer >::value)
+		if (!is_same<set_type::pointer, std::allocator<char>::pointer >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -258,7 +284,7 @@ inline static int	__test_type_const_pointer(void)
 	{
 		typedef ft::set<t_lint, std::less<int>, std::allocator<char> >	set_type;
 
-		if (!ft::is_same<set_type::const_pointer, std::allocator<char>::const_pointer >::value)
+		if (!is_same<set_type::const_pointer, std::allocator<char>::const_pointer >::value)
 			return KO;
 	}
 	catch (std::exception const &e)
@@ -940,6 +966,8 @@ int	test_set(void)
 {
 	t_test const	tests[] = {
 		__test_constructor,
+		__test_default_template_type_Compare,
+		__test_default_template_type_Alloc,
 		__test_type_key_type,
 		__test_type_value_type,
 		__test_type_key_compare,
