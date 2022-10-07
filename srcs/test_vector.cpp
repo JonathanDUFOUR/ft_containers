@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/07 10:51:12 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <iostream>
 #include <vector>
 #include "arrays.hpp"
+#include "benchmark.hpp"
 #include "colors.hpp"
 #include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
@@ -2141,6 +2142,16 @@ int	test_vector(void)
 				std::cerr << RESET;
 				++koCount;
 				break;
+		}
+		if (!g_ratio.empty())
+		{
+			std::cout << ' ';
+			benchmark_best_case();
+			std::cout << ' ';
+			benchmark_worst_case();
+			std::cout << ' ';
+			benchmark_average_case();
+			g_ratio.clear();
 		}
 		std::cout << '\n';
 	}

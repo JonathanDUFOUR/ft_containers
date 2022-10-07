@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/07 11:50:33 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <limits>
 #include "arrays.hpp"
+#include "benchmark.hpp"
 #include "colors.hpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "iterator/spec/reverse_iterator.tpp"
@@ -30,8 +31,15 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
+			g_start = clock();
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	ft_rit;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	std_rit;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (sizeof(ft_rit) != sizeof(std_rit) ||
 				memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
@@ -42,8 +50,16 @@ inline static int	__test_constructor(void)
 			for (idx = 0U ; idx < g_int_size ; ++idx)
 			{
 				ft::random_access_iterator_restrictor<int const *> const							it(&g_int[idx]);
+
+				g_start = clock();
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit(it);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit(it);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				if (sizeof(ft_rit) != sizeof(std_rit) || memcmp(&ft_rit, &std_rit, sizeof(ft_rit)))
 					return EXIT_FAILURE;
@@ -54,9 +70,17 @@ inline static int	__test_constructor(void)
 			// Default position
 			{
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit0;
-				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit1(ft_rit0);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit0;
+
+				g_start = clock();
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit1(ft_rit0);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit1(std_rit0);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				if (sizeof(ft_rit1) != sizeof(std_rit1) ||
 					memcmp(&ft_rit1, &std_rit1, sizeof(ft_rit1)))
@@ -67,12 +91,36 @@ inline static int	__test_constructor(void)
 				for (idx = 0U ; idx < g_int_size ; ++idx)
 				{
 					ft::random_access_iterator_restrictor<int const *> const								it(&g_int[idx]);
+
+					g_start = clock();
 					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit0(it);
-					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit1(ft_rit0);
-					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit2(ft_rit1);
+					g_ft_duration = clock() - g_start;
+
+					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit0(it);
+					g_std_duration = clock() - g_start;
+
+					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+					g_start = clock();
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit1(ft_rit0);
+					g_ft_duration = clock() - g_start;
+
+					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit1(std_rit0);
+					g_std_duration = clock() - g_start;
+
+					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+					g_start = clock();
+					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit2(ft_rit1);
+					g_ft_duration = clock() - g_start;
+
+					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit2(std_rit1);
+					g_std_duration = clock() - g_start;
+
+					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 					if ((sizeof (ft_rit1) != sizeof (std_rit1)) || sizeof(ft_rit2) != sizeof(std_rit2) ||
 						(memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0))) ||
@@ -102,8 +150,20 @@ inline static int	__test_function_base(void)
 			ft::random_access_iterator_restrictor<double const *> const							it(&g_double[idx]);
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<double const *> > const	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<double const *> > const	std_rit(it);
+			ft::random_access_iterator_restrictor<double const *>								ft_ret;
+			ft::random_access_iterator_restrictor<double const *>								std_ret;
 
-			if (ft_rit.base() != std_rit.base())
+			g_start = clock();
+			ft_ret = ft_rit.base();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_rit.base();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return EXIT_FAILURE;
 		}
 	}
@@ -122,22 +182,42 @@ inline static int	__test_operator_assign(void)
 	title(__func__);
 	try
 	{
-		ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >	rit0;
+		ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >	ft_rit0;
+		std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >	std_rit0;
 
 		for (idx = 0U ; idx < g_string_size ; ++idx)
 		{
-			ft::random_access_iterator_restrictor<std::string const *>								it0(&g_string[idx]);
-			ft::random_access_iterator_restrictor<std::string const *> const						it1(&g_string[idx]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >		rit1(it0);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const>	rit2(it1);
+			ft::random_access_iterator_restrictor<std::string *> const									it0(&g_string[idx]);
+			ft::random_access_iterator_restrictor<std::string const *> const							it1(&g_string[idx]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> > const			ft_rit1(it0);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const		ft_rit2(it1);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> > const			std_rit1(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const	std_rit2(it1);
 
-			rit0 = rit1;
-			if (memcmp(&rit0, &rit1,
-				sizeof(ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >)))
+			g_start = clock();
+			ft_rit0 = ft_rit1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_rit0 = std_rit1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (memcmp(&ft_rit0, &ft_rit1, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit1, sizeof(std_rit0)))
 				return EXIT_FAILURE;
-			rit0 = rit2;
-			if (memcmp(&rit0, &rit2,
-				sizeof(ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> >)))
+
+			g_start = clock();
+			ft_rit0 = ft_rit2;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_rit0 = std_rit2;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (memcmp(&ft_rit0, &ft_rit2, sizeof(ft_rit0)) != memcmp(&std_rit0, &std_rit2, sizeof(std_rit0)))
 				return EXIT_FAILURE;
 		}
 	}
@@ -164,10 +244,17 @@ inline static int	__test_operator_dereference(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> > const	ft_rit(it);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<t_hint *> > const	std_rit(it);
 
-				*ft_rit += 42;
-				*std_rit += 42;
+				g_start = clock();
+				t_hint &ft_nb = *ft_rit;
+				g_ft_duration = clock() - g_start;
 
-				if (*ft_rit != *std_rit)
+				g_start = clock();
+				t_hint &std_nb = *std_rit;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_nb != std_nb)
 					return EXIT_FAILURE;
 			}
 		}
@@ -179,7 +266,15 @@ inline static int	__test_operator_dereference(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_hint const *> > const	ft_rit(it);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<t_hint const *> > const	std_rit(it);
 
-				if (*ft_rit != *std_rit)
+				g_start = clock();
+				t_hint const &ft_nb = *ft_rit;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				t_hint const &std_nb = *std_rit;
+				g_std_duration = clock() - g_start;
+
+				if (ft_nb != std_nb)
 					return EXIT_FAILURE;
 			}
 		}
@@ -207,12 +302,30 @@ inline static int	__test_operator_maddress(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> *> > const	ft_rit(it);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> *> > const	std_rit(it);
 
-				++ft_rit->first;
-				++std_rit->first;
-				--ft_rit->second;
-				--std_rit->second;
+				g_start = clock();
+				int	&ft_first = ft_rit->first;
+				g_ft_duration = clock() - g_start;
 
-				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+				g_start = clock();
+				int	&std_first = std_rit->first;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_first != std_first)
+					return EXIT_FAILURE;
+
+				g_start = clock();
+				char	&ft_second = ft_rit->second;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				char	&std_second = std_rit->second;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_second != std_second)
 					return EXIT_FAILURE;
 			}
 		}
@@ -224,7 +337,30 @@ inline static int	__test_operator_maddress(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> > const	ft_rit(it);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<std::pair<int, char> const *> > const	std_rit(it);
 
-				if (ft_rit->first != std_rit->first || ft_rit->second != std_rit->second)
+				g_start = clock();
+				int const	&ft_first = ft_rit->first;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				int const	&std_first = std_rit->first;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_first != std_first)
+					return EXIT_FAILURE;
+
+				g_start = clock();
+				char const	&ft_second = ft_rit->second;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				char const	&std_second = std_rit->second;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_second != std_second)
 					return EXIT_FAILURE;
 			}
 		}
@@ -251,18 +387,44 @@ inline static int	__test_operator_increment(void)
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
 
 			for (idx = 1U ; idx < g_luint_size ; ++idx)
-				if ((++ft_rit).base() != (++std_rit).base())
+			{
+				g_start = clock();
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ++ft_rit;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = ++std_rit;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 					return EXIT_FAILURE;
+			}
 		}
 		// Postfix incrementation
 		{
 			ft::random_access_iterator_restrictor<t_luint const *>							it(&g_luint[g_luint_size]);
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_ret;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_ret;
 
 			for (idx = 1U ; idx > g_luint_size ; ++idx)
-				if (ft_rit++.base() != std_rit++.base() || ft_rit.base() != std_rit.base())
+			{
+				g_start = clock();
+				ft_ret = ft_rit++;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std_rit++;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -287,18 +449,44 @@ inline static int	__test_operator_decrement(void)
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
 
 			for (idx = 1U ; idx < g_luint_size ; ++idx)
-				if ((--ft_rit).base() != (--std_rit).base())
+			{
+				g_start = clock();
+				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = --ft_rit;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = --std_rit;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 					return EXIT_FAILURE;
+			}
 		}
 		// Postfix decrementation
 		{
 			ft::random_access_iterator_restrictor<t_luint const *>							it(&g_luint[0]);
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_ret;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_ret;
 
 			for (idx = 1U ; idx < g_luint_size ; ++idx)
-				if (ft_rit--.base() != std_rit--.base() || ft_rit.base() != std_rit.base())
+			{
+				g_start = clock();
+				ft_ret = ft_rit--;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std_rit--;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -322,9 +510,17 @@ inline static int	__test_operator_add_assign(void)
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
 
-			ft_rit = (ft_rit += idx);
-			std_rit = (std_rit += idx);
-			if (ft_rit.base() != std_rit.base())
+			g_start = clock();
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ft_rit += idx;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = std_rit += idx;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 				return EXIT_FAILURE;
 		}
 	}
@@ -349,9 +545,17 @@ inline static int	__test_operator_sub_assign(void)
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	std_rit(it);
 
-			ft_rit = (ft_rit -= idx);
-			std_rit = (std_rit -= idx);
-			if (ft_rit.base() != std_rit.base())
+			g_start = clock();
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ft_rit -= idx;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = std_rit -= idx;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret.base() != std_ret.base() || ft_rit.base() != std_rit.base())
 				return EXIT_FAILURE;
 		}
 	}
@@ -375,10 +579,22 @@ inline static int	__test_operator_add(void)
 			ft::random_access_iterator_restrictor<float const *> const							it(&g_float[g_float_size - 1]);
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >			ft_ret;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		std_ret;
 
 			for (idx = 0U ; idx < g_float_size ; ++idx)
 			{
-				if ((ft_rit + idx).base() != (std_rit + idx).base())
+				g_start = clock();
+				ft_ret = ft_rit + idx;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std_rit + idx;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base())
 					return EXIT_FAILURE;
 			}
 		}
@@ -387,10 +603,24 @@ inline static int	__test_operator_add(void)
 			ft::random_access_iterator_restrictor<float const *> const							it(&g_float[g_float_size - 1]);
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
 			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >			ft_ret;
+			std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		std_ret;
 
 			for (idx = 0U ; idx < g_float_size ; ++idx)
-				if ((idx + ft_rit).base() != (idx + std_rit).base())
+			{
+				g_start = clock();
+				ft_ret = idx + ft_rit;
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = idx + std_rit;
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret.base() != std_ret.base())
 					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -411,10 +641,24 @@ inline static int	__test_operator_sub(void)
 		ft::random_access_iterator_restrictor<float const *> const							it(&g_float[0]);
 		ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	ft_rit(it);
 		std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> > const	std_rit(it);
+		ft::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >			ft_ret;
+		std::reverse_iterator<ft::random_access_iterator_restrictor<float const *> >		std_ret;
 
 		for (idx = 0U ; idx < 10U ; ++idx)
-			if ((ft_rit - idx).base() != (std_rit - idx).base())
+		{
+			g_start = clock();
+			ft_ret = ft_rit - idx;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_rit - idx;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret.base() != std_ret.base())
 				return EXIT_FAILURE;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -439,10 +683,17 @@ inline static int	__test_operator_access(void)
 
 			for (idx = 0U ; idx < g_hhuint_size ; ++idx)
 			{
-				++ft_rit[idx];
-				++std_rit[idx];
+				g_start = clock();
+				t_hhuint	&ft_ret = ft_rit[idx];
+				g_ft_duration = clock() - g_start;
 
-				if (ft_rit[idx] != std_rit[idx])
+				g_start = clock();
+				t_hhuint	&std_ret = std_rit[idx];
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -453,8 +704,20 @@ inline static int	__test_operator_access(void)
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_hhuint const *> > const	std_rit(it);
 
 			for (idx = 0U ; idx < g_hhuint_size ; ++idx)
-				if (ft_rit[idx] != std_rit[idx])
+			{
+				g_start = clock();
+				t_hhuint const	&ft_ret = ft_rit[idx];
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				t_hhuint const	&std_ret = std_rit[idx];
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -473,11 +736,14 @@ inline static int	__test_operator_distance(void)
 	title(__func__);
 	try
 	{
+		ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> >::difference_type	ft_ret;
+		std::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> >::difference_type	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_string_size ; ++idx0)
 		{
-			ft::random_access_iterator_restrictor<std::string const *> const							it0(&g_string[idx0]);
-			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const		ft_rit0(it0);
-			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> > const	std_rit0(it0);
+			ft::random_access_iterator_restrictor<std::string *> const							it0(&g_string[idx0]);
+			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> > const	ft_rit0(it0);
+			std::reverse_iterator<ft::random_access_iterator_restrictor<std::string *> > const	std_rit0(it0);
 
 			for (idx1 = 0U ; idx1 < g_string_size ; ++idx1)
 			{
@@ -485,7 +751,17 @@ inline static int	__test_operator_distance(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<std::string const *> const> const	std_rit1(it1);
 
-				if (ft::operator-(ft_rit0, ft_rit1) != std::operator-(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator-(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator-(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -506,6 +782,9 @@ inline static int	__test_operator_equivalent(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -518,7 +797,17 @@ inline static int	__test_operator_equivalent(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator==(ft_rit0, ft_rit1) != std::operator==(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator==(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -539,6 +828,9 @@ inline static int	__test_operator_different(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -551,7 +843,17 @@ inline static int	__test_operator_different(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator!=(ft_rit0, ft_rit1) != std::operator!=(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -572,6 +874,9 @@ inline static int	__test_operator_lower(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -584,7 +889,17 @@ inline static int	__test_operator_lower(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator<(ft_rit0, ft_rit1) != std::operator<(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator<(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -605,6 +920,9 @@ inline static int	__test_operator_greater(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -617,7 +935,17 @@ inline static int	__test_operator_greater(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator>(ft_rit0, ft_rit1) != std::operator>(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator>(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -638,6 +966,9 @@ inline static int	__test_operator_lower_or_equivalent(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -650,7 +981,17 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator<=(ft_rit0, ft_rit1) != std::operator<=(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -671,6 +1012,9 @@ inline static int	__test_operator_greater_or_equivalent(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx0 = 0U ; idx0 < g_int_size ; ++idx0)
 		{
 			ft::random_access_iterator_restrictor<int *> const							it0(&g_int[idx0]);
@@ -683,7 +1027,17 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit1(it1);
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit1(it1);
 
-				if (ft::operator>=(ft_rit0, ft_rit1) != std::operator>=(std_rit0, std_rit1))
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_rit0 , ft_rit1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_rit0 , std_rit1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return EXIT_FAILURE;
 			}
 		}
@@ -745,6 +1099,16 @@ int	test_reverse_iterator(void)
 				std::cerr << RESET;
 				++koCount;
 				break;
+		}
+		if (!g_ratio.empty())
+		{
+			std::cout << ' ';
+			benchmark_best_case();
+			std::cout << ' ';
+			benchmark_worst_case();
+			std::cout << ' ';
+			benchmark_average_case();
+			g_ratio.clear();
 		}
 		std::cout << '\n';
 	}
