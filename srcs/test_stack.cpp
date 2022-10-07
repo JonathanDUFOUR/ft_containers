@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 16:28:16 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 10:50:57 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/07 17:08:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,37 @@
 #include "tester.hpp"
 #include "e_ret.hpp"
 
-inline static int	__test_constructor(void)
+inline static int	__test_constructor_default(void)
+{
+	int					ret;
+	std::vector<t_uint>	vec;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		g_start = clock();
+		ft::stack<int, std::vector<int> >	ft_sta;
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std::stack<int, std::vector<int> >	std_sta;
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (sizeof(ft_sta) != sizeof(std_sta) || memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_constructor_wrapper(void)
 {
 	int					ret;
 	std::vector<t_uint>	vec;
@@ -33,37 +63,39 @@ inline static int	__test_constructor(void)
 	ret = IMP_OK;
 	try
 	{
-		// Default constructor
+		// Empty underlying container
 		{
-			ft::stack<int, std::vector<int> >	ft_sta;
-			std::stack<int, std::vector<int> >	std_sta;
+			g_start = clock();
+			ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
+			g_ft_duration = clock() - g_start;
 
-			if (sizeof(ft_sta) != sizeof(std_sta)
-				|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
+			g_start = clock();
+			std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (sizeof(ft_sta) != sizeof(std_sta) || memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
 				ret = ISO_OK;
 		}
-		// Wrap constructor
+		// Non-empty underlying container
 		{
-			// Empty underlying container
+			for (idx = 0U ; idx < g_uint_size ; ++idx)
 			{
+				vec.push_back(g_uint[idx]);
+
+				g_start = clock();
 				ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
-				if (sizeof(ft_sta) != sizeof(std_sta)
-					|| memcmp(&ft_sta, &std_sta, sizeof(ft_sta)))
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (sizeof(ft_sta) != sizeof(std_sta))
 					ret = ISO_OK;
-			}
-			// Non-empty underlying container
-			{
-				for (idx = 0U ; idx < g_uint_size ; ++idx)
-				{
-					vec.push_back(g_uint[idx]);
-
-					ft::stack<t_uint, std::vector<t_uint> >		ft_sta(vec);
-					std::stack<t_uint, std::vector<t_uint> >	std_sta(vec);
-
-					if (sizeof(ft_sta) != sizeof(std_sta))
-						ret = ISO_OK;
-				}
 			}
 		}
 	}
@@ -142,7 +174,44 @@ inline static int	__test_type_container_type(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_top(void)
+inline static int	__test_function_top_constant(void)
+{
+	std::vector<char>	vec;
+	t_uint				idx;
+
+	title(__func__);
+	try
+	{
+		for (idx = 0U ; idx < g_char_size ; ++idx)
+		{
+			vec.push_back(g_char[idx]);
+
+			ft::stack<char, std::vector<char> > const	ft_sta(vec);
+			std::stack<char, std::vector<char> > const	std_sta(vec);
+
+			g_start = clock();
+			char const	&ft_ret = ft_sta.top();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			char const	&std_ret = std_sta.top();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_top_mutable(void)
 {
 	std::vector<char>	vec;
 	t_uint				idx;
@@ -157,7 +226,17 @@ inline static int	__test_function_top(void)
 			ft::stack<char, std::vector<char> >		ft_sta(vec);
 			std::stack<char, std::vector<char> >	std_sta(vec);
 
-			if (ft_sta.top() != std_sta.top())
+			g_start = clock();
+			char	&ft_ret = ft_sta.top();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			char	&std_ret = std_sta.top();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -181,8 +260,15 @@ inline static int	__test_function_push(void)
 
 		for (idx = 0U ; idx < g_string_size ; ++idx)
 		{
+			g_start = clock();
 			ft_sta.push(g_string[idx]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_sta.push(g_string[idx]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_sta.top() != std_sta.top())
 				return KO;
@@ -215,13 +301,27 @@ inline static int	__test_function_pop(void)
 		{
 			if (ft_sta.top() != std_sta.top())
 				return KO;
+			g_start = clock();
 			ft_sta.pop();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_sta.pop();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 		}
 		for (idx = 0U ; idx < g_float_size ; ++idx)
 		{
+			g_start = clock();
 			ft_sta.pop();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_sta.pop();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 		}
 	}
 	catch (std::exception const &e)
@@ -239,24 +339,29 @@ inline static int	__test_function_empty(void)
 	title(__func__);
 	try
 	{
-		ft::stack<t_lint, std::vector<t_lint> >		ft_sta;
-		std::stack<t_lint, std::vector<t_lint> >	std_sta;
+		std::vector<t_lint>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
-			if (ft_sta.empty() != std_sta.empty())
+			ft::stack<t_lint, std::vector<t_lint> > const	ft_sta(vec);
+			std::stack<t_lint, std::vector<t_lint> > const	std_sta(vec);
+
+			g_start = clock();
+			ft_ret = ft_sta.empty();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_sta.empty();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
-			ft_sta.push(g_lint[idx]);
-			std_sta.push(g_lint[idx]);
-		}
-		if (ft_sta.empty() != std_sta.empty())
-			return KO;
-		for (idx = 0U ; idx < g_lint_size ; ++idx)
-		{
-			ft_sta.pop();
-			std_sta.pop();
-			if (ft_sta.empty() != std_sta.empty())
-				return KO;
+
+			vec.push_back(g_lint[idx]);
 		}
 	}
 	catch (std::exception const &e)
@@ -274,24 +379,29 @@ inline static int	__test_function_size(void)
 	title(__func__);
 	try
 	{
-		ft::stack<t_uint, std::vector<t_uint> >		ft_sta;
-		std::stack<t_uint, std::vector<t_uint> >	std_sta;
+		std::vector<t_uint>									vec;
+		ft::stack<t_uint, std::vector<t_uint> >::size_type	ft_ret;
+		std::stack<t_uint, std::vector<t_uint> >::size_type	std_ret;
 
 		for (idx = 0U ; idx < g_uint_size ; ++idx)
 		{
-			if (ft_sta.size() != std_sta.size())
+			ft::stack<t_uint, std::vector<t_uint> > const	ft_sta(vec);
+			std::stack<t_uint, std::vector<t_uint> > const	std_sta(vec);
+
+			g_start = clock();
+			ft_ret = ft_sta.size();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_sta.size();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
-			ft_sta.push(g_uint[idx]);
-			std_sta.push(g_uint[idx]);
-		}
-		if (ft_sta.size() != std_sta.size())
-			return KO;
-		for (idx = 0U ; idx < g_uint_size ; ++idx)
-		{
-			ft_sta.pop();
-			std_sta.pop();
-			if (ft_sta.size() != std_sta.size())
-				return KO;
+
+			vec.push_back(g_uint[idx]);
 		}
 	}
 	catch (std::exception const &e)
@@ -309,21 +419,55 @@ inline static int	__test_operator_equivalent(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator==(ft_sta0, ft_sta1) != std::operator==(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator==(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator==(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -341,21 +485,55 @@ inline static int	__test_operator_different(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator!=(ft_sta0, ft_sta1) != std::operator!=(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -373,21 +551,55 @@ inline static int	__test_operator_lower(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator<(ft_sta0, ft_sta1) != std::operator<(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator<(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator<(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -405,21 +617,55 @@ inline static int	__test_operator_greater(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator>(ft_sta0, ft_sta1) != std::operator>(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator>(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator>(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -437,21 +683,55 @@ inline static int	__test_operator_lower_or_equivalent(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator<=(ft_sta0, ft_sta1) != std::operator<=(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -469,21 +749,55 @@ inline static int	__test_operator_greater_or_equivalent(void)
 	title(__func__);
 	try
 	{
-		ft::stack<int, std::vector<int> >	ft_sta0;
-		ft::stack<int, std::vector<int> >	ft_sta1;
-		std::stack<int, std::vector<int> >	std_sta0;
-		std::stack<int, std::vector<int> >	std_sta1;
+		std::vector<int>	vec;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_int_size ; ++idx)
 		{
-			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
-				return KO;
-			ft_sta0.push(g_int[idx]);
-			std_sta0.push(g_int[idx]);
-			if (ft::operator>=(ft_sta0, ft_sta1) != std::operator>=(std_sta0, std_sta1))
-				return KO;
-			ft_sta1.push(g_int[idx]);
-			std_sta1.push(g_int[idx]);
+			// Equivalence
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
+			// Difference
+			{
+				ft::stack<int, std::vector<int> > const		ft_sta0(vec);
+				std::stack<int, std::vector<int> > const	std_sta0(vec);
+
+				vec.push_back(g_int[idx]);
+
+				ft::stack<int, std::vector<int> > const		ft_sta1(vec);
+				std::stack<int, std::vector<int> > const	std_sta1(vec);
+
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_sta0, ft_sta1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_sta0, std_sta1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
+					return KO;
+			}
 		}
 	}
 	catch (std::exception const &e)
@@ -497,12 +811,14 @@ inline static int	__test_operator_greater_or_equivalent(void)
 int	test_stack(void)
 {
 	t_test const	tests[] = {
-		__test_constructor,
+		__test_constructor_default,
+		__test_constructor_wrapper,
 		__test_default_template_type_Container,
 		__test_type_value_type,
 		__test_type_size_type,
 		__test_type_container_type,
-		__test_function_top,
+		__test_function_top_constant,
+		__test_function_top_mutable,
 		__test_function_push,
 		__test_function_pop,
 		__test_function_empty,
