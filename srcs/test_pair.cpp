@@ -6,13 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 10:56:47 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/07 10:40:30 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstring>
 #include <iostream>
 #include "arrays.hpp"
+#include "benchmark.hpp"
 #include "colors.hpp"
 #include "tester.hpp"
 #include "type_traits.hpp"
@@ -29,8 +30,15 @@ inline static int	__test_constructor(void)
 	{
 		// Default constructor
 		{
+			g_start = clock();
 			ft::pair<int, t_uint> const		ft_pair;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std::pair<int, t_uint> const	std_pair;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (sizeof(ft_pair) != sizeof(std_pair) || memcmp(&ft_pair, &std_pair, sizeof(ft_pair)))
 				ret = ISO_OK;
@@ -39,8 +47,15 @@ inline static int	__test_constructor(void)
 		}
 		// Parameters constructor
 		{
+			g_start = clock();
 			ft::pair<t_uint, int> const		ft_pair(42U, -42);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std::pair<t_uint, int> const	std_pair(42U, -42);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (sizeof(ft_pair) != sizeof(std_pair) || memcmp(&ft_pair, &std_pair, sizeof(ft_pair)))
 				ret = ISO_OK;
@@ -52,9 +67,17 @@ inline static int	__test_constructor(void)
 			// Default pair
 			{
 				ft::pair<char const, char const> const	ft_pair0;
-				ft::pair<char const, char const> const	ft_pair1(ft_pair0);
 				std::pair<char const, char const> const	std_pair0;
+
+				g_start = clock();
+				ft::pair<char const, char const> const	ft_pair1(ft_pair0);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::pair<char const, char const> const	std_pair1(std_pair0);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				if (sizeof(ft_pair1) != sizeof(std_pair1) || memcmp(&ft_pair1, &std_pair1, sizeof(ft_pair1)))
 					ret = ISO_OK;
@@ -64,9 +87,17 @@ inline static int	__test_constructor(void)
 			// Filled pair
 			{
 				ft::pair<char const, char const> const	ft_pair0('!', '?');
-				ft::pair<char, char> const				ft_pair1(ft_pair0);
 				std::pair<char const, char const> const	std_pair0('!', '?');
+
+				g_start = clock();
+				ft::pair<char, char> const				ft_pair1(ft_pair0);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::pair<char, char> const				std_pair1(std_pair0);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				if (sizeof(ft_pair1) != sizeof(std_pair1) || memcmp(&ft_pair1, &std_pair1, sizeof(ft_pair1)))
 					ret = ISO_OK;
@@ -131,8 +162,15 @@ inline static int	__test_function_make_pair(void)
 
 		for (idx = 0U ; idx < g_luint_size && idx < g_string_size ; ++idx)
 		{
+			g_start = clock();
 			ft_pair = ft::make_pair(g_luint[idx], g_string[idx]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_pair = std::make_pair(g_luint[idx], g_string[idx]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_pair.first != std_pair.first || ft_pair.second != std_pair.second)
 				return KO;
@@ -158,8 +196,15 @@ inline static int	__test_operator_assign(void)
 			std::pair<t_hhint, std::string>			std_pair0(-1, "Hello World");
 			std::pair<t_hhint, std::string> const	std_pair1(55, "How are you today ?");
 
+			g_start = clock();
 			ft_pair0 = ft_pair1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_pair0 = std_pair1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_pair0.first != std_pair0.first || ft_pair0.second != std_pair0.second)
 				return KO;
@@ -171,8 +216,15 @@ inline static int	__test_operator_assign(void)
 			std::pair<t_hhint, std::string>						std_pair0(-1, "Hello World");
 			std::pair<t_hhint const, std::string const> const	std_pair1(55, "How are you today ?");
 
+			g_start = clock();
 			ft_pair0 = ft_pair1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_pair0 = std_pair1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_pair0.first != std_pair0.first || ft_pair0.second != std_pair0.second)
 				return KO;
@@ -197,8 +249,20 @@ inline static int	__test_operator_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator==(ft_pair0, ft_pair1) != std::operator==(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator==(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator==(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second != second
@@ -207,8 +271,20 @@ inline static int	__test_operator_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 209U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 209U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator==(ft_pair0, ft_pair1) != std::operator==(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator==(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator==(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first != first | second == second
@@ -217,8 +293,20 @@ inline static int	__test_operator_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.22f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.22f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator==(ft_pair0, ft_pair1) != std::operator==(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator==(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator==(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first != first | second != second
@@ -227,8 +315,20 @@ inline static int	__test_operator_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.22f, 209U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.22f, 209U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator==(ft_pair0, ft_pair1) != std::operator==(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator==(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator==(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -251,8 +351,20 @@ inline static int	__test_operator_different(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator!=(ft_pair0, ft_pair1) != std::operator!=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator!=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator!=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second != second
@@ -261,8 +373,20 @@ inline static int	__test_operator_different(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 209U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 209U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator!=(ft_pair0, ft_pair1) != std::operator!=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator!=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator!=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first != first | second == second
@@ -271,8 +395,20 @@ inline static int	__test_operator_different(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.22f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.22f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator!=(ft_pair0, ft_pair1) != std::operator!=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator!=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator!=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first != first | second != second
@@ -281,8 +417,20 @@ inline static int	__test_operator_different(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.22f, 209U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.22f, 209U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator!=(ft_pair0, ft_pair1) != std::operator!=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator!=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator!=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -305,8 +453,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second > second
@@ -315,8 +475,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second == second
@@ -325,8 +497,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second < second
@@ -335,8 +519,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second > second
@@ -345,8 +541,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second == second
@@ -355,8 +563,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second < second
@@ -365,8 +585,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second > second
@@ -375,8 +607,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second == second
@@ -385,8 +629,20 @@ inline static int	__test_operator_lower(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<(ft_pair0, ft_pair1) != std::operator<(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -409,8 +665,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second > second
@@ -419,8 +687,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second == second
@@ -429,8 +709,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second < second
@@ -439,8 +731,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second > second
@@ -449,8 +753,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second == second
@@ -459,8 +775,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second < second
@@ -469,8 +797,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second > second
@@ -479,8 +819,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second == second
@@ -489,8 +841,20 @@ inline static int	__test_operator_greater(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>(ft_pair0, ft_pair1) != std::operator>(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -513,8 +877,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second > second
@@ -523,8 +899,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second == second
@@ -533,8 +921,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second < second
@@ -543,8 +943,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second > second
@@ -553,8 +965,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second == second
@@ -563,8 +987,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second < second
@@ -573,8 +1009,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second > second
@@ -583,8 +1031,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second == second
@@ -593,8 +1053,20 @@ inline static int	__test_operator_lower_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator<=(ft_pair0, ft_pair1) != std::operator<=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator<=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator<=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -617,8 +1089,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second > second
@@ -627,8 +1111,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first < first | second == second
@@ -637,8 +1133,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(21.12f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second < second
@@ -647,8 +1155,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second > second
@@ -657,8 +1177,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first > first | second == second
@@ -667,8 +1199,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(21.12f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second < second
@@ -677,8 +1221,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second > second
@@ -687,8 +1243,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 201U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 201U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 		// first == first | second == second
@@ -697,8 +1265,20 @@ inline static int	__test_operator_greater_or_equivalent(void)
 			ft::pair<float, t_hhuint> const		ft_pair1(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair0(12.21f, 210U);
 			std::pair<float, t_hhuint> const	std_pair1(12.21f, 210U);
+			bool								ft_ret;
+			bool								std_ret;
 
-			if (ft::operator>=(ft_pair0, ft_pair1) != std::operator>=(std_pair0, std_pair1))
+			g_start = clock();
+			ft_ret = ft::operator>=(ft_pair0, ft_pair1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std::operator>=(std_pair0, std_pair1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -756,6 +1336,16 @@ int	test_pair(void)
 				std::cerr << RESET;
 				++koCount;
 				break;
+		}
+		if (!g_ratio.empty())
+		{
+			std::cout << ' ';
+			benchmark_best_case();
+			std::cout << ' ';
+			benchmark_worst_case();
+			std::cout << ' ';
+			benchmark_average_case();
+			g_ratio.clear();
 		}
 		std::cout << '\n';
 	}
