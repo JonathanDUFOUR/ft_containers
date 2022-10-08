@@ -6,15 +6,10 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 12:13:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:06:34 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <algorithm>
-#include <cstdlib>
-#include <iostream>
-#include <list>
-#include <set>
 #include "arrays.hpp"
 #include "colors.hpp"
 #include "iterator/requirements_check.tpp"
@@ -23,6 +18,11 @@
 #include "tester.hpp"
 #include "t_int.hpp"
 #include "utility.hpp"
+#include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <list>
+#include <set>
 
 template <typename T>
 inline static void	__blackSteps(

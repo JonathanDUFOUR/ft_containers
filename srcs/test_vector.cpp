@@ -6,17 +6,10 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/28 18:36:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 16:11:48 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 15:52:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <vector>
 #include "arrays.hpp"
 #include "benchmark.hpp"
 #include "colors.hpp"
@@ -26,6 +19,14 @@
 #include "utility.hpp"
 #include "vector.hpp"
 #include "e_ret.hpp"
+#include <cmath>
+#include <cstdlib>
+#include <cstring>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <iterator>
+#include <vector>
 
 inline static int	__test_constructor_default(void)
 {

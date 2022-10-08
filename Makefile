@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/10/06 18:00:40 by jodufour         ###   ########.fr        #
+#    Updated: 2022/10/08 15:54:04 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ SRC			=	\
 				test_stack.cpp					\
 				test_vector.cpp					\
 				title.cpp
+
 
 ######################################
 #            OBJECT FILES            #

@@ -6,21 +6,21 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 11:50:33 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:06:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
-#include <cstring>
-#include <iomanip>
-#include <iostream>
-#include <limits>
 #include "arrays.hpp"
 #include "benchmark.hpp"
 #include "colors.hpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "iterator/spec/reverse_iterator.tpp"
 #include "tester.hpp"
+#include <cstdlib>
+#include <cstring>
+#include <iomanip>
+#include <iostream>
+#include <limits>
 
 inline static int	__test_constructor(void)
 {

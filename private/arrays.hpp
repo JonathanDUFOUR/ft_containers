@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 20:27:44 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/30 11:28:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 15:53:19 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define ARRAYS_HPP
 
 # include "t_int.hpp"
+# include <string>
 
 static char const *const	g_file[] = {
 	"resource/alphabet",

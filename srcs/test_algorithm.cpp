@@ -6,21 +6,21 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 10:39:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:04:43 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <algorithm>
-#include <cstdlib>
-#include <functional>
-#include <iostream>
-#include <vector>
 #include "algorithm.hpp"
 #include "benchmark.hpp"
 #include "colors.hpp"
 #include "iterator/restrictor/input_iterator_restrictor.tpp"
 #include "tester.hpp"
 #include "t_int.hpp"
+#include <algorithm>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
+#include <vector>
 
 static int const			g_int0[] = {
 	-54321,
@@ -1029,7 +1029,7 @@ inline static int	__test_lexicographical_compare(void)
 	}
 	return EXIT_SUCCESS;
 }
-
+/* 
 inline static int	__test_swap(void)
 {
 	title(__func__);
@@ -1113,13 +1113,13 @@ inline static int	__test_swap(void)
 	}
 	return EXIT_SUCCESS;
 }
-
+ */
 int	test_algorithm(void)
 {
 	t_test const	tests[] = {
 		__test_equal,
 		__test_lexicographical_compare,
-		__test_swap,
+		// __test_swap,
 		NULL
 	};
 	t_uint			koCount;

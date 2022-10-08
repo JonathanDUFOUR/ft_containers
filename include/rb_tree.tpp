@@ -6,17 +6,13 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 21:43:39 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 17:45:34 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 18:49:48 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_TPP
 # define RB_TREE_TPP
 
-# include <cassert>
-# include <cstring>
-# include <functional>
-# include <memory>
 # include "algorithm.hpp"
 # include "iterator/spec/rb_tree_iterator.tpp"
 # include "iterator/spec/reverse_iterator.tpp"
@@ -25,6 +21,10 @@
 # include "e_rb_color.hpp"
 # include "e_rb_direction.hpp"
 # include "e_rb_min_max.hpp"
+# include <cassert>
+# include <cstring>
+# include <functional>
+# include <memory>
 
 namespace ft
 {

@@ -6,16 +6,16 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/02 13:02:40 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 17:35:56 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 18:49:41 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_NODE_TPP
 # define RB_NODE_TPP
 
-# include <stdint.h>
 # include "e_rb_color.hpp"
 # include "e_rb_direction.hpp"
+# include <stdint.h>
 
 namespace ft
 {

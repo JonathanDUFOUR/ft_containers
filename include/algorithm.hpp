@@ -6,16 +6,16 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:51:22 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 18:49:28 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ALGORITHM_HPP
 # define ALGORITHM_HPP
 
+# include "type_traits.hpp"
 # include <cstddef>
 # include <cstdlib>
-# include "type_traits.hpp"
 
 namespace ft
 {

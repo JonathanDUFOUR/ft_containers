@@ -6,17 +6,17 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 16:00:25 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/06 18:55:55 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:05:14 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
-#include <iostream>
 #include "colors.hpp"
 #include "iterator/restrictor/input_iterator_restrictor.tpp"
-#include "type_traits.hpp"
 #include "tester.hpp"
+#include "type_traits.hpp"
 #include "t_int.hpp"
+#include <cstdlib>
+#include <iostream>
 
 inline static int	__test_bool(void)
 {

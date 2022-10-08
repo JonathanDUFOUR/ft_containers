@@ -6,19 +6,19 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/27 15:56:52 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 18:50:15 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-# include <cstring>
-# include <memory>
 # include "algorithm.hpp"
 # include "iterator/spec/reverse_iterator.tpp"
 # include "iterator/spec/vector_iterator.tpp"
 # include "type_traits.hpp"
+# include <cstring>
+# include <memory>
 
 namespace ft
 {

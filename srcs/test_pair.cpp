@@ -6,12 +6,10 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/28 10:56:47 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 10:40:30 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:06:22 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstring>
-#include <iostream>
 #include "arrays.hpp"
 #include "benchmark.hpp"
 #include "colors.hpp"
@@ -19,6 +17,8 @@
 #include "type_traits.hpp"
 #include "utility.hpp"
 #include "e_ret.hpp"
+#include <cstring>
+#include <iostream>
 
 inline static int	__test_constructor(void)
 {

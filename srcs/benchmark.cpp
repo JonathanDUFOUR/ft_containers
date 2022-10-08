@@ -6,14 +6,14 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 18:00:04 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 08:39:31 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:05:02 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iomanip>
-#include <iostream>
 #include "benchmark.hpp"
 #include "colors.hpp"
+#include <iomanip>
+#include <iostream>
 
 static inline float	__average(void)
 {

@@ -6,13 +6,10 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/07 10:50:47 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/08 16:07:46 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <algorithm>
-#include <iostream>
-#include <set>
 #include "arrays.hpp"
 #include "benchmark.hpp"
 #include "colors.hpp"
@@ -21,6 +18,9 @@
 #include "iterator/requirements_check.tpp"
 #include "iterator/restrictor/random_access_iterator_restrictor.tpp"
 #include "e_ret.hpp"
+#include <algorithm>
+#include <iostream>
+#include <set>
 
 inline static int	__test_constructor(void)
 {
