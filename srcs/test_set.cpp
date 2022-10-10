@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/08 16:07:46 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/10 13:50:35 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <iostream>
 #include <set>
 
-inline static int	__test_constructor(void)
+inline static int	__test_constructor_default(void)
 {
 	int	ret;
 
@@ -30,76 +30,155 @@ inline static int	__test_constructor(void)
 	ret = IMP_OK;
 	try
 	{
-		// Default constructor
+		g_start = clock();
+		ft::set<int> const	ft_set;
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std::set<int> const	std_set;
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_constructor_range(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Range of input_iterator_restrictor
 		{
-			ft::set<int> const	ft_set;
-			std::set<int> const	std_set;
+			ft::input_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+			ft::input_iterator_restrictor<t_huint const *> const	it1(&g_huint[0]);
+
+			g_start = clock();
+			ft::set<t_huint> const									ft_set(it0, it1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::set<t_huint> const									std_set(it0, it1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
 				ret = ISO_OK;
 		}
-		// Range constructor
+		// Range of forward_iterator_restrictor
 		{
-			// Range of input_iterator_restrictor
-			{
-				ft::input_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
-				ft::input_iterator_restrictor<t_huint const *> const	it1(&g_huint[0]);
-				ft::set<t_huint> const									ft_set(it0, it1);
-				std::set<t_huint> const									std_set(it0, it1);
+			ft::forward_iterator_restrictor<void *const *> const	it;
 
-				if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
-					ret = ISO_OK;
-			}
-			// Range of forward_iterator_restrictor
-			{
-				ft::forward_iterator_restrictor<void *const *> const	it;
-				ft::set<void *> const									ft_set(it, it);
-				std::set<void *> const									std_set(it, it);
+			g_start = clock();
+			ft::set<void *> const									ft_set(it, it);
+			g_ft_duration = clock() - g_start;
 
-				if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
-					ret = ISO_OK;
-			}
-			// Range of random_access_iterator
-			{
-				ft::random_access_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
-				ft::random_access_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
-				ft::set<t_huint> const											ft_set(it0, it1);
-				std::set<t_huint> const											std_set(it0, it1);
+			g_start = clock();
+			std::set<void *> const									std_set(it, it);
+			g_std_duration = clock() - g_start;
 
-				if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
-					ret = ISO_OK;
-			}
-			// Range of char const *
-			{
-				ft::set<char> const		ft_set(&g_char[0], &g_char[g_char_size]);
-				std::set<char> const	std_set(&g_char[0], &g_char[g_char_size]);
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-				if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
-					ret = ISO_OK;
-			}
+			if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
+				ret = ISO_OK;
 		}
-		// Copy constructor
+		// Range of random_access_iterator
 		{
-			// Default set
-			{
-				ft::set<int> const	ft_set0;
-				ft::set<int> const	ft_set1(ft_set0);
-				std::set<int> const	std_set0;
-				std::set<int> const	std_set1(std_set0);
+			ft::random_access_iterator_restrictor<t_huint const *> const	it0(&g_huint[0]);
+			ft::random_access_iterator_restrictor<t_huint const *> const	it1(&g_huint[g_huint_size]);
 
-				if (sizeof(ft_set1) != sizeof(std_set1) || memcmp(&ft_set1, &std_set1, sizeof(ft_set1)))
-					ret = ISO_OK;
-			}
-			// Filled set
-			{
-				ft::set<int> const	ft_set0(&g_int[0], &g_int[g_int_size]);
-				ft::set<int> const	ft_set1(ft_set0);
-				std::set<int> const	std_set0(&g_int[0], &g_int[g_int_size]);
-				std::set<int> const	std_set1(std_set0);
+			g_start = clock();
+			ft::set<t_huint> const											ft_set(it0, it1);
+			g_ft_duration = clock() - g_start;
 
-				if (sizeof(ft_set1) != sizeof(std_set1) || memcmp(&ft_set1, &std_set1, sizeof(ft_set1)))
-					ret = ISO_OK;
-			}
+			g_start = clock();
+			std::set<t_huint> const											std_set(it0, it1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
+				ret = ISO_OK;
+		}
+		// Range of char const *
+		{
+			g_start = clock();
+			ft::set<char> const		ft_set(&g_char[0], &g_char[g_char_size]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::set<char> const	std_set(&g_char[0], &g_char[g_char_size]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (sizeof(ft_set) != sizeof(std_set) || memcmp(&ft_set, &std_set, sizeof(ft_set)))
+				ret = ISO_OK;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_constructor_copy(void)
+{
+	int	ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		// Default set
+		{
+			ft::set<int> const	ft_set0;
+			std::set<int> const	std_set0;
+
+			g_start = clock();
+			ft::set<int> const	ft_set1(ft_set0);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::set<int> const	std_set1(std_set0);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (sizeof(ft_set1) != sizeof(std_set1) || memcmp(&ft_set1, &std_set1, sizeof(ft_set1)))
+				ret = ISO_OK;
+		}
+		// Filled set
+		{
+			ft::set<int> const	ft_set0(&g_int[0], &g_int[g_int_size]);
+			std::set<int> const	std_set0(&g_int[0], &g_int[g_int_size]);
+
+			g_start = clock();
+			ft::set<int> const	ft_set1(ft_set0);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std::set<int> const	std_set1(std_set0);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (sizeof(ft_set1) != sizeof(std_set1) || memcmp(&ft_set1, &std_set1, sizeof(ft_set1)))
+				ret = ISO_OK;
 		}
 	}
 	catch (std::exception const &e)
@@ -306,20 +385,66 @@ inline static int	__test_function_max_size(void)
 	ret = IMP_OK;
 	try
 	{
-		ft::set<t_hhuint> const		ft_set0;
-		ft::set<std::string> const	ft_set1;
-		ft::set<long double> const	ft_set2;
-		std::set<t_hhuint> const	std_set0;
-		std::set<std::string> const	std_set1;
-		std::set<long double> const	std_set2;
+		// Set of unsigned char
+		{
+			ft::set<t_hhuint> const			ft_set;
+			std::set<t_hhuint> const		std_set;
+			ft::set<t_hhuint>::size_type	ft_ret;
+			std::set<t_hhuint>::size_type	std_ret;
 
-		if (ft_set0.max_size() != std_set0.max_size() || ft_set1.max_size() != std_set1.max_size() ||
-			ft_set2.max_size() != std_set2.max_size())
-			ret = ISO_OK;
-		if ((ft_set0.max_size() < ft_set1.max_size()) != (std_set0.max_size() < std_set1.max_size()) ||
-			(ft_set0.max_size() < ft_set2.max_size()) != (std_set0.max_size() < std_set2.max_size()) ||
-			(ft_set1.max_size() < ft_set2.max_size()) != (std_set1.max_size() < std_set2.max_size()))
-			return KO;
+			g_start = clock();
+			ft_ret = ft_set.max_size();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.max_size();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
+				ret = ISO_OK;
+		}
+		// Set of std::string
+		{
+			ft::set<std::string> const			ft_set;
+			std::set<std::string> const			std_set;
+			ft::set<std::string>::size_type		ft_ret;
+			std::set<std::string>::size_type	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.max_size();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.max_size();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
+				ret = ISO_OK;
+		}
+		// Set of long double
+		{
+			ft::set<long double> const			ft_set;
+			std::set<long double> const			std_set;
+			ft::set<long double>::size_type		ft_ret;
+			std::set<long double>::size_type	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.max_size();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.max_size();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
+				ret = ISO_OK;
+		}
 	}
 	catch (std::exception const &e)
 	{
@@ -338,46 +463,86 @@ inline static int	__test_function_key_comp(void)
 	{
 		// std::less
 		{
-			ft::set<char, std::less<char> > const				ft_set;
-			std::set<char, std::less<char> > const				std_set;
-			ft::set<char, std::less<char> >::key_compare const	ft_key_cmp = ft_set.key_comp();
-			std::set<char, std::less<char> >::key_compare const	std_key_cmp = std_set.key_comp();
+			ft::set<char, std::less<char> > const			ft_set;
+			std::set<char, std::less<char> > const			std_set;
+			ft::set<char, std::less<char> >::key_compare	ft_ret;
+			std::set<char, std::less<char> >::key_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.key_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.key_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::less_equal
 		{
-			ft::set<char, std::less_equal<char> > const					ft_set;
-			std::set<char, std::less_equal<char> > const				std_set;
-			ft::set<char, std::less_equal<char> >::key_compare const	ft_key_cmp = ft_set.key_comp();
-			std::set<char, std::less_equal<char> >::key_compare const	std_key_cmp = std_set.key_comp();
+			ft::set<char, std::less_equal<char> > const			ft_set;
+			std::set<char, std::less_equal<char> > const		std_set;
+			ft::set<char, std::less_equal<char> >::key_compare	ft_ret;
+			std::set<char, std::less_equal<char> >::key_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.key_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.key_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater
 		{
-			ft::set<char, std::greater<char> > const				ft_set;
-			std::set<char, std::greater<char> > const				std_set;
-			ft::set<char, std::greater<char> >::key_compare const	ft_key_cmp = ft_set.key_comp();
-			std::set<char, std::greater<char> >::key_compare const	std_key_cmp = std_set.key_comp();
+			ft::set<char, std::greater<char> > const			ft_set;
+			std::set<char, std::greater<char> > const			std_set;
+			ft::set<char, std::greater<char> >::key_compare		ft_ret;
+			std::set<char, std::greater<char> >::key_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.key_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.key_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater_equal
 		{
-			ft::set<char, std::greater_equal<char> > const					ft_set;
-			std::set<char, std::greater_equal<char> > const					std_set;
-			ft::set<char, std::greater_equal<char> >::key_compare const		ft_key_cmp = ft_set.key_comp();
-			std::set<char, std::greater_equal<char> >::key_compare const	std_key_cmp = std_set.key_comp();
+			ft::set<char, std::greater_equal<char> > const			ft_set;
+			std::set<char, std::greater_equal<char> > const			std_set;
+			ft::set<char, std::greater_equal<char> >::key_compare	ft_ret;
+			std::set<char, std::greater_equal<char> >::key_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.key_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.key_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_key_cmp(g_char[idx - 1], g_char[idx]) != std_key_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 	}
@@ -398,46 +563,86 @@ inline static int	__test_function_value_comp(void)
 	{
 		// std::less
 		{
-			ft::set<char, std::less<char> > const					ft_set;
-			std::set<char, std::less<char> > const					std_set;
-			ft::set<char, std::less<char> >::value_compare const	ft_val_cmp = ft_set.value_comp();
-			std::set<char, std::less<char> >::value_compare const	std_val_cmp = std_set.value_comp();
+			ft::set<char, std::less<char> > const			ft_set;
+			std::set<char, std::less<char> > const			std_set;
+			ft::set<char, std::less<char> >::value_compare	ft_ret;
+			std::set<char, std::less<char> >::value_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.value_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.value_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_val_cmp(g_char[idx - 1], g_char[idx]) != std_val_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::less_equal
 		{
-			ft::set<char, std::less_equal<char> > const					ft_set;
-			std::set<char, std::less_equal<char> > const				std_set;
-			ft::set<char, std::less_equal<char> >::value_compare const	ft_val_cmp = ft_set.value_comp();
-			std::set<char, std::less_equal<char> >::value_compare const	std_val_cmp = std_set.value_comp();
+			ft::set<char, std::less_equal<char> > const				ft_set;
+			std::set<char, std::less_equal<char> > const			std_set;
+			ft::set<char, std::less_equal<char> >::value_compare	ft_ret;
+			std::set<char, std::less_equal<char> >::value_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.value_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.value_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_val_cmp(g_char[idx - 1], g_char[idx]) != std_val_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater
 		{
-			ft::set<char, std::greater<char> > const					ft_set;
-			std::set<char, std::greater<char> > const					std_set;
-			ft::set<char, std::greater<char> >::value_compare const		ft_val_cmp = ft_set.value_comp();
-			std::set<char, std::greater<char> >::value_compare const	std_val_cmp = std_set.value_comp();
+			ft::set<char, std::greater<char> > const			ft_set;
+			std::set<char, std::greater<char> > const			std_set;
+			ft::set<char, std::greater<char> >::value_compare	ft_ret;
+			std::set<char, std::greater<char> >::value_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.value_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.value_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_val_cmp(g_char[idx - 1], g_char[idx]) != std_val_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 		// std::greater_equal
 		{
-			ft::set<char, std::greater_equal<char> > const					ft_set;
-			std::set<char, std::greater_equal<char> > const					std_set;
-			ft::set<char, std::greater_equal<char> >::value_compare const	ft_val_cmp = ft_set.value_comp();
-			std::set<char, std::greater_equal<char> >::value_compare const	std_val_cmp = std_set.value_comp();
+			ft::set<char, std::greater_equal<char> > const				ft_set;
+			std::set<char, std::greater_equal<char> > const				std_set;
+			ft::set<char, std::greater_equal<char> >::value_compare		ft_ret;
+			std::set<char, std::greater_equal<char> >::value_compare	std_ret;
+
+			g_start = clock();
+			ft_ret = ft_set.value_comp();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.value_comp();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			for (idx = 1U ; idx < g_char_size ; ++idx)
-				if (ft_val_cmp(g_char[idx - 1], g_char[idx]) != std_val_cmp(g_char[idx - 1], g_char[idx]))
+				if (ft_ret(g_char[idx - 1], g_char[idx]) != std_ret(g_char[idx - 1], g_char[idx]))
 					return KO;
 		}
 	}
@@ -456,12 +661,25 @@ inline static int	__test_function_size(void)
 	title(__func__);
 	try
 	{
+		ft::set<t_huint>::size_type		ft_ret;
+		std::set<t_huint>::size_type	std_ret;
+
 		for (idx = 0U ; idx < g_huint_size ; ++idx)
 		{
 			ft::set<t_huint> const	ft_set(&g_huint[idx], &g_huint[g_huint_size]);
 			std::set<t_huint> const	std_set(&g_huint[idx], &g_huint[g_huint_size]);
 
-			if (ft_set.size() != std_set.size())
+			g_start = clock();
+			ft_ret = ft_set.size();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.size();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -480,12 +698,25 @@ inline static int	__test_function_empty(void)
 	title(__func__);
 	try
 	{
+		bool	ft_ret;
+		bool	std_ret;
+
 		for (idx = 0U ; idx < g_uint_size ; ++idx)
 		{
 			ft::set<t_uint> const	ft_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
 			std::set<t_uint> const	std_set(&g_uint[idx * (idx % 2)], &g_uint[idx]);
 
-			if (ft_set.empty() != std_set.empty())
+			g_start = clock();
+			ft_ret = ft_set.empty();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.empty();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -497,7 +728,7 @@ inline static int	__test_function_empty(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_begin(void)
+inline static int	__test_function_begin_constant(void)
 {
 	t_uint	idx;
 	int		ret;
@@ -506,62 +737,45 @@ inline static int	__test_function_begin(void)
 	ret = IMP_OK;
 	try
 	{
-		// Mutable access
+		ft::set<char>::const_iterator	ft_ret;
+		std::set<char>::const_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::iterator		ft_it;
-			std::set<char>::iterator	std_it;
+			ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+			std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
-				std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+			g_start = clock();
+			ft_ret = ft_set.begin();
+			g_ft_duration = clock() - g_start;
 
-				ft_it = ft_set.begin();
-				std_it = std_set.begin();
+			g_start = clock();
+			std_ret = std_set.begin();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_it.base() != !!std_it._M_node)
-					ret = ISO_OK;
-				if (*ft_it != *std_it)
-					return KO;
-			}
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			ft::set<char>	ft_set;
-			std::set<char>	std_set;
-
-			ft_it = ft_set.begin();
-			std_it = std_set.begin();
-
-			if (!!ft_it.base() != !!std_it._M_node)
+			if (!!ft_ret.base() != !!std_ret._M_node)
 				ret = ISO_OK;
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
-		// Constant access
-		{
-			ft::set<char>::const_iterator	ft_cit;
-			std::set<char>::const_iterator	std_cit;
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
-				std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+		ft::set<char> const		ft_set;
+		std::set<char> const	std_set;
 
-				ft_cit = ft_set.begin();
-				std_cit = std_set.begin();
+		g_start = clock();
+		ft_ret = ft_set.begin();
+		g_ft_duration = clock() - g_start;
 
-				if (!!ft_cit.base() != !!std_cit._M_node)
-					ret = ISO_OK;
-				if (*ft_cit != *std_cit)
-					return KO;
-			}
+		g_start = clock();
+		std_ret = std_set.begin();
+		g_std_duration = clock() - g_start;
 
-			ft::set<char> const		ft_set;
-			std::set<char> const	std_set;
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			ft_cit = ft_set.begin();
-			std_cit = std_set.begin();
-
-			if (!!ft_cit.base() != !!std_cit._M_node)
-				ret = ISO_OK;
-		}
+		if (!!ft_ret.base() != !!std_ret._M_node)
+			ret = ISO_OK;
 	}
 	catch (std::exception const &e)
 	{
@@ -571,7 +785,7 @@ inline static int	__test_function_begin(void)
 	return ret;
 }
 
-inline static int	__test_function_end(void)
+inline static int	__test_function_begin_mutable(void)
 {
 	t_uint	idx;
 	int		ret;
@@ -580,70 +794,106 @@ inline static int	__test_function_end(void)
 	ret = IMP_OK;
 	try
 	{
-		// Mutable access
+		ft::set<char>::iterator		ft_ret;
+		std::set<char>::iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::iterator		ft_it;
-			std::set<char>::iterator	std_it;
+			ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+			std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
-				std::set<char>	std_set(&g_char[0], &g_char[idx]);
+			g_start = clock();
+			ft_ret = ft_set.begin();
+			g_ft_duration = clock() - g_start;
 
-				ft_it = ft_set.end();
-				std_it = std_set.end();
+			g_start = clock();
+			std_ret = std_set.begin();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_it.base() != !!std_it._M_node)
-					ret = ISO_OK;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-				--ft_it;
-				--std_it;
-
-				if (*ft_it != *std_it)
-					return KO;
-			}
-
-			ft::set<char>	ft_set;
-			std::set<char>	std_set;
-
-			ft_it = ft_set.end();
-			std_it = std_set.end();
-
-			if (!!ft_it.base() != !!std_it._M_node)
+			if (!!ft_ret.base() != !!std_ret._M_node)
 				ret = ISO_OK;
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
-		// Constant access
+
+		ft::set<char>	ft_set;
+		std::set<char>	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.begin();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.begin();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base() != !!std_ret._M_node)
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_function_end_constant(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<char>::const_iterator	ft_ret;
+		std::set<char>::const_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::const_iterator	ft_cit;
-			std::set<char>::const_iterator	std_cit;
+			ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
+			std::set<char> const	std_set(&g_char[0], &g_char[idx]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
-				std::set<char> const	std_set(&g_char[0], &g_char[idx]);
+			g_start = clock();
+			ft_ret = ft_set.end();
+			g_ft_duration = clock() - g_start;
 
-				ft_cit = ft_set.end();
-				std_cit = std_set.end();
+			g_start = clock();
+			std_ret = std_set.end();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_cit.base() != !!std_cit._M_node)
-					ret = ISO_OK;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-				--ft_cit;
-				--std_cit;
-
-				if (*ft_cit != *std_cit)
-					return KO;
-			}
-
-			ft::set<char> const		ft_set;
-			std::set<char> const	std_set;
-
-			ft_cit = ft_set.end();
-			std_cit = std_set.end();
-
-			if (!!ft_cit.base() != !!std_cit._M_node)
+			if (!!ft_ret.base() != !!std_ret._M_node)
 				ret = ISO_OK;
+
+			--ft_ret;
+			--std_ret;
+
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
+
+		ft::set<char> const		ft_set;
+		std::set<char> const	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.end();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.end();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base() != !!std_ret._M_node)
+			ret = ISO_OK;
 	}
 	catch (std::exception const &e)
 	{
@@ -653,7 +903,7 @@ inline static int	__test_function_end(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_rbegin(void)
+inline static int	__test_function_end_mutable(void)
 {
 	t_uint	idx;
 	int		ret;
@@ -662,62 +912,106 @@ inline static int	__test_function_rbegin(void)
 	ret = IMP_OK;
 	try
 	{
-		// Mutable access
+		ft::set<char>::iterator		ft_ret;
+		std::set<char>::iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::reverse_iterator		ft_rit;
-			std::set<char>::reverse_iterator	std_rit;
+			ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
+			std::set<char>	std_set(&g_char[0], &g_char[idx]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
-				std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+			g_start = clock();
+			ft_ret = ft_set.end();
+			g_ft_duration = clock() - g_start;
 
-				ft_rit = ft_set.rbegin();
-				std_rit = std_set.rbegin();
+			g_start = clock();
+			std_ret = std_set.end();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
-					ret = ISO_OK;
-				if (*ft_rit != *std_rit)
-					return KO;
-			}
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			ft::set<char>	ft_set;
-			std::set<char>	std_set;
-
-			ft_rit = ft_set.rbegin();
-			std_rit = std_set.rbegin();
-
-			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+			if (!!ft_ret.base() != !!std_ret._M_node)
 				ret = ISO_OK;
+
+			--ft_ret;
+			--std_ret;
+
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
-		// Constant access
+
+		ft::set<char>	ft_set;
+		std::set<char>	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.end();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.end();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base() != !!std_ret._M_node)
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_rbegin_constant(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<char>::const_reverse_iterator	ft_ret;
+		std::set<char>::const_reverse_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::const_reverse_iterator	ft_crit;
-			std::set<char>::const_reverse_iterator	std_crit;
+			ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+			std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char> const		ft_set(&g_char[idx - 1], &g_char[g_char_size]);
-				std::set<char> const	std_set(&g_char[idx - 1], &g_char[g_char_size]);
+			g_start = clock();
+			ft_ret = ft_set.rbegin();
+			g_ft_duration = clock() - g_start;
 
-				ft_crit = ft_set.rbegin();
-				std_crit = std_set.rbegin();
+			g_start = clock();
+			std_ret = std_set.rbegin();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
-					ret = ISO_OK;
-				if (*ft_crit != *std_crit)
-					return KO;
-			}
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			ft::set<char> const		ft_set;
-			std::set<char> const	std_set;
-
-			ft_crit = ft_set.rbegin();
-			std_crit = std_set.rbegin();
-
-			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+			if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
 				ret = ISO_OK;
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
+
+		ft::set<char> const		ft_set;
+		std::set<char> const	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.rbegin();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.rbegin();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
+			ret = ISO_OK;
 	}
 	catch (std::exception const &e)
 	{
@@ -727,7 +1021,7 @@ inline static int	__test_function_rbegin(void)
 	return ret;
 }
 
-inline static int	__test_function_rend(void)
+inline static int	__test_function_rbegin_mutable(void)
 {
 	t_uint	idx;
 	int		ret;
@@ -736,70 +1030,167 @@ inline static int	__test_function_rend(void)
 	ret = IMP_OK;
 	try
 	{
-		// Mutable access
+		ft::set<char>::reverse_iterator		ft_ret;
+		std::set<char>::reverse_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::reverse_iterator		ft_rit;
-			std::set<char>::reverse_iterator	std_rit;
+			ft::set<char>	ft_set(&g_char[idx - 1], &g_char[g_char_size]);
+			std::set<char>	std_set(&g_char[idx - 1], &g_char[g_char_size]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
-				std::set<char>	std_set(&g_char[0], &g_char[idx]);
+			g_start = clock();
+			ft_ret = ft_set.rbegin();
+			g_ft_duration = clock() - g_start;
 
-				ft_rit = ft_set.rend();
-				std_rit = std_set.rend();
+			g_start = clock();
+			std_ret = std_set.rbegin();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
-					ret = ISO_OK;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-				--ft_rit;
-				--std_rit;
-
-				if (*ft_rit != *std_rit)
-					return KO;
-			}
-
-			ft::set<char>	ft_set;
-			std::set<char>	std_set;
-
-			ft_rit = ft_set.rend();
-			std_rit = std_set.rend();
-
-			if (!!ft_rit.base().base() != !!std_rit.base()._M_node)
+			if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
 				ret = ISO_OK;
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
-		// Constant access
+
+		ft::set<char>	ft_set;
+		std::set<char>	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.rbegin();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.rbegin();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_function_rend_constant(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<char>::const_reverse_iterator	ft_ret;
+		std::set<char>::const_reverse_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
 		{
-			ft::set<char>::const_reverse_iterator	ft_crit;
-			std::set<char>::const_reverse_iterator	std_crit;
+			ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
+			std::set<char> const	std_set(&g_char[0], &g_char[idx]);
 
-			for (idx = 1U ; idx < g_char_size ; ++idx)
-			{
-				ft::set<char> const		ft_set(&g_char[0], &g_char[idx]);
-				std::set<char> const	std_set(&g_char[0], &g_char[idx]);
+			g_start = clock();
+			ft_ret = ft_set.rend();
+			g_ft_duration = clock() - g_start;
 
-				ft_crit = ft_set.rend();
-				std_crit = std_set.rend();
+			g_start = clock();
+			std_ret = std_set.rend();
+			g_std_duration = clock() - g_start;
 
-				if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
-					ret = ISO_OK;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-				--ft_crit;
-				--std_crit;
-
-				if (*ft_crit != *std_crit)
-					return KO;
-			}
-
-			ft::set<char> const		ft_set;
-			std::set<char> const	std_set;
-
-			ft_crit = ft_set.rend();
-			std_crit = std_set.rend();
-
-			if (!!ft_crit.base().base() != !!std_crit.base()._M_node)
+			if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
 				ret = ISO_OK;
+
+			--ft_ret;
+			--std_ret;
+
+			if (*ft_ret != *std_ret)
+				return KO;
 		}
+
+		ft::set<char> const		ft_set;
+		std::set<char> const	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.rend();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.rend();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
+			ret = ISO_OK;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return ret;
+}
+
+inline static int	__test_function_rend_mutable(void)
+{
+	t_uint	idx;
+	int		ret;
+
+	title(__func__);
+	ret = IMP_OK;
+	try
+	{
+		ft::set<char>::reverse_iterator		ft_ret;
+		std::set<char>::reverse_iterator	std_ret;
+
+		for (idx = 1U ; idx < g_char_size ; ++idx)
+		{
+			ft::set<char>	ft_set(&g_char[0], &g_char[idx]);
+			std::set<char>	std_set(&g_char[0], &g_char[idx]);
+
+			g_start = clock();
+			ft_ret = ft_set.rend();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.rend();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
+				ret = ISO_OK;
+
+			--ft_ret;
+			--std_ret;
+
+			if (*ft_ret != *std_ret)
+				return KO;
+		}
+
+		ft::set<char>	ft_set;
+		std::set<char>	std_set;
+
+		g_start = clock();
+		ft_ret = ft_set.rend();
+		g_ft_duration = clock() - g_start;
+
+		g_start = clock();
+		std_ret = std_set.rend();
+		g_std_duration = clock() - g_start;
+
+		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+		if (!!ft_ret.base().base() != !!std_ret.base()._M_node)
+			ret = ISO_OK;
 	}
 	catch (std::exception const &e)
 	{
@@ -965,82 +1356,30 @@ inline static int	__test_type_const_reverse_iterator(void)
 	return ret;
 }
 
-inline static int	__test_function_insert(void)
+inline static int	__test_function_insert_range(void)
 {
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		// Range insertion
+		ft::set<std::string>	ft_set;
+		std::set<std::string>	std_set;
+
+		for (idx = 1U ; idx < g_string_size ; ++idx)
 		{
-			ft::set<std::string>	ft_set;
-			std::set<std::string>	std_set;
+			g_start = clock();
+			ft_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 1U ; idx < g_string_size ; ++idx)
-			{
-				ft_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
-				std_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
+			g_start = clock();
+			std_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
+			g_std_duration = clock() - g_start;
 
-				if (ft_set.size() != std_set.size() || !std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
-			}
-		}
-		// Single insertion
-		{
-			ft::set<std::string>								ft_set;
-			std::set<std::string>								std_set;
-			ft::pair<ft::set<std::string>::iterator, bool>		ft_ret;
-			std::pair<std::set<std::string>::iterator, bool>	std_ret;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			for (idx = 0U ; idx < g_string_size ; ++idx)
-			{
-				ft_ret = ft_set.insert(g_string[idx]);
-				std_ret = std_set.insert(g_string[idx]);
-
-				if (*ft_ret.first != *std_ret.first ||
-					ft_ret.second != std_ret.second ||
-					ft_set.size() != std_set.size() ||
-					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
-			}
-		}
-		// Single insertion with hint
-		{
-			ft::set<std::string>			ft_set;
-			std::set<std::string>			std_set;
-			ft::set<std::string>::iterator	ft_it;
-			std::set<std::string>::iterator	std_it;
-
-			ft_set.insert(ft_set.begin(), std::string("dedicated to lmartin"));
-			std_set.insert(std_set.begin(), std::string("dedicated to lmartin"));
-			ft_it = ft_set.begin();
-			std_it = std_set.begin();
-			for (idx = 0U ; idx < g_string_size * 3 ; ++idx)
-			{
-				switch (idx % 3)
-				{
-					case 0:
-						ft_it = ft_set.insert(ft_it, g_string[idx / 3]);
-						std_it = std_set.insert(std_it, g_string[idx / 3]);
-						break;
-				
-					case 1:
-						ft_it = ft_set.insert(ft_set.begin(), *++ft_set.begin());
-						std_it = std_set.insert(std_set.begin(), *++std_set.begin());
-						break;
-
-					case 2:
-						ft_it = ft_set.insert(ft_set.end(), *++ft_set.rbegin());
-						std_it = std_set.insert(std_set.end(), *++std_set.rbegin());
-						break;
-				}
-
-				if (*ft_it != *std_it ||
-					ft_set.size() != std_set.size() ||
-					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
-			}
+			if (ft_set.size() != std_set.size() || !std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1051,71 +1390,222 @@ inline static int	__test_function_insert(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_erase(void)
+inline static int	__test_function_insert_single(void)
 {
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		// Single erase (position)
+		ft::set<std::string>								ft_set;
+		std::set<std::string>								std_set;
+		ft::pair<ft::set<std::string>::iterator, bool>		ft_ret;
+		std::pair<std::set<std::string>::iterator, bool>	std_ret;
+
+		for (idx = 0U ; idx < g_string_size ; ++idx)
 		{
-			ft::set<char>	ft_set(&g_char[0], &g_char[g_char_size]);
-			std::set<char>	std_set(&g_char[0], &g_char[g_char_size]);
+			g_start = clock();
+			ft_ret = ft_set.insert(g_string[idx]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; ++idx)
-			{
-				ft_set.erase(ft_set.begin());
-				std_set.erase(std_set.begin());
+			g_start = clock();
+			std_ret = std_set.insert(g_string[idx]);
+			g_std_duration = clock() - g_start;
 
-				if (ft_set.size() != std_set.size() ||
-					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
-			}
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (*ft_ret.first != *std_ret.first ||
+				ft_ret.second != std_ret.second ||
+				ft_set.size() != std_set.size() ||
+				!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
 		}
-		// Single erase (key)
-		{
-			ft::set<char>	ft_set(&g_char[0], &g_char[g_char_size]);
-			std::set<char>	std_set(&g_char[0], &g_char[g_char_size]);
-			size_t			ft_ret;
-			size_t			std_ret;
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
 
-			for (idx = 0U ; idx < g_char_size * 2 && idx < g_lint_size * 2 ; ++idx)
+inline static int	__test_function_insert_single_hint(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<std::string>			ft_set;
+		std::set<std::string>			std_set;
+		ft::set<std::string>::iterator	ft_ret;
+		std::set<std::string>::iterator	std_ret;
+
+		ft_set.insert(ft_set.begin(), std::string("dedicated to lmartin"));
+		std_set.insert(std_set.begin(), std::string("dedicated to lmartin"));
+		ft_ret = ft_set.begin();
+		std_ret = std_set.begin();
+		for (idx = 0U ; idx < g_string_size * 3 ; ++idx)
+		{
+			switch (idx % 3)
 			{
-				ft_ret = ft_set.erase(g_char[idx / 2]);
-				std_ret = std_set.erase(g_char[idx / 2]);
+				case 0:
+					g_start = clock();
+					ft_ret = ft_set.insert(ft_ret, g_string[idx / 3]);
+					g_ft_duration = clock() - g_start;
 
-				if (ft_ret != std_ret || ft_set.size() != std_set.size() ||
-					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
-			}
-		}
-		// Range erase
-		{
-			ft::set<char>				ft_set(&g_char[0], &g_char[g_char_size]);
-			std::set<char>				std_set(&g_char[0], &g_char[g_char_size]);
-			ft::set<char>::iterator		ft_it0;
-			ft::set<char>::iterator		ft_it1;
-			std::set<char>::iterator	std_it0;
-			std::set<char>::iterator	std_it1;
+					g_start = clock();
+					std_ret = std_set.insert(std_ret, g_string[idx / 3]);
+					g_std_duration = clock() - g_start;
+					break;
 			
-			for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; idx += 2)
-			{
-				ft_it0 = ft_set.begin();
-				std_it0 = std_set.begin();
-				std::advance(ft_it0, ft_set.size() / 2 - 1);
-				std::advance(std_it0, std_set.size() / 2 - 1);
-				ft_it1 = ft_it0;
-				std_it1 = std_it0;
-				std::advance(ft_it1, 2U);
-				std::advance(std_it1, 2U);
-				ft_set.erase(ft_it0, ft_it1);
-				std_set.erase(std_it0, std_it1);
+				case 1:
+					g_start = clock();
+					ft_ret = ft_set.insert(ft_set.begin(), *++ft_set.begin());
+					g_ft_duration = clock() - g_start;
 
-				if (ft_set.size() != std_set.size() ||
-					!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
-					return KO;
+					g_start = clock();
+					std_ret = std_set.insert(std_set.begin(), *++std_set.begin());
+					g_std_duration = clock() - g_start;
+					break;
+
+				case 2:
+					g_start = clock();
+					ft_ret = ft_set.insert(ft_set.end(), *++ft_set.rbegin());
+					g_ft_duration = clock() - g_start;
+
+					g_start = clock();
+					std_ret = std_set.insert(std_set.end(), *++std_set.rbegin());
+					g_std_duration = clock() - g_start;
+					break;
 			}
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (*ft_ret != *std_ret ||
+				ft_set.size() != std_set.size() ||
+				!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_erase_range(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<char>				ft_set(&g_char[0], &g_char[g_char_size]);
+		std::set<char>				std_set(&g_char[0], &g_char[g_char_size]);
+		ft::set<char>::iterator		ft_it0;
+		ft::set<char>::iterator		ft_it1;
+		std::set<char>::iterator	std_it0;
+		std::set<char>::iterator	std_it1;
+		
+		for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; idx += 2)
+		{
+			ft_it0 = ft_set.begin();
+			std_it0 = std_set.begin();
+			std::advance(ft_it0, ft_set.size() / 2 - 1);
+			std::advance(std_it0, std_set.size() / 2 - 1);
+			ft_it1 = ft_it0;
+			std_it1 = std_it0;
+			std::advance(ft_it1, 2U);
+			std::advance(std_it1, 2U);
+
+			g_start = clock();
+			ft_set.erase(ft_it0, ft_it1);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_set.erase(std_it0, std_it1);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_set.size() != std_set.size() ||
+				!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_erase_single_position(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<char>	ft_set(&g_char[0], &g_char[g_char_size]);
+		std::set<char>	std_set(&g_char[0], &g_char[g_char_size]);
+
+		for (idx = 0U ; idx < g_char_size && idx < g_lint_size ; ++idx)
+		{
+			g_start = clock();
+			ft_set.erase(ft_set.begin());
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_set.erase(std_set.begin());
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_set.size() != std_set.size() ||
+				!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_erase_single_key(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<char>				ft_set(&g_char[0], &g_char[g_char_size]);
+		std::set<char>				std_set(&g_char[0], &g_char[g_char_size]);
+		ft::set<char>::size_type	ft_ret;
+		std::set<char>::size_type	std_ret;
+
+		for (idx = 0U ; idx < g_char_size * 2 && idx < g_lint_size * 2 ; ++idx)
+		{
+			g_start = clock();
+			ft_ret = ft_set.erase(g_char[idx / 2]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.erase(g_char[idx / 2]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret || ft_set.size() != std_set.size() ||
+				!std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1138,8 +1628,15 @@ inline static int	__test_function_clear(void)
 			ft::set<int>	ft_set(&g_int[0], &g_int[idx]);
 			std::set<int>	std_set(&g_int[0], &g_int[idx]);
 
+			g_start = clock();
 			ft_set.clear();
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_set.clear();
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_set.size() != std_set.size() || !std::equal(ft_set.begin(), ft_set.end(), std_set.begin()))
 				return KO;
@@ -1153,7 +1650,7 @@ inline static int	__test_function_clear(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_find(void)
+inline static int	__test_function_find_constant(void)
 {
 	t_uint	idx;
 	float	nb;
@@ -1161,57 +1658,82 @@ inline static int	__test_function_find(void)
 	title(__func__);
 	try
 	{
-		// Mutable access
+		ft::set<float> const			ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const			std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::const_iterator	ft_ret;
+		std::set<float>::const_iterator	std_ret;
+
+		for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
 		{
-			ft::set<float>				ft_set(&g_float[0], &g_float[g_float_size]);
-			std::set<float>				std_set(&g_float[0], &g_float[g_float_size]);
-			ft::set<float>::iterator	ft_it;
-			std::set<float>::iterator	std_it;
-
-			for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
+			if (idx % 2)
 			{
-				if (idx % 2)
-				{
+				nb = static_cast<float>(rand());
+				while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
 					nb = static_cast<float>(rand());
-					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
-						nb = static_cast<float>(rand());
-				}
-				else
-					nb = g_float[idx / 2];
-
-				ft_it = ft_set.find(nb);
-				std_it = std_set.find(nb);
-
-				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
-					(ft_it != ft_set.end() && (*ft_it != *std_it)))
-					return KO;
 			}
+			else
+				nb = g_float[idx / 2];
+
+			g_start = clock();
+			ft_ret = ft_set.find(nb);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.find(nb);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
 		}
-		// Constant access
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_find_mutable(void)
+{
+	t_uint	idx;
+	float	nb;
+
+	title(__func__);
+	try
+	{
+		ft::set<float>				ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float>				std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::iterator	ft_ret;
+		std::set<float>::iterator	std_ret;
+
+		for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
 		{
-			ft::set<float> const			ft_set(&g_float[0], &g_float[g_float_size]);
-			std::set<float> const			std_set(&g_float[0], &g_float[g_float_size]);
-			ft::set<float>::const_iterator	ft_cit;
-			std::set<float>::const_iterator	std_cit;
-
-			for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
+			if (idx % 2)
 			{
-				if (idx % 2)
-				{
+				nb = static_cast<float>(rand());
+				while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
 					nb = static_cast<float>(rand());
-					while (std::find(&g_float[0], &g_float[g_float_size], nb) != &g_float[g_float_size])
-						nb = static_cast<float>(rand());
-				}
-				else
-					nb = g_float[idx / 2];
-
-				ft_cit = ft_set.find(nb);
-				std_cit = std_set.find(nb);
-
-				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
-					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
-					return KO;
 			}
+			else
+				nb = g_float[idx / 2];
+
+			g_start = clock();
+			ft_ret = ft_set.find(nb);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.find(nb);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1230,8 +1752,10 @@ inline static int	__test_function_count(void)
 	title(__func__);
 	try
 	{
-		ft::set<float> const	ft_set(&g_float[0], &g_float[g_float_size]);
-		std::set<float> const	std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float> const		ft_set(&g_float[0], &g_float[g_float_size]);
+		std::set<float> const		std_set(&g_float[0], &g_float[g_float_size]);
+		ft::set<float>::size_type	ft_ret;
+		std::set<float>::size_type	std_ret;
 
 		for (idx = 0U ; idx < g_float_size * 2 ; ++idx)
 		{
@@ -1244,7 +1768,17 @@ inline static int	__test_function_count(void)
 			else
 				nb = g_float[idx / 2];
 
-			if (ft_set.count(nb) != std_set.count(nb))
+			g_start = clock();
+			ft_ret = ft_set.count(nb);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.count(nb);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if (ft_ret != std_ret)
 				return KO;
 		}
 	}
@@ -1256,46 +1790,33 @@ inline static int	__test_function_count(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_lower_bound(void)
+inline static int	__test_function_lower_bound_constant(void)
 {
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		// Mutable access
+		ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
+		ft::set<t_lint>::const_iterator		ft_ret;
+		std::set<t_lint>::const_iterator	std_ret;
+
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
-			ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
-			std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
-			ft::set<t_lint>::iterator	ft_it;
-			std::set<t_lint>::iterator	std_it;
+			g_start = clock();
+			ft_ret = ft_set.lower_bound(g_lint[idx]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 0U ; idx < g_lint_size ; ++idx)
-			{
-				ft_it = ft_set.lower_bound(g_lint[idx]);
-				std_it = std_set.lower_bound(g_lint[idx]);
+			g_start = clock();
+			std_ret = std_set.lower_bound(g_lint[idx]);
+			g_std_duration = clock() - g_start;
 
-				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
-					(ft_it != ft_set.end() && (*ft_it != *std_it)))
-					return KO;
-			}
-		}
-		// Constant access
-		{
-			ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
-			std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
-			ft::set<t_lint>::const_iterator		ft_cit;
-			std::set<t_lint>::const_iterator	std_cit;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			for (idx = 0U ; idx < g_lint_size ; ++idx)
-			{
-				ft_cit = ft_set.lower_bound(g_lint[idx]);
-				std_cit = std_set.lower_bound(g_lint[idx]);
-
-				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
-					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
-					return KO;
-			}
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1306,46 +1827,33 @@ inline static int	__test_function_lower_bound(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_upper_bound(void)
+inline static int	__test_function_lower_bound_mutable(void)
 {
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		// Mutable access
+		ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
+		ft::set<t_lint>::iterator	ft_ret;
+		std::set<t_lint>::iterator	std_ret;
+
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
-			ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
-			std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
-			ft::set<t_lint>::iterator	ft_it;
-			std::set<t_lint>::iterator	std_it;
+			g_start = clock();
+			ft_ret = ft_set.lower_bound(g_lint[idx]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 0U ; idx < g_lint_size ; ++idx)
-			{
-				ft_it = ft_set.upper_bound(g_lint[idx]);
-				std_it = std_set.upper_bound(g_lint[idx]);
+			g_start = clock();
+			std_ret = std_set.lower_bound(g_lint[idx]);
+			g_std_duration = clock() - g_start;
 
-				if ((ft_it == ft_set.end()) != (std_it == std_set.end()) ||
-					(ft_it != ft_set.end() && (*ft_it != *std_it)))
-					return KO;
-			}
-		}
-		// Constant access
-		{
-			ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
-			std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
-			ft::set<t_lint>::const_iterator		ft_cit;
-			std::set<t_lint>::const_iterator	std_cit;
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
-			for (idx = 0U ; idx < g_lint_size ; ++idx)
-			{
-				ft_cit = ft_set.upper_bound(g_lint[idx]);
-				std_cit = std_set.upper_bound(g_lint[idx]);
-
-				if ((ft_cit == ft_set.end()) != (std_cit == std_set.end()) ||
-					(ft_cit != ft_set.end() && (*ft_cit != *std_cit)))
-					return KO;
-			}
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1356,55 +1864,152 @@ inline static int	__test_function_upper_bound(void)
 	return IMP_OK;
 }
 
-inline static int	__test_function_equal_range(void)
+inline static int	__test_function_upper_bound_constant(void)
 {
 	t_uint	idx;
 
 	title(__func__);
 	try
 	{
-		// Mutable access
+		ft::set<t_lint> const				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint> const				std_set(&g_lint[0], &g_lint[g_lint_size]);
+		ft::set<t_lint>::const_iterator		ft_ret;
+		std::set<t_lint>::const_iterator	std_ret;
+
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
-			ft::set<t_hint>					ft_set(&g_hint[0], &g_hint[g_hint_size]);
-			std::set<t_hint>				std_set(&g_hint[0], &g_hint[g_hint_size]);
-			ft::pair<
-				ft::set<t_hint>::iterator,
-				ft::set<t_hint>::iterator>	ft_ret;
-			std::pair<
-				std::set<t_hint>::iterator,
-				std::set<t_hint>::iterator>	std_ret;
+			g_start = clock();
+			ft_ret = ft_set.upper_bound(g_lint[idx]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 0U ; idx < g_hint_size ; ++idx)
-			{
-				ft_ret = ft_set.equal_range(g_hint[idx]);
-				std_ret = std_set.equal_range(g_hint[idx]);
+			g_start = clock();
+			std_ret = std_set.upper_bound(g_lint[idx]);
+			g_std_duration = clock() - g_start;
 
-				if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
-					(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
-					return KO;
-			}
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
 		}
-		// Constant access
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_upper_bound_mutable(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_lint>				ft_set(&g_lint[0], &g_lint[g_lint_size]);
+		std::set<t_lint>			std_set(&g_lint[0], &g_lint[g_lint_size]);
+		ft::set<t_lint>::iterator	ft_ret;
+		std::set<t_lint>::iterator	std_ret;
+
+		for (idx = 0U ; idx < g_lint_size ; ++idx)
 		{
-			ft::set<t_hint> const					ft_set(&g_hint[0], &g_hint[g_hint_size]);
-			std::set<t_hint> const					std_set(&g_hint[0], &g_hint[g_hint_size]);
-			ft::pair<
-				ft::set<t_hint>::const_iterator,
-				ft::set<t_hint>::const_iterator>	ft_ret;
-			std::pair<
-				std::set<t_hint>::const_iterator,
-				std::set<t_hint>::const_iterator>	std_ret;
+			g_start = clock();
+			ft_ret = ft_set.upper_bound(g_lint[idx]);
+			g_ft_duration = clock() - g_start;
 
-			for (idx = 0U ; idx < g_hint_size ; ++idx)
-			{
-				ft_ret = ft_set.equal_range(g_hint[idx]);
-				std_ret = std_set.equal_range(g_hint[idx]);
+			g_start = clock();
+			std_ret = std_set.upper_bound(g_lint[idx]);
+			g_std_duration = clock() - g_start;
 
-				if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
-					(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
-					return KO;
-			}
-			
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret == ft_set.end()) != (std_ret == std_set.end()) ||
+				(ft_ret != ft_set.end() && (*ft_ret != *std_ret)))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_equal_range_constant(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hint> const					ft_set(&g_hint[0], &g_hint[g_hint_size]);
+		std::set<t_hint> const					std_set(&g_hint[0], &g_hint[g_hint_size]);
+		ft::pair<
+			ft::set<t_hint>::const_iterator,
+			ft::set<t_hint>::const_iterator>	ft_ret;
+		std::pair<
+			std::set<t_hint>::const_iterator,
+			std::set<t_hint>::const_iterator>	std_ret;
+
+		for (idx = 0U ; idx < g_hint_size ; ++idx)
+		{
+			g_start = clock();
+			ft_ret = ft_set.equal_range(g_hint[idx]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.equal_range(g_hint[idx]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
+				(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
+				return KO;
+		}
+	}
+	catch (std::exception const &e)
+	{
+		std::cerr << "Exception: " << e.what() << '\n';
+		return KO;
+	}
+	return IMP_OK;
+}
+
+inline static int	__test_function_equal_range_mutable(void)
+{
+	t_uint	idx;
+
+	title(__func__);
+	try
+	{
+		ft::set<t_hint>					ft_set(&g_hint[0], &g_hint[g_hint_size]);
+		std::set<t_hint>				std_set(&g_hint[0], &g_hint[g_hint_size]);
+		ft::pair<
+			ft::set<t_hint>::iterator,
+			ft::set<t_hint>::iterator>	ft_ret;
+		std::pair<
+			std::set<t_hint>::iterator,
+			std::set<t_hint>::iterator>	std_ret;
+
+		for (idx = 0U ; idx < g_hint_size ; ++idx)
+		{
+			g_start = clock();
+			ft_ret = ft_set.equal_range(g_hint[idx]);
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
+			std_ret = std_set.equal_range(g_hint[idx]);
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+			if ((ft_ret.first == ft_set.end()) != (std_ret.first == std_set.end()) ||
+				(ft_ret.first != ft_set.end() && !std::equal(ft_ret.first, ft_ret.second, std_ret.first)))
+				return KO;
 		}
 	}
 	catch (std::exception const &e)
@@ -1435,8 +2040,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft_set0.swap(ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std_set0.swap(std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1458,8 +2070,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft_set0.swap(ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std_set0.swap(std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1481,8 +2100,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft_set0.swap(ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std_set0.swap(std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1504,8 +2130,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft_set0.swap(ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std_set0.swap(std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1530,8 +2163,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::swap(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1553,8 +2193,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::swap(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1576,8 +2223,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::swap(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1599,8 +2253,15 @@ inline static int	__test_function_swap(void)
 				ft::set<char>::const_iterator	ft_cend0;
 				ft::set<char>::const_iterator	ft_cend1;
 
+				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
 				std::swap(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 				ft_cend0 = ft_set0.end();
 				ft_cend1 = ft_set1.end();
@@ -1631,8 +2292,15 @@ inline static int	__test_operator_assign(void)
 			std::set<std::string>		std_set0;
 			std::set<std::string> const	std_set1;
 
+			g_start = clock();
 			ft_set0 = ft_set1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_set0 = std_set1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_set0.size() != std_set0.size() || !std::equal(ft_set0.begin(), ft_set0.end(), std_set0.begin()))
 				return KO;
@@ -1644,8 +2312,15 @@ inline static int	__test_operator_assign(void)
 			std::set<std::string>		std_set0(&g_string[0], &g_string[g_string_size / 2]);
 			std::set<std::string> const	std_set1;
 
+			g_start = clock();
 			ft_set0 = ft_set1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_set0 = std_set1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_set0.size() != std_set0.size() || !std::equal(ft_set0.begin(), ft_set0.end(), std_set0.begin()))
 				return KO;
@@ -1657,8 +2332,15 @@ inline static int	__test_operator_assign(void)
 			std::set<std::string>		std_set0;
 			std::set<std::string> const	std_set1(&g_string[g_string_size / 2], &g_string[g_string_size]);
 
+			g_start = clock();
 			ft_set0 = ft_set1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_set0 = std_set1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_set0.size() != std_set0.size() || !std::equal(ft_set0.begin(), ft_set0.end(), std_set0.begin()))
 				return KO;
@@ -1670,8 +2352,15 @@ inline static int	__test_operator_assign(void)
 			std::set<std::string>			std_set0(&g_string[0], &g_string[g_string_size / 2]);
 			std::set<std::string> const	std_set1(&g_string[g_string_size / 2], &g_string[g_string_size]);
 
+			g_start = clock();
 			ft_set0 = ft_set1;
+			g_ft_duration = clock() - g_start;
+
+			g_start = clock();
 			std_set0 = std_set1;
+			g_std_duration = clock() - g_start;
+
+			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 			if (ft_set0.size() != std_set0.size() || !std::equal(ft_set0.begin(), ft_set0.end(), std_set0.begin()))
 				return KO;
@@ -1696,6 +2385,8 @@ inline static int	__test_operator_equivalent(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1706,7 +2397,17 @@ inline static int	__test_operator_equivalent(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator==(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -1720,7 +2421,17 @@ inline static int	__test_operator_equivalent(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator==(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -1728,7 +2439,17 @@ inline static int	__test_operator_equivalent(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator==(ft_set0, ft_set1) != std::operator==(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator==(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator==(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -1752,6 +2473,8 @@ inline static int	__test_operator_different(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1762,7 +2485,17 @@ inline static int	__test_operator_different(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -1776,7 +2509,17 @@ inline static int	__test_operator_different(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -1784,7 +2527,17 @@ inline static int	__test_operator_different(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator!=(ft_set0, ft_set1) != std::operator!=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator!=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator!=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -1808,6 +2561,8 @@ inline static int	__test_operator_lower(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1818,7 +2573,17 @@ inline static int	__test_operator_lower(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -1832,7 +2597,17 @@ inline static int	__test_operator_lower(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -1840,7 +2615,17 @@ inline static int	__test_operator_lower(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator<(ft_set0, ft_set1) != std::operator<(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -1864,6 +2649,8 @@ inline static int	__test_operator_greater(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1874,7 +2661,17 @@ inline static int	__test_operator_greater(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -1888,7 +2685,17 @@ inline static int	__test_operator_greater(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -1896,7 +2703,17 @@ inline static int	__test_operator_greater(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator>(ft_set0, ft_set1) != std::operator>(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -1920,6 +2737,8 @@ inline static int	__test_operator_lower_or_equivalent(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1930,7 +2749,17 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -1944,7 +2773,17 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -1952,7 +2791,17 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator<=(ft_set0, ft_set1) != std::operator<=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator<=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator<=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -1976,6 +2825,8 @@ inline static int	__test_operator_greater_or_equivalent(void)
 		ft::set<t_hhint>	ft_set1;
 		std::set<t_hhint>	std_set0;
 		std::set<t_hhint>	std_set1;
+		bool				ft_ret;
+		bool				std_ret;
 
 		for (idx = 0U ; idx < g_hhint_size ; ++idx)
 		{
@@ -1986,7 +2837,17 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				std_set0.insert(g_hhint[idx] + 1);
 				std_set1.insert(g_hhint[idx] - 1);
 
-				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 
 				ft_set0.erase(g_hhint[idx] + 1);
@@ -2000,7 +2861,17 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				ft_set0.insert(g_hhint[idx]);
 				std_set0.insert(g_hhint[idx]);
 
-				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 			// Equivalence
@@ -2008,7 +2879,17 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				ft_set1.insert(g_hhint[idx]);
 				std_set1.insert(g_hhint[idx]);
 
-				if (ft::operator>=(ft_set0, ft_set1) != std::operator>=(std_set0, std_set1))
+				g_start = clock();
+				ft_ret = ft::operator>=(ft_set0, ft_set1);
+				g_ft_duration = clock() - g_start;
+
+				g_start = clock();
+				std_ret = std::operator>=(std_set0, std_set1);
+				g_std_duration = clock() - g_start;
+
+				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
+
+				if (ft_ret != std_ret)
 					return KO;
 			}
 		}
@@ -2024,7 +2905,9 @@ inline static int	__test_operator_greater_or_equivalent(void)
 int	test_set(void)
 {
 	t_test const	tests[] = {
-		__test_constructor,
+		__test_constructor_default,
+		__test_constructor_range,
+		__test_constructor_copy,
 		__test_default_template_type_Compare,
 		__test_default_template_type_Alloc,
 		__test_type_key_type,
@@ -2041,22 +2924,34 @@ int	test_set(void)
 		__test_function_value_comp,
 		__test_function_size,
 		__test_function_empty,
-		__test_function_begin,
-		__test_function_end,
-		__test_function_rbegin,
-		__test_function_rend,
+		__test_function_begin_constant,
+		__test_function_begin_mutable,
+		__test_function_end_constant,
+		__test_function_end_mutable,
+		__test_function_rbegin_constant,
+		__test_function_rbegin_mutable,
+		__test_function_rend_constant,
+		__test_function_rend_mutable,
 		__test_type_iterator,
 		__test_type_const_iterator,
 		__test_type_reverse_iterator,
 		__test_type_const_reverse_iterator,
-		__test_function_insert,
-		__test_function_erase,
+		__test_function_insert_range,
+		__test_function_insert_single,
+		__test_function_insert_single_hint,
+		__test_function_erase_range,
+		__test_function_erase_single_position,
+		__test_function_erase_single_key,
 		__test_function_clear,
-		__test_function_find,
+		__test_function_find_constant,
+		__test_function_find_mutable,
 		__test_function_count,
-		__test_function_lower_bound,
-		__test_function_upper_bound,
-		__test_function_equal_range,
+		__test_function_lower_bound_constant,
+		__test_function_lower_bound_mutable,
+		__test_function_upper_bound_constant,
+		__test_function_upper_bound_mutable,
+		__test_function_equal_range_constant,
+		__test_function_equal_range_mutable,
 		__test_function_swap,
 		__test_operator_assign,
 		__test_operator_equivalent,
