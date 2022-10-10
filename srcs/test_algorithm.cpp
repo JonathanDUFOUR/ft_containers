@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/27 15:09:45 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/08 16:04:43 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/10 17:56:49 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,10 +125,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -138,10 +140,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -160,10 +164,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -173,10 +179,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -197,10 +205,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -210,10 +220,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -232,10 +244,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -245,10 +259,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -269,10 +285,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -282,10 +300,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -304,10 +324,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -317,10 +339,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -344,10 +368,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -357,10 +383,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -379,10 +407,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -392,10 +422,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -419,10 +451,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -432,10 +466,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -454,10 +490,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -467,10 +505,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -494,10 +534,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -507,10 +549,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -529,10 +573,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -542,10 +588,12 @@ inline static int	__test_equal(void)
 				g_start = clock();
 				ft_ret = ft::equal(first0, last0, first1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::equal(first0, last0, first1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -581,10 +629,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -594,10 +644,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -617,10 +669,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -630,10 +684,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -655,10 +711,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -668,10 +726,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -691,10 +751,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -704,10 +766,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -729,10 +793,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -742,10 +808,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -765,10 +833,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -778,10 +848,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -807,10 +879,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -820,10 +894,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -843,10 +919,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -856,10 +934,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -884,10 +964,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -897,10 +979,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -920,10 +1004,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -933,10 +1019,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -961,10 +1049,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -974,10 +1064,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -997,10 +1089,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first0, last0, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1010,10 +1104,12 @@ inline static int	__test_lexicographical_compare(void)
 				g_start = clock();
 				ft_ret = ft::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::lexicographical_compare(first0, last0, first1, last1, cmp);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1029,7 +1125,7 @@ inline static int	__test_lexicographical_compare(void)
 	}
 	return EXIT_SUCCESS;
 }
-/* 
+
 inline static int	__test_swap(void)
 {
 	title(__func__);
@@ -1048,10 +1144,12 @@ inline static int	__test_swap(void)
 		g_start = clock();
 		ft::swap(ft_a, ft_b);
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std::swap(std_a, std_b);
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1073,10 +1171,12 @@ inline static int	__test_swap(void)
 		g_start = clock();
 		ft::swap(ft_a, ft_b);
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std::swap(std_a, std_b);
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1101,10 +1201,12 @@ inline static int	__test_swap(void)
 		g_start = clock();
 		ft::swap(ft_a, ft_b);
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std::swap(std_a, std_b);
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1113,13 +1215,13 @@ inline static int	__test_swap(void)
 	}
 	return EXIT_SUCCESS;
 }
- */
+
 int	test_algorithm(void)
 {
 	t_test const	tests[] = {
 		__test_equal,
 		__test_lexicographical_compare,
-		// __test_swap,
+		__test_swap,
 		NULL
 	};
 	t_uint			koCount;

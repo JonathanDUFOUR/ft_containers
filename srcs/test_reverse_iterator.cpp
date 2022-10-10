@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/25 09:40:33 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/08 16:06:49 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/10 18:04:28 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ inline static int	__test_constructor(void)
 			g_start = clock();
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	ft_rit;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::reverse_iterator<ft::random_access_iterator_restrictor<std::ostream const *> > const	std_rit;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -54,10 +56,12 @@ inline static int	__test_constructor(void)
 				g_start = clock();
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit(it);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit(it);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -75,10 +79,12 @@ inline static int	__test_constructor(void)
 				g_start = clock();
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		ft_rit1(ft_rit0);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const	std_rit1(std_rit0);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -95,30 +101,36 @@ inline static int	__test_constructor(void)
 					g_start = clock();
 					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit0(it);
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit0(it);
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 
 					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 					g_start = clock();
 					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const			ft_rit1(ft_rit0);
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> > const		std_rit1(std_rit0);
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 
 					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
 					g_start = clock();
 					ft::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	ft_rit2(ft_rit1);
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std::reverse_iterator<ft::random_access_iterator_restrictor<int const *> const> const	std_rit2(std_rit1);
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 
 					g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -156,10 +168,12 @@ inline static int	__test_function_base(void)
 			g_start = clock();
 			ft_ret = ft_rit.base();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_rit.base();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -197,10 +211,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_rit0 = ft_rit1;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_rit0 = std_rit1;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -210,10 +226,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_rit0 = ft_rit2;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_rit0 = std_rit2;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -247,10 +265,12 @@ inline static int	__test_operator_dereference(void)
 				g_start = clock();
 				t_hint &ft_nb = *ft_rit;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				t_hint &std_nb = *std_rit;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -269,10 +289,12 @@ inline static int	__test_operator_dereference(void)
 				g_start = clock();
 				t_hint const &ft_nb = *ft_rit;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				t_hint const &std_nb = *std_rit;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				if (ft_nb != std_nb)
 					return EXIT_FAILURE;
@@ -305,10 +327,12 @@ inline static int	__test_operator_maddress(void)
 				g_start = clock();
 				int	&ft_first = ft_rit->first;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				int	&std_first = std_rit->first;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -318,10 +342,12 @@ inline static int	__test_operator_maddress(void)
 				g_start = clock();
 				char	&ft_second = ft_rit->second;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				char	&std_second = std_rit->second;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -340,10 +366,12 @@ inline static int	__test_operator_maddress(void)
 				g_start = clock();
 				int const	&ft_first = ft_rit->first;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				int const	&std_first = std_rit->first;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -353,10 +381,12 @@ inline static int	__test_operator_maddress(void)
 				g_start = clock();
 				char const	&ft_second = ft_rit->second;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				char const	&std_second = std_rit->second;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -391,10 +421,12 @@ inline static int	__test_operator_increment(void)
 				g_start = clock();
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ++ft_rit;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = ++std_rit;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -415,10 +447,12 @@ inline static int	__test_operator_increment(void)
 				g_start = clock();
 				ft_ret = ft_rit++;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std_rit++;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -453,10 +487,12 @@ inline static int	__test_operator_decrement(void)
 				g_start = clock();
 				ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = --ft_rit;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = --std_rit;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -477,10 +513,12 @@ inline static int	__test_operator_decrement(void)
 				g_start = clock();
 				ft_ret = ft_rit--;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std_rit--;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -513,10 +551,12 @@ inline static int	__test_operator_add_assign(void)
 			g_start = clock();
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ft_rit += idx;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = std_rit += idx;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -548,10 +588,12 @@ inline static int	__test_operator_sub_assign(void)
 			g_start = clock();
 			ft::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&ft_ret = ft_rit -= idx;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::reverse_iterator<ft::random_access_iterator_restrictor<t_luint const *> >	&std_ret = std_rit -= idx;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -587,10 +629,12 @@ inline static int	__test_operator_add(void)
 				g_start = clock();
 				ft_ret = ft_rit + idx;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std_rit + idx;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -611,10 +655,12 @@ inline static int	__test_operator_add(void)
 				g_start = clock();
 				ft_ret = idx + ft_rit;
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = idx + std_rit;
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -649,10 +695,12 @@ inline static int	__test_operator_sub(void)
 			g_start = clock();
 			ft_ret = ft_rit - idx;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_rit - idx;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -686,10 +734,12 @@ inline static int	__test_operator_access(void)
 				g_start = clock();
 				t_hhuint	&ft_ret = ft_rit[idx];
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				t_hhuint	&std_ret = std_rit[idx];
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -708,10 +758,12 @@ inline static int	__test_operator_access(void)
 				g_start = clock();
 				t_hhuint const	&ft_ret = ft_rit[idx];
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				t_hhuint const	&std_ret = std_rit[idx];
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -754,10 +806,12 @@ inline static int	__test_operator_distance(void)
 				g_start = clock();
 				ft_ret = ft::operator-(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator-(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -800,10 +854,12 @@ inline static int	__test_operator_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator==(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator==(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -846,10 +902,12 @@ inline static int	__test_operator_different(void)
 				g_start = clock();
 				ft_ret = ft::operator!=(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator!=(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -892,10 +950,12 @@ inline static int	__test_operator_lower(void)
 				g_start = clock();
 				ft_ret = ft::operator<(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -938,10 +998,12 @@ inline static int	__test_operator_greater(void)
 				g_start = clock();
 				ft_ret = ft::operator>(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -984,10 +1046,12 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator<=(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<=(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1030,10 +1094,12 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator>=(ft_rit0 , ft_rit1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>=(std_rit0 , std_rit1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 

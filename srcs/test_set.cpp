@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 13:06:05 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/10 13:50:35 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/10 18:07:38 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ inline static int	__test_constructor_default(void)
 		g_start = clock();
 		ft::set<int> const	ft_set;
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std::set<int> const	std_set;
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -67,10 +69,12 @@ inline static int	__test_constructor_range(void)
 			g_start = clock();
 			ft::set<t_huint> const									ft_set(it0, it1);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<t_huint> const									std_set(it0, it1);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -84,10 +88,12 @@ inline static int	__test_constructor_range(void)
 			g_start = clock();
 			ft::set<void *> const									ft_set(it, it);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<void *> const									std_set(it, it);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -102,10 +108,12 @@ inline static int	__test_constructor_range(void)
 			g_start = clock();
 			ft::set<t_huint> const											ft_set(it0, it1);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<t_huint> const											std_set(it0, it1);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -117,10 +125,12 @@ inline static int	__test_constructor_range(void)
 			g_start = clock();
 			ft::set<char> const		ft_set(&g_char[0], &g_char[g_char_size]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<char> const	std_set(&g_char[0], &g_char[g_char_size]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -152,10 +162,12 @@ inline static int	__test_constructor_copy(void)
 			g_start = clock();
 			ft::set<int> const	ft_set1(ft_set0);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<int> const	std_set1(std_set0);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -170,10 +182,12 @@ inline static int	__test_constructor_copy(void)
 			g_start = clock();
 			ft::set<int> const	ft_set1(ft_set0);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std::set<int> const	std_set1(std_set0);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -395,10 +409,12 @@ inline static int	__test_function_max_size(void)
 			g_start = clock();
 			ft_ret = ft_set.max_size();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.max_size();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -415,10 +431,12 @@ inline static int	__test_function_max_size(void)
 			g_start = clock();
 			ft_ret = ft_set.max_size();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.max_size();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -435,10 +453,12 @@ inline static int	__test_function_max_size(void)
 			g_start = clock();
 			ft_ret = ft_set.max_size();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.max_size();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -471,10 +491,12 @@ inline static int	__test_function_key_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.key_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.key_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -492,10 +514,12 @@ inline static int	__test_function_key_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.key_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.key_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -513,10 +537,12 @@ inline static int	__test_function_key_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.key_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.key_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -534,10 +560,12 @@ inline static int	__test_function_key_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.key_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.key_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -571,10 +599,12 @@ inline static int	__test_function_value_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.value_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.value_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -592,10 +622,12 @@ inline static int	__test_function_value_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.value_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.value_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -613,10 +645,12 @@ inline static int	__test_function_value_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.value_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.value_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -634,10 +668,12 @@ inline static int	__test_function_value_comp(void)
 			g_start = clock();
 			ft_ret = ft_set.value_comp();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.value_comp();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -672,10 +708,12 @@ inline static int	__test_function_size(void)
 			g_start = clock();
 			ft_ret = ft_set.size();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.size();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -709,10 +747,12 @@ inline static int	__test_function_empty(void)
 			g_start = clock();
 			ft_ret = ft_set.empty();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.empty();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -748,10 +788,12 @@ inline static int	__test_function_begin_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.begin();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.begin();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -767,10 +809,12 @@ inline static int	__test_function_begin_constant(void)
 		g_start = clock();
 		ft_ret = ft_set.begin();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.begin();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -805,10 +849,12 @@ inline static int	__test_function_begin_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.begin();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.begin();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -824,10 +870,12 @@ inline static int	__test_function_begin_mutable(void)
 		g_start = clock();
 		ft_ret = ft_set.begin();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.begin();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -862,10 +910,12 @@ inline static int	__test_function_end_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.end();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.end();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -885,10 +935,12 @@ inline static int	__test_function_end_constant(void)
 		g_start = clock();
 		ft_ret = ft_set.end();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.end();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -923,10 +975,12 @@ inline static int	__test_function_end_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.end();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.end();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -946,10 +1000,12 @@ inline static int	__test_function_end_mutable(void)
 		g_start = clock();
 		ft_ret = ft_set.end();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.end();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -984,10 +1040,12 @@ inline static int	__test_function_rbegin_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.rbegin();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.rbegin();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1003,10 +1061,12 @@ inline static int	__test_function_rbegin_constant(void)
 		g_start = clock();
 		ft_ret = ft_set.rbegin();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.rbegin();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1041,10 +1101,12 @@ inline static int	__test_function_rbegin_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.rbegin();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.rbegin();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1060,10 +1122,12 @@ inline static int	__test_function_rbegin_mutable(void)
 		g_start = clock();
 		ft_ret = ft_set.rbegin();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.rbegin();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1098,10 +1162,12 @@ inline static int	__test_function_rend_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.rend();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.rend();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1121,10 +1187,12 @@ inline static int	__test_function_rend_constant(void)
 		g_start = clock();
 		ft_ret = ft_set.rend();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.rend();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1159,10 +1227,12 @@ inline static int	__test_function_rend_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.rend();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.rend();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1182,10 +1252,12 @@ inline static int	__test_function_rend_mutable(void)
 		g_start = clock();
 		ft_ret = ft_set.rend();
 		g_ft_duration = clock() - g_start;
+		g_ft_duration += !g_ft_duration;
 
 		g_start = clock();
 		std_ret = std_set.rend();
 		g_std_duration = clock() - g_start;
+		g_std_duration += !g_std_duration;
 
 		g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1371,10 +1443,12 @@ inline static int	__test_function_insert_range(void)
 			g_start = clock();
 			ft_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set.insert(&g_string[idx - 1], &g_string[idx + 1]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1407,10 +1481,12 @@ inline static int	__test_function_insert_single(void)
 			g_start = clock();
 			ft_ret = ft_set.insert(g_string[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.insert(g_string[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1453,30 +1529,36 @@ inline static int	__test_function_insert_single_hint(void)
 					g_start = clock();
 					ft_ret = ft_set.insert(ft_ret, g_string[idx / 3]);
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std_ret = std_set.insert(std_ret, g_string[idx / 3]);
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 					break;
 			
 				case 1:
 					g_start = clock();
 					ft_ret = ft_set.insert(ft_set.begin(), *++ft_set.begin());
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std_ret = std_set.insert(std_set.begin(), *++std_set.begin());
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 					break;
 
 				case 2:
 					g_start = clock();
 					ft_ret = ft_set.insert(ft_set.end(), *++ft_set.rbegin());
 					g_ft_duration = clock() - g_start;
+					g_ft_duration += !g_ft_duration;
 
 					g_start = clock();
 					std_ret = std_set.insert(std_set.end(), *++std_set.rbegin());
 					g_std_duration = clock() - g_start;
+					g_std_duration += !g_std_duration;
 					break;
 			}
 
@@ -1524,10 +1606,12 @@ inline static int	__test_function_erase_range(void)
 			g_start = clock();
 			ft_set.erase(ft_it0, ft_it1);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set.erase(std_it0, std_it1);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1559,10 +1643,12 @@ inline static int	__test_function_erase_single_position(void)
 			g_start = clock();
 			ft_set.erase(ft_set.begin());
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set.erase(std_set.begin());
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1596,10 +1682,12 @@ inline static int	__test_function_erase_single_key(void)
 			g_start = clock();
 			ft_ret = ft_set.erase(g_char[idx / 2]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.erase(g_char[idx / 2]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1631,10 +1719,12 @@ inline static int	__test_function_clear(void)
 			g_start = clock();
 			ft_set.clear();
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set.clear();
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1677,10 +1767,12 @@ inline static int	__test_function_find_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.find(nb);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.find(nb);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1724,10 +1816,12 @@ inline static int	__test_function_find_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.find(nb);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.find(nb);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1771,10 +1865,12 @@ inline static int	__test_function_count(void)
 			g_start = clock();
 			ft_ret = ft_set.count(nb);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.count(nb);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1807,10 +1903,12 @@ inline static int	__test_function_lower_bound_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.lower_bound(g_lint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.lower_bound(g_lint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1844,10 +1942,12 @@ inline static int	__test_function_lower_bound_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.lower_bound(g_lint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.lower_bound(g_lint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1881,10 +1981,12 @@ inline static int	__test_function_upper_bound_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.upper_bound(g_lint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.upper_bound(g_lint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1918,10 +2020,12 @@ inline static int	__test_function_upper_bound_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.upper_bound(g_lint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.upper_bound(g_lint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -1959,10 +2063,12 @@ inline static int	__test_function_equal_range_constant(void)
 			g_start = clock();
 			ft_ret = ft_set.equal_range(g_hint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.equal_range(g_hint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2000,10 +2106,12 @@ inline static int	__test_function_equal_range_mutable(void)
 			g_start = clock();
 			ft_ret = ft_set.equal_range(g_hint[idx]);
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_ret = std_set.equal_range(g_hint[idx]);
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2043,10 +2151,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft_set0.swap(ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_set0.swap(std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2073,10 +2183,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft_set0.swap(ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_set0.swap(std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2103,10 +2215,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft_set0.swap(ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_set0.swap(std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2133,10 +2247,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft_set0.swap(ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_set0.swap(std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2166,10 +2282,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::swap(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2196,10 +2314,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::swap(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2226,10 +2346,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::swap(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2256,10 +2378,12 @@ inline static int	__test_function_swap(void)
 				g_start = clock();
 				ft::swap(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std::swap(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2295,10 +2419,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_set0 = ft_set1;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set0 = std_set1;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2315,10 +2441,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_set0 = ft_set1;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set0 = std_set1;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2335,10 +2463,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_set0 = ft_set1;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set0 = std_set1;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2355,10 +2485,12 @@ inline static int	__test_operator_assign(void)
 			g_start = clock();
 			ft_set0 = ft_set1;
 			g_ft_duration = clock() - g_start;
+			g_ft_duration += !g_ft_duration;
 
 			g_start = clock();
 			std_set0 = std_set1;
 			g_std_duration = clock() - g_start;
+			g_std_duration += !g_std_duration;
 
 			g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2400,10 +2532,12 @@ inline static int	__test_operator_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator==(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator==(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2424,10 +2558,12 @@ inline static int	__test_operator_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator==(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator==(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2442,10 +2578,12 @@ inline static int	__test_operator_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator==(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator==(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2488,10 +2626,12 @@ inline static int	__test_operator_different(void)
 				g_start = clock();
 				ft_ret = ft::operator!=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator!=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2512,10 +2652,12 @@ inline static int	__test_operator_different(void)
 				g_start = clock();
 				ft_ret = ft::operator!=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator!=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2530,10 +2672,12 @@ inline static int	__test_operator_different(void)
 				g_start = clock();
 				ft_ret = ft::operator!=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator!=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2576,10 +2720,12 @@ inline static int	__test_operator_lower(void)
 				g_start = clock();
 				ft_ret = ft::operator<(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2600,10 +2746,12 @@ inline static int	__test_operator_lower(void)
 				g_start = clock();
 				ft_ret = ft::operator<(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2618,10 +2766,12 @@ inline static int	__test_operator_lower(void)
 				g_start = clock();
 				ft_ret = ft::operator<(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2664,10 +2814,12 @@ inline static int	__test_operator_greater(void)
 				g_start = clock();
 				ft_ret = ft::operator>(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2688,10 +2840,12 @@ inline static int	__test_operator_greater(void)
 				g_start = clock();
 				ft_ret = ft::operator>(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2706,10 +2860,12 @@ inline static int	__test_operator_greater(void)
 				g_start = clock();
 				ft_ret = ft::operator>(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2752,10 +2908,12 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator<=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2776,10 +2934,12 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator<=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2794,10 +2954,12 @@ inline static int	__test_operator_lower_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator<=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator<=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2840,10 +3002,12 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator>=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2864,10 +3028,12 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator>=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
@@ -2882,10 +3048,12 @@ inline static int	__test_operator_greater_or_equivalent(void)
 				g_start = clock();
 				ft_ret = ft::operator>=(ft_set0, ft_set1);
 				g_ft_duration = clock() - g_start;
+				g_ft_duration += !g_ft_duration;
 
 				g_start = clock();
 				std_ret = std::operator>=(std_set0, std_set1);
 				g_std_duration = clock() - g_start;
+				g_std_duration += !g_std_duration;
 
 				g_ratio.insert(static_cast<float>(g_ft_duration) / static_cast<float>(g_std_duration));
 
