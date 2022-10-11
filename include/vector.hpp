@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/08 18:50:15 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/10/11 10:42:53 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ private:
 	template<typename U>
 	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, false_type const)
 	{
-		this->_insertRange(pos, param1, param2);
+		this->_insertRange(pos, param1, param2, typename iterator_traits<U>::iterator_category());
 	}
 
 	/**
@@ -95,42 +95,20 @@ private:
 	inline void	_insertFill(iterator const pos, size_type const n, value_type const &val)
 	{
 		size_type const	offset = pos - this->begin();
-		size_type		newCapacity;
-		pointer			newHead;
-		pointer			newTail;
+		pointer			ptr0;
+		pointer			ptr1;
 		allocator_type	alloc;
 
-		if (!n)
-			return ;
-		if (this->size() + n <= this->capacity())
-		{
-			this->_rangeMove(this->_head + offset + n, this->_head + offset, this->_tail);
-			this->_tail += n;
-		}
-		else
-		{
-			newCapacity = this->size() * 2;
-			if (newCapacity < this->size() + n)
-				newCapacity = this->size() + n;
-			newHead = alloc.allocate(newCapacity, this->_head);
-			newTail = newHead + this->size() + n;
-			if (this->_head)
-			{
-				this->_rangeMove(newHead, this->_head, pos.base());
-				this->_rangeMove(newHead + offset + n, pos.base(), this->_tail);
-				alloc.deallocate(this->_head, this->capacity());
-			}
-			this->_head = newHead;
-			this->_tail = newTail;
-			this->_end_of_storage = this->_head + newCapacity;
-		}
-		for (newHead = this->_head + offset, newTail = newHead + n ; newHead != newTail ; ++newHead)
-			alloc.construct(newHead, val);
+		this->_prepareMemoryArea(pos, n);
+
+		for (ptr0 = this->_head + offset, ptr1 = ptr0 + n ; ptr0 != ptr1 ; ++ptr0)
+			alloc.construct(ptr0, val);
 	}
 
 	/**
 	 * @brief	Insert elements at a specific position using a range of iterators,
 	 * 			from `first` included to `last` excluded.
+	 * 			It is assumed that the given iterators are not random access iterators, thanks to the fourth parameter.
 	 * 
 	 * @tparam	InputIterator The type of the iterators to use.
 	 * 			(it must conform to the standard input iterator requirements)
@@ -140,7 +118,11 @@ private:
 	 * @param	last The last element of the range.
 	 */
 	template <typename InputIterator>
-	void	_insertRange(iterator const &pos, InputIterator first, InputIterator const last)
+	void	_insertRange(
+		iterator const &pos,
+		InputIterator first,
+		InputIterator const last,
+		std::input_iterator_tag const)
 	{
 		size_type const	offset = this->end() - pos;
 		size_type		newCapacity;
@@ -173,6 +155,76 @@ private:
 			}
 			alloc.construct(this->_tail - offset, *first);
 			++this->_tail;
+		}
+	}
+
+	/**
+	 * @brief	Insert elements at a specific position using a range of iterators,
+	 * 			from `first` included to `last` excluded.
+	 * 			It is assumed that the given iterators are random access iterators, thanks to the fourth parameter.
+	 * 
+	 * @tparam	RandomAccessIterator The type of the iterators to use.
+	 * 			(it must conform to the standard random access iterator requirements)
+	 * 
+	 * @param	pos The position to insert the elements.
+	 * @param	first The first element of the range.
+	 * @param	last The last element of the range.
+	 */
+	template <typename RandomAccessIterator>
+	void	_insertRange(
+		iterator const &pos,
+		RandomAccessIterator first,
+		RandomAccessIterator const last,
+		std::random_access_iterator_tag const)
+	{
+		size_type const	offset = pos - this->begin();
+		pointer			ptr;
+		allocator_type	alloc;
+
+		this->_prepareMemoryArea(pos, last - first);
+
+		for (ptr = this->_head + offset ; first != last ; ++ptr, ++first)
+			alloc.construct(ptr, *first);
+	}
+
+	/**
+	 * @brief	Reorginize the vector content to make a n-sized hole at a specific position.
+	 * 			It may result in a reallocation of the vector.
+	 * 
+	 * @param	pos The position of the hole to make.
+	 * @param	n The size of the hole to make.
+	 */
+	void	_prepareMemoryArea(iterator const &pos, size_type const n)
+	{
+		size_type const	offset = pos - this->begin();
+		size_type		newCapacity;
+		pointer			newHead;
+		pointer			newTail;
+		allocator_type	alloc;
+
+		if (!n)
+			return ;
+		if (this->size() + n <= this->capacity())
+		{
+			this->_rangeMove(this->_head + offset + n, this->_head + offset, this->_tail);
+			this->_tail += n;
+		}
+		else
+		{
+			newCapacity = this->size() * 2;
+			if (newCapacity < this->size() + n)
+				newCapacity = this->size() + n;
+			newHead = alloc.allocate(newCapacity, this->_head);
+			newTail = newHead + this->size() + n;
+			if (this->_head)
+			{
+				this->_rangeMove(newHead, this->_head, pos.base());
+				this->_rangeMove(newHead + offset + n, pos.base(), this->_tail);
+				alloc.deallocate(this->_head, this->capacity());
+			}
+			this->_head = newHead;
+			this->_tail = newTail;
+			this->_end_of_storage = this->_head + newCapacity;
 		}
 	}
 
@@ -263,7 +315,7 @@ public:
 		_tail(NULL),
 		_end_of_storage(NULL)
 	{
-		this->_insertRange(iterator(), src.begin(), src.end());
+		this->_insertRange(iterator(), src.begin(), src.end(), typename iterator_traits<iterator>::iterator_category());
 	}
 
 // ***************************************************************************************************************** //
