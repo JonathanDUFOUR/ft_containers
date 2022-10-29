@@ -6,7 +6,7 @@
 #    By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/27 10:35:48 by jodufour          #+#    #+#              #
-#    Updated: 2022/10/08 15:54:04 by jodufour         ###   ########.fr        #
+#    Updated: 2022/10/29 08:30:44 by jodufour         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,10 +27,10 @@ NAME		=	unit_test.out
 #######################################
 #             DIRECTORIES             #
 #######################################
-SRC_DIR		=	srcs/
-OBJ_DIR		=	objs/
-INC_DIR		=	include/
-PRV_DIR		=	private/
+SRC_DIR		=	srcs
+OBJ_DIR		=	objs
+INC_DIR		=	include
+PRV_DIR		=	private
 
 ######################################
 #            SOURCE FILES            #
@@ -54,7 +54,7 @@ SRC			=	\
 #            OBJECT FILES            #
 ######################################
 OBJ			=	${SRC:.cpp=.o}
-OBJ			:=	${addprefix ${OBJ_DIR}, ${OBJ}}
+OBJ			:=	${addprefix ${OBJ_DIR}/, ${OBJ}}
 
 DEP			=	${OBJ:.o=.d}
 
@@ -62,7 +62,7 @@ DEP			=	${OBJ:.o=.d}
 #                FLAGS                #
 #######################################
 CXXFLAGS	=	-c
-CXXFLAGS	+=	-Wall -Wextra #-Werror
+CXXFLAGS	+=	-Wall -Wextra -Werror
 CXXFLAGS	+=	-Wshadow
 CXXFLAGS	+=	-Weffc++
 CXXFLAGS	+=	-std=c++98
@@ -125,7 +125,7 @@ endif
 
 -include ${DEP}
 
-${OBJ_DIR}%.o: ${SRC_DIR}%.cpp
+${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp
 	@${MKDIR} ${@D}
 	${CXX} $< ${CXXFLAGS} ${OUTPUT_OPTION}
 
