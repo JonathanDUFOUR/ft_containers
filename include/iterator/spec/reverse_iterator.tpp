@@ -6,7 +6,7 @@
 /*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 06:00:52 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/04 15:35:17 by jodufour         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:21:27 by jodufour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,31 +222,6 @@ public:
 	{
 		return this->_it[-idx - 1];
 	}
-
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator==(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator!=(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator<(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator>(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator<=(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
-	template <typename BidirectionalIterator0, typename BidirectionalIterator1>
-	friend inline bool	operator>=(
-		reverse_iterator<BidirectionalIterator0> const &lhs,
-		reverse_iterator<BidirectionalIterator1> const &rhs);
 };
 
 /**
