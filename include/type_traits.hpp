@@ -1,87 +1,65 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   type_traits.hpp                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/27 09:48:18 by jodufour          #+#    #+#             */
-/*   Updated: 2022/09/28 19:13:06 by jodufour         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef TYPE_TRAITS_HPP
-# define TYPE_TRAITS_HPP
+#define TYPE_TRAITS_HPP
 
-namespace ft
-{
+#include "type/fundamentals.hpp" // ft::t_{{i,u}{8,16,32,64},bool,char,double,float,long_double,wchar}
 
-template <bool Cond, typename T = void>
-struct enable_if;
+namespace ft {
+template <typename T, T value>
+struct integral_constant {
+    operator T() const { return value; }
+};
 
-template <typename T>
-struct enable_if<true, T>
-{
-	typedef T	type;
+// clang-format off
 
-}; // struct enable_if
+typedef integral_constant<t_bool, false> t_false;
+typedef integral_constant<t_bool, true > t_true;
 
-template <typename T, T v>
-struct integral_constant
-{
-	// Member types
-	typedef T						value_type;
-	typedef integral_constant<T, v>	type;
+template <t_bool, typename T = void> struct enable_if;
+template <        typename T       > struct enable_if<true, T> {typedef T type;};
 
-	// Attributes
-	static value_type const	value = v;
+template <typename T> struct is_integral          : t_false{};
+template <          > struct is_integral<t_i8>    : t_true {};
+template <          > struct is_integral<t_i16>   : t_true {};
+template <          > struct is_integral<t_i32>   : t_true {};
+template <          > struct is_integral<t_i64>   : t_true {};
+template <          > struct is_integral<t_u8>    : t_true {};
+template <          > struct is_integral<t_u16>   : t_true {};
+template <          > struct is_integral<t_u32>   : t_true {};
+template <          > struct is_integral<t_u64>   : t_true {};
+template <          > struct is_integral<t_bool>  : t_true {};
+template <          > struct is_integral<t_char>  : t_true {};
+template <          > struct is_integral<t_wchar> : t_true {};
 
-	// Operators
-	operator value_type(void) const
-	{
-		return value;
-	}
+template <typename T0, typename T1> struct is_same       : t_false{};
+template <typename T>               struct is_same<T, T> : t_true {};
 
-}; // struct integral_constant
+template <typename T> struct is_trivially_copyable                : t_false{};
+template <          > struct is_trivially_copyable<t_bool>        : t_true {};
+template <          > struct is_trivially_copyable<t_char>        : t_true {};
+template <          > struct is_trivially_copyable<t_wchar>       : t_true {};
+template <          > struct is_trivially_copyable<t_i8>          : t_true {};
+template <          > struct is_trivially_copyable<t_i16>         : t_true {};
+template <          > struct is_trivially_copyable<t_i32>         : t_true {};
+template <          > struct is_trivially_copyable<t_i64>         : t_true {};
+template <          > struct is_trivially_copyable<t_u8>          : t_true {};
+template <          > struct is_trivially_copyable<t_u16>         : t_true {};
+template <          > struct is_trivially_copyable<t_u32>         : t_true {};
+template <          > struct is_trivially_copyable<t_u64>         : t_true {};
+template <          > struct is_trivially_copyable<t_float>       : t_true {};
+template <          > struct is_trivially_copyable<t_double>      : t_true {};
+template <          > struct is_trivially_copyable<t_long_double> : t_true {};
 
-typedef integral_constant<bool, true>	true_type;
-typedef integral_constant<bool, false>	false_type;
+template <typename T> struct make_unsigned;
+template <          > struct make_unsigned<t_i8> {typedef t_u8  type;};
+template <          > struct make_unsigned<t_i16>{typedef t_u16 type;};
+template <          > struct make_unsigned<t_i32>{typedef t_u32 type;};
+template <          > struct make_unsigned<t_i64>{typedef t_u64 type;};
+template <          > struct make_unsigned<t_u8> {typedef t_u8  type;};
+template <          > struct make_unsigned<t_u16>{typedef t_u16 type;};
+template <          > struct make_unsigned<t_u32>{typedef t_u32 type;};
+template <          > struct make_unsigned<t_u64>{typedef t_u64 type;};
 
-template <typename T> class is_integral : public false_type {};
-template <> class is_integral<bool> : public true_type {};
-template <> class is_integral<char> : public true_type {};
-template <> class is_integral<wchar_t> : public true_type {};
-template <> class is_integral<signed char> : public true_type {};
-template <> class is_integral<signed short> : public true_type {};
-template <> class is_integral<signed int> : public true_type {};
-template <> class is_integral<signed long> : public true_type {};
-template <> class is_integral<unsigned char> : public true_type {};
-template <> class is_integral<unsigned short> : public true_type {};
-template <> class is_integral<unsigned int> : public true_type {};
-template <> class is_integral<unsigned long> : public true_type {};
-
-template <typename T> class is_pointer : public false_type {};
-template <typename T> class is_pointer<T *> : public true_type {};
-
-template <typename T0, typename T1> class is_same : public false_type {};
-template <typename T> class is_same<T, T> : public true_type {};
-
-template <typename T> class is_trivially_copyable : public false_type {};
-template <> class is_trivially_copyable<bool> : public true_type {};
-template <> class is_trivially_copyable<char> : public true_type {};
-template <> class is_trivially_copyable<wchar_t> : public true_type {};
-template <> class is_trivially_copyable<signed char> : public true_type {};
-template <> class is_trivially_copyable<signed short> : public true_type {};
-template <> class is_trivially_copyable<signed int> : public true_type {};
-template <> class is_trivially_copyable<signed long> : public true_type {};
-template <> class is_trivially_copyable<unsigned char> : public true_type {};
-template <> class is_trivially_copyable<unsigned short> : public true_type {};
-template <> class is_trivially_copyable<unsigned int> : public true_type {};
-template <> class is_trivially_copyable<unsigned long> : public true_type {};
-template <> class is_trivially_copyable<float> : public true_type {};
-template <> class is_trivially_copyable<double> : public true_type {};
-template <> class is_trivially_copyable<long double> : public true_type {};
-
+// clang-format on
 } // namespace ft
 
 #endif

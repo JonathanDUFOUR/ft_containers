@@ -1,863 +1,998 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   vector.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/27 10:42:42 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/11 10:42:53 by jodufour         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef VECTOR_HPP
-# define VECTOR_HPP
+#define VECTOR_HPP
 
-# include "algorithm.hpp"
-# include "iterator/spec/reverse_iterator.tpp"
-# include "iterator/spec/vector_iterator.tpp"
-# include "type_traits.hpp"
-# include <cstring>
-# include <memory>
+#include "algorithm.hpp"
+#include "iterator.hpp"
+#include "type_traits.hpp"
+#include <memory>
 
 namespace ft
 {
+#pragma region[Vector]
+
 template <typename T, typename Alloc = std::allocator<T> >
-class vector
+class Vector
 {
 public:
-	// Member types
-	typedef T													value_type;
-	typedef Alloc												allocator_type;
+    // Member types
+    typedef T     ValueType;
+    typedef Alloc Allocator;
 
-	typedef typename allocator_type::const_pointer				const_pointer;
-	typedef typename allocator_type::pointer					pointer;
+    typedef typename Allocator::const_reference ConstReference;
+    typedef typename Allocator::const_pointer   ConstPointer;
+    typedef typename Allocator::pointer         Pointer;
+    typedef typename Allocator::reference       Reference;
 
-	typedef typename allocator_type::const_reference			const_reference;
-	typedef typename allocator_type::reference					reference;
+    typedef ConstPointer                   ConstIterator;
+    typedef Pointer                        Iterator;
+    typedef ReverseIterator<ConstIterator> ConstReverseIterator;
+    typedef ReverseIterator<Iterator>      ReverseIterator;
 
-	typedef vector_iterator<const_pointer>						const_iterator;
-	typedef vector_iterator<pointer>							iterator;
-
-	typedef reverse_iterator<const_iterator>					const_reverse_iterator;
-	typedef reverse_iterator<iterator>							reverse_iterator;
-
-	typedef typename iterator_traits<iterator>::difference_type	difference_type;
-	typedef size_t												size_type;
+    typedef typename IteratorTraits<Iterator>::Difference Difference;
+    typedef usize                                         Size;
 
 private:
-	// Attributes
-	pointer	_head;
-	pointer	_tail;
-	pointer	_end_of_storage;
+    // Attributes
+    Pointer m_head;
+    Pointer m_tail;
+    Pointer m_end_of_storage;
 
-// ****************************************************************************************************************** //
-//                                              Private Member Functions                                              //
-// ****************************************************************************************************************** //
+    // ┏━━━━━━━━━┓
+    // ┃ Methods ┃
+    // ┗━━━━━━━━━┛
 
-	/**
-	 * @brief	Determine that the called insert() is a fill insertion, thanks to the fourth paramter type.
-	 * 
-	 * @tparam	U Any integral type.
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	param1 The number of elements to insert.
-	 * @param	param2 The element value to fill the vector with.
-	 */
-	template<typename U>
-	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, true_type const)
-	{
-		this->_insertFill(pos, param1, param2);
-	}
+    /**
+     * @brief	Determine that the called insert() is a fill insertion,
+     * thanks to the fourth paramter type.
+     *
+     * @tparam	U Any integral type.
+     *
+     * @param	pos The position to insert the elements.
+     * @param	param1 The number of elements to insert.
+     * @param	param2 The element value to fill the vector with.
+     */
+    template <typename U>
+    inline void _insertDispatch(
+        Iterator const pos, U const param1, U const param2, true_type const
+    )
+    {
+        _insertFill(pos, param1, param2);
+    }
 
-	/**
-	 * @brief	Determine that the called insert() is a range insertion, thanks to the fourth paramter type.
-	 * 
-	 * @tparam	U Any non-integral type.
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	param1 The first element of the range to insert.
-	 * @param	param2 The last element of the range to insert.
-	 */
-	template<typename U>
-	inline void	_insertDispatch(iterator const pos, U const param1, U const param2, false_type const)
-	{
-		this->_insertRange(pos, param1, param2, typename iterator_traits<U>::iterator_category());
-	}
+    /**
+     * @brief	Determine that the called insert() is a range insertion,
+     * thanks to the fourth paramter type.
+     *
+     * @tparam	U Any non-integral type.
+     *
+     * @param	pos The position to insert the elements.
+     * @param	param1 The first element of the range to insert.
+     * @param	param2 The last element of the range to insert.
+     */
+    template <typename U>
+    inline void _insertDispatch(
+        Iterator const pos, U const param1, U const param2, false_type const
+    )
+    {
+        _insertRange(pos, param1, param2, typename iterator_traits<U>::iterator_category());
+    }
 
-	/**
-	 * @brief	Insert elements at a specific position.
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	n The number of elements to insert.
-	 * @param	val The element value to fill the vector with.
-	 */
-	inline void	_insertFill(iterator const pos, size_type const n, value_type const &val)
-	{
-		size_type const	offset = pos - this->begin();
-		pointer			ptr0;
-		pointer			ptr1;
-		allocator_type	alloc;
+    /**
+     * @brief	Insert elements at a specific position.
+     *
+     * @param	pos The position to insert the elements.
+     * @param	n The number of elements to insert.
+     * @param	inner The element value to fill the vector with.
+     */
+    inline void _insertFill(
+        Iterator const pos, Size const n, ValueType const &inner
+    )
+    {
+        Size const offset = pos - begin();
+        Pointer    ptr0;
+        Pointer    ptr1;
+        Allocator  alloc;
 
-		this->_prepareMemoryArea(pos, n);
+        _prepareMemoryArea(pos, n);
 
-		for (ptr0 = this->_head + offset, ptr1 = ptr0 + n ; ptr0 != ptr1 ; ++ptr0)
-			alloc.construct(ptr0, val);
-	}
+        for (ptr0 = m_head + offset, ptr1 = ptr0 + n; ptr0 != ptr1; ++ptr0) {
+            alloc.construct(ptr0, inner);
+        }
+    }
 
-	/**
-	 * @brief	Insert elements at a specific position using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			It is assumed that the given iterators are not random access iterators, thanks to the fourth parameter.
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	_insertRange(
-		iterator const &pos,
-		InputIterator first,
-		InputIterator const last,
-		std::input_iterator_tag const)
-	{
-		size_type const	offset = this->end() - pos;
-		size_type		newCapacity;
-		pointer			newHead;
-		pointer			newTail;
-		allocator_type	alloc;
+    /**
+     * @brief	Insert elements at a specific position using a range of
+     * iterators, from `first` included to `last` excluded. It is assumed
+     * that the given iterators are not random access iterators, thanks to
+     * the fourth parameter.
+     *
+     * @tparam	InputIterator The type of the iterators to use.
+     * 			(it must conform to the standard input Iterator
+     * requirements)
+     *
+     * @param	pos The position to insert the elements.
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    template <typename InputIterator>
+    void _insertRange(
+        Iterator const     &pos,
+        InputIterator       first,
+        InputIterator const last,
+        std::input_iterator_tag const
+    )
+    {
+        Size const offset = end() - pos;
+        Size       newCapacity;
+        Pointer    newHead;
+        Pointer    newTail;
+        Allocator  alloc;
 
-		newCapacity = this->size() * 2;
-		for ( ; first != last ; ++first)
-		{
-			if (this->size() < this->capacity())
-				this->_rangeMove(this->_tail - offset + 1, this->_tail - offset, this->_tail);
-			else
-			{
+        newCapacity = size() * 2;
+        for (; first != last; ++first) {
+            if (size() < capacity()) {
+                _rangeMove(m_tail - offset + 1, m_tail - offset, m_tail);
+            }
+            else {
 
-				if (newCapacity < this->size() + 1)
-					newCapacity = this->size() + 1;
-				newHead = alloc.allocate(newCapacity, this->_head);
-				newTail = newHead + this->size();
-				if (this->_head)
-				{
-					this->_rangeMove(newHead, this->_head, this->_tail - offset);
-					this->_rangeMove(newTail - offset + 1, this->_tail - offset, this->_tail);
-					alloc.deallocate(this->_head, this->capacity());
-				}
-				this->_head = newHead;
-				this->_tail = newTail;
-				this->_end_of_storage = this->_head + newCapacity;
-				++newCapacity;
-			}
-			alloc.construct(this->_tail - offset, *first);
-			++this->_tail;
-		}
-	}
+                if (newCapacity < size() + 1) {
+                    newCapacity = size() + 1;
+                }
+                newHead = alloc.allocate(newCapacity, m_head);
+                newTail = newHead + size();
+                if (m_head) {
+                    _rangeMove(newHead, m_head, m_tail - offset);
+                    _rangeMove(newTail - offset + 1, m_tail - offset, m_tail);
+                    alloc.deallocate(m_head, capacity());
+                }
+                m_head           = newHead;
+                m_tail           = newTail;
+                m_end_of_storage = m_head + newCapacity;
+                ++newCapacity;
+            }
+            alloc.construct(m_tail - offset, *first);
+            ++m_tail;
+        }
+    }
 
-	/**
-	 * @brief	Insert elements at a specific position using a range of iterators,
-	 * 			from `first` included to `last` excluded.
-	 * 			It is assumed that the given iterators are random access iterators, thanks to the fourth parameter.
-	 * 
-	 * @tparam	RandomAccessIterator The type of the iterators to use.
-	 * 			(it must conform to the standard random access iterator requirements)
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename RandomAccessIterator>
-	void	_insertRange(
-		iterator const &pos,
-		RandomAccessIterator first,
-		RandomAccessIterator const last,
-		std::random_access_iterator_tag const)
-	{
-		size_type const	offset = pos - this->begin();
-		pointer			ptr;
-		allocator_type	alloc;
+    /**
+     * @brief	Insert elements at a specific position using a range of
+     * iterators, from `first` included to `last` excluded. It is assumed
+     * that the given iterators are random access iterators, thanks to the
+     * fourth parameter.
+     *
+     * @tparam	RandomAccessIterator The type of the iterators to use.
+     * 			(it must conform to the standard random access
+     * Iterator requirements)
+     *
+     * @param	pos The position to insert the elements.
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    template <typename RandomAccessIterator>
+    void _insertRange(
+        Iterator const            &pos,
+        RandomAccessIterator       first,
+        RandomAccessIterator const last,
+        std::random_access_iterator_tag const
+    )
+    {
+        Size const offset = pos - begin();
+        Pointer    ptr;
+        Allocator  alloc;
 
-		this->_prepareMemoryArea(pos, last - first);
+        _prepareMemoryArea(pos, last - first);
 
-		for (ptr = this->_head + offset ; first != last ; ++ptr, ++first)
-			alloc.construct(ptr, *first);
-	}
+        for (ptr = m_head + offset; first != last; ++ptr, ++first) {
+            alloc.construct(ptr, *first);
+        }
+    }
 
-	/**
-	 * @brief	Reorginize the vector content to make a n-sized hole at a specific position.
-	 * 			It may result in a reallocation of the vector.
-	 * 
-	 * @param	pos The position of the hole to make.
-	 * @param	n The size of the hole to make.
-	 */
-	void	_prepareMemoryArea(iterator const &pos, size_type const n)
-	{
-		size_type const	offset = pos - this->begin();
-		size_type		newCapacity;
-		pointer			newHead;
-		pointer			newTail;
-		allocator_type	alloc;
+    /**
+     * @brief	Reorginize the vector content to make a n-sized hole at
+     * a specific position. It may result in a reallocation of the vector.
+     *
+     * @param	pos The position of the hole to make.
+     * @param	n The size of the hole to make.
+     */
+    void _prepareMemoryArea(
+        Iterator const &pos, Size const n
+    )
+    {
+        Size const offset = pos - begin();
+        Size       newCapacity;
+        Pointer    newHead;
+        Pointer    newTail;
+        Allocator  alloc;
 
-		if (!n)
-			return ;
-		if (this->size() + n <= this->capacity())
-		{
-			this->_rangeMove(this->_head + offset + n, this->_head + offset, this->_tail);
-			this->_tail += n;
-		}
-		else
-		{
-			newCapacity = this->size() * 2;
-			if (newCapacity < this->size() + n)
-				newCapacity = this->size() + n;
-			newHead = alloc.allocate(newCapacity, this->_head);
-			newTail = newHead + this->size() + n;
-			if (this->_head)
-			{
-				this->_rangeMove(newHead, this->_head, pos.base());
-				this->_rangeMove(newHead + offset + n, pos.base(), this->_tail);
-				alloc.deallocate(this->_head, this->capacity());
-			}
-			this->_head = newHead;
-			this->_tail = newTail;
-			this->_end_of_storage = this->_head + newCapacity;
-		}
-	}
+        if (!n) {
+            return;
+        }
+        if (size() + n <= capacity()) {
+            _rangeMove(m_head + offset + n, m_head + offset, m_tail);
+            m_tail += n;
+        }
+        else {
+            newCapacity = size() * 2;
+            if (newCapacity < size() + n) {
+                newCapacity = size() + n;
+            }
+            newHead = alloc.allocate(newCapacity, m_head);
+            newTail = newHead + size() + n;
+            if (m_head) {
+                _rangeMove(newHead, m_head, pos.base());
+                _rangeMove(newHead + offset + n, pos.base(), m_tail);
+                alloc.deallocate(m_head, capacity());
+            }
+            m_head           = newHead;
+            m_tail           = newTail;
+            m_end_of_storage = m_head + newCapacity;
+        }
+    }
 
-	/**
-	 * @brief	Copy elements from a location to another, using a range of pointers,
-	 * 			from `first` included to `last` excluded,
-	 * 			using either trivial copy if possible, or non-trivial copy if not.
-	 * 
-	 * @param	dst The destination location.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	inline void	_rangeMove(pointer dst, pointer first, pointer last)
-		__attribute__((nonnull))
-	{
-		allocator_type	alloc;
+    /**
+     * @brief	Copy elements from a location to another, using a range
+     * of pointers, from `first` included to `last` excluded, using either
+     * trivial copy if possible, or non-trivial copy if not.
+     *
+     * @param	dst The destination location.
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    inline void _rangeMove(
+        Pointer dst, Pointer first, Pointer last
+    ) __attribute__((nonnull))
+    {
+        Allocator alloc;
 
-		if (is_trivially_copyable<value_type>::value)
-			memmove(dst, first, (last - first) * sizeof(value_type));
-		else if (dst < first)
-			for ( ; first != last ; ++first, ++dst)
-			{
-				alloc.construct(dst, *first);
-				alloc.destroy(first);
-			}
-		else if (dst > first)
-			for (dst += (last - first - 1), --first, --last ; first != last ; --last, --dst)
-			{
-				alloc.construct(dst, *last);
-				alloc.destroy(last);
-			}
-	}
+        if (is_trivially_copyable<ValueType>::value) {
+            memmove(dst, first, (last - first) * sizeof(ValueType));
+        }
+        else if (dst < first) {
+            for (; first != last; ++first, ++dst) {
+                alloc.construct(dst, *first);
+                alloc.destroy(first);
+            }
+        }
+        else if (dst > first) {
+            for (dst += (last - first - 1), --first, --last; first != last; --last, --dst) {
+                alloc.construct(dst, *last);
+                alloc.destroy(last);
+            }
+        }
+    }
 
 public:
-// ****************************************************************************************************************** //
-//                                                    Constructors                                                    //
-// ****************************************************************************************************************** //
+    // ┏━━━━━━━━━━━━━━┓
+    // ┃ Constructors ┃
+    // ┗━━━━━━━━━━━━━━┛
 
-	/**
-	 * @brief	Construct a new empty vector object. (default constructor)
-	 */
-	explicit vector(allocator_type const & = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_end_of_storage(NULL) {}
+    /**
+     * @brief	Construct a new empty vector object. (default
+     * constructor)
+     */
+    explicit Vector(
+        Allocator const & = Allocator()
+    )
+    : m_head(NULL), m_tail(NULL), m_end_of_storage(NULL)
+    {}
 
-	/**
-	 * @brief	Construct a new vector object with specific size and content. (fill constructor)
-	 * 
-	 * @param	n The number of elements to fill the vector with.
-	 * @param	val The element value to fill the vector with.
-	 */
-	explicit vector(size_type const n, value_type const &val = value_type(), allocator_type const & = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_end_of_storage(NULL)
-	{
-		this->_insertFill(iterator(), n, val);
-	}
+    /**
+     * @brief	Construct a new vector object with specific size and
+     * content. (fill constructor)
+     *
+     * @param	n The number of elements to fill the vector with.
+     * @param	inner The element value to fill the vector with.
+     */
+    explicit Vector(
+        Size const n, ValueType const &inner = ValueType(), Allocator const & = Allocator()
+    )
+    : m_head(NULL), m_tail(NULL), m_end_of_storage(NULL)
+    {
+        _insertFill(Iterator(), n, inner);
+    }
 
-	/**
-	 * @brief	Construct a new vector object using a range of iterators.
-	 * 			The resulting vector will contain the elements from `first` included to `last` excluded.
-	 * 			(range constructor)
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	vector(InputIterator first, InputIterator last, allocator_type const & = allocator_type()) :
-		_head(NULL),
-		_tail(NULL),
-		_end_of_storage(NULL)
-	{
-		this->_insertDispatch(iterator(), first, last, is_integral<InputIterator>());
-	}
+    /**
+     * @brief	Construct a new vector object using a range of
+     * iterators. The resulting vector will contain the elements from
+     * `first` included to `last` excluded. (range constructor)
+     *
+     * @tparam	InputIterator The type of the iterators to use.
+     * 			(it must conform to the standard input Iterator
+     * requirements)
+     *
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    template <typename InputIterator>
+    Vector(
+        InputIterator first, InputIterator last, Allocator const & = Allocator()
+    )
+    : m_head(NULL), m_tail(NULL), m_end_of_storage(NULL)
+    {
+        _insertDispatch(Iterator(), first, last, is_integral<InputIterator>());
+    }
 
-	/**
-	 * @brief	Construct a new vector object as a copy of another one. (copy constructor)
-	 * 
-	 * @param	src The vector to copy.
-	 */
-	vector(vector const &src) :
-		_head(NULL),
-		_tail(NULL),
-		_end_of_storage(NULL)
-	{
-		this->_insertRange(iterator(), src.begin(), src.end(), typename iterator_traits<iterator>::iterator_category());
-	}
+    /**
+     * @brief	Construct a new vector object as a copy of another one.
+     * (copy constructor)
+     *
+     * @param	src The vector to copy.
+     */
+    Vector(
+        Vector const &src
+    )
+    : m_head(NULL), m_tail(NULL), m_end_of_storage(NULL)
+    {
+        _insertRange(
+            Iterator(),
+            src.begin(),
+            src.end(),
+            typename iterator_traits<Iterator>::iterator_category()
+        );
+    }
 
-// ***************************************************************************************************************** //
-//                                                    Destructors                                                    //
-// ***************************************************************************************************************** //
+    // ┏━━━━━━━━━━━━┓
+    // ┃ Destructor ┃
+    // ┗━━━━━━━━━━━━┛
 
-	/**
-	 * @brief	Destroy a vector object, releasing its related allocated memory. (destructor)
-	 */
-	~vector(void)
-	{
-		this->clear();
-		if (this->_head)
-			allocator_type().deallocate(this->_head, this->capacity());
-	};
+    /**
+     * @brief	Destroy a vector object, releasing its related allocated
+     * memory. (destructor)
+     */
+    ~Vector(
+        void
+    )
+    {
+        clear();
+        if (m_head) {
+            Allocator().deallocate(m_head, capacity());
+        }
+    };
 
-// ***************************************************************************************************************** //
-//                                              Public Member Functions                                              //
-// ***************************************************************************************************************** //
+    // ┏━━━━━━━━━┓
+    // ┃ Methods ┃
+    // ┗━━━━━━━━━┛
 
-	/**
-	 * @brief		Assign a new size and a new content to the vector. (fill assignation)
-	 * 
-	 * @param n		The new size of the vector.
-	 * @param val	The new value to fill the vector with.
-	 */
-	void	assign(size_type const n, value_type const &val)
-	{
-		this->clear();
-		this->_insertFill(this->begin(), n, val);
-	}
+    /**
+     * @brief		Assign a new size and a new content to the
+     * vector. (fill assignation)
+     *
+     * @param n		The new size of the vector.
+     * @param inner	The new value to fill the vector with.
+     */
+    void assign(
+        Size const n, ValueType const &inner
+    )
+    {
+        clear();
+        _insertFill(begin(), n, inner);
+    }
 
-	/**
-	 * @brief	Assign a new size and a new content to the vector, using a range of iterators,
-	 * 			from `first` included to `last` excluded. (range assignation)
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	assign(InputIterator first, InputIterator last)
-	{
-		this->clear();
-		this->_insertDispatch(this->begin(), first, last, is_integral<InputIterator>());
-	}
+    /**
+     * @brief	Assign a new size and a new content to the vector, using
+     * a range of iterators, from `first` included to `last` excluded.
+     * (range assignation)
+     *
+     * @tparam	InputIterator The type of the iterators to use.
+     * 			(it must conform to the standard input Iterator
+     * requirements)
+     *
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    template <typename InputIterator>
+    void assign(
+        InputIterator first, InputIterator last
+    )
+    {
+        clear();
+        _insertDispatch(begin(), first, last, is_integral<InputIterator>());
+    }
 
-	/**
-	 * @param	n The position of the element to access.
-	 * 
-	 * @return	The element at the given position.
-	 */
-	reference	at(size_type const n)
-	{
-		if (n >= this->size())
-			throw std::out_of_range("vector::at");
-		return this->_head[n];
-	}
+    /**
+     * @param	n The position of the element to access.
+     *
+     * @return	The element at the given position.
+     */
+    Reference at(
+        Size const n
+    )
+    {
+        if (n >= size()) {
+            throw std::out_of_range("vector::at");
+        }
+        return m_head[n];
+    }
 
-	/**
-	 * @param	n The position of the constant element to access.
-	 * 
-	 * @return	The constant element at the given position.
-	 */
-	const_reference	at(size_type const n) const
-	{
-		if (n >= this->size())
-			throw std::out_of_range("vector::at");
-		return this->_head[n];
-	}
+    /**
+     * @param	n The position of the constant element to access.
+     *
+     * @return	The constant element at the given position.
+     */
+    ConstReference at(
+        Size const n
+    ) const
+    {
+        if (n >= size()) {
+            throw std::out_of_range("vector::at");
+        }
+        return m_head[n];
+    }
 
-	/**
-	 * @return	The last element of the vector.
-	 */
-	reference	back(void)
-	{
-		return *(this->_tail - 1);
-	}
+    /**
+     * @return	The last element of the vector.
+     */
+    Reference back(
+        void
+    )
+    {
+        return *(m_tail - 1);
+    }
 
-	/**
-	 * @return	The constant last element of the vector.
-	 */
-	const_reference	back(void) const
-	{
-		return *(this->_tail - 1);
-	}
+    /**
+     * @return	The constant last element of the vector.
+     */
+    ConstReference back(
+        void
+    ) const
+    {
+        return *(m_tail - 1);
+    }
 
-	/**
-	 * @return	An iterator to the first element of the vector.
-	 */
-	iterator	begin(void)
-	{
-		return iterator(this->_head);
-	}
+    /**
+     * @return	An Iterator to the first element of the vector.
+     */
+    Iterator begin(
+        void
+    )
+    {
+        return Iterator(m_head);
+    }
 
-	/**
-	 * @return	A const_iterator to the first element of the vector.
-	 */
-	const_iterator	begin(void) const
-	{
-		return const_iterator(this->_head);
-	}
+    /**
+     * @return	A ConstIterator to the first element of the vector.
+     */
+    ConstIterator begin(
+        void
+    ) const
+    {
+        return ConstIterator(m_head);
+    }
 
-	/**
-	 * @return	The number of allocated memory in the vector.
-	 */
-	size_type	capacity(void) const
-	{
-		return this->_end_of_storage - this->_head;
-	}
+    /**
+     * @return	The number of allocated memory in the vector.
+     */
+    Size capacity(
+        void
+    ) const
+    {
+        return m_end_of_storage - m_head;
+    }
 
-	/**
-	 * @brief	Destroy every element in the vector without deallocating them.
-	 */
-	void	clear(void)
-	{
-		allocator_type	alloc;
+    /**
+     * @brief	Destroy every element in the vector without deallocating
+     * them.
+     */
+    void clear(
+        void
+    )
+    {
+        Allocator alloc;
 
-		if (this->_head == this->_tail)
-			return ;
-		for (--this->_tail ; this->_tail != this->_head ; --this->_tail)
-			alloc.destroy(this->_tail);
-		alloc.destroy(this->_tail);
-	}
+        if (m_head == m_tail) {
+            return;
+        }
+        for (--m_tail; m_tail != m_head; --m_tail) {
+            alloc.destroy(m_tail);
+        }
+        alloc.destroy(m_tail);
+    }
 
-	/**
-	 * @return	Either true if the vector is empty, or false if not.
-	 */
-	bool	empty(void) const
-	{
-		return this->_head == this->_tail;
-	}
+    /**
+     * @return	Either true if the vector is empty, or false if not.
+     */
+    bool empty(
+        void
+    ) const
+    {
+        return m_head == m_tail;
+    }
 
-	/**
-	 * @return	An iterator to the post-last element of the vector.
-	 */
-	iterator	end(void)
-	{
-		return iterator(this->_tail);
-	}
+    /**
+     * @return	An Iterator to the post-last element of the vector.
+     */
+    Iterator end(
+        void
+    )
+    {
+        return Iterator(m_tail);
+    }
 
-	/**
-	 * @return	A const_iterator to the post-last element of the vector.
-	 */
-	const_iterator	end(void) const
-	{
-		return const_iterator(this->_tail);
-	}
+    /**
+     * @return	A ConstIterator to the post-last element of the vector.
+     */
+    ConstIterator end(
+        void
+    ) const
+    {
+        return ConstIterator(m_tail);
+    }
 
-	/**
-	 * @brief	Remove a single element from the vector. (single erase)
-	 * 
-	 * @param	pos The position of the element to remove.
-	 * 
-	 * @return	An iterator to the element after the removed one.
-	 */
-	iterator	erase(iterator const pos)
-	{
-		return this->erase(pos, pos + 1);
-	}
+    /**
+     * @brief	Remove a single element from the vector. (single erase)
+     *
+     * @param	pos The position of the element to remove.
+     *
+     * @return	An Iterator to the element after the removed one.
+     */
+    Iterator erase(
+        Iterator const pos
+    )
+    {
+        return erase(pos, pos + 1);
+    }
 
-	/**
-	 * @brief	Remove elements from the vector using a range of iterators,
-	 * 			from `first` included to `last` excluded. (range erase)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 * 
-	 * @return	An iterator to the element after the removed ones.
-	 */
-	iterator	erase(iterator const &first, iterator const &last)
-	{
-		allocator_type	alloc;
-		iterator		it;
+    /**
+     * @brief	Remove elements from the vector using a range of
+     * iterators, from `first` included to `last` excluded. (range erase)
+     *
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     *
+     * @return	An Iterator to the element after the removed ones.
+     */
+    Iterator erase(
+        Iterator const &first, Iterator const &last
+    )
+    {
+        Allocator alloc;
+        Iterator  it;
 
-		for (it = first ; it != last ; ++it)
-			alloc.destroy(it.base());
-		this->_rangeMove(first.base(), last.base(), this->_tail);
-		this->_tail -= last - first;
-		return first;
-	}
+        for (it = first; it != last; ++it) {
+            alloc.destroy(it.base());
+        }
+        _rangeMove(first.base(), last.base(), m_tail);
+        m_tail -= last - first;
+        return first;
+    }
 
-	/**
-	 * @return	The first element of the vector.
-	 */
-	reference	front(void)
-	{
-		return *this->_head;
-	}
+    /**
+     * @return	The first element of the vector.
+     */
+    Reference front(
+        void
+    )
+    {
+        return *m_head;
+    }
 
-	/**
-	 * @return	The constant first element of the vector.
-	 */
-	const_reference	front(void) const
-	{
-		return *this->_head;
-	}
+    /**
+     * @return	The constant first element of the vector.
+     */
+    ConstReference front(
+        void
+    ) const
+    {
+        return *m_head;
+    }
 
-	/**
-	 * @return	An allocator_type default object.
-	 */
-	allocator_type	get_allocator(void) const
-	{
-		return allocator_type();
-	}
+    /**
+     * @return	An Allocator default object.
+     */
+    Allocator get_allocator(
+        void
+    ) const
+    {
+        return Allocator();
+    }
 
-	/**
-	 * @brief	Insert elements at a specific position. (fill insertion)
-	 * 
-	 * @par		The call to _insertFill() instead of directly put the implementation here
-	 * 			is for handle ambiguous call of an overload of insert().
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	n The number of elements to insert.
-	 * @param	val The element value to fill the vector with.
-	 */
-	void	insert(iterator const pos, size_type const n, value_type const &val)
-	{
-		this->_insertFill(pos, n, val);
-	}
+    /**
+     * @brief	Insert elements at a specific position. (fill insertion)
+     *
+     * @par		The call to _insertFill() instead of directly put the
+     * implementation here is for handle ambiguous call of an overload of
+     * insert().
+     *
+     * @param	pos The position to insert the elements.
+     * @param	n The number of elements to insert.
+     * @param	inner The element value to fill the vector with.
+     */
+    void insert(
+        Iterator const pos, Size const n, ValueType const &inner
+    )
+    {
+        _insertFill(pos, n, inner);
+    }
 
-	/**
-	 * @brief	Insert elements at a specific position using a range of iterators,
-	 * 			from `first` included to `last` excluded. (range insertion)
-	 * 
-	 * @par		The call to _insertDispacth() instead of directly put the implementation here
-	 * 			is for handle ambiguous call of an overload of insert().
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	pos The position to insert the elements.
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	insert(iterator const pos, InputIterator first, InputIterator last)
-	{
-		this->_insertDispatch(pos, first, last, is_integral<InputIterator>());
-	}
+    /**
+     * @brief	Insert elements at a specific position using a range of
+     * iterators, from `first` included to `last` excluded. (range
+     * insertion)
+     *
+     * @par		The call to _insertDispacth() instead of directly put
+     * the implementation here is for handle ambiguous call of an overload
+     * of insert().
+     *
+     * @tparam	InputIterator The type of the iterators to use.
+     * 			(it must conform to the standard input Iterator
+     * requirements)
+     *
+     * @param	pos The position to insert the elements.
+     * @param	first The first element of the range.
+     * @param	last The last element of the range.
+     */
+    template <typename InputIterator>
+    void insert(
+        Iterator const pos, InputIterator first, InputIterator last
+    )
+    {
+        _insertDispatch(pos, first, last, is_integral<InputIterator>());
+    }
 
-	/**
-	 * @brief	Insert an element at a specific position. (single insertion)
-	 * 
-	 * @param	pos The position to insert the element.
-	 * @param	val The element to insert.
-	 * 
-	 * @return	An iterator to the inserted element.
-	 */
-	iterator	insert(iterator const pos, value_type const &val)
-	{
-		size_type const	offset = pos - this->begin();
+    /**
+     * @brief	Insert an element at a specific position. (single
+     * insertion)
+     *
+     * @param	pos The position to insert the element.
+     * @param	inner The element to insert.
+     *
+     * @return	An Iterator to the inserted element.
+     */
+    Iterator insert(
+        Iterator const pos, ValueType const &inner
+    )
+    {
+        Size const offset = pos - begin();
 
-		this->insert(pos, 1LU, val);
-		return this->begin() + offset;
-	}
+        insert(pos, 1LU, inner);
+        return begin() + offset;
+    }
 
-	/**
-	 * @return	The maximum number of elements that can be stored in the vector.
-	 */
-	size_type	max_size(void) const
-	{
-		return allocator_type().max_size();
-	}
+    /**
+     * @return	The maximum number of elements that can be stored in the
+     * vector.
+     */
+    Size max_size(
+        void
+    ) const
+    {
+        return Allocator().max_size();
+    }
 
-	/**
-	 * @brief	Destroy the last element in the vector without deallocating it.
-	 */
-	void	pop_back(void)
-	{
-		if (this->_tail)
-			--this->_tail;
-		allocator_type().destroy(this->_tail);
-	}
+    /**
+     * @brief	Destroy the last element in the vector without
+     * deallocating it.
+     */
+    void pop_back(
+        void
+    )
+    {
+        if (m_tail) {
+            --m_tail;
+        }
+        Allocator().destroy(m_tail);
+    }
 
-	/**
-	 * @brief	Append a new element at the end of the vector.
-	 * 
-	 * @param	val The element value to append.
-	 */
-	void	push_back(value_type const &val)
-	{
-		this->_insertFill(this->end(), 1LU, val);
-	}
+    /**
+     * @brief	Append a new element at the end of the vector.
+     *
+     * @param	inner The element value to append.
+     */
+    void push_back(
+        ValueType const &inner
+    )
+    {
+        _insertFill(end(), 1LU, inner);
+    }
 
-	/**
-	 * @return	A reverse_iterator to the last element of the vector.
-	 */
-	reverse_iterator	rbegin(void)
-	{
-		return reverse_iterator(this->end());
-	}
+    /**
+     * @return	A ReverseIterator to the last element of the vector.
+     */
+    ReverseIterator rbegin(
+        void
+    )
+    {
+        return ReverseIterator(end());
+    }
 
-	/**
-	 * @return	A const_reverse_iterator to the last element of the vector.
-	 */
-	const_reverse_iterator	rbegin(void) const
-	{
-		return const_reverse_iterator(this->end());
-	}
+    /**
+     * @return	A ConstReverseIterator to the last element of the
+     * vector.
+     */
+    ConstReverseIterator rbegin(
+        void
+    ) const
+    {
+        return ConstReverseIterator(end());
+    }
 
-	/**
-	 * @return	A reverse_iterator to the first element of the vector.
-	 */
-	reverse_iterator	rend(void)
-	{
-		return reverse_iterator(this->begin());
-	}
+    /**
+     * @return	A ReverseIterator to the first element of the vector.
+     */
+    ReverseIterator rend(
+        void
+    )
+    {
+        return ReverseIterator(begin());
+    }
 
-	/**
-	 * @return	A const_reverse_iterator to the first element of the vector.
-	 */
-	const_reverse_iterator	rend(void) const
-	{
-		return const_reverse_iterator(this->begin());
-	}
+    /**
+     * @return	A ConstReverseIterator to the first element of the
+     * vector.
+     */
+    ConstReverseIterator rend(
+        void
+    ) const
+    {
+        return ConstReverseIterator(begin());
+    }
 
-	/**
-	 * @brief	Request for a minimum capacity of the vector.
-	 * 			It may result in a reallocation of the content.
-	 * 
-	 * @param	n The minimum capacity to request.
-	 */
-	void	reserve(size_type const n)
-	{
-		pointer			newHead;
-		pointer			newTail;
-		allocator_type	alloc;
+    /**
+     * @brief	Request for a minimum capacity of the vector.
+     * 			It may result in a reallocation of the content.
+     *
+     * @param	n The minimum capacity to request.
+     */
+    void reserve(
+        Size const n
+    )
+    {
+        Pointer   newHead;
+        Pointer   newTail;
+        Allocator alloc;
 
-		if (n <= this->capacity())
-			return ;
-		else if (n > alloc.max_size())
-			throw std::length_error("vector::reserve");
-		newHead = alloc.allocate(n, this->_head);
-		newTail = newHead + this->size();
-		this->_rangeMove(newHead, this->_head, this->_tail);
-		alloc.deallocate(this->_head, this->capacity());
-		this->_head = newHead;
-		this->_tail = newTail;
-		this->_end_of_storage = this->_head + n;
-	}
+        if (n <= capacity()) {
+            return;
+        }
+        else if (n > alloc.max_size()) {
+            throw std::length_error("vector::reserve");
+        }
+        newHead = alloc.allocate(n, m_head);
+        newTail = newHead + size();
+        _rangeMove(newHead, m_head, m_tail);
+        alloc.deallocate(m_head, capacity());
+        m_head           = newHead;
+        m_tail           = newTail;
+        m_end_of_storage = m_head + n;
+    }
 
-	/**
-	 * @brief	Request for a new size of the vector.
-	 * 			In case of a smaller size, the current content is truncated.
-	 * 			In case of a greater size, the extra content is filled with `val`.
-	 * 			It may result in a reallocation of the content.
-	 * 
-	 * @param	n The new size of the vector.
-	 * @param	val The value to fill the extra content with.
-	 */
-	void	resize(size_type const n, value_type const val = value_type())
-	{
-		if (n < this->size())
-			this->erase(this->_head + n, this->end());
-		else if (n > this->size())
-			this->_insertFill(this->end(), n - this->size(), val);
-	}
+    /**
+     * @brief	Request for a new size of the vector.
+     * 			In case of a smaller size, the current content
+     * is truncated. In case of a greater size, the extra content is filled
+     * with `inner`. It may result in a reallocation of the content.
+     *
+     * @param	n The new size of the vector.
+     * @param	inner The value to fill the extra content with.
+     */
+    void resize(
+        Size const n, ValueType const inner = ValueType()
+    )
+    {
+        if (n < size()) {
+            erase(m_head + n, end());
+        }
+        else if (n > size()) {
+            _insertFill(end(), n - size(), inner);
+        }
+    }
 
-	/**
-	 * @return	The number of stored elements in the vector.
-	 */
-	size_type	size(void) const
-	{
-		return this->_tail - this->_head;
-	}
+    /**
+     * @return	The number of stored elements in the vector.
+     */
+    Size size(
+        void
+    ) const
+    {
+        return m_tail - m_head;
+    }
 
-	/**
-	 * @brief	Swap the content of the given vector with the content of the current vector.
-	 * 
-	 * @param	other The vector to swap with.
-	 */
-	void	swap(vector &other)
-	{
-		ft::swap<pointer>(this->_head, other._head);
-		ft::swap<pointer>(this->_tail, other._tail);
-		ft::swap<pointer>(this->_end_of_storage, other._end_of_storage);
-	}
+    /**
+     * @brief	Swap the content of the given vector with the content of
+     * the current vector.
+     *
+     * @param	other The vector to swap with.
+     */
+    void swap(
+        Vector &other
+    )
+    {
+        swap<Pointer>(m_head, other.m_head);
+        swap<Pointer>(m_tail, other.m_tail);
+        swap<Pointer>(m_end_of_storage, other.m_end_of_storage);
+    }
 
-// ***************************************************************************************************************** //
-//                                                     Operators                                                     //
-// ***************************************************************************************************************** //
+    // ┏━━━━━━━━━━━┓
+    // ┃ Operators ┃
+    // ┗━━━━━━━━━━━┛
 
-	/**
-	 * @brief	Assign a new content to the vector from another one's. (copy assignation)
-	 * 
-	 * @param	rhs The right hand side vector to copy the content from.
-	 * 
-	 * @return	The assigned vector.
-	 */
-	vector	&operator=(vector const &rhs)
-	{
-		if (this != &rhs)
-			this->assign(rhs.begin(), rhs.end());
-		return *this;
-	}
+    /**
+     * @brief	Assign a new content to the vector from another one's.
+     * (copy assignation)
+     *
+     * @param	rhs The right hand side vector to copy the content from.
+     *
+     * @return	The assigned vector.
+     */
+    Vector &operator=(
+        Vector const &rhs
+    )
+    {
+        if (this != &rhs) {
+            assign(rhs.begin(), rhs.end());
+        }
+        return *this;
+    }
 
-	/**
-	 * @param	idx The index of the element to get.
-	 * 
-	 * @return	The element at the given index.
-	 */
-	reference	operator[](size_type const idx)
-	{
-		return this->_head[idx];
-	}
+    /**
+     * @param	idx The index of the element to get.
+     *
+     * @return	The element at the given index.
+     */
+    Reference operator[](
+        Size const idx
+    )
+    {
+        return m_head[idx];
+    }
 
-	/**
-	 * @param	idx The index of the constant element to get.
-	 * 
-	 * @return	The constant element at the given index.
-	 */
-	const_reference	operator[](size_type const idx) const
-	{
-		return this->_head[idx];
-	}
+    /**
+     * @param	idx The index of the constant element to get.
+     *
+     * @return	The constant element at the given index.
+     */
+    ConstReference operator[](
+        Size const idx
+    ) const
+    {
+        return m_head[idx];
+    }
 
 }; // class vector
 
 /**
  * @brief	Check if two vector are equivalent.
- * 
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
+ *
  * @return	Either true if the two vector are equivalent, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator==(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator==(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return &lhs == &rhs || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+    return &lhs == &rhs || (lhs.size() == rhs.size() && equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 /**
  * @brief	Check if two vector are different.
- * 
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
+ *
  * @return	Either true if the two vector are different, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator!=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator!=(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return !(lhs == rhs);
+    return !(lhs == rhs);
 }
 
 /**
  * @brief	Check if two vector are strictly lexiographicaly ordered.
- * 
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
- * @return	Either true if the two vector are strictly lexiographicaly ordered, or false if not.
+ *
+ * @return	Either true if the two vector are strictly lexiographicaly
+ * ordered, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator<(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator<(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
 }
 
 /**
- * @brief	Check if two vector are strictly lexiographicaly reverse-ordered.
- * 
+ * @brief	Check if two vector are strictly lexiographicaly
+ * reverse-ordered.
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
- * @return	Either true if the two vector are strictly lexiographicaly reverse-ordered, or false if not.
+ *
+ * @return	Either true if the two vector are strictly lexiographicaly
+ * reverse-ordered, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator>(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator>(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return rhs < lhs;
+    return rhs < lhs;
 }
 
 /**
  * @brief	Check if two vector are lexiographicaly ordered or equivalent.
- * 
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
- * @return	Either true if the two vector are lexiographicaly ordered or equivalent, or false if not.
+ *
+ * @return	Either true if the two vector are lexiographicaly ordered or
+ * equivalent, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator<=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator<=(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return !(rhs < lhs);
+    return !(rhs < lhs);
 }
 
 /**
- * @brief	Check if two vector are lexiographicaly reverse-ordered or equivalent.
- * 
+ * @brief	Check if two vector are lexiographicaly reverse-ordered or
+ * equivalent.
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	lhs The left hand side vector to compare.
  * @param	rhs The right hand side vector to compare.
- * 
- * @return	Either true if the two vector are lexiographicaly reverse-ordered or equivalent, or false if not.
+ *
+ * @return	Either true if the two vector are lexiographicaly
+ * reverse-ordered or equivalent, or false if not.
  */
 template <typename T, typename Alloc>
-bool	operator>=(vector<T, Alloc> const &lhs, vector<T, Alloc> const &rhs)
+bool operator>=(
+    Vector<T, Alloc> const &lhs, Vector<T, Alloc> const &rhs
+)
 {
-	return !(lhs < rhs);
+    return !(lhs < rhs);
 }
 
-// ***************************************************************************************************************** //
-//                                               Specialized Functions                                               //
-// ***************************************************************************************************************** //
+// ┏━━━━━━━━━━━━━━━━━━━━━━━┓
+// ┃ Specialized functions ┃
+// ┗━━━━━━━━━━━━━━━━━━━━━━━┛
 
 /**
  * @brief	Swap the contents of two given vector.
- * 
+ *
  * @tparam	T The type of the elements stored in both of the vector.
  * @tparam	Alloc The allocator type used in both of the vector.
- * 
+ *
  * @param	a The first vector to swap.
  * @param	b The second vector to swap.
  */
 template <typename T, typename Alloc>
-void	swap(vector<T, Alloc> &a, vector<T, Alloc> &b)
+void swap(
+    Vector<T, Alloc> &a, Vector<T, Alloc> &b
+)
 {
-	a.swap(b);
+    a.swap(b);
 }
 
+#pragma endregion
 } // namespace ft
 
 #endif

@@ -1,622 +1,707 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   map.hpp                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/27 10:42:51 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/11 10:03:56 by jodufour         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef MAP_HPP
-# define MAP_HPP
+#define MAP_HPP
 
-# include "rb_tree.tpp"
+#include "functional.hpp" // ft::{binary_function,less}
+#include "red_black_tree.hpp" // ft::red_black_tree
+#include "utility.hpp" // ft::pair
 
-namespace ft
-{
+namespace ft {
+
 template <
-	typename Key,
-	typename T,
-	typename Compare = std::less<Key>,
-	typename Alloc = std::allocator<pair<Key const, T> > >
+    typename Key,
+    typename T,
+    typename Compare   = less<Key>,
+    typename Allocator = std::allocator<pair<Key const, T> >
+>
 class map
 {
+public: // types
+        // value_type      : T
+        // reference       : lvalue of T
+        // const_reference : const lvalue of T
+        // iterator        : iterator type pointing to T
+        // const_iterator  : iterator type pointing to const T
+        // difference_type : {,const_}iterator::difference_type
+        // size_type       : make_unsigned<difference_type>::type
+        //
+        // reverse_iterator       : reverse_iterator<iterator>
+        // const_reverse_iterator : reverse_iterator<const_iterator>
+        //
+        // key_type      : Key
+        // key_compare   : Compare
+        // value_compare : container dependent
 private:
-	// Member types
-	typedef rb_node<pair<Key const, T> >							_node_type;
-	typedef typename Alloc::template rebind<_node_type>::other		_node_allocator_type;
+    typedef red_black_tree<
+        pair<Key const, T>,
+        Compare,
+        typename Allocator::template rebind<rbt_node<pair<Key const, T> > >::other
+    >
+        tree_type;
 
 public:
-	// Member types
-	typedef Key														key_type;
-	typedef T														mapped_type;
-	typedef Compare													key_compare;
-	typedef Alloc													allocator_type;
+    typedef Key                                                 key_type;
+    typedef T                                                   mapped_type;
+    typedef pair<Key const, T>                                  value_type;
+    typedef Compare                                             key_compare;
+    typedef Allocator                                           allocator_type;
+    typedef typename Allocator::const_reference                 const_reference;
+    typedef typename Allocator::reference                       reference;
+    typedef typename Allocator::const_pointer                   const_pointer;
+    typedef typename Allocator::pointer                         pointer;
+    typedef typename tree_type::t_node_iterator_mut             const_iterator;
+    typedef typename tree_type::t_node_mut_iterator_mut         iterator;
+    typedef typename tree_type::t_node_reverse_iterator_mut     const_reverse_iterator;
+    typedef typename tree_type::t_node_mut_reverse_iterator_mut reverse_iterator;
+    typedef typename tree_type::t_difference_mut                difference_type;
+    typedef typename tree_type::t_size_mut                      size_type;
 
-	typedef pair<key_type const, mapped_type>						value_type;
+    class value_compare : public binary_function<value_type, value_type, bool>
+    {
+        friend class map;
 
-	typedef typename allocator_type::const_reference				const_reference;
-	typedef typename allocator_type::reference						reference;
+    protected:
+        key_compare m_predicate;
 
-	typedef typename allocator_type::const_pointer					const_pointer;
-	typedef typename allocator_type::pointer						pointer;
+        // ┏━━━━━━━━━━━━━━┓
+        // ┃ Constructors ┃
+        // ┗━━━━━━━━━━━━━━┛
 
-	typedef rb_tree_iterator<value_type const, _node_type const>	const_iterator;
-	typedef rb_tree_iterator<value_type, _node_type>				iterator;
-
-	typedef reverse_iterator<const_iterator>						const_reverse_iterator;
-	typedef reverse_iterator<iterator>								reverse_iterator;
-
-	typedef typename iterator_traits<iterator>::difference_type		difference_type;
-	typedef size_t													size_type;
-
-
-	class value_compare : public std::binary_function<value_type, value_type, bool>
-	{
-		friend class map;
-
-	protected:
-		// Attributes
-		key_compare	_cmp;
-
-	public:
-		// Operators
-		bool operator()(value_type const &lhs, value_type const &rhs) const
-		{
-			return this->_cmp(lhs.first, rhs.first);
-		}
-
-	}; // class value_compare
-
-private:
-	// Attributes
-	rb_tree<value_type, value_compare, _node_allocator_type>	_tree;
+        // ┏━━━━━━━━━━━┓
+        // ┃ Operators ┃
+        // ┗━━━━━━━━━━━┛
+    };
 
 public:
-// ****************************************************************************************************************** //
-//                                                    Constructors                                                    //
-// ****************************************************************************************************************** //
+    // ┏━━━━━━━━━━━━━━┓
+    // ┃ Constructors ┃
+    // ┗━━━━━━━━━━━━━━┛
 
-	/**
-	 * @brief	Construct a new empty map object. (default constructor)
-	 */
-	explicit map(key_compare const & = key_compare(), allocator_type const & = allocator_type()) :
-		_tree() {}
+    /**
+     * @brief Default constructor.
+     */
+    PairComparator(
+        KeyComparator const &cmp = KeyComparator()
+    )
+    : m_cmp(cmp)
 
-	/**
-	 * @brief	Construct a new map object using a range of iterators.
-	 * 			The resulting map will contain elements from `first` included to `last` excluded.
-	 * 			(range constructor)
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	map(
-		InputIterator const first,
-		InputIterator const last,
-		key_compare const & = key_compare(),
-		allocator_type const & = allocator_type()) :
-		_tree(first, last) {}
+    {}
 
-	/**
-	 * @brief	Construct a new map object as a copy of another one. (copy constructor)
-	 * 
-	 * @param	src The map to copy.
-	 */
-	map(map const &src) :
-		_tree(src._tree) {}
+    // ┏━━━━━━━━━━━┓
+    // ┃ Operators ┃
+    // ┗━━━━━━━━━━━┛
 
-// ***************************************************************************************************************** //
-//                                                    Destructors                                                    //
-// ***************************************************************************************************************** //
+    bool operator()(
+        Pair const &lhs, Pair const &rhs
+    ) const
+    {
+        return m_cmp(lhs.first, rhs.first);
+    }
 
-	/**
-	 * @brief	Destroy the map object. (destructor)
-	 */
-	~map(void)
-	{
-		this->_tree.clear();
-	}
+}; // class PairComparator
 
-// ***************************************************************************************************************** //
-//                                              Public Member Functions                                              //
-// ***************************************************************************************************************** //
+private:
+RedBlackTree<Pair, PairComparator, NodeAllocator> m_inner;
 
-	/**
-	 * @return	An iterator to the first element of the map.
-	 */
-	iterator	begin(void)
-	{
-		return this->_tree.begin();
-	}
-
-	/**
-	 * @return	A const_iterator to the first element of the map.
-	 */
-	const_iterator	begin(void) const
-	{
-		return this->_tree.begin();
-	}
-
-	/**
-	 * @brief	Remove every elements of the map.
-	 */
-	void	clear(void)
-	{
-		this->_tree.clear();
-	}
-
-	/**
-	 * @return	The number of matching elements with a given key in the map.
-	 */
-	size_type	count(key_type const &key) const
-	{
-		return this->_tree.find(value_type(key, mapped_type())) != this->_tree.getNil();
-	}
-
-	/**
-	 * @return	Either true if the map is empty, or false if not.
-	 */
-	bool	empty(void) const
-	{
-		return !this->_tree.getSize();
-	}
-
-	/**
-	 * @return	An iterator to the post-last element of the map.
-	 */
-	iterator	end(void)
-	{
-		return this->_tree.end();
-	}
-
-	/**
-	 * @return	A const_iterator to the post-last element of the map.
-	 */
-	const_iterator	end(void) const
-	{
-		return this->_tree.end();
-	}
-
-	/**
-	 * @brief	Search for elements matching a given key in the map.
-	 * 			The resulting match is returned as a range of iterator,
-	 * 			from the first element included to the last element excluded.
-	 * 
-	 * @param	key The key to search for.
-	 * 
-	 * @return	A pair containing an iterator to the first element of the matching range as `first` member,
-	 * 			and an iterator to the last element of the matching range as `second` member.
-	 */
-	pair<iterator, iterator>	equal_range(key_type const &key)
-	{
-		return this->_tree.equal_range(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @brief	Search for constant elements matching a given key in the map.
-	 * 			The resulting match is returned as a range of const_iterator,
-	 * 			from the first constant element included to the last constant element excluded.
-	 * 
-	 * @param	key The key to search for.
-	 * 
-	 * @return	A pair containing an iterator to the first constant element of the matching range as `first` member,
-	 * 			and an iterator to the last constant element of the matching range as `second` member.
-	 */
-	pair<const_iterator, const_iterator>	equal_range(key_type const &key) const
-	{
-		return this->_tree.equal_range(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @brief	Remove an element from the map. (single erase (position))
-	 * 
-	 * @param	pos The position of the element to remove.
-	 */
-	void	erase(iterator pos)
-	{
-		this->_tree.erase(pos.base());
-	}
-
-	/**
-	 * @brief	Remove an element from the map. (single erase (key))
-	 * 
-	 * @param	key The key of the element to remove.
-	 * 
-	 * @return	The number of removed element(s).
-	 */
-	size_type	erase(key_type const &key)
-	{
-		return this->_tree.erase(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @brief	Remove elements from the map, using a range of iterators,
-	 * 			from `first` included to `last` excluded. (range erase)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	void	erase(iterator first, iterator const last)
-	{
-		while (first != last)
-			this->erase(first++);
-	}
-
-	/**
-	 * @brief	Search for an element in the map.
-	 * 
-	 * @param	key The key of the element to search.
-	 * 
-	 * @return	An iterator to the element if found, or end() if not.
-	 */
-	iterator	find(key_type const &key)
-	{
-		return iterator(this->_tree.find(value_type(key, mapped_type())));
-	}
-
-	/**
-	 * @brief	Search for a constant element in the map.
-	 * 
-	 * @param	key The key of the constant element to search.
-	 * 
-	 * @return	A const_iterator to the constant element if found, or end() if not.
-	 */
-	const_iterator	find(key_type const &key) const
-	{
-		return const_iterator(this->_tree.find(value_type(key, mapped_type())));
-	}
-
-	/**
-	 * @brief	Insert elements in the map using a range of iterators,
-	 * 			from `first` included to `last` excluded. (range insertion)
-	 * 
-	 * @tparam	InputIterator The type of the iterators to use.
-	 * 			(it must conform to the standard input iterator requirements)
-	 * 
-	 * @param	first The first element of the range.
-	 * @param	last The last element of the range.
-	 */
-	template <typename InputIterator>
-	void	insert(InputIterator first, InputIterator const last)
-	{
-		for (; first != last ; ++first)
-			this->insert(*first);
-	}
-
-	/**
-	 * @brief	Insert an element in the map. (single insertion)
-	 * 
-	 * @param	val The value of the element to insert in the map.
-	 * 
-	 * @return	A pair containing an iterator to the element of the map with the given value as `first` member,
-	 * 			and a boolean indicating whether a new element has been inserted as `second` member.
-	 */
-	pair<iterator, bool>	insert(value_type const &val)
-	{
-		return this->_tree.insert(val);
-	}
-
-	/**
-	 * @brief	Insert an element in the map. (single insertion with hint)
-	 * 
-	 * @param	pos The position where to insert the element.
-	 * @param	val The value of the element to insert in the map.
-	 * 
-	 * @return	An iterator to the element of the map with the given value.
-	 */
-	iterator	insert(iterator const pos, value_type const &val)
-	{
-		return this->_tree.insert(pos.base(), val);
-	}
-
-	/**
-	 * @return	A key_compare default object.
-	 */
-	key_compare	key_comp(void) const
-	{
-		return key_compare();
-	}
-
-	/**
-	 * @brief	Search for the first element in the map that should be after or at the given key.
-	 * 
-	 * @param	key The key of the virtual element preceding the searched one.
-	 * 
-	 * @return	An iterator to the element if found, or end() if not.
-	 */
-	iterator	lower_bound(key_type const &key)
-	{
-		return this->_tree.lower_bound(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @brief	Search for the first constant element in the map that should be after or at the given key.
-	 * 
-	 * @param	key The key of the virtual element preceding the searched one.
-	 * 
-	 * @return	An iterator to the constant element if found, or end() if not.
-	 */
-	const_iterator	lower_bound(key_type const &key) const
-	{
-		return this->_tree.lower_bound(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @return	The maximum number of elements that can be stored in the map.
-	 */
-	size_type	max_size(void) const
-	{
-		return this->_tree.max_size();
-	}
-
-	/**
-	 * @return	A reverse_iterator to the last element of the map.
-	 */
-	reverse_iterator	rbegin(void)
-	{
-		return this->_tree.rbegin();
-	}
-
-	/**
-	 * @return	A const_reverse_iterator to the last element of the map.
-	 */
-	const_reverse_iterator	rbegin(void) const
-	{
-		return this->_tree.rbegin();
-	}
-
-	/**
-	 * @return	A reverse_iterator to the pre-first element of the map.
-	 */
-	reverse_iterator	rend(void)
-	{
-		return this->_tree.rend();
-	}
-
-	/**
-	 * @return	A const_reverse_iterator to the pre-first element of the map.
-	 */
-	const_reverse_iterator	rend(void) const
-	{
-		return this->_tree.rend();
-	}
-
-	/**
-	 * @return	The number of stored elements in the map.
-	 */
-	size_type	size(void) const
-	{
-		return this->_tree.getSize();
-	}
-
-	/**
-	 * @brief	Swap the content of the given map with the content of the current map.
-	 * 
-	 * @param	other The map to swap with.
-	 */
-	void	swap(map &other)
-	{
-		this->_tree.swap(other._tree);
-	}
-
-	/**
-	 * @brief	Search for the first element in the map that should be strictly after the given key.
-	 * 
-	 * @param	key The key of the virtual element preceding the searched one.
-	 * 
-	 * @return	An iterator to the element if found, or end() if not.
-	 */
-	iterator	upper_bound(key_type const &key)
-	{
-		return this->_tree.upper_bound(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @brief	Search for the first constant element in the map that should be strictly after the given key.
-	 * 
-	 * @param	key The key of the virtual element preceding the searched one.
-	 * 
-	 * @return	A const_iterator to the element if found, or end() if not.
-	 */
-	const_iterator	upper_bound(key_type const &key) const
-	{
-		return this->_tree.upper_bound(value_type(key, mapped_type()));
-	}
-
-	/**
-	 * @return	A value_compare default object.
-	 */
-	value_compare	value_comp(void) const
-	{
-		return value_compare();
-	}
-
-// ***************************************************************************************************************** //
-//                                                     Operators                                                     //
-// ***************************************************************************************************************** //
-
-	/**
-	 * @brief	Assign a new content to the map from another one's. (copy assignation)
-	 * 
-	 * @param	rhs The right hand side map to copy the content from.
-	 * 
-	 * @return	The assigned map.
-	 */
-	map	&operator=(map const &rhs)
-	{
-		if (this != &rhs)
-			this->_tree = rhs._tree;
-		return *this;
-	}
-
-	/**
-	 * @brief	Look for an element in the map, inserting it if not found.
-	 * 
-	 * @param	key The key of the element to get.
-	 * 
-	 * @return	The element matching the given key.
-	 */
-	mapped_type	&operator[](key_type const &key)
-	{
-		iterator	it;
-		key_compare	cmp;
-
-		if (!this->_tree.getSize())
-			return this->_tree.insert(value_type(key, mapped_type())).first->second;
-
-		it = this->lower_bound(key);
-		if (it == this->end())
-			return this->_tree.insert(this->_tree.getNil()->child[RB_MAX], value_type(key, mapped_type()))->second;
-
-		if (cmp(it->first, key) || cmp(key, it->first))
-			return this->_tree.insert(it.base(), value_type(key, mapped_type()))->second;
-
-		return it->second;
-	}
-
-}; // class map
+public:
+// ┏━━━━━━━━━━━━━━┓
+// ┃ Constructors ┃
+// ┗━━━━━━━━━━━━━━┛
 
 /**
- * @brief	Check if two map are equivalent.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are equivalent, or false if not.
+ * @brief Default constructor.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator==(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+explicit Map(
+    KeyComparator const &cmp = KeyComparator(), Allocator const &alloc = Allocator()
+)
+: m_inner(PairComparator(cmp), alloc)
+{}
+
+/**
+ * @brief Range constructor.
+ *
+ * @tparam InputIterator The iterator type of the range.
+ *                       (must conform to the input iterator requirements)
+ *
+ * @param begin The first element of the range.
+ * @param end The post-last element of the range.
+ */
+template <typename InputIterator>
+Map(
+    InputIterator const &begin,
+    InputIterator const &end,
+    KeyComparator const &cmp   = KeyComparator(),
+    Allocator const     &alloc = Allocator()
+)
+: m_inner(begin, end, PairComparator(cmp), alloc)
+{}
+
+/**
+ * @brief Copy constructor.
+ *
+ * @param other The map to copy.
+ */
+Map(
+    Map const &other
+)
+: m_inner(other.m_inner)
+{}
+
+// ┏━━━━━━━━━━━━┓
+// ┃ Destructor ┃
+// ┗━━━━━━━━━━━━┛
+
+~Map() { m_inner.clear(); }
+
+// ┏━━━━━━━━━┓
+// ┃ Methods ┃
+// ┗━━━━━━━━━┛
+
+/**
+ * @return An iterator to the first element of the map.
+ */
+Iterator begin() { return m_inner.begin(); }
+
+/**
+ * @return An iterator to the first element of the map.
+ */
+ConstIterator begin() const { return m_inner.begin(); }
+
+/**
+ * @brief Removes every element from the Map.
+ */
+void clear() { m_inner.clear(); }
+
+/**
+ * @return The number of elements matching the `key`.
+ */
+Size count(
+    Key const &key
+) const
 {
-	return &lhs == &rhs || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+    if (m_inner.find(Pair(key, MappedElement())) != m_inner.nil()) {
+        return 1;
+    }
+    return 0;
 }
 
 /**
- * @brief	Check if two map are different.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are different, or false if not.
+ * @return `true` if the map is empty, `false` otherwise.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator!=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+bool empty() const { return m_inner.size() == 0; }
+
+/**
+ * @return An iterator to the post-last element of the map.
+ */
+Iterator end() { return m_inner.end(); }
+
+/**
+ * @return An iterator to the post-last element of the map.
+ */
+ConstIterator end() const { return m_inner.end(); }
+
+/**
+ * @return An iterator range with every element matching the `key`.
+ */
+Pair<Iterator, Iterator> equal_range(
+    Key const &key
+)
 {
-	return !(lhs == rhs);
+    return m_inner.equal_range(Pair(key, MappedElement()));
 }
 
 /**
- * @brief	Check if two map are strictly lexiographicaly ordered.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are strictly lexiographicaly ordered, or false if not.
+ * @return An iterator range with every element matching the `key`.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator<(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+Pair<ConstIterator, ConstIterator> equal_range(
+    Key const &key
+) const
 {
-	return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return m_inner.equal_range(Pair(key, MappedElement()));
 }
 
 /**
- * @brief	Check if two map are strictly lexiographicaly reverse-ordered.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are strictly lexiographicaly reverse-ordered, or false if not.
+ * @brief Removes the single `target` element.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator>(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+void erase(
+    Iterator const &target
+)
 {
-	return rhs < lhs;
+    m_inner.erase(target);
 }
 
 /**
- * @brief	Check if two map are lexiographicaly ordered or equivalent.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are lexiographicaly ordered or equivalent, or false if not.
+ * @brief Removes the single element matching the `needle` key if it exists.
+ *
+ * @return 1 if the element with the `needle` key
+ *         has been found and removed, 0 otherwise.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator<=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+Size erase(
+    Key const &needle
+)
 {
-	return !(rhs < lhs);
+    return m_inner.erase(Pair(needle, MappedElement()));
 }
 
 /**
- * @brief	Check if two map are lexiographicaly reverse-ordered or equivalent.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	lhs The left hand side map to compare.
- * @param	rhs The right hand side map to compare.
- * 
- * @return	Either true if the two map are lexiographicaly reverse-ordered or equivalent, or false if not.
+ * @brief Removes all elements in the range [`begin`, `end`).
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-bool	operator>=(map<Key, T, Compare, Alloc> const &lhs, map<Key, T, Compare, Alloc> const &rhs)
+void erase(
+    Iterator const &begin, Iterator const &end
+)
 {
-	return !(lhs < rhs);
+    m_inner.erase(begin, end);
 }
 
-// ***************************************************************************************************************** //
-//                                               Specialized Functions                                               //
-// ***************************************************************************************************************** //
+/**
+ * @return The single element matching the `key` if it exists,
+ *         `end()` otherwise.
+ */
+Iterator find(
+    Key const &key
+)
+{
+    return m_inner.find(Pair(key, MappedElement()));
+}
 
 /**
- * @brief	Swap the contents of two given map.
- * 
- * @tparam	Key The key type of both of the map.
- * @tparam	T The mapped type of both of the map.
- * @tparam	Compare The functor to use to compare the keys.
- * @tparam	Alloc The allocator type used in both of the map.
- * 
- * @param	a The first map to swap.
- * @param	b The second map to swap.
+ * @brief	Search for a constant element in the Map.
+ *
+ * @param	key The key of the constant element to search.
+ *
+ * @return	A ConstIterator to the constant element if found, or end() if
+ * not.
  */
-template <typename Key, typename T, typename Compare, typename Alloc>
-void	swap(map<Key, T, Compare, Alloc> &a, map<Key, T, Compare, Alloc> &b)
+ConstIterator find(
+    Key const &key
+) const
 {
-	a.swap(b);
+    return ConstIterator(m_inner.find(Pair(key, MappedElement())));
+}
+
+/**
+ * @brief	Insert elements in the Map using a range of iterators,
+ * 			from `first` included to `last` excluded. (range
+ * insertion)
+ *
+ * @tparam	InputIterator The type of the iterators to use.
+ * 			(it must conform to the standard input Iterator
+ * requirements)
+ *
+ * @param	first The first element of the range.
+ * @param	last The last element of the range.
+ */
+template <typename InputIterator>
+void insert(
+    InputIterator first, InputIterator const last
+)
+{
+    for (; first != last; ++first) {
+        insert(*first);
+    }
+}
+
+/**
+ * @brief	Insert an element in the Map. (single insertion)
+ *
+ * @param	inner The value of the element to insert in the Map.
+ *
+ * @return	A Pair containing an Iterator to the element of the Map with the
+ * given value as `first` member, and a boolean indicating whether a new
+ * element has been inserted as `second` member.
+ */
+Pair<Iterator, bool> insert(
+    Pair const &inner
+)
+{
+    return m_inner.insert(inner);
+}
+
+/**
+ * @brief	Insert an element in the Map. (single insertion with hint)
+ *
+ * @param	pos The position where to insert the element.
+ * @param	inner The value of the element to insert in the Map.
+ *
+ * @return	An Iterator to the element of the Map with the given value.
+ */
+Iterator insert(
+    Iterator const pos, Pair const &inner
+)
+{
+    return m_inner.insert(pos.base(), inner);
+}
+
+/**
+ * @return	A KeyComparator default object.
+ */
+KeyComparator key_comp(
+    void
+) const
+{
+    return KeyComparator();
+}
+
+/**
+ * @brief	Search for the first element in the Map that should be after or
+ * at the given key.
+ *
+ * @param	key The key of the virtual element preceding the searched one.
+ *
+ * @return	An Iterator to the element if found, or end() if not.
+ */
+Iterator lower_bound(
+    Key const &key
+)
+{
+    return m_inner.lower_bound(Pair(key, MappedElement()));
+}
+
+/**
+ * @brief	Search for the first constant element in the Map that should be
+ * after or at the given key.
+ *
+ * @param	key The key of the virtual element preceding the searched one.
+ *
+ * @return	An Iterator to the constant element if found, or end() if not.
+ */
+ConstIterator lower_bound(
+    Key const &key
+) const
+{
+    return m_inner.lower_bound(Pair(key, MappedElement()));
+}
+
+/**
+ * @return	The maximum number of elements that can be stored in the Map.
+ */
+Size max_size(
+    void
+) const
+{
+    return m_inner.max_size();
+}
+
+/**
+ * @return	A ReverseIterator to the last element of the Map.
+ */
+ReverseIterator rbegin(
+    void
+)
+{
+    return m_inner.rbegin();
+}
+
+/**
+ * @return	A ConstReverseIterator to the last element of the Map.
+ */
+ConstReverseIterator rbegin(
+    void
+) const
+{
+    return m_inner.rbegin();
+}
+
+/**
+ * @return	A ReverseIterator to the pre-first element of the Map.
+ */
+ReverseIterator rend(
+    void
+)
+{
+    return m_inner.rend();
+}
+
+/**
+ * @return	A ConstReverseIterator to the pre-first element of the Map.
+ */
+ConstReverseIterator rend(
+    void
+) const
+{
+    return m_inner.rend();
+}
+
+/**
+ * @return	The number of stored elements in the Map.
+ */
+Size size(
+    void
+) const
+{
+    return m_inner.getSize();
+}
+
+/**
+ * @brief	Swap the content of the given Map with the content of the
+ * current Map.
+ *
+ * @param	other The Map to swap with.
+ */
+void swap(
+    Map &other
+)
+{
+    m_inner.swap(other.m_inner);
+}
+
+/**
+ * @brief	Search for the first element in the Map that should be strictly
+ * after the given key.
+ *
+ * @param	key The key of the virtual element preceding the searched one.
+ *
+ * @return	An Iterator to the element if found, or end() if not.
+ */
+Iterator upper_bound(
+    Key const &key
+)
+{
+    return m_inner.upper_bound(Pair(key, MappedElement()));
+}
+
+/**
+ * @brief	Search for the first constant element in the Map that should be
+ * strictly after the given key.
+ *
+ * @param	key The key of the virtual element preceding the searched one.
+ *
+ * @return	A ConstIterator to the element if found, or end() if not.
+ */
+ConstIterator upper_bound(
+    Key const &key
+) const
+{
+    return m_inner.upper_bound(Pair(key, MappedElement()));
+}
+
+/**
+ * @return	A PairComparator default object.
+ */
+PairComparator value_comp(
+    void
+) const
+{
+    return PairComparator();
+}
+
+// *****************************************************************************************************************
+// //
+//                                                     Operators //
+// *****************************************************************************************************************
+// //
+
+/**
+ * @brief	Assign a new content to the Map from another one's. (copy
+ * assignation)
+ *
+ * @param	rhs The right hand side Map to copy the content from.
+ *
+ * @return	The assigned Map.
+ */
+Map &operator=(
+    Map const &rhs
+)
+{
+    if (this != &rhs) {
+        m_inner = rhs.m_inner;
+    }
+    return *this;
+}
+
+/**
+ * @brief	Look for an element in the Map, inserting it if not found.
+ *
+ * @param	key The key of the element to get.
+ *
+ * @return	The element matching the given key.
+ */
+MappedElement &operator[](
+    Key const &key
+)
+{
+    Iterator      it;
+    KeyComparator cmp;
+
+    if (!m_inner.getSize()) {
+        return m_inner.insert(Pair(key, MappedElement())).first->second;
+    }
+
+    it = lower_bound(key);
+    if (it == end()) {
+        return m_inner.insert(m_inner.getNil()->childs[RCHILD], Pair(key, MappedElement()))->second;
+    }
+
+    if (cmp(it->first, key) || cmp(key, it->first)) {
+        return m_inner.insert(it.base(), Pair(key, MappedElement()))->second;
+    }
+
+    return it->second;
+}
+
+}; // class Map
+
+/**
+ * @brief	Check if two Map are equivalent.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are equivalent, or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator==(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return &lhs == &rhs
+        || (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+/**
+ * @brief	Check if two Map are different.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are different, or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator!=(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return !(lhs == rhs);
+}
+
+/**
+ * @brief	Check if two Map are strictly lexiographicaly ordered.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are strictly lexiographicaly ordered,
+ * or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator<(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+/**
+ * @brief	Check if two Map are strictly lexiographicaly reverse-ordered.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are strictly lexiographicaly
+ * reverse-ordered, or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator>(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return rhs < lhs;
+}
+
+/**
+ * @brief	Check if two Map are lexiographicaly ordered or equivalent.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are lexiographicaly ordered or
+ * equivalent, or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator<=(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return !(rhs < lhs);
+}
+
+/**
+ * @brief	Check if two Map are lexiographicaly reverse-ordered or
+ * equivalent.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	lhs The left hand side Map to compare.
+ * @param	rhs The right hand side Map to compare.
+ *
+ * @return	Either true if the two Map are lexiographicaly reverse-ordered
+ * or equivalent, or false if not.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+bool operator>=(
+    Map<Key, MappedElement, KeyComparator, Allocator> const &lhs,
+    Map<Key, MappedElement, KeyComparator, Allocator> const &rhs
+)
+{
+    return !(lhs < rhs);
+}
+
+// *****************************************************************************************************************
+// //
+//                                               Specialized Functions //
+// *****************************************************************************************************************
+// //
+
+/**
+ * @brief	Swap the contents of two given Map.
+ *
+ * @tparam	Key The key type of both of the Map.
+ * @tparam	MappedElement The mapped type of both of the Map.
+ * @tparam	KeyComparator The functor to use to compare the keys.
+ * @tparam	Allocator The allocator type used in both of the Map.
+ *
+ * @param	a The first Map to swap.
+ * @param	b The second Map to swap.
+ */
+template <typename Key, typename MappedElement, typename KeyComparator, typename Allocator>
+void swap(
+    Map<Key, MappedElement, KeyComparator, Allocator> &a,
+    Map<Key, MappedElement, KeyComparator, Allocator> &b
+)
+{
+    a.swap(b);
 }
 
 } // namespace ft

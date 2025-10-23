@@ -1,161 +1,152 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   algorithm.hpp                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jodufour <jodufour@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/27 13:09:13 by jodufour          #+#    #+#             */
-/*   Updated: 2022/10/08 18:49:28 by jodufour         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef ALGORITHM_HPP
-# define ALGORITHM_HPP
+#define ALGORITHM_HPP
 
-# include "type_traits.hpp"
-# include <cstddef>
-# include <cstdlib>
+#include "functional.hpp" // {EQ,LT}
+#include "iterator.hpp" // ft::iterator_traits
+#include <cstring> // memcpy
 
-namespace ft
-{
-/**
- * @brief	Compare elements with some others, using ranges of iterators, from `first0` included to `last0` excluded.
- * 
- * @tparam	InputIterator0 The type of the iterators to use as first and second paramters.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	InputIterator1 The type of the iterator to use as third paramter.
- * 			(it must conform to the standard input iterator requirements)
- * 
- * @param	first0 The first element of the first range.
- * @param	last0 The last element of the first range.
- * @param	first1 The first element of the second range, to compare with.
- * 
- * @return	Either true if both ranges are equal, or false if not.
- */
-template <typename InputIterator0, typename InputIterator1>
-bool	equal(InputIterator0 first0, InputIterator0 last0, InputIterator1 first1)
-{
-	while (first0 != last0 && *first0 == *first1)
-	{
-		++first0;
-		++first1;
-	}
-	return first0 == last0;
-}
+namespace ft {
 
-/**
- * @brief	Compare elements with some others, using ranges of iterators, from `first0` included to `last0` excluded.
- * 
- * @tparam	InputIterator0 The type of the iterators to use as first and second paramters.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	InputIterator1 The type of the iterator to use as third paramter.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	BinaryPredicate A function pointer type that returns an integral type.
- * 
- * @param	first0 The first element of the first range.
- * @param	last0 The last element of the first range.
- * @param	first1 The first element of the second range, to compare with.
- * @param	pred The function to use to compare elements.
- * 
- * @return	Either true if both ranges are equal according to `pred`, or false if not.
- */
+//! \param first0    The first element of the first range.
+//!
+//! \param ptend0    The past-the-end element of the first range.
+//!
+//! \param first1    The first element of the second range.
+//!
+//! \param predicate The function to test each element pair.
+//!
+//! \return `true` if both ranges match according to `predicate`, `false` otherwise.
+//!
+//! \complexity O(RangeSize).
+//!
+//! \warning `ptend0` being unreachable by `first0` is undefined behavior.
+//!
+//! \warning The first range being longer than the second one is undefined behavior.
+//!
 template <typename InputIterator0, typename InputIterator1, typename BinaryPredicate>
-bool	equal(InputIterator0 first0, InputIterator0 last0, InputIterator1 first1, BinaryPredicate pred)
+inline bool equal(
+    InputIterator0        first0,
+    InputIterator0 const  ptend0,
+    InputIterator1        first1,
+    BinaryPredicate const predicate
+)
 {
-	while (first0 != last0 && pred(*first0, *first1))
-	{
-		++first0;
-		++first1;
-	}
-	return first0 == last0;
+    if (first0 == first1) {
+        return predicate(*first0, *first1);
+    }
+    while (first0 != ptend0 && predicate(*first0, *first1)) {
+        ++first0;
+        ++first1;
+    }
+    return first0 == ptend0;
 }
 
-/**
- * @brief	Compare lexicographically elements with some others, using ranges of iterators,
- * 			from `first0` included to `last0` excluded, and from `first1` included to `last1` excluded.
- * 
- * @tparam	InputIterator0 The type of the iterators to use as first and second paramters.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	InputIterator1 The type of the iterators to use as third and fourth paramters.
- * 			(it must conform to the standard input iterator requirements)
- * 
- * @param	first0 The first element of the first range.
- * @param	last0 The last element of the first range.
- * @param	first1 The first element of the second range, to compare with.
- * @param	last1 The last element of the second range, to compare with.
- * 
- * @return	Either true if both ranges are lexicographically ordered, or false if not.
- */
+//! \param first0 The first element of the first range.
+//!
+//! \param ptend0 The past-the-end element of the first range.
+//!
+//! \param first1 The first element of the second range.
+//!
+//! \return `true` if both ranges match, `false` otherwise.
+//!
+//! \complexity O(RangeSize).
+//!
+//! \warning `ptend0` being unreachable by `first0` is undefined behavior.
+//!
+//! \warning The first range being longer than the second one is undefined behavior.
+//!
 template <typename InputIterator0, typename InputIterator1>
-bool	lexicographical_compare(
-	InputIterator0 first0,
-	InputIterator0 last0,
-	InputIterator1 first1,
-	InputIterator1 last1)
+inline bool equal(
+    InputIterator0 first0, InputIterator0 const ptend0, InputIterator1 first1
+)
 {
-	while (first0 != last0)
-	{
-		if (first1 == last1 || *first1 < *first0)
-			return false;
-		else if (*first0 < *first1)
-			return true;
-		++first0;
-		++first1;
-	}
-	return first1 != last1;
+    return ft::equal(
+        first0, ptend0, first1, EQ(typename iterator_traits<InputIterator0>::value_type)
+    );
 }
 
-/**
- * @brief	Compare lexicographically elements with some others, using ranges of iterators,
- * 			from `first0` included to `last0` excluded, and from `first1` included to `last1` excluded.
- * 
- * @tparam	InputIterator0 The type of the iterators to use as first and second paramters.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	InputIterator1 The type of the iterators to use as third and fourth paramters.
- * 			(it must conform to the standard input iterator requirements)
- * @tparam	Compare A function pointer type that returns an integral type.
- * 
- * @param	first0 The first element of the first range.
- * @param	last0 The last element of the first range.
- * @param	first1 The first element of the second range, to compare with.
- * @param	last1 The last element of the second range, to compare with.
- * @param	comp The function to use to compare elements.
- * 
- * @return	Either true if both ranges are lexicographically ordered according to `comp`, or false if not.
- */
-template <typename InputIterator0, typename InputIterator1, typename Compare>
-bool	lexicographical_compare(
-	InputIterator0 first0,
-	InputIterator0 last0,
-	InputIterator1 first1,
-	InputIterator1 last1,
-	Compare comp)
+//! \param first0    The first element of the first range.
+//!
+//! \param ptend0    The past-the-end element of the first range.
+//!
+//! \param first1    The first element of the second range.
+//!
+//! \param ptend1    The past-the-end element of the second range.
+//!
+//! \param predicate The function to test each element pair.
+//!
+//! \return `true` if both ranges are lexicographically ordered according to `predicate`,
+//!         `false` otherwise.
+//!
+//! \complexity O(min(RangeSize0, RangeSize1)).
+//!
+//! \warning `ptend0` being unreachable by `first0` is undefined behavior.
+//!
+//! \warning `ptend1` being unreachable by `first1` is undefined behavior.
+//!
+template <typename InputIterator0, typename InputIterator1, typename BinaryPredicate>
+inline bool lexicographical_compare(
+    InputIterator0        first0,
+    InputIterator0 const  ptend0,
+    InputIterator1        first1,
+    InputIterator1 const  ptend1,
+    BinaryPredicate const predicate
+)
 {
-	while (first0 != last0)
-	{
-		if (first1 == last1 || comp(*first1, *first0))
-			return false;
-		else if (comp(*first0, *first1))
-			return true;
-		++first0;
-		++first1;
-	}
-	return first1 != last1;
+    if (first0 == first1) {
+        return predicate(*first0, *first1);
+    }
+    while (first0 != ptend0 && first1 != ptend1) {
+        if (predicate(*first0, *first1)) {
+            return true;
+        }
+        ++first0;
+        ++first1;
+    }
+    return first1 != ptend1;
 }
 
-/**
- * @brief	Swap two elements of any type.
- * 
- * @tparam	T The type of the elements to swap.
- */
+//! \param first0 The first element of the first range.
+//!
+//! \param ptend0 The past-the-end element of the first range.
+//!
+//! \param first1 The first element of the second range.
+//!
+//! \param ptend1 The past-the-end element of the second range.
+//!
+//! \return `true` if both ranges are lexicographically ordered, `false` otherwise.
+//!
+//! \complexity O(min(RangeSize0, RangeSize1)).
+//!
+//! \warning `ptend0` being unreachable by `first0` is undefined behavior.
+//!
+//! \warning `ptend1` being unreachable by `first1` is undefined behavior.
+//!
+template <typename InputIterator0, typename InputIterator1>
+inline bool lexicographical_compare(
+    InputIterator0       first0,
+    InputIterator0 const ptend0,
+    InputIterator1       first1,
+    InputIterator1 const ptend1
+)
+{
+    return ft::lexicographical_compare(
+        first0, ptend0, first1, ptend1, less<typename iterator_traits<InputIterator0>::value_type>()
+    );
+}
+
+//! \complexity O(sizeof(T)).
+//!
 template <typename T>
-inline void	swap(T &a, T &b)
+inline void swap(
+    T &a, T &b
+)
 {
-	T const	tmp = a;
+    t_u8 c[sizeof(T)];
 
-	a = b;
-	b = tmp;
+    memcpy(&c, &a, sizeof(T));
+    memcpy(&a, &b, sizeof(T));
+    memcpy(&b, &c, sizeof(T));
 }
 
 } // namespace ft

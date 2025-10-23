@@ -1,24 +1,27 @@
-# ft_containers
+# Abstract_data
+
 ![Project illustration](./illustration.png "Storing, storing...")<br>
-This project is the 13th of the 42 School cursus.<br>
+Post-CommonCore project of the 42 school.<br>
 
 # Description
-In this project, we must reimplement some of the STL containers, defined by the ISO 1998.<br>
-Those containers are :<br>
- - vector<br>
- - stack (underlying our own vector)<br>
- - map<br>
- - set<br>
 
-In addition to this, some extra features and utilities are expected to be reimplemented, as:<br>
- - iterator_traits<br>
- - reverse_iterator<br>
- - enable_if<br>
- - is_integral<br>
- - equal<br>
- - lexicographical_compare<br>
- - pair<br>
- - make_pair<br>
+In this project, we must reimplement the following STL containers:
+- sequence containers:
+  - `list`
+  - `deque`
+  - `vector` (`bool` specialization is not required)
+- associative containers:
+  - `map`
+  - `set`
+  - `multimap`
+  - `multiset`
+- container adaptors:
+  - `stack`
+  - `queue`
+  - `priority_queue`
 
-ISO pdf to learn more about the different iterator categories, and the standard containers:
-https://www.lirmm.fr/~ducour/Doc-objets/ISO+IEC+14882-1998.pdf
+If a container has an iterator system,  
+we must reimplement it as well.
+
+We must take the 1998 ISO C++ standard as reference.  
+Complexities must be repected.
