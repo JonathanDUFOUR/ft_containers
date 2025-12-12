@@ -1,21 +1,21 @@
 #ifndef ALGORITHM_HPP
 #define ALGORITHM_HPP
 
-#include "functional.hpp" // {EQ,LT}
-#include "iterator.hpp" // ft::iterator_traits
-#include <cstring> // memcpy
+#include "functional.hpp"
+#include "iterator.hpp"
+#include <cstring>
 
 namespace ft {
 
-//! \param first0    The first element of the first range.
+//! \param first0 The first element of the first range.
 //!
-//! \param ptend0    The past-the-end element of the first range.
+//! \param ptend0 The past-the-end element of the first range.
 //!
-//! \param first1    The first element of the second range.
+//! \param first1 The first element of the second range.
 //!
-//! \param predicate The function to test each element pair.
+//! \param cmp    The function to test each element pair.
 //!
-//! \return `true` if both ranges match according to `predicate`, `false` otherwise.
+//! \return `true` if both ranges match according to `cmp`, `false` otherwise.
 //!
 //! \complexity O(RangeSize).
 //!
@@ -28,13 +28,10 @@ inline bool equal(
     InputIterator0        first0,
     InputIterator0 const  ptend0,
     InputIterator1        first1,
-    BinaryPredicate const predicate
+    BinaryPredicate const cmp
 )
 {
-    if (first0 == first1) {
-        return predicate(*first0, *first1);
-    }
-    while (first0 != ptend0 && predicate(*first0, *first1)) {
+    while (first0 != ptend0 && cmp(*first0, *first1)) {
         ++first0;
         ++first1;
     }
@@ -65,17 +62,17 @@ inline bool equal(
     );
 }
 
-//! \param first0    The first element of the first range.
+//! \param first0 The first element of the first range.
 //!
-//! \param ptend0    The past-the-end element of the first range.
+//! \param ptend0 The past-the-end element of the first range.
 //!
-//! \param first1    The first element of the second range.
+//! \param first1 The first element of the second range.
 //!
-//! \param ptend1    The past-the-end element of the second range.
+//! \param ptend1 The past-the-end element of the second range.
 //!
-//! \param predicate The function to test each element pair.
+//! \param cmp The function to test each element pair.
 //!
-//! \return `true` if both ranges are lexicographically ordered according to `predicate`,
+//! \return `true` if both ranges are lexicographically ordered according to `cmp`,
 //!         `false` otherwise.
 //!
 //! \complexity O(min(RangeSize0, RangeSize1)).
@@ -90,14 +87,11 @@ inline bool lexicographical_compare(
     InputIterator0 const  ptend0,
     InputIterator1        first1,
     InputIterator1 const  ptend1,
-    BinaryPredicate const predicate
+    BinaryPredicate const cmp
 )
 {
-    if (first0 == first1) {
-        return predicate(*first0, *first1);
-    }
     while (first0 != ptend0 && first1 != ptend1) {
-        if (predicate(*first0, *first1)) {
+        if (cmp(*first0, *first1)) {
             return true;
         }
         ++first0;
@@ -142,11 +136,10 @@ inline void swap(
     T &a, T &b
 )
 {
-    t_u8 c[sizeof(T)];
+    T const c = a;
 
-    memcpy(&c, &a, sizeof(T));
-    memcpy(&a, &b, sizeof(T));
-    memcpy(&b, &c, sizeof(T));
+    a = b;
+    b = c;
 }
 
 } // namespace ft

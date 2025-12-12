@@ -1,7 +1,6 @@
 #ifndef SET_HPP
 #define SET_HPP
 
-#include "algorithm.hpp" // ft::swap
 #include "functional.hpp" // ft::less
 #include "memory.hpp" // ft::allocator
 #include "red_black_tree.hpp" // ft::red_black_tree

@@ -1,7 +1,7 @@
 #ifndef TYPE_TRAITS_HPP
 #define TYPE_TRAITS_HPP
 
-#include "type/fundamentals.hpp" // ft::t_{{i,u}{8,16,32,64},bool,char,double,float,long_double,wchar}
+#include "type/fundamentals.hpp"
 
 namespace ft {
 template <typename T, T value>

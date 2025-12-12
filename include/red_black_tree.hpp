@@ -1,91 +1,94 @@
 #ifndef RED_BLACK_TREE_HPP
 #define RED_BLACK_TREE_HPP
 
-#include "algorithm.hpp" // ft::{equal,lexicographical_compare,swap}
-#include "functional.hpp" // ft::less
-#include "iterator.hpp" // ft::{bidirectional_iterator_tag,reverse_iterator}
-#include "memory.hpp" // ft::allocator
-#include "type/fundamentals.hpp" // ft::t_{i,u}size
-#include "utility.hpp" // ft::pair
+#include "algorithm.hpp"
+#include "functional.hpp"
+#include "iterator.hpp"
+#include "memory.hpp"
+#include "type/fundamentals.hpp"
+#include "utility.hpp"
 
 namespace ft {
 
-enum rbt_color { RED, BLACK };
+enum e_rbt_color { RED, BLACK };
 
-typedef rbt_color const t_rbt_color;
+typedef e_rbt_color const t_rbt_color;
 
-enum rbt_direction {
+enum e_rbt_direction {
     LE, // Left
     RI, // Right
-    DIRECTION_COUNT
+
+    DIRECTION_COUNT,
 };
 
-typedef rbt_direction const t_rbt_direction;
-typedef rbt_direction       t_rbt_direction_mut;
+typedef e_rbt_direction const t_rbt_direction;
+typedef e_rbt_direction       t_rbt_direction_mut;
 
-template <typename Inner>
+template <typename T>
 class rbt_node
 {
 #define SELF rbt_node
 
-private: // types
+private: /* types */
     typedef SELF const    t_self;
     typedef t_self *const t_self_ptr;
-    typedef Inner const   t_inner;
+    typedef T const       t_value;
 
     // TODO: remove unused typedefs when all tests pass
 
-private: // fields
-    // Allows both (`node->m_lson`|`node->m_rson`) and
-    // (`node->m_sons[LE]`|`node->m_sons[RI]`)
+private: /* fields */
+    // Allows access to the same memory area via:
+    // - `node.m_lchild`       ; `node.m_rchild`
+    // - `node.m_children[LE]` ; `node.m_children[RI]`
     union
     {
         struct {
-            t_self_ptr m_lson;
-            t_self_ptr m_rson;
+            t_self_ptr m_lchild;
+            t_self_ptr m_rchild;
         };
 
-        t_self_ptr m_sons[DIRECTION_COUNT];
+        t_self_ptr m_children[DIRECTION_COUNT];
     };
 
-    t_self_ptr  m_father;
-    t_rbt_color m_color;
-    t_inner     m_inner;
+    t_self_ptr      m_parent;
+    t_rbt_color     m_color;
+    t_rbt_direction m_direction;
+    t_value         m_value;
 
-public: // constructors
+public: /* constructors */
     //! \complexity O(1).
     //!
     SELF(
-        t_self_ptr lson, t_self_ptr rson, t_self_ptr father, t_rbt_color color, t_inner &inner
+        t_self_ptr      lchild,
+        t_self_ptr      rchild,
+        t_self_ptr      parent,
+        t_rbt_color     color,
+        t_rbt_direction direction,
+        t_value        &value
     )
-    : m_lson(lson), m_rson(rson), m_father(father), m_color(color), m_inner(inner)
+    : m_lchild(lchild)
+    , m_rchild(rchild)
+    , m_parent(parent)
+    , m_color(color)
+    , m_direction(direction)
+    , m_value(value)
     {}
 
-public: // methods
-    //! \return The leftmost node from the caller.
+public: /* methods */
+    //! \return The `direction`most child-node from the caller.
     //!
     //! \complexity O(NodesBeforeLmost).
     //!
-    t_self_ptr lmost() const
+    //! \warning `direction` being neither `LE` nor `RI` is undefined behavior.
+    //!
+    t_self_ptr extreme(
+        t_rbt_direction direction
+    )
     {
         t_self_ptr node = this;
 
-        while (node->m_lson) {
-            node = node->m_lson;
-        }
-        return node;
-    }
-
-    //! \return The rightmost node from the caller.
-    //!
-    //! \complexity O(NodesBeforeRmost).
-    //!
-    t_self_ptr rmost() const
-    {
-        t_self_ptr node = this;
-
-        while (node->m_rson) {
-            node = node->m_rson;
+        while (node->m_children[direction]) {
+            node = node->m_children[direction];
         }
         return node;
     }
@@ -98,24 +101,24 @@ class rbt_iterator
 {
 #define SELF rbt_iterator
 
-private: // types
+private: /* types */
     typedef SELF const        t_self;
     typedef Node const        t_node;
     typedef t_node *const     t_node_ptr;
     typedef t_node_ptr *const t_node_ptr_ptr;
 
-public: // types
+public: /* types */
     typedef bidirectional_iterator_tag    iterator_category;
     typedef t_isize                       difference_type;
-    typedef typename Node::t_inner        value_type;
-    typedef typename Node::t_inner       &reference;
-    typedef typename Node::t_inner *const pointer;
+    typedef typename Node::t_value        value_type;
+    typedef typename Node::t_value       &reference;
+    typedef typename Node::t_value *const pointer;
 
-private: // fields
+private: /* fields */
     t_node_ptr     m_ptr;
     t_node_ptr_ptr m_max;
 
-public: // constructors
+public: /* constructors */
     //! \complexity O(1).
     //!
     SELF(
@@ -140,32 +143,50 @@ public: // constructors
     : m_ptr(ptr), m_max(&max)
     {}
 
-public: // operators
+private: /* methods */
+    t_self &move(
+        t_rbt_direction direction
+    )
+    {
+        t_rbt_direction opposite = direction == LE ? RI : LE;
+
+        if (m_ptr->m_children[direction]) {
+            m_ptr = m_ptr->m_children[direction]->extreme(opposite);
+            return *this;
+        }
+        while (m_ptr->direction == direction) {
+            m_ptr = m_ptr->m_parent;
+        }
+        m_ptr = m_ptr->m_parent;
+        return *this;
+    }
+
+public: /* operators */
     //! \complexity O(1).
     //!
-    bool operator==(
+    t_bool operator==(
         t_self &rhs
-    )
+    ) const
     {
         return m_ptr == rhs.m_ptr;
     }
 
     //! \complexity O(1).
     //!
-    bool operator!=(
+    t_bool operator!=(
         t_self &rhs
-    )
+    ) const
     {
         return m_ptr != rhs.m_ptr;
     }
 
     //! \complexity O(1).
     //!
-    reference operator*() const { return m_ptr->m_inner; }
+    reference operator*() const { return m_ptr->m_value; }
 
     //! \complexity O(1).
     //!
-    pointer operator->() const { return &m_ptr->m_inner; }
+    pointer operator->() const { return &m_ptr->m_value; }
 
     //! \complexity O(1).
     //!
@@ -182,21 +203,7 @@ public: // operators
     //!
     //! \warning Caller being past-the-end is undefined behavior.
     //!
-    t_self &operator++()
-    {
-        if (m_ptr->m_rson) {
-            m_ptr = m_ptr->m_rson->lmost();
-            return *this;
-        }
-        t_node_ptr father = m_ptr->m_father;
-
-        while (father && m_ptr == father->m_rson) {
-            m_ptr  = father;
-            father = m_ptr->m_father;
-        }
-        m_ptr = father;
-        return *this;
-    }
+    t_self &operator++() { return move(RI); }
 
     //! \complexity O(log(TreeSize)) amortized O(1).
     //!
@@ -206,10 +213,10 @@ public: // operators
         int
     )
     {
-        t_self before_move(*this);
+        t_self before_inc(*this);
 
         ++*this;
-        return before_move;
+        return before_inc;
     }
 
     //! \complexity O(log(TreeSize)) amortized O(1).
@@ -218,21 +225,10 @@ public: // operators
     //!
     t_self &operator--()
     {
-        if (!m_ptr) {
-            m_ptr = *m_max;
-            return *this;
+        if (m_ptr) {
+            return move(LE);
         }
-        if (m_ptr->m_lson) {
-            m_ptr = m_ptr->m_lson->rmost();
-            return *this;
-        }
-        t_node_ptr father = m_ptr->m_father;
-
-        while (father && m_ptr == father->m_lson) {
-            m_ptr  = father;
-            father = m_ptr->m_father;
-        }
-        m_ptr = father;
+        m_ptr = *m_max;
         return *this;
     }
 
@@ -244,10 +240,10 @@ public: // operators
         int
     )
     {
-        t_self before_move(*this);
+        t_self before_dec(*this);
 
         --*this;
-        return before_move;
+        return before_dec;
     }
 
 #undef SELF
@@ -256,7 +252,7 @@ public: // operators
 //! A Red Black Tree is a self-balancing Binary Search Tree (BST)
 //! which is ruled by the following properties:
 //!  1. Every node is either red or black
-//!  2. All NULL nodes are considered black
+//!  2. All `NULL` nodes are considered black
 //!  3. A red node does not have a red child
 //!  4. Every path from a node to any of its descendant NULL nodes
 //!     goes through the same number of black nodes
@@ -266,9 +262,9 @@ public: // operators
 //!  - a violation of the 4th property is called a "black violation"
 template <
     t_bool AllowsDuplicates,
-    typename Inner,
-    typename Compare   = less<Inner>,
-    typename Allocator = allocator<rbt_node<Inner> >
+    typename T,
+    typename Compare   = less<T>,
+    typename Allocator = allocator<rbt_node<T> >
 >
 class red_black_tree
 {
@@ -277,8 +273,8 @@ class red_black_tree
 private: /* types */
     typedef SELF const                                   t_self;
     typedef SELF                                         t_self_mut;
-    typedef Inner const                                  t_inner;
-    typedef Inner                                        t_inner_mut;
+    typedef T const                                      t_value;
+    typedef T                                            t_value_mut;
     typedef Compare const                                t_compare;
     typedef Allocator const                              t_allocator;
     typedef typename Allocator::value_type const         t_node;
@@ -372,57 +368,58 @@ private: /* methods */
     //!
     //! \param node           The newly inserted node.
     //!
-    //! \param father         The parent-node of `node`.
+    //! \param parent         The parent-node of `node`.
     //!
-    //! \param node_direction Whether `node` is the right or left son of `father`.
+    //! \param node_direction Whether `node` is the right or left child of `parent`.
     //!
     //! \complexity O(log(TreeSize)) amortized O(1).
     //!
-    //! \warning `node` not being a red leaf of the `m_root` tree or a `father`'s son
+    //! \warning `node` not being a red leaf of the `m_root` tree or a child-node of `parent`
     //!          is undefined behavior.
     //!
-    //! \warning `father` not being the `node`'s father or being black is undefined behavior.
+    //! \warning `parent` not being the parent-node of `node` or being black is undefined behavior.
     //!
-    //! \warning `node_direction` not being such as `father->sons[node_direction] == node`
+    //! \warning `node_direction` not being such as `parent->m_children[node_direction] == node`
     //!          is undefined behavior.
     //!
     void fix_red_violation(
-        t_node_ptr node, t_node_ptr father, t_rbt_direction_mut node_direction
-    ) __attribute__((nonnull))
+        t_node_ptr          node __attribute__((nonnull)),
+        t_node_ptr          parent __attribute__((nonnull)),
+        t_rbt_direction_mut node_direction
+    )
     {
         do {
-            t_node_ptr grandfather = father->m_father;
+            t_node_ptr grandparent = parent->m_parent;
 
-            if (!grandfather) {
+            if (!grandparent) {
                 // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_4
-                father->m_color = BLACK;
+                parent->m_color = BLACK;
                 return;
             }
-            t_rbt_direction uncle_direction = father == grandfather->m_lson ? RI : LE;
-            t_node_ptr      uncle           = grandfather->m_sons[uncle_direction];
+            t_rbt_direction pibling_direction = parent == grandparent->m_lchild ? RI : LE;
+            t_node_ptr      pibling           = grandparent->m_children[pibling_direction];
 
-            if (!uncle || uncle->m_color == BLACK) {
-                if (node_direction == uncle_direction) {
+            if (!pibling || pibling->m_color == BLACK) {
+                if (node_direction == pibling_direction) {
                     // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_5
-                    node_direction = node_direction == LE ? RI : LE;
-                    father         = rotate(father, node_direction);
-                    node           = father->sons[node_direction];
+                    node   = parent;
+                    parent = rotate(parent, node_direction == LE ? RI : LE);
                 }
                 // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_6
-                rotate(grandfather, uncle_direction)->m_color;
-                father->m_color      = BLACK;
-                grandfather->m_color = RED;
+                rotate(grandparent, pibling_direction);
+                grandparent->m_color = RED;
+                parent->m_color      = BLACK;
                 return;
             }
             // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_2
-            father->m_color      = BLACK;
-            grandfather->m_color = RED;
-            uncle->m_color       = BLACK;
-            node                 = grandfather;
-            father               = node->father;
-            node_direction       = node == father->m_lson ? LE : RI;
+            parent->m_color      = BLACK;
+            grandparent->m_color = RED;
+            pibling->m_color     = BLACK;
+            node                 = grandparent;
+            parent               = node->m_parent;
+            node_direction       = node == parent->m_lchild ? LE : RI;
         }
-        while (father && father->m_color == RED);
+        while (parent && parent->m_color == RED);
         // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_1
         // https://en.wikipedia.org/wiki/Red-black_tree#Insert_case_3
     }
@@ -431,86 +428,91 @@ private: /* methods */
     //!
     //! \param node   The node to remove.
     //!
-    //! \param father The `node`'s father.
+    //! \param parent The parent-node of `node`.
     //!
-    //! \param inner  Whether `node` is the right or left son of `father`.
+    //! \param inner  Whether `node` is the right or left child-node of `parent`.
     //!
     //! \complexity O(log(TreeSize)) amortized O(1).
     //!
-    //! \warning `node` being `NULL` or not being a `father`'s son is undefined behavior.
+    //! \warning `node` not being part of the `m_root` tree or a child-node of `parent`
+    //!          is undefined behavior.
     //!
-    //! \warning `father` not being the `node`'s father is undefined behavior.
+    //! \warning `parent` not being part of the `m_root` tree or the parent-node of `node`
+    //!          is undefined behavior.
     //!
-    //! \warning `inner` not being such as `father->sons[inner] == node` is undefined behavior.
+    //! \warning `inner` not being such as `parent->m_children[inner] == node`
+    //!          is undefined behavior.
     //!
     void prevent_black_violation(
-        t_node_ptr node, t_node_ptr father, t_rbt_direction inner
+        t_node_ptr      node __attribute__((nonnull)),
+        t_node_ptr      parent __attribute__((nonnull)),
+        t_rbt_direction inner
     )
     {
         t_rbt_direction_mut outer;
-        t_node_ptr          brother;
-        t_node_ptr          inner_nephew;
-        t_node_ptr          outer_nephew;
+        t_node_ptr          sibling;
+        t_node_ptr          inner_nibling;
+        t_node_ptr          outer_nibling;
 
         do {
-            outer        = inner == LE ? RI : LE;
-            brother      = father->m_sons[outer];
-            inner_nephew = brother->m_sons[inner];
-            outer_nephew = brother->m_sons[outer];
+            outer   = inner == LE ? RI : LE;
+            sibling = parent->m_children[outer];
 
-            if (brother->m_color == RED) {
+            if (sibling->m_color == RED) {
                 // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_3
-                rotate(father, inner);
-                father->m_color  = RED;
-                brother->m_color = BLACK;
-                brother          = inner_nephew;
-                outer_nephew     = brother->m_sons[outer];
-                if (outer_nephew->m_color == RED) {
+                rotate(parent, inner);
+                parent->m_color  = RED;
+                sibling->m_color = BLACK;
+                sibling          = parent->m_children[outer];
+
+                outer_nibling = sibling->m_children[outer];
+                if (outer_nibling && outer_nibling->m_color == RED) {
                     goto D6;
                 }
-                inner_nephew = brother->m_sons[inner];
-                if (inner_nephew->m_color == RED) {
+                inner_nibling = sibling->m_children[inner];
+                if (inner_nibling && inner_nibling->m_color == RED) {
                     goto D5;
                 }
                 // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_4
-                father->m_color  = BLACK;
-                brother->m_color = RED;
+                parent->m_color  = BLACK;
+                sibling->m_color = RED;
                 return;
             }
-            if (outer_nephew->m_color == RED) {
+            outer_nibling = sibling->m_children[outer];
+            if (outer_nibling && outer_nibling->m_color == RED) {
                 goto D6;
             }
-            if (inner_nephew->m_color == RED) {
+            inner_nibling = sibling->m_children[inner];
+            if (inner_nibling && inner_nibling->m_color == RED) {
                 goto D5;
             }
-            if (father->m_color == RED) {
-                // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_4
-                father->m_color  = BLACK;
-                brother->m_color = RED;
-                return;
-            }
-            if (!father) {
+            if (!parent) {
                 // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_1
                 return;
             }
+            if (parent->m_color == RED) {
+                // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_4
+                parent->m_color  = BLACK;
+                sibling->m_color = RED;
+                return;
+            }
             // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_2
-            brother->m_color = RED;
-            node             = father;
-            father           = node->m_father;
-            inner            = node == father->m_lson ? LE : RI;
+            sibling->m_color = RED;
+            node             = parent;
+            parent           = node->m_parent;
+            inner            = node == parent->m_lchild ? LE : RI;
         }
-        while (father);
+        while (parent);
     D5: // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_5
-        rotate(brother, outer);
-        brother->m_color      = RED;
-        inner_nephew->m_color = BLACK;
-        outer_nephew          = brother;
-        brother               = inner_nephew;
+        outer_nibling          = sibling;
+        sibling                = rotate(sibling, outer);
+        outer_nibling->m_color = RED;
+        sibling->m_color       = BLACK;
     D6: // https://en.wikipedia.org/wiki/Red-black_tree#Delete_case_6
-        rotate(father, inner);
-        brother->m_color      = father->m_color;
-        father->m_color       = BLACK;
-        outer_nephew->m_color = BLACK;
+        rotate(parent, inner);
+        sibling->m_color       = parent->m_color;
+        parent->m_color        = BLACK;
+        outer_nibling->m_color = BLACK;
     }
 
     //! \param node The root-node of the tree to clear.
@@ -526,22 +528,22 @@ private: /* methods */
         if (!node) {
             return;
         }
-        recursive_clear(node->m_lson);
-        recursive_clear(node->m_rson);
+        recursive_clear(node->m_lchild);
+        recursive_clear(node->m_rchild);
         m_alloc.destroy(node);
         m_alloc.deallocate(node, 1);
     }
 
     //! \param node   The root-node of the tree to clone.
     //!
-    //! \param father The parent-node of the new node.
+    //! \param parent The parent-node of the new node.
     //!
     //! \complexity O(TreeSize).
     //!
     //! \return The root-node of the new tree.
     //!
     t_node_ptr recursive_clone(
-        t_node_ptr node, t_node_ptr father = NULL
+        t_node_ptr node, t_node_ptr parent = NULL
     ) const
     {
         if (!node) {
@@ -552,14 +554,30 @@ private: /* methods */
         m_alloc.construct(
             new_node,
             node(
-                recursive_clone(node->m_lson, new_node),
-                recursive_clone(node->m_rson, new_node),
-                father,
+                recursive_clone(node->m_lchild, new_node),
+                recursive_clone(node->m_rchild, new_node),
+                parent,
                 node->m_color,
-                node->m_inner
+                node->m_value
             )
         );
         return new_node;
+    }
+
+    //! \brief Updates every child-node of `node` to point back to `node` as parent-node.
+    //!
+    //! \complexity O(1).
+    //!
+    void relink_children(
+        t_node &node
+    )
+    {
+        if (node.lchild) {
+            node.lchild->parent = node;
+        }
+        if (node.rchild) {
+            node.rchild->parent = node;
+        }
     }
 
     //! \brief Rotates the `node` tree to the given `direction` + updates `m_root` if needed.
@@ -569,34 +587,104 @@ private: /* methods */
     //!
     //! \complexity O(1).
     //!
-    //! \warning `node` being `NULL` or not being part of the `m_root` tree
-    //!          or having no son in the opposite `direction` is undefined behavior.
+    //! \warning `node` not being part of the `m_root` tree
+    //!          or having no child in the opposite `direction` is undefined behavior.
     //!
     //! \warning `direction` being neither `LE` nor `RI` is undefined behavior.
     //!
     t_node_ptr rotate(
-        t_node_ptr node, t_rbt_direction direction
-    ) __attribute__((nonnull))
+        t_node_ptr node __attribute__((nonnull)), t_rbt_direction direction
+    )
     {
-        t_rbt_direction opposite = direction == LE ? RI : LE;
-        t_node_ptr      son      = node->m_sons[opposite];
-        t_node_ptr      grandson = son->m_sons[direction];
-        t_node_ptr      father   = node->m_father;
+        t_rbt_direction opposite   = direction == LE ? RI : LE;
+        t_node_ptr      child      = node->m_children[opposite];
+        t_node_ptr      grandchild = child->m_children[direction];
+        t_node_ptr      parent     = node->m_parent;
 
-        node->m_sons[opposite] = grandson;
-        node->m_father         = son;
-        son->m_father          = father;
-        son->m_sons[direction] = node;
-        if (grandson) {
-            grandson->m_father = node;
+        node->m_children[opposite]   = grandchild;
+        node->m_parent               = child;
+        child->m_parent              = parent;
+        child->m_children[direction] = node;
+        if (grandchild) {
+            grandchild->m_parent = node;
         }
-        if (father) {
-            father->m_sons[node == father->m_lson ? LE : RI] = son;
+        if (parent) {
+            parent->m_children[node == parent->m_lchild ? LE : RI] = child;
         }
         else {
-            m_root = son;
+            m_root = child;
         }
-        return son;
+        return child;
+    }
+
+    //! \brief Swaps two adjacent nodes `parent` and `child` by adjusting their neighbor-nodes,
+    //!        instead of naively swapping their inner values.
+    //!        This allows to keep iterators/pointers/references valid
+    //!        and to make swapping time constant regardless of the `Inner` type.
+    //!
+    //! \complexity O(1).
+    //!
+    //! \warning `parent` not being the parent-node of `child` or part of the `m_root` tree
+    //!          is undefined behavior.
+    //!
+    //! \warning `child` not being a child-node of `parent` or part of the `m_root` tree
+    //!          is undefined behavior.
+    //!
+    void swap_adjacent_nodes(
+        t_node &parent, t_node &child
+    )
+    {
+        t_rbt_direction direction = child == parent.m_lchild ? LE : RI;
+        t_rbt_direction opposite  = direction == LE ? RI : LE;
+
+        parent.m_parent = &child;
+        // TODO
+    }
+
+    //! \brief Swaps `a` and `b` by adjusting their neighbor-nodes
+    //!        instead of naively swapping their inner values.
+    //!        This allows to keep iterators/pointers/references valid
+    //!        and to make swapping time constant regardless of the `Inner` type.
+    //!
+    //! \complexity O(1).
+    //!
+    //! \warning `a` being `b` or not being part of the `m_root` tree is undefined behavior.
+    //!
+    //! \warning `b` not being part of the `m_root` tree is undefined behavior.
+    //!
+    void swap_nodes(
+        t_node &a, t_node &b
+    )
+    {
+        _Bool const a_is_parent_of_b = !!(b.m_parent - &a);
+        _Bool const b_is_parent_of_a = !!(a.m_parent - &b);
+
+        switch (!!(a.m_parent - &b) << 1 | !!(b.m_parent - &a)) {
+        case 0 : return swap_non_adjacent_nodes(a, b);
+        case 1 : return swap_adjacent_nodes(a, b);
+        case 2 : return swap_adjacent_nodes(b, a);
+        default: __builtin_unreachable();
+        }
+    }
+
+    //! \brief Swaps two non-adjacent nodes `a` and `b` by adjusting their neighbor-nodes,
+    //!        instead of naively swapping their inner values.
+    //!        This allows to keep iterators/pointers/references valid
+    //!        and to make swapping time constant regardless of the `Inner` type.
+    //!
+    //! \complexity O(1).
+    //!
+    //! \warning `a` being adjacent to `b` or not being part of the `m_root` tree
+    //!          is undefined behavior.
+    //!
+    //! \warning `b` being adjacent to `a` or not being part of the `m_root` tree
+    //!          is undefined behavior.
+    //!
+    void swap_non_adjacent_nodes(
+        t_node &a, t_node &b
+    )
+    {
+        // TODO
     }
 
 public: /* methods */
@@ -629,7 +717,7 @@ public: /* methods */
     //! \complexity O(log(TreeSize)).
     //!
     t_node_iterator_pair equal_range(
-        t_inner &needle
+        t_value &needle
     ) const
     {
         if (AllowsDuplicates) {
@@ -647,28 +735,25 @@ public: /* methods */
     //! \return An element matching the `needle` if any, `end()` otherwise.
     //!
     //! \note If multiple elements match the `needle`, only the first encountered shall be returned.
-    //!       Remember that the first encountered does not mean the first in order.
+    //!       It may or may not be the first in order.
     //!
     //! \complexity O(log(TreeSize)).
     //!
     t_node_iterator find(
-        t_inner &needle
+        t_value &needle
     ) const
     {
         t_node_ptr node = m_root;
 
         while (node) {
-            if (m_cmp(needle, node->m_inner)) {
-                node = node->m_lson;
-            }
-            else if (m_cmp(node->m_inner, needle)) {
-                node = node->m_rson;
-            }
-            else {
-                break;
+            switch (!!m_cmp(node->m_value, needle) << 1 | !!m_cmp(needle, node->m_value)) {
+            case 0 : return t_node_iterator(node, m_max);
+            case 1 : node = node->m_lchild; break;
+            case 2 : node = node->m_rchild; break;
+            default: __builtin_unreachable();
             }
         }
-        return t_node_iterator(node, m_max);
+        return end();
     }
 
     // ┏━━━━━━━━━━━┓
@@ -711,30 +796,30 @@ public: /* methods */
             return;
         }
         t_node_ptr node      = target.m_ptr;
-        t_node_ptr successor = node->m_rson;
+        t_node_ptr successor = node->m_rchild;
 
         // `node` has at most 2 child-nodes
         if (successor) {
             successor = successor->lmost();
-            swap(node->m_inner, successor->m_inner);
+            swap_nodes(node, successor);
             node = successor;
         }
         // `node` has at most 1 child-node
-        successor = node->m_lson | node->m_rson;
+        successor = node->m_lchild | node->m_rchild;
         if (successor) {
-            swap(node->m_inner, successor->m_inner);
+            swap_nodes(node, successor);
             node = successor;
         }
         // `node` has no child-nodes
-        t_node_ptr      father    = node->m_father;
-        t_rbt_direction direction = node == father->m_lson ? LE : RI;
+        t_node_ptr      parent    = node->m_parent;
+        t_rbt_direction direction = node == parent->m_lchild ? LE : RI;
 
         if (node->m_color == BLACK) {
-            prevent_black_violation(node, father, direction);
+            prevent_black_violation(node, parent, direction);
         }
-        father->m_sons[direction] = NULL;
+        parent->m_children[direction] = NULL;
         if (m_bounds[direction] == node) {
-            m_bounds[direction] = father;
+            m_bounds[direction] = parent;
         }
         m_alloc.destroy(node);
         m_alloc.deallocate(node, 1);
@@ -775,7 +860,7 @@ public: /* methods */
     //! \complexity O(MatchCount+log(TreeSize)).
     //!
     t_usize erase(
-        t_inner &needle
+        t_value &needle
     )
     {
         t_node_iterator_pair range = equal_range(needle);
@@ -791,7 +876,7 @@ public: /* methods */
     //! \complexity O(log(TreeSize)).
     //!
     pair<t_node_iterator, bool> insert(
-        t_inner &value
+        t_value &value
     )
     {
         if (!m_size) {
@@ -804,39 +889,39 @@ public: /* methods */
         }
         t_rbt_direction_mut direction;
         t_node_ptr          node = m_root;
-        t_node_ptr          father;
+        t_node_ptr          parent;
 
         if (AllowsDuplicates) {
             do {
-                direction = m_cmp(value, node->m_inner) ? LE : RI;
-                father    = node;
-                node      = node->m_sons[direction];
+                direction = m_cmp(value, node->m_value) ? LE : RI;
+                parent    = node;
+                node      = node->m_children[direction];
             }
             while (node);
         }
         else {
             do {
-                switch (!!m_cmp(value, node->m_inner) | !!m_cmp(node->m_inner, value) << 1) {
+                switch (!!m_cmp(node->m_value, value) << 1 | !!m_cmp(value, node->m_value)) {
                 case 0 : return make_pair(t_node_iterator(node, m_max), false);
                 case 1 : direction = LE; break;
                 case 2 : direction = RI; break;
                 default: __builtin_unreachable();
                 }
-                father = node;
-                node   = node->m_sons[direction];
+                parent = node;
+                node   = node->m_children[direction];
             }
             while (node);
         }
 
-        node                      = m_alloc.allocate(1);
-        father->m_sons[direction] = node;
-        if (m_bounds[direction] == father) {
+        node                          = m_alloc.allocate(1);
+        parent->m_children[direction] = node;
+        if (m_bounds[direction] == parent) {
             m_bounds[direction] = node;
         }
         ++m_size;
-        m_alloc.construct(node, node(NULL, NULL, father, RED, value));
-        if (father->m_color == RED) {
-            fix_red_violation(node, father, direction);
+        m_alloc.construct(node, node(NULL, NULL, parent, RED, value));
+        if (parent->m_color == RED) {
+            fix_red_violation(node, parent, direction);
         }
         return make_pair(t_node_iterator(node, m_max), true);
     }
@@ -852,7 +937,7 @@ public: /* methods */
     //! \warning `hint` not being an iterator over the caller is undefined behavior.
     //!
     t_node_iterator insert(
-        t_node_iterator &hint, t_inner &value
+        t_node_iterator &hint, t_value &value
     )
     {
         if (hint == end() || m_cmp(value, *hint) || (++hint != end() && m_cmp(*hint, value))) {
@@ -865,27 +950,27 @@ public: /* methods */
         if (!AllowsDuplicates && !m_cmp(*hint, value)) {
             return hint;
         }
-        t_node_ptr          node = hint.m_ptr->m_rson;
-        t_node_ptr          father;
+        t_node_ptr          node = hint.m_ptr->m_rchild;
+        t_node_ptr          parent;
         t_rbt_direction_mut direction;
 
         if (node) {
-            father    = node->lmost();
+            parent    = node->lmost();
             direction = LE;
         }
         else {
-            father    = hint.m_ptr;
+            parent    = hint.m_ptr;
             direction = RI;
         }
-        node                      = m_alloc.allocate(1);
-        father->m_sons[direction] = node;
-        if (m_bounds[direction] == father) {
+        node                          = m_alloc.allocate(1);
+        parent->m_children[direction] = node;
+        if (m_bounds[direction] == parent) {
             m_bounds[direction] = node;
         }
         ++m_size;
-        m_alloc.construct(node, node(NULL, NULL, father, RED, value));
-        if (father->m_color == RED) {
-            fix_red_violation(node, father, direction);
+        m_alloc.construct(node, node(NULL, NULL, parent, RED, value));
+        if (parent->m_color == RED) {
+            fix_red_violation(node, parent, direction);
         }
         return t_node_iterator(node, m_max);
     }
@@ -921,19 +1006,19 @@ public: /* methods */
     //! \complexity O(log(TreeSize)).
     //!
     t_node_iterator lower_bound(
-        t_inner &value
+        t_value &value
     ) const
     {
         t_node_ptr node           = m_root;
         t_node_ptr first_not_less = NULL;
 
         while (node) {
-            if (m_cmp(node->m_inner, value)) {
-                node = node->m_rson;
+            if (m_cmp(node->m_value, value)) {
+                node = node->m_rchild;
             }
             else {
                 first_not_less = node;
-                node           = node->m_lson;
+                node           = node->m_lchild;
             }
         }
         return t_node_iterator(first_not_less, m_max);
@@ -950,19 +1035,19 @@ public: /* methods */
     //! \complexity O(log(TreeSize)).
     //!
     t_node_iterator upper_bound(
-        t_inner &value
+        t_value &value
     ) const
     {
         t_node_ptr node          = m_root;
         t_node_ptr first_greater = NULL;
 
         while (node) {
-            if (m_cmp(value, node->m_inner)) {
+            if (m_cmp(value, node->m_value)) {
                 first_greater = node;
-                node          = node->m_lson;
+                node          = node->m_lchild;
             }
             else {
-                node = node->m_rson;
+                node = node->m_rchild;
             }
         }
         return t_node_iterator(first_greater, m_max);
@@ -1014,7 +1099,7 @@ public: /* operators */
         t_self &rhs
     ) const
     {
-        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), LT(t_inner));
+        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), LT(t_value));
     }
 
     //! \complexity O(TreeSize+TreeSize×log(TreeSize)) amortized O(TreeSize).
@@ -1025,7 +1110,7 @@ public: /* operators */
     {
         // TODO: check if final binary differs between these two implementations
         // return rhs < *this;
-        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), GT(t_inner));
+        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), GT(t_value));
     }
 
     //! \complexity O(TreeSize+TreeSize×log(TreeSize)) amortized O(TreeSize).
@@ -1036,7 +1121,7 @@ public: /* operators */
     {
         // TODO: check if final binary differs between these two implementations
         // return !(*this > rhs);
-        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), LE(t_inner));
+        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), LE(t_value));
     }
 
     //! \complexity O(TreeSize+TreeSize×log(TreeSize)) amortized O(TreeSize).
@@ -1047,7 +1132,7 @@ public: /* operators */
     {
         // TODO: check if final binary differs between these two implementations
         // return !(*this < rhs);
-        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), GE(t_inner));
+        return lexicographical_compare(begin(), end(), rhs.begin(), rhs.end(), GE(t_value));
     }
 
 #undef SELF

@@ -2,9 +2,10 @@
 #define FUNCTIONAL_HPP
 
 #define EQ(T) equal_to<T>()
+#define NE(T) not_equal_to<T>()
 #define LT(T) less<T>()
-#define GT(T) greater<T>()
 #define LE(T) less_equal<T>()
+#define GT(T) greater<T>()
 #define GE(T) greater_equal<T>()
 
 namespace ft {
@@ -27,12 +28,12 @@ struct equal_to : binary_function<T, T, bool> {
 };
 
 template <typename T>
-struct greater : binary_function<T, T, bool> {
+struct not_equal_to : binary_function<T, T, bool> {
     bool operator()(
         T const &a, T const &b
     ) const
     {
-        return a > b;
+        return a != b;
     }
 };
 
@@ -47,22 +48,32 @@ struct less : binary_function<T, T, bool> {
 };
 
 template <typename T>
-struct greater_equal : binary_function<T, T, bool> {
-    bool operator()(
-        T const &a, T const &b
-    ) const
-    {
-        return a >= b;
-    }
-};
-
-template <typename T>
 struct less_equal : binary_function<T, T, bool> {
     bool operator()(
         T const &a, T const &b
     ) const
     {
         return a <= b;
+    }
+};
+
+template <typename T>
+struct greater : binary_function<T, T, bool> {
+    bool operator()(
+        T const &a, T const &b
+    ) const
+    {
+        return a > b;
+    }
+};
+
+template <typename T>
+struct greater_equal : binary_function<T, T, bool> {
+    bool operator()(
+        T const &a, T const &b
+    ) const
+    {
+        return a >= b;
     }
 };
 
